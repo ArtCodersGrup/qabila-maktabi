@@ -3,7 +3,7 @@
 **Mavzu:** Ma'lumotlarni kodlash
 **Yosh:** 8–12
 **Taxminiy davomiyligi:** 20 daqiqa
-**Holati:** dizayn — muallif tasdig'ini kutmoqda
+**Holati:** tasdiqlangan (2026-09-19)
 
 Umumiy qoidalar: [`../../QOIDALAR.md`](../../QOIDALAR.md). Bu hujjat faqat shu o'yinga xos narsalarni yozadi.
 
@@ -55,6 +55,8 @@ Bosh ekran
 
 **Bosh ekran:** o'yin nomi, "Boshlash" tugmasi, 3 ta bosqich kartasi (yopiq 🔒 / ochiq / tugagan ✓), ovoz tugmasi.
 "Boshlash" birinchi ochiq, lekin hali tugamagan bosqichdan boshlaydi. Tugagan bosqichni kartasini bosib qayta o'ynash mumkin.
+
+**O'qituvchi va sinov uchun:** manzilga `?bosqich=2` (yoki `1`, `3`) qo'shilsa, o'yin shu bosqichdan boshlanadi — oldingi bosqichlarni o'ynash shart emas.
 
 ---
 
@@ -243,7 +245,11 @@ Hammasi `oyinlar/01-qabila-kodlari/` ichida:
 | `js/sound.js` | Tovush effektlari (Web Audio) | storage |
 | `js/art.js` | SVG rasmlar: qahramonlar va ularning holatlari, qog'oz, harf kartochkasi, daraxt, odamlar | — |
 | `js/ui.js` | Nutq pufagi, harf tugmalari, raqam klaviaturasi, progress doiralari, "Davom" | art, sound |
-| `js/scenes.js` | Har bir ekran/qism: kirish, 1–3-bosqichlar, final, tabrik | logic, art, ui |
+| `js/scenes/common.js` | Bosqichlar uchun umumiy: mashq sikli, qo'lda yasash, daraxt sahnalari | logic, art, ui, sound |
+| `js/scenes/stage1.js` | Kirish sahnasi va 1-bosqich | common |
+| `js/scenes/stage2.js` | 2-bosqich (pauza sahnasi bilan) | common |
+| `js/scenes/stage3.js` | 3-bosqich (odamlar, hisoblagich) | common |
+| `js/scenes/final.js` | Bosqich tugashi, final (0 va 1), tabrik | common |
 | `js/main.js` | Ishga tushirish, ekranlar orasida o'tish, bosh ekran | hammasi |
 | `fonts/` | Nunito shrift fayli (OFL litsenziya) | — |
 | `tests/logic.test.js` | `logic.js` uchun avtomatik testlar | logic |
