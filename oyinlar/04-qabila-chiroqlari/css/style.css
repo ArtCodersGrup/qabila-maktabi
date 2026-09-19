@@ -37,6 +37,15 @@
 .mgrid .key { padding: 4px; font-size: 18px; }
 .answer { font-size: 22px; font-weight: 900; color: var(--togri); }
 
+/* Yotiq ekran: sahna ustuni torroq, jadval 3 ustun, katta naqsh kichikroq — kod jadvali va 8 ta tugma sig'adi */
+@media (orientation: landscape) {
+  .play { grid-template-columns: minmax(150px, 24%) minmax(0, 1fr); }
+  .ctable4 { grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: none; }
+  .pattern.big .plamp { width: 40px; height: 48px; }
+  .ctable4 .plamp { width: 17px; height: 20px; }
+  .crow { padding: 4px 6px; gap: 6px; }
+}
+
 /* ---------- Formula, hikoya, tabrik ---------- */
 .formula-box { display: flex; flex-direction: column; align-items: center; gap: 10px; max-width: 100%; text-align: center; }
 .formula-row { font-size: 22px; font-weight: 800; animation: pop 0.3s; }
