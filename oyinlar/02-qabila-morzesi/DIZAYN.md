@@ -226,14 +226,14 @@ Hammasi `oyinlar/02-qabila-morzesi/` ichida, umumiy qismlar `oyinlar/umumiy/` da
 | `index.html` | Sahifa; avval `../umumiy/` skriptlari, keyin o'yinniki |
 | `css/style.css` | Faqat shu o'yinga xos uslublar (qo'llanma, guruhlar, Morze klaviaturasi) |
 | `js/morse.js` | **Sof hisob:** kodlar jadvali, so'zni kodlash va kodni o'qish, harf to'plamlari, so'zlar va topshiriqlar ro'yxati, tasodifiy xabar/topshiriq tanlash, javobni tekshirish. Node'da test qilinadi. |
-| `js/story-art.js` | Hikoya rasmlari (SVG): telegraf, harflar, kema, mayoq, radio, ko'z |
+| `js/game-art.js` | Hikoya rasmlari (SVG): telegraf, kema, mayoq, radio, ko'z |
 | `js/morse-ui.js` | Nuqta/chiziq shakllari, xabar guruhlari + kataklar, qo'llanma jadvali, Morze klaviaturasi, "Tinglash" |
 | `js/scenes/common.js` | O'qish va yozish mashqlari sikli (3 ta to'g'ri javob, xato qoidasi) |
 | `js/scenes/stage1.js` | Kirish + 1-bosqich |
 | `js/scenes/stage2.js` | 2-bosqich + XAYR |
 | `js/scenes/stage3.js` | Hikoya + SOS |
 | `js/scenes/final.js` | Bosqich tugashi, tabrik |
-| `js/main.js` | Bosh ekran va bosqichlar oqimi (saqlash kaliti: `qabila-morzesi:v1`) |
+| `js/main.js` | Umumiy qobiqni (`umumiy/js/app.js`) shu o'yin sozlamalari bilan ishga tushiradi (saqlash kaliti: `qabila-morzesi:v1`) |
 | `tests/morse.test.js` | `morse.js` testlari |
 
 ## 12. Tekshiruv
@@ -254,8 +254,9 @@ QOIDALAR 9-bo'limi bo'yicha, 2-o'yin boshlanganda ikkala o'yinga kerak kod umumi
 | `css/asos.css` — ranglar, shrift, zonalar, pufak, tugmalar, harf kartochkalari, raqam klaviaturasi, qahramonlar animatsiyasi | `css/style.css` — faqat 1-o'yinga xos (daraxt, devor, formula, odamlar) |
 | `js/storage.js` — saqlash kaliti har o'yinda o'zi beriladi | — |
 | `js/sound.js` — + signal ketma-ketligini chalish (Morze uchun) | — |
-| `js/art.js` — Oqsoqol, Shogird, odam, baraban, ikonkalar | `js/tree.js` — so'zlar daraxti (1-o'yinniki) |
-| `js/ui.js` — pufak, tugmalar, kataklar, klaviatura, progress | `js/scenes/`, `js/main.js` |
+| `js/art.js` — Oqsoqol, Shogird, baraban, ikonkalar | `js/game-art.js` — so'zlar daraxti va kichik odam (1-o'yinniki) |
+| `js/ui.js` — pufak, tugmalar, kataklar, klaviatura, progress | `js/scenes/` |
+| `js/app.js` — bosh ekran, bosqichlar oqimi, ovoz tugmasi, `?bosqich=N` | `js/main.js` — faqat `QK.app.start({...})` |
 | `tests/` — storage va rasmlar testlari | `tests/` — logic va daraxt testlari |
 
 - 1-o'yinning saqlangan progressi yo'qolmaydi (kalit o'zgarmaydi: `qabila-kodlari:v1`).
