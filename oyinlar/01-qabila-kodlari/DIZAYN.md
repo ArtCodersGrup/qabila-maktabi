@@ -241,20 +241,17 @@ Hammasi `oyinlar/01-qabila-kodlari/` ichida:
 | `index.html` | Sahifa, skriptlarni ulaydi | — |
 | `css/style.css` | Ranglar, zonalar, tik/yotiq joylashuv | — |
 | `js/logic.js` | **Sof hisob:** so'zlar soni, so'zlar ro'yxati, eng kamida nechta harf, tasodifiy misol yasash, javobni tekshirish. Ekran bilan ishlamaydi. | — |
-| `js/storage.js` | Tugagan bosqichlar va ovoz tanlovini saqlash (`localStorage`, xato bo'lsa jim o'tkazib yuboradi) | — |
-| `js/sound.js` | Tovush effektlari (Web Audio) | storage |
-| `js/art.js` | SVG rasmlar: qahramonlar va ularning holatlari, qog'oz, harf kartochkasi, daraxt, odamlar | — |
-| `js/ui.js` | Nutq pufagi, harf tugmalari, raqam klaviaturasi, progress doiralari, "Davom" | art, sound |
-| `js/scenes/common.js` | Bosqichlar uchun umumiy: mashq sikli, qo'lda yasash, daraxt sahnalari | logic, art, ui, sound |
+| `js/game-art.js` | SVG rasmlar: so'zlar daraxti va kichik odam (shu o'yinniki) | — |
+| `js/scenes/common.js` | Bosqichlar uchun umumiy: mashq sikli, qo'lda yasash, daraxt sahnalari | logic, umumiy/art, umumiy/ui, umumiy/sound |
 | `js/scenes/stage1.js` | Kirish sahnasi va 1-bosqich | common |
 | `js/scenes/stage2.js` | 2-bosqich (pauza sahnasi bilan) | common |
 | `js/scenes/stage3.js` | 3-bosqich (odamlar, hisoblagich) | common |
 | `js/scenes/final.js` | Bosqich tugashi, final (0 va 1), tabrik | common |
-| `js/main.js` | Ishga tushirish, ekranlar orasida o'tish, bosh ekran | hammasi |
-| `fonts/` | Nunito shrift fayli (OFL litsenziya) | — |
+| `js/main.js` | `../umumiy/js/app.js` dagi `QK.app.start({...})` ni shu o'yin sozlamalari bilan chaqiradi | hammasi |
 | `tests/logic.test.js` | `logic.js` uchun avtomatik testlar | logic |
 
 `logic.js` ham brauzerda, ham Node'da ishlaydi (testlar uchun).
+`storage.js`, `sound.js`, `art.js` (qahramonlar) va `ui.js`, shuningdek `fonts/`, endi `../umumiy/` da (13-bo'lim).
 
 ## 11. Kutilmagan holatlar
 

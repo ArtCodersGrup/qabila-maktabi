@@ -35,3 +35,7 @@
 .pause-options { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 14px; }
 .pause-opt { display: flex; flex-direction: column; align-items: center; gap: 6px; font-weight: 800; }
 .pause-or { font-weight: 800; }
+
+/* ---------- Maslahat va baraban zarblari (faqat shu o'yinda) ---------- */
+.hint-title { font-weight: 800; border-bottom: 3px solid var(--yana); }
+.beats { display: flex; gap: 8px; min-height: 40px; }

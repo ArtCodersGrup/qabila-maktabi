@@ -165,11 +165,8 @@ button:disabled { cursor: default; opacity: 0.45; }
 .counter .key { width: 56px; }
 .counter-val { min-width: 110px; text-align: center; font-size: 22px; font-weight: 900; }
 
-.hint-title { font-weight: 800; border-bottom: 3px solid var(--yana); }
-
 /* ---------- Baraban ---------- */
 .drum { width: 110px; }
-.beats { display: flex; gap: 8px; min-height: 40px; }
 
 /* ---------- Bosh ekran ---------- */
 .game-title { margin: 0; font-size: 30px; font-weight: 900; text-align: center; }
