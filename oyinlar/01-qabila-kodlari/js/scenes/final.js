@@ -6,14 +6,19 @@
   const { ui, sound, art, common } = QK;
   const BITS = ["0", "1"];
 
-  async function stageDone(s) {
+  // goingOn — o'yin keyingi bosqichga o'tsa true (matn shunga ishora qiladi),
+  // faqat shu bosqich qayta o'ynalgan bo'lsa (M3) false — "keyingisiga" deyilmaydi
+  async function stageDone(s, goingOn) {
     ui.setCompact(false);
     ui.clearWork();
     ui.raisePaper(false);
     sound.play("win");
     ui.pose("elder", "happy", 1200);
     ui.pose("apprentice", "happy", 1200);
-    await ui.say("elder", `${s}-bosqich tugadi! Barakalla, keyingisiga oʻtamiz.`);
+    const text = goingOn
+      ? `${s}-bosqich tugadi! Barakalla, keyingisiga oʻtamiz.`
+      : `${s}-bosqich tugadi! Barakalla!`;
+    await ui.say("elder", text);
   }
 
   async function finale() {

@@ -58,7 +58,7 @@
     if (stage === 1 && !state.done[0]) await scenes.intro();
     if (once) {
       await scenes["stage" + stage]();
-      await scenes.stageDone(stage);
+      await scenes.stageDone(stage, false); // davom etmaymiz — "keyingisiga oʻtamiz" deyilmaydi
       home();
       return;
     }
@@ -66,7 +66,7 @@
       await scenes["stage" + s]();
       state.done[s - 1] = true;
       saveState();
-      if (s < 3) await scenes.stageDone(s);
+      if (s < 3) await scenes.stageDone(s, true); // keyingi bosqichga o'tamiz
     }
     await scenes.finale();
     const next = await scenes.congrats();
