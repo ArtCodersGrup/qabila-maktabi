@@ -62,7 +62,7 @@ Bosh ekran
 1. Oqsoqol: "Chiroqlar bilan son ham yuborsa boʻladi!" Chiroqlar ustida 4 2 1.
 2. "Har bir chiroqning oʻz qiymati bor. Yoniq chiroqlar qiymatini qoʻshamiz." Topshiriq: "5 ni yasa." — bola to'g'ri naqshni yoqquncha (jonli yig'indi yordam beradi).
 3. **Ta'rif:** "Yoniq — 1, oʻchiq — 0. Kompyuter 5 ni 101 deb yozadi — bu ikkilik son." / "Esingdami, «Mehmon» naqshi? U — 101, yaʼni 5!"
-4. **Mashq** (3 ta to'g'ri): 1–2-misol 3 ta chiroq (1–7), 3-misol 4 ta chiroq (8 4 2 1, 1–15). Tasodifiy:
+4. **Mashq** (3 ta to'g'ri): 1–2-misol 3 ta chiroq (1–7), 3-misol 4 ta chiroq (8 4 2 1, 8–15 — yangi 8 lik chiroq doim kerak). Tasodifiy:
    - **Naqsh → son:** raqam klaviaturasida javob. 1-xato: "4 + 1 = ?" ko'rinadi. 2-xato: "4 + 1 = 5".
    - **Son → naqsh:** bola chiroqlarni yoqadi, "Yuborish". 1-xato: "Eng katta qiymatli chiroqdan boshla." 2-xato: to'g'ri naqsh ko'rsatiladi.
 

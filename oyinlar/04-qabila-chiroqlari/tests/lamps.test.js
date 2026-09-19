@@ -53,6 +53,7 @@ test("lampSteps: 1 dan javobgacha", () => {
     { lamps: 2, count: 4, enough: false },
     { lamps: 3, count: 8, enough: true },
   ]);
+  assert.deepEqual(L.lampSteps(10, 3).map((s) => s.enough), [false, false, true]);
 });
 
 test("ma'nolar va narsalar", () => {
@@ -87,7 +88,7 @@ test("makeBinaryTask: 1–2-misol 3 chiroq (1–7), 3-misol 4 chiroq (1–15)", 
     const idx = k % 3;
     const t = L.makeBinaryTask(idx, prev);
     assert.equal(t.lamps, idx === 2 ? 4 : 3);
-    assert.ok(t.value >= 1 && t.value < L.count(2, t.lamps));
+    assert.ok(t.value >= (idx === 2 ? 8 : 1) && t.value < L.count(2, t.lamps));
     if (prev) assert.notEqual(t.value, prev.value);
     types.add(t.type);
     prev = t;
@@ -97,13 +98,16 @@ test("makeBinaryTask: 1–2-misol 3 chiroq (1–7), 3-misol 4 chiroq (1–15)", 
 
 test("makeLampsQuestion: javob to'g'ri, ketma-ket bir xil savol yo'q", () => {
   let prev = null;
+  const seen = new Set();
   for (let k = 0; k < 1000; k++) {
     const q = L.makeLampsQuestion(prev);
     assert.ok(q.states === L.PLAIN || q.states === L.COLOR);
     assert.equal(q.items, L.THINGS[q.thing].n);
     assert.equal(q.answer, L.minLamps(q.items, q.states));
     if (prev) assert.ok(q.thing !== prev.thing || q.states !== prev.states);
+    seen.add(`${q.thing}-${q.states}`);
     prev = q;
   }
+  assert.equal(seen.size, L.THINGS.length * 2); // hamma narsa ikkala chiroq turi bilan chiqadi
   assert.deepEqual(L.makeLampsQuestion(null, () => 0), { thing: 0, text: "29 ta harf", items: 29, states: 2, answer: 5 });
 });

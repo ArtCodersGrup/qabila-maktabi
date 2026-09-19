@@ -30,8 +30,8 @@
   // 1-xato maslahati: 1, 2, 3… ta chiroq naqshlari (belgisiz)
   function hintRows(q) {
     const max = q.states === lamps.PLAIN ? 6 : 4;
-    const box = ui.h("div", { class: "formula-box" });
-    for (let n = 1; n <= max; n++) box.append(ui.h("div", { class: "formula-row", text: `${n} ta chiroq: ${lamps.count(q.states, n)} ta naqsh` }));
+    const box = ui.h("div", { class: "rows2" });
+    for (let n = 1; n <= max; n++) box.append(ui.h("div", { class: "formula-row", text: `${n} ta: ${lamps.count(q.states, n)}` }));
     return box;
   }
 
@@ -39,14 +39,14 @@
   function solutionRows(q) {
     const box = ui.h("div", { class: "formula-box" });
     for (const s of lamps.lampSteps(q.items, q.states)) {
-      box.append(ui.h("div", { class: "formula-row", text: `${s.lamps} ta chiroq: ${s.count} ta naqsh ${s.enough ? "✓ yetadi" : "— yetmaydi"}` }));
+      box.append(ui.h("div", { class: "formula-row", text: `${s.lamps} ta: ${s.count} ${s.enough ? "✓ yetadi" : "— kam"}` }));
     }
     return box;
   }
 
   // 7.3: nechta chiroq kerak?
   function lampsTask(q) {
-    ui.setCompact(false);
+    ui.setCompact(true);
     ui.clearWork();
     ui.clearControl();
     const kind = q.states === lamps.PLAIN ? "oddiy" : "rangli";
@@ -58,11 +58,12 @@
       hint: () => {
         box.innerHTML = "";
         box.append(hintRows(q));
-        ui.bubble("elder", `↻ Naqshlar soni ${q.items} dan kam boʻlmagan birinchi qatorni top.`);
+        ui.bubble("elder", `↻ Naqshlar soni ${q.items} yoki koʻproq boʻlgan birinchi qatorni top.`);
       },
       solution: () => {
         box.innerHTML = "";
         box.append(solutionRows(q));
+        box.lastChild.lastChild.scrollIntoView({ block: "nearest" });
       },
     });
   }
@@ -80,7 +81,7 @@
   async function stage3() {
     ui.bubble("elder", "Qabilaga rangli chiroqlar keldi: oʻchiq, sariq, koʻk — 3 xil! 2 ta chiroq bilan hamma naqshni top.");
     await common.findAll({ count: 2, states: lamps.COLOR });
-    await ui.say("elder", "2 ta rangli chiroq — 9 ta naqsh: 3 × 3.");
+    await ui.say("elder", `2 ta rangli chiroq — 9 ta naqsh: 3 × 3 = 3${ui.sup(2)}.`);
     await explain();
     await ui.say("elder", "Endi hisoblaymiz: nechta chiroq kerak? 3 ta toʻgʻri javob!");
     await common.exercises({

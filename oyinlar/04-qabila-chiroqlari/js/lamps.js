@@ -82,14 +82,16 @@
     return { type: rng() < 0.5 ? "decode" : "encode", meaning };
   }
 
-  // 2-bosqich mashqi: k — nechanchi misol (0, 1 → 3 chiroq; 2 → 4 chiroq). 0 chiqmaydi, oldingisidan boshqa
+  // 2-bosqich mashqi: k — nechanchi misol (0, 1 → 3 chiroq, 1–7; 2 → 4 chiroq, 8–15 — yangi 8 lik chiroq doim kerak).
+  // Oldingisidan boshqa.
   function makeBinaryTask(k, prev, rng) {
     rng = rng || Math.random;
     const lamps = k >= 2 ? 4 : 3;
+    const lo = lamps === 4 ? 8 : 1;
     let value;
     do {
-      value = pickIndex(count(PLAIN, lamps), rng);
-    } while (value === 0 || (prev && value === prev.value));
+      value = lo + pickIndex(count(PLAIN, lamps) - lo, rng);
+    } while (prev && value === prev.value);
     return { type: rng() < 0.5 ? "toNumber" : "toLamps", lamps, value };
   }
 

@@ -24,8 +24,12 @@
     const renderCount = () => { counter.textContent = `Topilgan naqshlar: ${found.size}`; };
     renderCount();
 
+    let busy = false; // ikki marta tez bosish bitta bosish hisoblanadi
     return ui.settle((done) => {
       const save = () => {
+        if (busy) return;
+        busy = true;
+        setTimeout(() => { busy = false; }, 400);
         const p = row.get();
         const key = lamps.patternKey(p);
         if (found.has(key)) {
@@ -39,6 +43,7 @@
         wallEl.add(p, labelFor ? labelFor(p) : null);
         renderCount();
         if (found.size === total) {
+          row.lock();
           ui.clearControl();
           done();
         }
@@ -59,8 +64,12 @@
   // 1-xato — hint(), 2-xato — solution(). Natija: true — bola o'zi topdi.
   function tries({ setup, check, hint, solution }) {
     let wrong = 0;
+    let busy = false; // ikki marta tez bosish ikkita xato bo'lib hisoblanmasin
     return ui.settle((finish) => {
       setup((value) => {
+        if (busy) return;
+        busy = true;
+        setTimeout(() => { busy = false; }, 400);
         if (check(value)) {
           sound.play("correct");
           ui.pose("apprentice", "happy", 900);

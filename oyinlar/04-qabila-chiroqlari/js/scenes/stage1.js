@@ -25,10 +25,15 @@
     ui.work().append(box);
     const meaning = ui.h("div", { class: "lamp-sum" });
     const show = (p) => { meaning.textContent = p[0] ? "Yoniq — «Keling»" : "Oʻchiq — «Kelmang»"; };
-    lampsUi.lampRow(box, { count: 1, states: lamps.PLAIN, onChange: show });
     box.append(meaning);
     show([0]);
-    await ui.say("elder", "Chiroqni bosib koʻr. Yoniq — «Keling», oʻchiq — «Kelmang».");
+    ui.bubble("elder", "Chiroqni bosib koʻr. Yoniq — «Keling», oʻchiq — «Kelmang».");
+    // Avval qildir: "Davom" bola chiroqni bir marta bosgandan keyin chiqadi
+    await ui.settle((done) => {
+      const row = lampsUi.lampRow(box, { count: 1, states: lamps.PLAIN, onChange: (p) => { show(p); done(); } });
+      box.prepend(box.lastChild); // chiroq yozuvdan tepada tursin
+      return row;
+    });
     await ui.say("elder", "Faqat 2 ta xabar — bu kam!");
   }
 
@@ -39,7 +44,7 @@
     ui.clearControl();
     const box = ui.h("div", { class: "formula-box" });
     ui.work().append(box);
-    ["1 chiroq: 2", "2 chiroq: 2 × 2 = 4", "3 chiroq: 2 × 2 × 2 = 8"].forEach((t) => {
+    ["1 chiroq: 2", "2 chiroq: 2 × 2 = 4", `3 chiroq: 2 × 2 × 2 = 2${ui.sup(3)} = 8`].forEach((t) => {
       box.append(ui.h("div", { class: "formula-row", text: t }));
     });
     await ui.say("elder", "Har bir chiroq 2 xil boʻladi. Chiroqlar soni qancha boʻlsa, 2 ni shuncha marta koʻpaytiramiz.");
@@ -68,7 +73,11 @@
         if (task.type === "decode") lampsUi.meaningButtons((i) => submit(i));
         else ui.control().append(ui.button("Yuborish", () => submit(row.get())));
       },
-      check: (v) => (task.type === "decode" ? v === task.meaning : lamps.toNumber(v) === task.meaning),
+      check: (v) => {
+        const ok = task.type === "decode" ? v === task.meaning : lamps.toNumber(v) === task.meaning;
+        if (ok && row) row.lock(); // maqtov paytida chiroqlar o'zgarmasin
+        return ok;
+      },
       hint: () => {
         table.highlight(task.meaning);
         if (row) row.shake();

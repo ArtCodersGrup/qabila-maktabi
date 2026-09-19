@@ -12,18 +12,24 @@
     ui.clearControl();
     const box = ui.h("div", { class: "lbox" });
     ui.work().append(box);
+    let row = null;
+    let reached = null;
+    const five = new Promise((resolve) => { reached = resolve; });
+    row = lampsUi.lampRow(box, {
+      count: 3,
+      states: lamps.PLAIN,
+      values: lamps.placeValues(3),
+      bits: true,
+      sum: true,
+      onChange: (p) => {
+        if (lamps.toNumber(p) !== 5) return;
+        row.lock();
+        reached();
+      },
+    });
     await ui.say("elder", "Chiroqlar bilan son ham yuborsa boʻladi!");
     ui.bubble("elder", "Har bir chiroqning oʻz qiymati bor. 5 ni yasa: yoniq chiroqlar qiymati 5 boʻlsin.");
-    await ui.settle((done) => {
-      lampsUi.lampRow(box, {
-        count: 3,
-        states: lamps.PLAIN,
-        values: lamps.placeValues(3),
-        bits: true,
-        sum: true,
-        onChange: (p) => { if (lamps.toNumber(p) === 5) done(); },
-      });
-    });
+    await ui.settle((done) => { five.then(done); });
     sound.play("correct");
     await ui.say("elder", "Toʻgʻri: 4 + 1 = 5!");
   }
@@ -62,19 +68,26 @@
         answer: task.value,
         hint: () => {
           note.textContent = `${lamps.sumText(pattern)} = ?`;
-          ui.bubble("elder", "↻ Yoniq chiroqlar qiymatini qoʻsh.");
+          ui.bubble("elder", `↻ Yoniq chiroqlar qiymatini qoʻsh: ${lamps.sumText(pattern)} = ?`);
         },
-        solution: () => { note.textContent = `${lamps.sumText(pattern)} = ${task.value}`; },
+        solution: () => {
+          note.textContent = `${lamps.sumText(pattern)} = ${task.value}`;
+          note.scrollIntoView({ block: "nearest" });
+        },
       });
     }
     ui.bubble("elder", `${task.value} ni yubor: yoniq chiroqlar qiymati ${task.value} boʻlsin.`);
     const row = lampsUi.lampRow(box, { count: task.lamps, states: lamps.PLAIN, values, bits: true, sum: true });
     return common.tries({
       setup: (submit) => ui.control().append(ui.button("Yuborish", () => submit(row.get()))),
-      check: (p) => lamps.toNumber(p) === task.value,
+      check: (p) => {
+        const ok = lamps.toNumber(p) === task.value;
+        if (ok) row.lock();
+        return ok;
+      },
       hint: () => {
         row.shake();
-        ui.bubble("elder", "↻ Eng katta qiymatli chiroqdan boshla.");
+        ui.bubble("elder", `↻ ${task.value} kerak. Eng katta qiymatli chiroqdan boshla.`);
       },
       solution: () => {
         row.set(pattern);
