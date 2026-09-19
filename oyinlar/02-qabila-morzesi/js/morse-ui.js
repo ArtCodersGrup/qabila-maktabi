@@ -32,19 +32,13 @@
   }
 
   // ---------- Qo'llanma ----------
-  function clearGuide() {
-    $("zone-guide").innerHTML = "";
-    $("play").classList.remove("has-guide");
-  }
+  const clearGuide = () => ui.closeGuide();
 
   // letters — ko'rsatiladigan harflar; onPick bo'lsa kataklar tugma (1-bosqich klaviaturasi);
   // fresh — yangi ochilgan harflar (qisqa miltillaydi)
   function guide(letters, opts) {
     opts = opts || {};
-    const zone = $("zone-guide");
-    zone.innerHTML = "";
-    $("play").classList.add("has-guide");
-    ui.onCleanup(clearGuide); // bosh ekranga qaytganda qo'llanma yo'qoladi
+    const zone = ui.openGuide(); // bosh ekranga qaytganda o'zi yopiladi
     // onPick yo'q — faqat ko'rish uchun (2-3-bosqich): ixcham katak (harf va kodi bir qatorda)
     const grid = ui.h("div", { class: "guide" + (opts.onPick ? "" : " compact") });
     const cells = {};

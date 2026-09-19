@@ -358,11 +358,29 @@
 
   const hideProgress = () => { $("progress").innerHTML = ""; };
 
+  // ---------- Qo'llanma zonasi (4-zona: 2- va 3-o'yin) ----------
+  // Zonani tozalab ochadi; bosh ekranga qaytganda (newRun) o'zi yopiladi. Zona yo'q sahifada — null.
+  function openGuide() {
+    const zone = $("zone-guide");
+    if (!zone) return null;
+    zone.innerHTML = "";
+    $("play").classList.add("has-guide");
+    onCleanup(closeGuide);
+    return zone;
+  }
+
+  function closeGuide() {
+    const zone = $("zone-guide");
+    if (zone) zone.innerHTML = "";
+    $("play").classList.remove("has-guide");
+  }
+
   QK.ui = {
     newRun, onCleanup, settle, sleep, h, button,
     work, control, clearWork, clearControl, setCompact,
     pose, resetPoses, paper, raisePaper,
     bubble, say, tile, wordChip, lettersLine, toast, sup,
     buildWords, askNumber, counter, choice, setProgress, hideProgress,
+    openGuide, closeGuide,
   };
 })(window);

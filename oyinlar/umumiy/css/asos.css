@@ -211,6 +211,31 @@ button:disabled { cursor: default; opacity: 0.45; }
 @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
 .shake { animation: shake 0.35s; }
 
+/* ---------- Qo'llanma zonasi: telefonda pastda, yotiq ekran va kompyuterda o'ng chekkada ---------- */
+/* .has-guide sinfini ui.openGuide()/closeGuide() qo'yadi/oladi; qo'llanma yo'q ekranlar 1-o'yindagidek */
+.play.has-guide {
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  grid-template-areas: "stage" "work" "control" "guide";
+}
+.zone-guide {
+  grid-area: guide; min-height: 0; overflow: auto; padding: 4px;
+  max-height: 42vh; /* eski brauzerlar uchun zaxira */
+  max-height: 30dvh;
+}
+.play:not(.has-guide) .zone-guide { display: none; }
+/* Qo'llanma va boshqaruv tik ekranda torroq bo'lganda, qahramonlar joy bo'shatib beradi (pufak qoladi) */
+@media (orientation: portrait) {
+  #play.compact.has-guide .actor { display: none; }
+}
+@media (orientation: landscape) {
+  .play.has-guide {
+    grid-template-columns: minmax(160px, 24%) minmax(0, 1fr) minmax(240px, 32%);
+    grid-template-rows: minmax(0, 1fr) auto;
+    grid-template-areas: "stage work guide" "stage control guide";
+  }
+  .zone-guide { max-height: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
