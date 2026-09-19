@@ -1,0 +1,47 @@
+/* Qabila chiroqlari — faqat shu o'yinga xos uslublar. Umumiylari: ../../umumiy/css/asos.css */
+
+.lbox { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+
+/* ---------- Bosiladigan chiroqlar ---------- */
+.lamp-row { display: flex; justify-content: center; gap: 12px; }
+.lamp-col { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.lamp-btn {
+  width: 64px; height: 76px; padding: 4px; border: none; border-radius: 14px;
+  background: #fff; box-shadow: 0 3px 0 var(--soya);
+}
+.lamp-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--soya); }
+.lamp-row.locked .lamp-btn { cursor: default; }
+.lamp-svg { display: block; width: 100%; height: 100%; }
+.lamp-val { font-size: 22px; font-weight: 900; color: var(--asosiy); }
+.lamp-bit { font-size: 22px; font-weight: 900; }
+.lamp-sum { font-size: 22px; font-weight: 800; text-align: center; }
+
+/* ---------- Naqsh, devor, kod jadvali, ma'no tugmalari ---------- */
+.pattern { display: inline-flex; gap: 2px; }
+.plamp { display: inline-block; width: 22px; height: 26px; }
+.plamp svg { display: block; width: 100%; height: 100%; }
+.pattern.big { gap: 10px; }
+.pattern.big .plamp { width: 56px; height: 67px; }
+.found-count { font-size: 20px; font-weight: 800; }
+.pwall { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 520px; }
+.pitem {
+  display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px;
+  border-radius: 10px; background: #fff; box-shadow: 0 2px 0 var(--soya); animation: pop 0.3s;
+}
+.plabel { font-size: 18px; font-weight: 800; }
+.ctable4 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; width: 100%; max-width: 420px; }
+.crow { display: flex; align-items: center; gap: 8px; padding: 4px 8px; border-radius: 10px; background: #fff; }
+.crow.hl { outline: 3px solid var(--yana); outline-offset: -3px; }
+.cmean { font-size: 18px; font-weight: 800; }
+.mgrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; width: 100%; max-width: 480px; }
+.mgrid .key { padding: 4px; font-size: 18px; }
+.answer { font-size: 22px; font-weight: 900; color: var(--togri); }
+
+/* ---------- Formula, hikoya, tabrik ---------- */
+.formula-box { display: flex; flex-direction: column; align-items: center; gap: 10px; max-width: 100%; text-align: center; }
+.formula-row { font-size: 22px; font-weight: 800; animation: pop 0.3s; }
+.story { display: flex; flex-direction: column; align-items: center; gap: 14px; width: 100%; }
+.story-art { width: min(260px, 70vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.story-caption { font-size: 26px; font-weight: 900; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 12px; font-size: 20px; font-weight: 800; text-align: center; }
