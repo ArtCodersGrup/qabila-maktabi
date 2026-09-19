@@ -112,14 +112,17 @@
     clearControl();
     return settle((done) => {
       let finished = false;
+      let ready = false;
+      // Tez-tez ikki marta bosilsa, keyingi pufak sakrab ketmasin
+      setTimeout(() => { ready = true; }, 300);
       const finish = () => {
-        if (finished) return;
+        if (finished || !ready) return;
         finished = true;
         $("bubble").onclick = null;
         clearControl();
         done();
       };
-      control().append(button("Davom ▶", finish));
+      control().append(button("Davom ▶︎", finish));
       $("bubble").onclick = finish;
     });
   }
@@ -145,7 +148,7 @@
   function toast(text) {
     const t = h("div", { class: "toast", text });
     $("play").append(t);
-    setTimeout(() => t.remove(), 1400);
+    setTimeout(() => t.remove(), 2500);
   }
 
   const SUP = { 1: "¹", 2: "²", 3: "³", 4: "⁴", 5: "⁵", 8: "⁸" };
@@ -155,8 +158,10 @@
   // Harfni bosish → birinchi bo'sh katakka; to'lgan katakni bosish → bo'shatish.
   // Barcha `targets` topilganda hal bo'ladi.
   function buildWords({ letters, len, allowShort, targets, slotsHost, onFound }) {
+    const id = runId; // shu run tugagach, kechikkan timer'lar hech narsa qilmasin
     const found = new Set();
     const cells = [];
+    let autoTimer = null;
 
     function setCell(cell, letter) {
       cell.dataset.letter = letter || "";
@@ -166,6 +171,9 @@
     const current = () => cells.map((c) => c.dataset.letter).join("");
     const clear = () => cells.forEach((c) => setCell(c, null));
     const isFull = () => cells.every((c) => c.dataset.letter);
+    const cancelAuto = () => {
+      if (autoTimer) { clearTimeout(autoTimer); autoTimer = null; }
+    };
 
     slotsHost.innerHTML = "";
     for (let k = 0; k < len; k++) {
@@ -182,6 +190,7 @@
 
     return settle((done) => {
       function submit() {
+        cancelAuto(); // qo'lda ("Tayyor") yuborilganda kutilayotgan avtomatik yuborish endi kerak emas
         const word = current();
         if (!word || (!allowShort && word.length !== len)) return;
         if (found.has(word)) {
@@ -190,7 +199,7 @@
           void slotsHost.offsetWidth; // animatsiyani qaytadan boshlash
           slotsHost.classList.add("shake");
           toast("Bu soʻz bor edi! Boshqasini yasa.");
-          setTimeout(clear, 400);
+          setTimeout(() => { if (id === runId) clear(); }, 400);
           return;
         }
         if (!targets.includes(word)) return;
@@ -215,7 +224,14 @@
             if (!empty) return;
             QK.sound.play("tap");
             setCell(empty, l);
-            if (isFull()) setTimeout(() => { if (isFull()) submit(); }, 250);
+            if (isFull()) {
+              const snap = current();
+              cancelAuto();
+              autoTimer = setTimeout(() => {
+                autoTimer = null;
+                if (id === runId && current() === snap) submit();
+              }, 250);
+            }
           },
         }));
       });
@@ -223,12 +239,17 @@
       const extras = h("div", { class: "pad-extras" });
       if (allowShort) extras.append(button("Tayyor", submit));
       extras.append(button("Yordam", () => {
+        cancelAuto();
         const missing = targets.find((w) => !found.has(w));
         if (!missing) return;
         clear();
         [...missing].forEach((ch, k) => setCell(cells[k], ch));
         slotsHost.classList.add("hint");
-        setTimeout(() => { slotsHost.classList.remove("hint"); clear(); }, 1200);
+        setTimeout(() => {
+          if (id !== runId) return;
+          slotsHost.classList.remove("hint");
+          clear();
+        }, 1200);
       }, "secondary"));
 
       clearControl();

@@ -65,8 +65,14 @@
     <g class="paper">
       <rect x="34" y="104" width="52" height="38" rx="4" fill="#FFFFFF" stroke="#C9C2B4" stroke-width="2"/>
       <text class="paper-text" x="60" y="131" text-anchor="middle" font-size="22" font-weight="900" fill="${INK}"></text>
-      <circle cx="36" cy="124" r="5" fill="#C98B5E"/>
-      <circle cx="84" cy="124" r="5" fill="#C98B5E"/>
+    </g>
+    <g class="arms-down">
+      <circle cx="37" cy="124" r="5" fill="#C98B5E"/>
+      <circle cx="83" cy="124" r="5" fill="#C98B5E"/>
+    </g>
+    <g class="arms-up">
+      <circle cx="37" cy="28" r="5" fill="#C98B5E"/>
+      <circle cx="83" cy="28" r="5" fill="#C98B5E"/>
     </g>
   </g>
 </svg>`;

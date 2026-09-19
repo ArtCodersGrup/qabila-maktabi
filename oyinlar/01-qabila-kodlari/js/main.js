@@ -24,35 +24,44 @@
     ui.paper("");
     ui.clearWork();
     ui.clearControl();
-    ui.bubble("elder", "Salom! Bu — «Qabila kodlari». Qaysi bosqichni oʻynaymiz?");
+    ui.bubble("elder", "Salom! Qaysi bosqichni oʻynaymiz?");
 
+    const title = ui.h("h1", { class: "game-title", text: "Qabila kodlari" });
     const cards = ui.h("div", { class: "cards" });
-    TITLES.forEach((title, k) => {
+    TITLES.forEach((titleText, k) => {
       const open = k === 0 || state.done[k - 1];
+      const clickable = open || state.done[k]; // tugagan bosqich, hattoki qulflangan bo'lsa ham, qayta o'ynaladi
       cards.append(ui.h("button", {
         class: "card" + (state.done[k] ? " done" : ""),
         type: "button",
-        disabled: !open,
-        onClick: () => { sound.play("tap"); play(k + 1); },
+        disabled: !clickable,
+        onClick: () => { sound.play("tap"); play(k + 1, state.done[k]); },
       },
       ui.h("span", { class: "card-num", text: String(k + 1) }),
-      ui.h("span", { class: "card-title", text: title }),
+      ui.h("span", { class: "card-title", text: titleText }),
       ui.h("span", { class: "card-state", text: state.done[k] ? "✓" : open ? "" : "🔒" })));
     });
-    ui.work().append(cards);
+    ui.work().append(title, cards);
 
     const next = state.done.indexOf(false);
     const start = next === -1 ? 1 : next + 1;
     ui.control().append(ui.button(next === -1 ? "Qayta oʻynash" : "Boshlash", () => play(start), "big"));
   }
 
-  async function play(stage) {
+  // once — tugagan bosqichni faqat o'zini qayta o'ynash uchun (M3): davom etmaydi, bosh ekranga qaytadi
+  async function play(stage, once) {
     const scenes = root.QK.scenes;
     ui.newRun();
     ui.resetPoses();
     ui.hideProgress();
     ui.clearControl();
     if (stage === 1 && !state.done[0]) await scenes.intro();
+    if (once) {
+      await scenes["stage" + stage]();
+      await scenes.stageDone(stage);
+      home();
+      return;
+    }
     for (let s = stage; s <= 3; s++) {
       await scenes["stage" + s]();
       state.done[s - 1] = true;
@@ -78,12 +87,13 @@
     updateSoundButton();
     sound.play("tap");
   });
-  // Brauzer talabi: ovoz faqat birinchi bosishdan keyin
-  document.addEventListener("pointerdown", () => sound.unlock());
-  document.addEventListener("keydown", () => sound.unlock());
+  // Brauzer talabi: ovoz faqat birinchi bosishdan keyin. Telefonda pointerdown emas,
+  // touchend/click orqali ochiladi — shuning uchun bir nechta hodisa tinglanadi.
+  const unlock = () => sound.unlock();
+  ["pointerdown", "pointerup", "touchend", "click", "keydown"].forEach((t) => document.addEventListener(t, unlock, true));
 
   // O'qituvchi va sinov uchun: ?bosqich=2 — shu bosqichdan boshlash
   const direct = Number(new URLSearchParams(root.location.search).get("bosqich"));
-  if (direct >= 1 && direct <= 3) play(direct);
+  if (Number.isInteger(direct) && direct >= 1 && direct <= 3) play(direct);
   else home();
 })(window);
