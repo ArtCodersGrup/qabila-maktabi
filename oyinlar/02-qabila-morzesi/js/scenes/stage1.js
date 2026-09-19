@@ -11,6 +11,11 @@
     ui.clearControl();
     ui.paper("");
     ui.work().append(ui.h("div", { class: "drum-box", html: art.drum() }));
+    ui.pose("apprentice", "drum", 300);
+    sound.play("tak");
+    await ui.sleep(300);
+    ui.pose("apprentice", "drum", 300);
+    sound.play("dum");
     await ui.say("elder", "Esingdami, Shogird barabanda tak-dum chalgan edi?");
     await ui.say("elder", "Endi biz qisqa va uzun zarblar bilan gaplashamiz. Bu — Morze alifbosi.");
     await ui.say("apprentice", "Men xabar chalaman, sen oʻqiysan!");

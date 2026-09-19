@@ -6,6 +6,7 @@
   let ctx = null;
   let muted = false;
   let beepNodes = [];
+  let beepMaster = null;
 
   function unlock() {
     if (ctx) {
@@ -61,7 +62,9 @@
     }
   }
 
-  // Morze signallarini to'xtatish (bosh ekranga qaytganda yoki yangi signal boshlanganda)
+  // Morze signallarini to'xtatish (bosh ekranga qaytganda, yangi signal boshlanganda yoki ovoz o'chirilganda).
+  // Barcha ossillatorlar bitta gain tuguni orqali ulangan — uni uzish darrov jim qiladi,
+  // ossillator.stop() ishlamay qolsa ham (masalan, ikkinchi marta chaqirilsa).
   function stopBeeps() {
     beepNodes.forEach((osc) => {
       try {
@@ -71,6 +74,14 @@
       }
     });
     beepNodes = [];
+    if (beepMaster) {
+      try {
+        beepMaster.disconnect();
+      } catch (e) {
+        // allaqachon uzilgan
+      }
+      beepMaster = null;
+    }
   }
 
   // Morze signallari: plan = [{ on, off }] millisekundda. Tekis ovoz, boshi va oxiri silliq.
@@ -78,6 +89,9 @@
     stopBeeps();
     if (muted || !ctx) return;
     try {
+      beepMaster = ctx.createGain();
+      beepMaster.gain.setValueAtTime(1, ctx.currentTime);
+      beepMaster.connect(ctx.destination);
       let t = ctx.currentTime;
       for (const b of plan) {
         const on = b.on / 1000;
@@ -90,7 +104,7 @@
         gain.gain.setValueAtTime(0.3, t + on - 0.005);
         gain.gain.linearRampToValueAtTime(0, t + on);
         osc.connect(gain);
-        gain.connect(ctx.destination);
+        gain.connect(beepMaster);
         osc.start(t);
         osc.stop(t + on + 0.01);
         beepNodes.push(osc);
@@ -107,7 +121,7 @@
     play,
     beeps,
     stopBeeps,
-    setMuted: (m) => { muted = !!m; },
+    setMuted: (m) => { muted = !!m; if (muted) stopBeeps(); },
     isMuted: () => muted,
   };
 })(window);
