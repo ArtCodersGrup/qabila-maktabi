@@ -13,6 +13,8 @@
   border-radius: 10px; background: #fff; box-shadow: 0 2px 0 var(--soya); font-size: 22px; font-weight: 900;
 }
 .ctile.shown { background: var(--matn); color: #fff; }
+/* So'z kataklari ustidagi harflar pastroq — uzun so'z 2 qatorga tushganda joy tejaladi */
+.cword .ctile { height: 38px; min-width: 40px; font-size: 20px; }
 .ctile.guess-tile { color: var(--asosiy); }
 
 /* ---------- So'z: ko'rsatilgan harflar va bola to'ldiradigan kataklar ---------- */
@@ -42,19 +44,22 @@
 .ct-top { font-size: 20px; font-weight: 900; color: var(--matn); }
 .ct-bottom { font-size: 18px; font-weight: 800; color: var(--asosiy); }
 @media (orientation: landscape) {
-  .ctable { grid-template-columns: repeat(auto-fill, minmax(52px, 1fr)); }
+  /* Yotiq ekran: jadval ustuni kengroq (5 ustun), sahna ustuni torroq */
+  .play.has-guide { grid-template-columns: minmax(140px, 20%) minmax(0, 1fr) minmax(260px, 40%); }
+  .ctable { grid-template-columns: repeat(5, minmax(48px, 1fr)); }
 }
 
 /* ---------- Kalit boshqaruvi ---------- */
 .key-ctrl { display: flex; align-items: center; justify-content: center; gap: 10px; }
 .key-ctrl .key { width: 52px; }
-.key-val { min-width: 150px; text-align: center; font-size: 20px; font-weight: 900; }
+.key-val { min-width: 90px; text-align: center; font-size: 20px; font-weight: 900; }
 .guess { min-height: 44px; }
 
 /* ---------- G'ildirak, hikoya, tabrik ---------- */
-.wheel-box { width: min(300px, 80vw); }
+.wheel-box { width: min(300px, 80vw, 58vh); }
 .wheel { display: block; width: 100%; height: auto; }
 .story { display: flex; flex-direction: column; align-items: center; gap: 14px; width: 100%; }
 .story-art { width: min(260px, 70vw); }
 .story-art svg { display: block; width: 100%; height: auto; }
+.story-caption { font-size: 26px; font-weight: 900; }
 .summary { display: flex; flex-direction: column; align-items: center; gap: 12px; font-size: 20px; font-weight: 800; text-align: center; }

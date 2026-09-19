@@ -44,6 +44,8 @@
         s.classList.toggle("current", k === current);
       });
     }
+    // Uzun so'z 2 qatorga tushganda joriy katak ekrandan chiqib ketmasin
+    const reveal = () => { if (current >= 0) slots[current].scrollIntoView({ block: "nearest" }); };
     render();
 
     return {
@@ -55,6 +57,7 @@
         const after = letters.findIndex((l, k) => k > current && !l);
         current = after !== -1 ? after : letters.findIndex((l) => !l);
         render();
+        reveal();
         return true;
       },
       letters: () => letters.slice(),
@@ -70,6 +73,7 @@
         }
         current = indices.length ? indices[0] : -1;
         render();
+        reveal();
       },
       // Jadval kaliti noto'g'ri bo'lganda: hamma katak bo'shatiladi
       clearAll() {
@@ -141,11 +145,11 @@
     };
   }
 
-  // ---------- Kalit boshqaruvi: [−] Jadval kaliti: k [+] (0–28, aylana) ----------
+  // ---------- Kalit boshqaruvi: [−] Kalit: k [+] (0–28, aylana) ----------
   // holder — table() yoki keyState(); onChange(k) — har o'zgarishda
   function keyControl(host, holder, onChange) {
     const val = ui.h("span", { class: "key-val", "aria-live": "polite" });
-    const render = () => { val.textContent = `Jadval kaliti: ${holder.getKey()}`; };
+    const render = () => { val.textContent = `Kalit: ${holder.getKey()}`; };
     const step = (d) => {
       holder.setKey(holder.getKey() + d);
       sound.play("tap");

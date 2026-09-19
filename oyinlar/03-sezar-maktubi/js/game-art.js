@@ -9,8 +9,8 @@
   const GOLD = "#E0B04A";
 
   // Sezar g'ildiragi: tashqi halqada alifbo, ichkisida kalitga surilgan harflar, markazda kalit.
-  // highlight — yonadigan harflar indekslari (Set)
-  function wheel(alphabet, key, highlight) {
+  // highlight — yonadigan harflar indekslari (Set); outerOnly — faqat tashqi halqa yonadi
+  function wheel(alphabet, key, highlight, outerOnly) {
     const n = alphabet.length;
     const hl = highlight || new Set();
     const c = 150;
@@ -21,13 +21,14 @@
     for (let i = 0; i < n; i++) {
       const a = ((-90 + (i * 360) / n) * Math.PI) / 180;
       const on = hl.has(i);
+      const innerOn = on && !outerOnly;
       const inner = alphabet[(((i + key) % n) + n) % n];
       const ox = (c + 128 * Math.cos(a)).toFixed(1);
       const oy = (c + 128 * Math.sin(a)).toFixed(1);
-      const ix = (c + 91 * Math.cos(a)).toFixed(1);
-      const iy = (c + 91 * Math.sin(a)).toFixed(1);
-      s += `<text class="w-outer" x="${ox}" y="${oy}" text-anchor="middle" dominant-baseline="central" font-size="${on ? 18 : 15}" font-weight="900" fill="${on ? ORANGE : INK}">${alphabet[i]}</text>`;
-      s += `<text class="w-inner" x="${ix}" y="${iy}" text-anchor="middle" dominant-baseline="central" font-size="${on ? 17 : 14}" font-weight="800" fill="${on ? ORANGE : BLUE}">${inner}</text>`;
+      const ix = (c + 93 * Math.cos(a)).toFixed(1);
+      const iy = (c + 93 * Math.sin(a)).toFixed(1);
+      s += `<text class="w-outer" x="${ox}" y="${oy}" text-anchor="middle" dominant-baseline="central" font-size="${on ? 19 : 17}" font-weight="900" fill="${on ? ORANGE : INK}">${alphabet[i]}</text>`;
+      s += `<text class="w-inner" x="${ix}" y="${iy}" text-anchor="middle" dominant-baseline="central" font-size="${innerOn ? 17 : 15}" font-weight="800" fill="${innerOn ? ORANGE : BLUE}">${inner}</text>`;
     }
     s += `<text x="${c}" y="${c - 10}" text-anchor="middle" dominant-baseline="central" font-size="40" font-weight="900" fill="${INK}">${key}</text>`;
     s += `<text x="${c}" y="${c + 26}" text-anchor="middle" dominant-baseline="central" font-size="16" font-weight="700" fill="${INK}">kalit</text>`;
@@ -67,7 +68,7 @@
   <rect x="140" y="56" width="10" height="18" fill="${GOLD}"/>
   <rect x="158" y="56" width="10" height="24" fill="${GOLD}"/>
 </svg>`,
-    // Ko'p kalitlar: 1 dan 28 gacha
+    // Ko'p kalitlar (son yozuvi rasm ostida, HTML'da)
     keys: `<svg viewBox="0 0 200 110" aria-hidden="true">
   <g fill="none" stroke="${GOLD}" stroke-width="5">
     <circle cx="30" cy="30" r="10"/><circle cx="80" cy="30" r="10"/><circle cx="130" cy="30" r="10"/><circle cx="180" cy="30" r="10"/>
@@ -76,7 +77,6 @@
     <rect x="38" y="27" width="22" height="6"/><rect x="88" y="27" width="22" height="6"/>
     <rect x="138" y="27" width="22" height="6"/><rect x="188" y="27" width="10" height="6"/>
   </g>
-  <text x="100" y="88" text-anchor="middle" font-size="30" font-weight="900" fill="${INK}">1 … 28</text>
 </svg>`,
     // Al-Kindiy: ochiq kitob va harflar chastotasi ustunchalari
     book: `<svg viewBox="0 0 200 120" aria-hidden="true">

@@ -32,17 +32,17 @@
       sound.play("tap");
       box.innerHTML = art.wheel(caesar.ALPHABET, k, new Set([0]));
     }
-    await ui.say("elder", "Endi har harf ostida 3 ta keyingi harf turibdi: A ostida — E.");
+    await ui.say("elder", "Endi har harf ostida 3 qadam keyingi harf turibdi: A ostida — E.");
   }
 
   // 5.1 (davomi): jadval ochiladi, bola kalitni 3 ga qo'yadi
   async function setupTable() {
     ui.clearWork();
     const tbl = caesarUi.table(0, null);
+    ui.paper(String(caesar.FIRST_KEY)); // qahramonlar ko'rinib turganda qog'oz ko'tariladi
+    ui.raisePaper(true);
     await ui.say("elder", "Gʻildirakni yoyib chiqsak — jadval boʻladi.");
     ui.setCompact(true);
-    ui.paper(String(caesar.FIRST_KEY));
-    ui.raisePaper(true);
     ui.bubble("elder", "Jadval kalitini 3 ga qoʻy.");
     const box = ui.h("div", { class: "cbox" });
     ui.work().append(box);
@@ -54,16 +54,20 @@
   }
 
   // 5.2: xat — so'zlar birma-bir ochiladi, oxirida butun gap o'qiladi
+  let lastLetter = null; // qayta o'ynaganda xat ketma-ket takrorlanmasin
+
   async function readLetter(tbl) {
-    const sentence = caesar.pickLetter();
+    const sentence = caesar.pickLetter(null, lastLetter);
+    lastLetter = sentence;
     const words = sentence.split(" ");
     const opened = [];
     ui.setProgress(3, 0);
     for (let w = 0; w < words.length; w++) {
       ui.bubble("elder", w === 0 ? "Pastki qatordan shifrlangan harfni top va katakni bos." : `${w + 1}-soʻzni och.`);
-      await common.solveWord({ plain: caesar.tokenize(words[w]), key: caesar.FIRST_KEY, mode: "decode", tbl, opened });
+      const ok = await common.solveWord({ plain: caesar.tokenize(words[w]), key: caesar.FIRST_KEY, mode: "decode", tbl, opened });
       opened.push(words[w]);
-      await ui.sleep(700);
+      if (ok) await ui.sleep(700);
+      else await ui.say("elder", `Bu soʻz — ${words[w]}. Davom etamiz.`); // 2-xato: yechimni ko'rib olsin
     }
     ui.setProgress(3, 1);
     ui.clearWork();
@@ -82,7 +86,7 @@
     ui.work().append(box);
     await ui.say("elder", "Kalit — har bir harf nechta surilgani. Sezarning kaliti — 3.");
     await ui.say("elder", "Shifrlashda harf oldinga suriladi, ochishda — orqaga.");
-    box.innerHTML = art.wheel(caesar.ALPHABET, caesar.FIRST_KEY, new Set([0, caesar.ALPHABET.length - 1]));
+    box.innerHTML = art.wheel(caesar.ALPHABET, caesar.FIRST_KEY, new Set([0, caesar.ALPHABET.length - 1]), true);
     await ui.say("elder", "Alifbo aylana: Ng dan keyin yana A keladi.");
   }
 
@@ -92,6 +96,7 @@
     await readLetter(tbl);
     await explain();
     // 5.4: mashq — jadval 3 da ochiladi, bola kalitni o'zi o'zgartiradi
+    ui.clearWork();
     const practice = caesarUi.table(caesar.FIRST_KEY, null);
     await ui.say("elder", "Endi boshqa kalitli soʻzlar. Jadvalni oʻzing sozla!");
     await common.exercises({

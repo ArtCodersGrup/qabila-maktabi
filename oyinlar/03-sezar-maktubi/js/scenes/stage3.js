@@ -10,7 +10,7 @@
     { art: "caesar", lines: ["Yuliy Sezar Qadimgi Rimning sarkardasi va hukmdori edi.", "U taxminan 2000 yil oldin yashagan."] },
     { art: "scroll", lines: ["U sarkardalariga maxfiy xatlar yuborgan.", "Xat dushman qoʻliga tushsa ham oʻqib boʻlmasin deb, harflarni 3 ga surgan."] },
     { art: "key", lines: ["Buni Rim tarixchisi Svetoniy yozib qoldirgan.", "Kalit — sir. Kalitni bilgan odam xatni bir zumda ochadi."] },
-    { art: "keys", lines: ["Lekin kalit atigi 28 xil. Sen hozir oʻzing sinab koʻrding!"] },
+    { art: "keys", caption: "1, 2, 3 … 28", lines: ["Lekin kalit atigi 28 xil. Sen hozir oʻzing sinab koʻrding!"] },
     { art: "book", lines: ["IX asrda olim Al-Kindiy harflar qanchalik koʻp uchrashiga qarab shifrni ochishni oʻylab topdi.", "Esingdami, Morzeda eng koʻp ishlatiladigan harf eng qisqa edi?"] },
     { art: "phone", lines: ["Bugun telefondagi xabarlar ham shifrlanadi.", "Faqat kalitlar juda uzun — hammasini sinash uchun millionlab yil kerak."] },
   ];
@@ -53,7 +53,9 @@
     ui.setCompact(false);
     ui.clearWork();
     ui.clearControl();
-    ui.work().append(ui.h("div", { class: "story" }, ui.h("div", { class: "story-art", html: art.story(sc.art) })));
+    ui.work().append(ui.h("div", { class: "story" },
+      ui.h("div", { class: "story-art", html: art.story(sc.art) }),
+      sc.caption ? ui.h("div", { class: "story-caption", text: sc.caption }) : null));
     for (const line of sc.lines) await ui.say("elder", line);
   }
 
@@ -74,7 +76,7 @@
       await crackWord(ex);
       await ui.say("elder", `✓ Toʻgʻri! Kalit ${ex.key} ekan: ${ex.word}.`);
     }
-    await ui.say("elder", "Hammasini sinab chiqish oson — shuning uchun Sezar shifri kuchsiz.");
+    await ui.say("elder", "Kalit atigi 28 xil. Hammasini sinab chiqish oson — shuning uchun Sezar shifri kuchsiz.");
     for (const sc of SCENES) await showScene(sc);
   }
 

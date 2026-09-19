@@ -40,7 +40,7 @@ O'zbek lotin alifbosi tartibida **29 ta harf**. `Oʻ`, `Gʻ`, `Sh`, `Ch`, `Ng` �
 - ochishda bola shifrlangan harfni **pastki** qatordan topib, katakni bosadi → **tepadagi** harf so'zga tushadi;
 - shifrlashda oddiy harfni **tepa** qatordan topib bosadi → **pastdagi** harf so'zga tushadi.
 
-**Jadval kaliti**ni bola o'zi o'rnatadi: `Jadval kaliti: [−] 3 [+]` (0–28, aylana). Asosiy ko'nikma: kalitni bilasan → jadvalni sozlaysan → o'qiysan.
+**Jadval kaliti**ni bola o'zi o'rnatadi: `[−] Kalit: 3 [+]` (0–28, aylana). Asosiy ko'nikma: kalitni bilasan → jadvalni sozlaysan → o'qiysan.
 
 ## 4. O'yin oqimi
 
@@ -65,7 +65,7 @@ Tepada 3 ta doira: **xat** + **2 ta so'z**.
 
 ### 5.1. Ko'rsatish: g'ildirak
 1. Ish maydonida katta g'ildirak (kalit 0). Oqsoqol: "Bu — Sezar gʻildiragi. Ichki halqani 3 ga buramiz."
-2. Ichki halqa 0 → 1 → 2 → 3 ga birma-bir suriladi. Oqsoqol: "Endi har harf ostida 3 ta keyingi harf turibdi: A ostida — E."
+2. Ichki halqa 0 → 1 → 2 → 3 ga birma-bir suriladi. Oqsoqol: "Endi har harf ostida 3 qadam keyingi harf turibdi: A ostida — E."
 3. Oqsoqol: "Gʻildirakni yoyib chiqsak — jadval boʻladi." Jadval ochiladi (kalit 0). Shogird qog'ozda **3** ni ko'taradi.
 4. Oqsoqol: "Jadval kalitini 3 ga qoʻy." — bola `+` ni bosib 3 ga yetkazadi.
 
@@ -103,7 +103,7 @@ Tepada 3 ta doira: **xat** + **2 ta so'z**.
 - Oqsoqol: "Endi Sezarga javob yozamiz. Javob ham shifrlanadi!" / "Oddiy harfni tepa qatordan top — pastdagisi shifr."
 - 3 ta to'g'ri javob (3 ta doira). Ish maydonida: oddiy so'z kataklari, ostida bo'sh kataklar.
 - Pufakda: "Kalit — {k}. «{SOʻZ}» soʻzini shifrla."
-- Birinchi javob har doim **XOʻP**, kalit 3. Keyingilari tasodifiy: TAYYOR, RAHMAT, SALOM, KELING (kalit 1–6).
+- Birinchi javob har doim **XOʻP**, kalit 3. Keyingilari tasodifiy: TAYYOR, RAHMAT, SALOM, KELING (kalit 1–6, 3 dan tashqari).
 - Xato qoidasi 5.2 dagidek; 2-xatodan keyin yangi so'z.
 - Yakunda Shogird: "Javob Sezarga joʻnatildi!"
 
@@ -111,7 +111,7 @@ Tepada 3 ta doira: **xat** + **2 ta so'z**.
 
 ### 7.1. Kalitsiz ochish (bonus)
 - Oqsoqol: "Dushman xatni tutib oldi. Lekin u kalitni bilmaydi!" / "Sen ham kalitni bilmaysan. Kalitni oʻzgartirib, maʼnoli soʻz chiqquncha sinab koʻr."
-- Ish maydonida: shifrlangan so'z kataklari; ostida — **joriy jadval kaliti bilan ochilgan** so'z (har o'zgarishda yangilanadi); `Jadval kaliti: [−] k [+]`; **"Topdim!"** tugmasi.
+- Ish maydonida: shifrlangan so'z kataklari; ostida — **joriy kalit bilan ochilgan** so'z (har o'zgarishda yangilanadi); `[−] Kalit: k [+]`; **"Topdim!"** tugmasi.
 - "Topdim!": kalit to'g'ri bo'lsa — "✓ Toʻgʻri! Kalit — {k}." Aks holda: "Bu soʻz maʼnoli emas. Yana sinab koʻr."
 - 2 ta so'z: SALOM, DOʻST, QUYOSH, YULDUZ dan (kalit 4–9). Baholanmaydi.
 - Oqsoqol: "Kalit atigi 28 xil. Hammasini sinab chiqish oson — shuning uchun Sezar shifri kuchsiz."
@@ -135,7 +135,8 @@ Tepada 3 ta doira: **xat** + **2 ta so'z**.
 2-o'yindagi 4 zona (sahna, ish maydoni, boshqaruv, **qo'llanma zonasi**). Qo'llanma zonasida — surish jadvali.
 
 - Telefon tik: jadval pastda, **6 ustun × 5 qator**, katak ≥ 48×48 px (tepa harf 20 px, pastki 18 px). Jadval ochiq va ixcham rejimda qahramonlar yashirinadi (pufak qoladi).
-- Telefon yotiq va kompyuter: jadval o'ng chekkada.
+- Telefon yotiq va kompyuter: jadval o'ng chekkada (kengligi 40%, 5 ustun); sahna ustuni torroq.
+- Uzun so'z (7–9 harf) 2 qatorga tushsa, joriy katak avtomatik ko'rinadigan joyga suriladi.
 - Jadval kaliti boshqaruvi ish maydonida, so'z ustida. Tekshirish avtomatik — "Tekshir" tugmasi yo'q (joy tejaladi).
 - G'ildirak: ish maydonida, eni `min(300px, 80vw)`.
 

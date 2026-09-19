@@ -92,5 +92,6 @@ test("pickLetter va rng", () => {
   const first = () => 0;
   assert.equal(C.pickLetter(first), C.LETTERS[0]);
   for (let k = 0; k < 100; k++) assert.ok(C.LETTERS.includes(C.pickLetter()));
+  for (let k = 0; k < 200; k++) assert.notEqual(C.pickLetter(null, C.LETTERS[1]), C.LETTERS[1]);
   assert.deepEqual(C.makeExercise(C.PRACTICE, null, first), { word: C.PRACTICE[0], key: 1 });
 });

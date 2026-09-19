@@ -66,7 +66,8 @@
     return pool[Math.floor(rng() * pool.length)];
   };
 
-  const pickLetter = (rng) => LETTERS[Math.floor((rng || Math.random)() * LETTERS.length)];
+  // Xat: oldingisidan boshqa (qayta o'ynaganda ketma-ket takrorlanmaydi)
+  const pickLetter = (rng, prev) => pickOther(LETTERS, prev, rng || Math.random);
 
   // Mashq misoli: ro'yxatdan so'z (oldingisidan boshqa), kalit 1–6 (xatdagi 3 dan boshqa)
   function makeExercise(list, prev, rng) {
