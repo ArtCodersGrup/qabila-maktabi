@@ -152,7 +152,7 @@
   const sup = (n) => SUP[n] || "^" + n;
 
   // ---------- Qo'lda so'z yasash ----------
-  // Harfni bosish → birinchi bo'sh katakga; to'lgan katakni bosish → bo'shatish.
+  // Harfni bosish → birinchi bo'sh katakka; to'lgan katakni bosish → bo'shatish.
   // Barcha `targets` topilganda hal bo'ladi.
   function buildWords({ letters, len, allowShort, targets, slotsHost, onFound }) {
     const found = new Set();
