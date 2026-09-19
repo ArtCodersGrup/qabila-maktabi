@@ -3,7 +3,7 @@
 **Mavzu:** Ma'lumotlarni kodlash — Morze alifbosi
 **Yosh:** 8–12
 **Taxminiy davomiyligi:** 20 daqiqa
-**Holati:** tasdiqlangan (2026-09-19)
+**Holati:** kod yozildi — muallif koʻrib chiqishini kutmoqda
 
 Umumiy qoidalar: [`../../QOIDALAR.md`](../../QOIDALAR.md). 1-o'yinning davomi: [`../01-qabila-kodlari/DIZAYN.md`](../01-qabila-kodlari/DIZAYN.md).
 
