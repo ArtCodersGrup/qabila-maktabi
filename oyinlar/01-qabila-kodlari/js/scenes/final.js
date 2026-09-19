@@ -3,7 +3,7 @@
   "use strict";
 
   const QK = root.QK;
-  const { logic, ui, sound, art } = QK;
+  const { ui, sound, art, common } = QK;
   const BITS = ["0", "1"];
 
   async function stageDone(s) {
@@ -39,18 +39,11 @@
     }
     await ui.say("apprentice", "Men hozir «101» degan soʻzni chaldim!");
 
-    // 0 va 1 daraxti: 3 qavat → 8 ta so'z
-    ui.setCompact(true);
-    ui.clearWork();
-    const treeBox = ui.h("div", { class: "tree-box" });
-    ui.work().append(treeBox);
-    treeBox.innerHTML = art.tree(BITS, 3, {
-      lit: new Set(logic.listWords(BITS, 3, "exact")),
-      levelCounts: [3],
-      animateLevel: 3,
-    });
+    // 0 va 1 daraxti: 3 qavat birin-ketin o'sadi (DIZAYN 8.3)
+    await common.treeLevels(BITS, 3);
     await ui.say("elder", "0 va 1 dan aynan 3 belgili soʻzlar: 2³ = 8 ta.");
-    await ui.say("elder", "Kompyuter koʻpincha har bir harfni 8 ta 0 yoki 1 bilan yozadi. 2⁸ = 256 xil soʻz — hamma harf va raqamlarga yetadi!");
+    await ui.say("elder", "Kompyuter koʻpincha har bir harfni 8 ta 0 yoki 1 bilan yozadi.");
+    await ui.say("elder", "2⁸ = 256 xil soʻz — hamma harf va raqamlarga yetadi!");
   }
 
   async function congrats() {

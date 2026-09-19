@@ -5,10 +5,11 @@
   const QK = root.QK;
   const { logic, ui, sound, art } = QK;
 
-  const PRAISE = ["Barakalla!", "Zoʻr!", "Toʻppa-toʻgʻri!", "Ofarin!"];
+  const PRAISE = ["✓ Barakalla!", "✓ Zoʻr!", "✓ Toʻppa-toʻgʻri!", "✓ Ofarin!"];
 
   // Mashq: 3 ta to'g'ri javobgacha tasodifiy misollar (QOIDALAR 4.4, 4.5).
-  // 1-xato — maslahat (spec.hint), 2-xato — yechim (spec.solution) va yangi misol, u hisobga olinmaydi.
+  // 1-xato — maslahat (spec.hint), 2-xato — yechim (spec.solution) va yangi misol;
+  // xato qilingan misol to'g'ri javoblar soniga qo'shilmaydi.
   async function exercises(stage, spec) {
     let prev = null;
     let correct = 0;
@@ -65,7 +66,7 @@
     }
   }
 
-  const hintTitle = () => ui.h("div", { class: "hint-title", text: "Maslahat:" });
+  const hintTitle = () => ui.h("div", { class: "hint-title", text: "↻ Maslahat:" });
 
   // □ □ □ kataklari, har birining tagida variantlar soni
   function variantSlots(a, i) {
@@ -111,10 +112,16 @@
       },
       solution(ex) {
         ui.clearWork();
-        const text = type === "exact"
-          ? `${logic.productText(ex.a, ex.i)} = ${ex.answer}`
-          : `${logic.sumText(ex.a, ex.i)} = ${ex.answer}`;
-        ui.work().append(ui.h("div", { class: "formula-box" }, ui.h("div", { class: "formula", text })));
+        const box = ui.h("div", { class: "formula-box" });
+        if (type === "exact") {
+          box.append(ui.h("div", { class: "formula", text: `${logic.productText(ex.a, ex.i)} = ${ex.answer}` }));
+        } else {
+          box.append(ui.h("div", { class: "formula", text: `${logic.sumText(ex.a, ex.i)} = ${ex.answer}` }));
+          const parts = [];
+          for (let k = 1; k <= ex.i; k++) parts.push(logic.countExact(ex.a, k));
+          box.append(ui.h("div", { class: "formula-row", text: `${parts.join(" + ")} = ${ex.answer}` }));
+        }
+        ui.work().append(box);
       },
     };
   }
@@ -178,15 +185,20 @@
     await ui.sleep(1200);
   }
 
-  // Har bir tugun — so'z: qavatlar birin-ketin yonadi, tepasida "{n} ta" (DIZAYN 2.2)
+  // Har bir tugun — so'z: qavatlar birin-ketin yonadi, tepasida "{n} ta" (DIZAYN 2.2).
+  // Qavat sonlari HTML matn sifatida ham chiqadi — daraxt kichik bo'lsa ham o'qiladi (I1).
   async function treeLevels(letters, depth) {
     ui.setCompact(true);
     ui.clearWork();
+    const counts = ui.h("div", { class: "level-counts" });
     const box = ui.h("div", { class: "tree-box" });
-    ui.work().append(box);
+    ui.work().append(counts, box);
     const levels = [];
     for (let lv = 1; lv <= depth; lv++) {
       levels.push(lv);
+      counts.textContent = levels
+        .map((L) => `${L}-qavat: ${logic.countExact(letters.length, L)} ta`)
+        .join(" · ");
       box.innerHTML = art.tree(letters, depth, {
         lit: new Set(logic.listWords(letters, lv, "upto")),
         levelCounts: levels.slice(),

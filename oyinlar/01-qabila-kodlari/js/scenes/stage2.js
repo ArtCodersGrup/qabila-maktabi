@@ -32,7 +32,7 @@
         ui.h("div", { class: "chip-row" }, ui.wordChip("A", AU), ui.wordChip("U", AU)),
         ui.h("div", { text: "ikkita soʻz" }))));
     await ui.say("elder", "Bu «AU» degan bitta soʻzmi yoki «A» va «U» degan ikkita soʻzmi? Bilib boʻlmaydi!");
-    await ui.say("elder", "Shuning uchun soʻzlar orasiga pauza qoʻyamiz. Morze alifbosida ham shunday.");
+    await ui.say("elder", "Soʻzlar har xil uzunlikda boʻlsa, orasiga pauza qoʻyamiz. Morze alifbosida ham shunday.");
   }
 
   // 5.2: har bir uzunlik alohida → yig'indi → umumiy formula

@@ -13,7 +13,8 @@
     ui.paper("");
     await ui.say("elder", "Salom! Men qabila oqsoqoliman.");
     await ui.say("elder", "Qabilamizda endigina yozuv paydo boʻldi. Lekin alifbomizda bir nechta harf bor, xolos.");
-    await ui.say("apprentice", "Har bir narsaga nom kerak. Nechta soʻz yasay olamiz? Keling, bilib olamiz!");
+    await ui.say("apprentice", "Har bir narsaga nom kerak.");
+    await ui.say("apprentice", "Nechta soʻz yasay olamiz? Kel, bilib olamiz!");
   }
 
   // 4.2: kataklar → ko'paytma → daraja → ta'rif → umumiy formula
