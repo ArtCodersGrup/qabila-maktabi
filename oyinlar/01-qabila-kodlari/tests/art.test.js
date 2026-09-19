@@ -17,7 +17,7 @@ test("tree: 27 barg — avtomatik ixcham, rangli kvadratchalar", () => {
   assert.equal(count(svg, /<rect/g), 81);
 });
 
-test("tree: yongan so'z yo'li rangli, qolgali kulrang", () => {
+test("tree: yongan so'z yo'li rangli, qolgani kulrang", () => {
   const svg = art.tree(["A", "U"], 2, { lit: new Set(["AU"]) });
   assert.ok(svg.includes('fill="#2F6FDE"'), "A — ko'k");
   assert.ok(svg.includes('fill="#F08A24"'), "AU dagi U — to'q sariq");
