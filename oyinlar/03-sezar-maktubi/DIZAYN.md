@@ -3,7 +3,7 @@
 **Mavzu:** Shifrlash — Sezar shifri
 **Yosh:** 8–12
 **Taxminiy davomiyligi:** 20 daqiqa
-**Holati:** tasdiqlangan (2026-09-19)
+**Holati:** kod yozildi — muallif koʻrib chiqishini kutmoqda
 
 Umumiy qoidalar: [`../../QOIDALAR.md`](../../QOIDALAR.md). Oldingi o'yinlar: [`01`](../01-qabila-kodlari/DIZAYN.md) — kodlash, [`02`](../02-qabila-morzesi/DIZAYN.md) — Morze.
 
