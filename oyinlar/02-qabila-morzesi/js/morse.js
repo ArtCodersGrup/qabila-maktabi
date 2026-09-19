@@ -71,6 +71,17 @@
     return { ok: wrong.length === 0, groups, read, wrong };
   }
 
+  // Bola harflar orasiga "harf oraligʻi" qo'yishni unutgandek ko'rinsa — true
+  // (guruhlar soni harflardan kam, lekin belgilar yetarlicha terilgan, YOKI bitta guruh 4 belgidan uzun)
+  function missingGap(target, symbols) {
+    const groups = parseTyped(symbols);
+    const wantSymbols = encodeWord(target).join("").length;
+    const typedSymbols = symbols.replace(/ /g, "").length;
+    const fewerGroups = groups.length < target.length;
+    const longGroup = groups.some((g) => g.length > 4);
+    return (fewerGroups && typedSymbols >= wantSymbols) || longGroup;
+  }
+
   // Bola o'qigan harflarni tekshirish: noto'g'ri kataklar indekslari
   function checkRead(word, letters) {
     const wrong = [];
@@ -125,7 +136,7 @@
 
   const api = {
     CODES, SETS, FIRST_WORD, LAST_WORD, WORDS, TASKS, MAX_SYMBOLS, UNIT_MS,
-    lettersUpTo, encodeWord, decodeCode, parseTyped, checkTyped, checkRead,
+    lettersUpTo, encodeWord, decodeCode, parseTyped, checkTyped, checkRead, missingGap,
     addSymbol, removeSymbol, beepPlan, pickMessage, readLevel, pickTask,
   };
 

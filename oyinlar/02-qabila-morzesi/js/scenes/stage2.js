@@ -11,14 +11,19 @@
     ui.clearWork();
     ui.clearControl();
     ui.paper("");
-    await ui.say("elder", "Endi sen javob yozasan. Qabila yana yangi harflarni oʻrgandi!");
     morseUi.guide(letters, { fresh: morse.SETS[2] });
-    await ui.say("elder", "Yozish uchun tugmalar: nuqta, chiziq, harf oraligʻi, oʻchirish va yuborish.");
+    await ui.say("elder", "Endi sen javob yozasan. Qabila yana yangi harflarni oʻrgandi!");
 
-    // 6.1: birgalikda misol — E
-    ui.bubble("elder", "Sinab koʻr: E ni yoz va yubor.");
-    const ok = await common.writeWord("E", letters);
-    await ui.say("apprentice", ok ? "Men oʻqidim: E!" : "E — bitta nuqta. Endi bilasan!");
+    // 6.1: birgalikda misol — E, so'ng ET (harf oraligʻi bilan)
+    ui.bubble("elder", "Pastdagi tugmalar bilan yozasan. Sinab koʻr: E ni yoz va yubor.");
+    const okE = await common.writeWord("E", letters);
+    await ui.say("apprentice", okE ? "Men oʻqidim: E!" : "E — bitta nuqta. Endi bilasan!");
+
+    ui.bubble("elder", "Endi ET: nuqta, «harf oraligʻi», chiziq. Keyin yubor.");
+    const okET = await common.writeWord("ET", letters);
+    await ui.say("apprentice", okET
+      ? "Men oʻqidim: ET! Harf oraligʻi harflarni ajratdi."
+      : "Harflar orasida «harf oraligʻi» boʻlishi kerak.");
 
     await ui.say("elder", "Endi qabila savol beradi. 3 ta toʻgʻri javob yoz!");
     await common.writeExercises();

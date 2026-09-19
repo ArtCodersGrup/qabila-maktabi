@@ -130,6 +130,7 @@ Yangi harflar ochilganda Oqsoqol aytadi: "Qabila yangi harflarni oʻrgandi!" va 
 1. Oqsoqol: "Endi sen javob yozasan. Qabila yana yangi harflarni oʻrgandi!" — 3-to'plam ochiladi.
 2. Morze klaviaturasi tanishtiriladi: `·`, `—`, **"harf oralig'i"**, **⌫**, **"Yuborish"**.
 3. Birgalikda misol: "E" ni yoz → bola `·` ni bosadi → "Yuborish" → Shogird: "Men oʻqidim: E!"
+4. Keyin ET: nuqta, harf oralig'i, chiziq — harf oralig'i harflarni ajratadi.
 
 ### 6.2. Mashq
 - Qabila savol beradi va qanday javob berishni aytadi. Pufakda: `Qabila soʻraydi: «{savol}» Javob ber: {JAVOB}.`
@@ -239,7 +240,7 @@ Hammasi `oyinlar/02-qabila-morzesi/` ichida, umumiy qismlar `oyinlar/umumiy/` da
 ## 12. Tekshiruv
 
 Muallif talabiga ko'ra oraliq brauzer tekshiruvlari **yo'q**:
-1. **Avtomatik testlar** (`node --test`): `morse.js` — kodlar jadvali xalqaro standartga mos; kodlash↔o'qish teskari; har bir so'z faqat o'z to'plami (va oldingilari) harflaridan; 2-to'plam so'zlarida kamida bitta yangi harf; so'zlarda `oʻ`/`gʻ` yo'q; topshiriq javoblari 2–4 harfli va 3-to'plam harflari hammasi ishlatilgan; tasodifiy tanlashda ketma-ket takror yo'q; terilgan belgilarni guruhlarga ajratish (ortiqcha oraliqlar, oxirgi oraliq).
+1. **Avtomatik testlar** (`node --test`): `morse.js` — kodlar jadvali xalqaro standartga mos; kodlash↔o'qish teskari; har bir so'z faqat o'z to'plami (va oldingilari) harflaridan; 2-to'plam so'zlarida kamida bitta yangi harf; so'zlarda `oʻ`/`gʻ` yo'q; topshiriq javoblari 2–4 harfli va 3-to'plam harflarining hammasi topshiriqlarda yoki XAYR da ishlatilgan (X faqat XAYR da uchraydi); tasodifiy tanlashda ketma-ket takror yo'q; terilgan belgilarni guruhlarga ajratish (ortiqcha oraliqlar, oxirgi oraliq).
 2. `umumiy/` testlari va **1-o'yin testlari** ham o'tishi shart (umumiy kod o'zgargani uchun).
 3. **Yakuniy kod ko'rigi** (butun branch).
 4. **Muallif** o'yinni o'zi ko'rib chiqadi (1-o'yin ham ishlashini).

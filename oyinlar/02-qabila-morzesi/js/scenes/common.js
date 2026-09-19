@@ -20,10 +20,13 @@
     const box = ui.h("div", { class: "read-box" });
     ui.work().append(box);
     const slots = morseUi.messageSlots(box, word);
-    const check = ui.button("Tekshir", () => submit());
     const listen = ui.button("Tinglash", () => morseUi.play(slots.codes, slots.groups), "secondary");
+    const check = mode === "demo" ? null : ui.button("Tekshir", () => submit());
     ui.control().append(ui.h("div", { class: "msg-tools" }, listen, check));
-    const update = () => { check.disabled = !slots.isFull(); };
+    const update = () => {
+      if (mode === "demo") { if (slots.isFull()) submit(); }
+      else check.disabled = !slots.isFull();
+    };
     morseUi.guide(letters, { fresh, onPick: (l) => { if (slots.fill(l)) update(); } });
     update();
 
@@ -91,12 +94,15 @@
         wrongCount++;
         if (wrongCount === 1) {
           g.highlight(new Set(target));
-          const fix = res.groups.length < target.length ? "Harf yetmayapti — qoʻsh." : "↻ Belgilanganlarini tuzat.";
+          let fix;
+          if (morse.missingGap(target, symbols)) fix = "Harflar orasiga «harf oraligʻi» qoʻy.";
+          else if (res.groups.length < target.length) fix = "Harf yetmayapti — qoʻsh.";
+          else fix = "↻ Belgilanganlarini tuzat.";
           ui.bubble("apprentice", `Men oʻqidim: ${res.read}, kerak edi: ${target}. ${fix}`);
           return;
         }
         ui.clearControl();
-        box.append(morseUi.wordCodes(target).el);
+        input.showSolution(target);
         finish(false);
       });
     });

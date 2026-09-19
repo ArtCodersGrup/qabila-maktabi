@@ -78,6 +78,14 @@ test("checkTyped: to'g'ri, noto'g'ri, yetishmayotgan va ortiqcha harf", () => {
   assert.equal(M.checkTyped("HA", "....-").ok, false); // harf oralig'isiz terilgan
 });
 
+test("missingGap: harf oralig'i unutilganda aniqlanadi", () => {
+  assert.equal(M.missingGap("HA", ".....-"), true);
+  assert.equal(M.missingGap("HA", ".... .-"), false);
+  assert.equal(M.missingGap("HA", "...."), false);
+  assert.equal(M.missingGap("MEN", "--.-."), true);
+  assert.equal(M.missingGap("OY", "------"), true);
+});
+
 test("checkRead: noto'g'ri kataklar indekslari", () => {
   assert.deepEqual(M.checkRead("SALOM", ["S", "A", "L", "O", "M"]), []);
   assert.deepEqual(M.checkRead("SALOM", ["S", "A", "I", "O", "N"]), [2, 4]);
