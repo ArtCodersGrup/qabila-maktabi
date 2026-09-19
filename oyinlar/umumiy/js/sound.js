@@ -5,6 +5,7 @@
 
   let ctx = null;
   let muted = false;
+  let beepNodes = [];
 
   function unlock() {
     if (ctx) {
@@ -60,10 +61,52 @@
     }
   }
 
+  // Morze signallarini to'xtatish (bosh ekranga qaytganda yoki yangi signal boshlanganda)
+  function stopBeeps() {
+    beepNodes.forEach((osc) => {
+      try {
+        osc.stop();
+      } catch (e) {
+        // allaqachon to'xtagan
+      }
+    });
+    beepNodes = [];
+  }
+
+  // Morze signallari: plan = [{ on, off }] millisekundda. Tekis ovoz, boshi va oxiri silliq.
+  function beeps(plan) {
+    stopBeeps();
+    if (muted || !ctx) return;
+    try {
+      let t = ctx.currentTime;
+      for (const b of plan) {
+        const on = b.on / 1000;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(600, t);
+        gain.gain.setValueAtTime(0, t);
+        gain.gain.linearRampToValueAtTime(0.3, t + 0.005);
+        gain.gain.setValueAtTime(0.3, t + on - 0.005);
+        gain.gain.linearRampToValueAtTime(0, t + on);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(t);
+        osc.stop(t + on + 0.01);
+        beepNodes.push(osc);
+        t += on + b.off / 1000;
+      }
+    } catch (e) {
+      // Ovoz chiqmasa ham o'yin davom etadi
+    }
+  }
+
   root.QK = root.QK || {};
   root.QK.sound = {
     unlock,
     play,
+    beeps,
+    stopBeeps,
     setMuted: (m) => { muted = !!m; },
     isMuted: () => muted,
   };

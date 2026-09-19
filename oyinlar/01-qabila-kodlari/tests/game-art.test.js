@@ -1,8 +1,12 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { loadScript } = require("./helpers.js");
+const path = require("node:path");
+const { loadScript } = require("../../umumiy/tests/helpers.js");
 
-const art = loadScript("js/art.js", {}).QK.art;
+const win = {};
+loadScript(path.join(__dirname, "../../umumiy/js/art.js"), win);
+loadScript(path.join(__dirname, "../js/game-art.js"), win);
+const art = win.QK.art;
 const count = (s, re) => (s.match(re) || []).length;
 
 test("tree: 3 harf, 2 qavat — 12 tugun + ildiz, 12 chiziq, harfli yozuv", () => {
@@ -36,13 +40,12 @@ test("tree: qavat sarlavhasi va o'sish animatsiyasi", () => {
   assert.equal(count(svg, /<rect/g), 0);
 });
 
-test("qahramonlar, odam, baraban, ikonkalar SVG qaytaradi", () => {
-  assert.match(art.elder(), /^<svg[\s\S]*<\/svg>$/);
-  assert.match(art.elder(), /class="eyes"/);
-  assert.match(art.apprentice(), /class="paper-text"/);
-  assert.match(art.apprentice(), /class="arms-up"/);
+test("person: xursand va xafa holati farq qiladi", () => {
   assert.match(art.person(true, 0), /^<svg/);
   assert.notEqual(art.person(true, 0), art.person(false, 0));
-  assert.match(art.drum(), /^<svg/);
-  for (const n of ["home", "sound-on", "sound-off"]) assert.match(art.icon(n), /^<svg[\s\S]*<path/);
+});
+
+test("umumiy qahramonlar ham joyida", () => {
+  assert.match(art.elder(), /^<svg/);
+  assert.match(art.apprentice(), /^<svg/);
 });
