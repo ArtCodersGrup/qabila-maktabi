@@ -1,0 +1,60 @@
+/* Sezar maktubi — faqat shu o'yinga xos uslublar. Umumiylari: ../../umumiy/css/asos.css */
+
+/* Surish jadvali 5 qator — tik ekranda qo'llanma zonasiga ko'proq joy */
+.zone-guide { max-height: 50vh; max-height: 48dvh; }
+@media (orientation: landscape) {
+  .zone-guide { max-height: none; }
+}
+
+/* ---------- Harf kataklari (Sh, Oʻ ham bitta katak) ---------- */
+.ctiles { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.ctile {
+  display: inline-grid; place-items: center; min-width: 44px; height: 44px; padding: 0 4px;
+  border-radius: 10px; background: #fff; box-shadow: 0 2px 0 var(--soya); font-size: 22px; font-weight: 900;
+}
+.ctile.shown { background: var(--matn); color: #fff; }
+.ctile.guess-tile { color: var(--asosiy); }
+
+/* ---------- So'z: ko'rsatilgan harflar va bola to'ldiradigan kataklar ---------- */
+.cbox { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.opened { font-size: 20px; font-weight: 800; text-align: center; color: var(--togri); overflow-wrap: anywhere; }
+.opened.big { font-size: 26px; }
+.cword { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.ccol { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.cslot {
+  min-width: 48px; height: 48px; padding: 0 4px; border: 3px dashed var(--chiziq); border-radius: 10px;
+  background: #fff; color: var(--matn); font-size: 22px; font-weight: 900;
+}
+.cslot.current { border-style: solid; border-color: var(--asosiy); }
+.cslot.wrong { border-style: solid; border-color: var(--yana); }
+.cslot.wrong.current { border-color: var(--asosiy); }
+.cslot.wrong:empty::after { content: "↻"; color: var(--yana); font-size: 20px; }
+.cslot.solution { border-style: solid; border-color: var(--togri); color: var(--togri); }
+
+/* ---------- Surish jadvali: tepada oddiy harf, pastda shifri ---------- */
+.ctable { display: grid; grid-template-columns: repeat(6, minmax(48px, 1fr)); gap: 4px; }
+.ct-cell {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: 48px; padding: 2px; border: none; border-radius: 10px; line-height: 1.1;
+  background: #fff; box-shadow: 0 2px 0 var(--soya);
+}
+.ct-cell:active { transform: translateY(2px); box-shadow: none; }
+.ct-top { font-size: 20px; font-weight: 900; color: var(--matn); }
+.ct-bottom { font-size: 18px; font-weight: 800; color: var(--asosiy); }
+@media (orientation: landscape) {
+  .ctable { grid-template-columns: repeat(auto-fill, minmax(52px, 1fr)); }
+}
+
+/* ---------- Kalit boshqaruvi ---------- */
+.key-ctrl { display: flex; align-items: center; justify-content: center; gap: 10px; }
+.key-ctrl .key { width: 52px; }
+.key-val { min-width: 150px; text-align: center; font-size: 20px; font-weight: 900; }
+.guess { min-height: 44px; }
+
+/* ---------- G'ildirak, hikoya, tabrik ---------- */
+.wheel-box { width: min(300px, 80vw); }
+.wheel { display: block; width: 100%; height: auto; }
+.story { display: flex; flex-direction: column; align-items: center; gap: 14px; width: 100%; }
+.story-art { width: min(260px, 70vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 12px; font-size: 20px; font-weight: 800; text-align: center; }
