@@ -119,10 +119,11 @@ Agar `ʻ` belgisi to'g'ri chiqmasa, tizim shrifti ishlatiladi.
 Information/
 ├── QOIDALAR.md                ← shu fayl
 └── oyinlar/
+    ├── umumiy/                ← kamida 2 ta o'yin ishlatadigan kod (qahramonlar, UI, tovush, shrift)
     └── NN-oyin-nomi/          ← har bir o'yin o'z papkasida
         ├── DIZAYN.md          ← o'yin dizayni
         ├── REJA.md            ← ish rejasi
-        ├── index.html
+        ├── index.html         ← umumiy skriptlarni ../umumiy/ dan ulaydi
         └── ...
 ```
 
@@ -130,7 +131,8 @@ Information/
 - Hujjatlar va papka nomlari **o'zbekcha**.
 - Kod fayllari va o'zgaruvchilar **inglizcha** (dasturlashdagi odatiy standart), kod ichidagi izohlar **o'zbekcha**.
 - Bir o'yinning fayllari boshqa o'yin papkasiga aralashmaydi.
-- Bir nechta o'yinga kerak bo'lgan umumiy kod ikkinchi o'yin boshlanganda `umumiy/` papkasiga chiqariladi.
+- Bir nechta o'yinga kerak bo'lgan kod `oyinlar/umumiy/` papkasida turadi. U yerga faqat **kamida 2 ta o'yin** ishlatadigan kod chiqariladi; bitta o'yinga xos narsa o'z papkasida qoladi.
+- `umumiy/` dagi kod o'zgarsa, **barcha o'yinlarning** testlari ishga tushiriladi.
 
 ## 10. Ish tartibi
 
@@ -140,10 +142,10 @@ Har bir o'yin shu yo'l bilan qilinadi:
 2. **`DIZAYN.md`** yoziladi → muallif o'qib, tasdiqlaydi.
 3. **`REJA.md`** — qadam-baqadam ish rejasi yoziladi → tasdiqlanadi.
 4. **Kod** reja bo'yicha yoziladi.
-5. **Tekshiruv:**
+5. **Tekshiruv** (oraliq brauzer tekshiruvlari yo'q — muallif talabi):
    - mantiq uchun avtomatik testlar (`node --test`);
-   - brauzerda skrinshotlar: telefon tik (375×667), telefon yotiq (667×375), kompyuter (1280×800);
-   - o'yinni boshidan oxirigacha o'ynab chiqish.
+   - oxirida bitta yakuniy kod ko'rigi;
+   - muallif o'yinni o'zi ko'rib chiqadi (telefon va kompyuterda).
 6. **Bolalarda sinov** — muallif bolalarga o'ynatib ko'radi, natijaga qarab tuzatiladi.
 
 Har bir muhim qadamdan keyin o'zgarishlar **git**'ga saqlanadi.
