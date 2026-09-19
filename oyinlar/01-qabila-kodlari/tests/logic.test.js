@@ -124,3 +124,9 @@ test("productText va sumText", () => {
   assert.equal(L.productText(3, 1), "3");
   assert.equal(L.sumText(4, 3), "4 + 4 × 4 + 4 × 4 × 4");
 });
+
+test("upToText: 1 dan i gacha ro'yxat, oxiridan oldin 'yoki'", () => {
+  assert.equal(L.upToText(2), "1 yoki 2");
+  assert.equal(L.upToText(3), "1, 2 yoki 3");
+  assert.equal(L.upToText(5), "1, 2, 3, 4 yoki 5");
+});

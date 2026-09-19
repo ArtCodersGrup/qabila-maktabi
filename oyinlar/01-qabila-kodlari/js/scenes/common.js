@@ -91,7 +91,7 @@
         ui.raisePaper(true);
         const question = type === "exact"
           ? `Aynan ${ex.i} harfli nechta soʻz bor?`
-          : `${ex.i} harfgacha (1, 2, …, ${ex.i} harfli) nechta soʻz bor?`;
+          : `${ex.i} harfgacha (${logic.upToText(ex.i)} harfli) nechta soʻz bor?`;
         ui.bubble("elder", ui.lettersLine("Harflar:", ex.letters, question));
       },
       hint(ex) {

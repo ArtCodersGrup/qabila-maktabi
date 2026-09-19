@@ -127,10 +127,18 @@
     return parts.join(" + ");
   }
 
+  // 1 dan i gacha ro'yxat, oxirgi son oldidan "yoki": upToText(3) === "1, 2 yoki 3"
+  function upToText(i) {
+    const nums = [];
+    for (let k = 1; k <= i; k++) nums.push(k);
+    if (nums.length === 1) return String(nums[0]);
+    return `${nums.slice(0, -1).join(", ")} yoki ${nums[nums.length - 1]}`;
+  }
+
   const api = {
     LETTER_POOL, STAGE_PAIRS, MAX_PEOPLE,
     countExact, countUpTo, countWords, listWords, minLetters, stage3Steps, stage3Range,
-    makeRng, pickLetters, exerciseKey, makeExercise, checkAnswer, productText, sumText,
+    makeRng, pickLetters, exerciseKey, makeExercise, checkAnswer, productText, sumText, upToText,
   };
 
   if (typeof module !== "undefined" && module.exports) module.exports = api;
