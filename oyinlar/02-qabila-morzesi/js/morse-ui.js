@@ -45,7 +45,8 @@
     zone.innerHTML = "";
     $("play").classList.add("has-guide");
     ui.onCleanup(clearGuide); // bosh ekranga qaytganda qo'llanma yo'qoladi
-    const grid = ui.h("div", { class: "guide" });
+    // onPick yo'q — faqat ko'rish uchun (2-3-bosqich): ixcham katak (harf va kodi bir qatorda)
+    const grid = ui.h("div", { class: "guide" + (opts.onPick ? "" : " compact") });
     const cells = {};
     for (const l of letters) {
       const fresh = !!opts.fresh && opts.fresh.includes(l);
@@ -75,6 +76,7 @@
     const groups = [];
     const slots = [];
     let current = 0;
+    let locked = false;
     const wrap = ui.h("div", { class: "message" });
     codes.forEach((code, k) => {
       const codeNode = codeEl(code, true);
@@ -101,9 +103,10 @@
     return {
       codes,
       groups,
-      // Navbatdagi katakka harf qo'yish; navbat keyingi bo'sh katakka o'tadi. Katak tanlanmagan bo'lsa — false
+      // Navbatdagi katakka harf qo'yish; navbat keyingi bo'sh katakka o'tadi. Katak tanlanmagan yoki xabar
+      // tugagan (lock qilingan) bo'lsa — false
       fill(letter) {
-        if (current < 0) return false;
+        if (locked || current < 0) return false;
         letters[current] = letter;
         slots[current].classList.remove("wrong");
         const after = letters.findIndex((l, k) => k > current && !l);
@@ -135,8 +138,12 @@
         current = -1;
         render();
       },
+      // Xabar tugagach: qo'llanma bosilsa ham endi hech narsani o'zgartirmasin
       lock() {
+        locked = true;
+        current = -1;
         slots.forEach((s) => { s.disabled = true; });
+        render();
       },
     };
   }
@@ -188,6 +195,10 @@
           codeEl(g, true),
           ui.h("div", { class: "typed-letter", text: marks.read[k] || "" })));
       });
+      // Harf oralig'i bosilgan bo'lsa — keyingi harf boshlanganini ko'rsatuvchi bo'sh joy
+      if (symbols.endsWith(" ")) {
+        view.append(ui.h("div", { class: "typed-group pending" }, ui.h("div", { class: "typed-slot" })));
+      }
     }
 
     function change(next) {
@@ -206,8 +217,8 @@
     }));
     key("·", "Nuqta", "dot-key", () => change(morse.addSymbol(symbols, ".")));
     key("—", "Chiziq", "dash-key", () => change(morse.addSymbol(symbols, "-")));
-    key("harf oraligʻi", "Harf oraligʻi", "gap", () => change(morse.addSymbol(symbols, " ")));
     key("⌫", "Oʻchirish", "del", () => change(morse.removeSymbol(symbols)));
+    key("harf oraligʻi", "Harf oraligʻi", "gap", () => change(morse.addSymbol(symbols, " ")));
     key("Yuborish", "Yuborish", "send", () => {
       if (morse.parseTyped(symbols).length) onSend(symbols);
     });
@@ -220,6 +231,12 @@
       mark(wrong, read) {
         marks = { wrong, read };
         render();
+      },
+      // 2-xato: to'g'ri kodni terilgan joyning o'rnida ko'rsatish (DIZAYN 6.2)
+      showSolution(word) {
+        view.innerHTML = "";
+        view.append(wordCodes(word).el);
+        view.scrollIntoView({ block: "nearest" });
       },
       symbols: () => symbols,
     };
