@@ -52,7 +52,7 @@ Har bir bosqich uch qismdan iborat va shu tartibda keladi:
 Bolaga faqat "Xato" deyilmaydi. Qizil rang va qo'rqituvchi ovoz ishlatilmaydi.
 
 1. **1-xato:** maslahat — bosqichdagi rasm yoki formula qayta ko'rsatiladi. Bola yana urinadi.
-2. **2-xato:** to'g'ri javob tushuntirish bilan ko'rsatiladi, keyin **shunga o'xshash yangi misol** beriladi. Bu misol hisobga olinmaydi.
+2. **2-xato:** to'g'ri javob tushuntirish bilan ko'rsatiladi, keyin **shunga o'xshash yangi misol** beriladi. Xato qilingan misol to'g'ri javoblar soniga qo'shilmaydi.
 
 ### 4.5. Bosqichdan o'tish
 - Mashqda **3 ta to'g'ri javob** — bosqich tugadi.
