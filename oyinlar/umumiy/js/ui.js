@@ -307,14 +307,14 @@
     });
   }
 
-  // ---------- Harflar soni hisoblagichi (3-bosqich) ----------
-  function counter(host, { start, min, max, onChange }) {
+  // ---------- Hisoblagich: "5 ta harf" (1-o'yin), "5 ta bit" (13-o'yin) ----------
+  function counter(host, { start, min, max, onChange, unit = "harf" }) {
     let a = start;
     const val = h("div", { class: "counter-val" });
     const minus = h("button", { class: "key", type: "button", text: "−", "aria-label": "Bitta kam" });
     const plus = h("button", { class: "key", type: "button", text: "+", "aria-label": "Bitta koʻp" });
     const render = () => {
-      val.textContent = `${a} ta harf`;
+      val.textContent = `${a} ta ${unit}`;
       minus.disabled = a <= min;
       plus.disabled = a >= max;
     };

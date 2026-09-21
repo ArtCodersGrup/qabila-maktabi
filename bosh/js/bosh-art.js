@@ -121,7 +121,19 @@
   <ellipse cx="33" cy="38" rx="16" ry="15" fill="#D6F0E4" stroke="#1A9E77" stroke-width="3"/>
   <ellipse cx="34" cy="42" rx="8" ry="8" fill="#EFE0FA" stroke="#8E5BD0" stroke-width="3"/>`);
 
-  const ICONS = { kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita };
+  // 13-o'yin: sandiq (bayt) va 8 ta bit
+  function sandiq() {
+    let dots = "";
+    const bits = "01000001";
+    for (let k = 0; k < 8; k++) dots += `<circle cx="${10.5 + k * 6.1}" cy="41" r="2.6" fill="${bits[k] === "1" ? "#F0C040" : "#D9D2C3"}"/>`;
+    return svg(`
+  <path d="M5 24 Q32 10 59 24 L59 29 L5 29 Z" fill="#A8743F" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/>
+  <rect x="5" y="29" width="54" height="26" rx="4" fill="#C98B5E" stroke="${INK}" stroke-width="3"/>
+  <rect x="7" y="36" width="50" height="10" rx="5" fill="#FFF6E5"/>${dots}
+  <rect x="28" y="21" width="8" height="10" rx="2" fill="#E0B04A" stroke="${INK}" stroke-width="2"/>`);
+  }
+
+  const ICONS = { kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq() };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";
