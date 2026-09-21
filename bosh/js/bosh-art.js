@@ -114,7 +114,14 @@
     return svg(out);
   }
 
-  const ICONS = { kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq() };
+  // 12-o'yin: ichma-ich doiralar (AI xaritasi)
+  const xarita = svg(`
+  <rect x="3" y="3" width="58" height="58" rx="10" fill="#F4EEE2" stroke="#B5AC98" stroke-width="2.5" stroke-dasharray="4 3"/>
+  <ellipse cx="32" cy="34" rx="25" ry="22" fill="#DCE8FA" stroke="#2F6FDE" stroke-width="3"/>
+  <ellipse cx="33" cy="38" rx="16" ry="15" fill="#D6F0E4" stroke="#1A9E77" stroke-width="3"/>
+  <ellipse cx="34" cy="42" rx="8" ry="8" fill="#EFE0FA" stroke="#8E5BD0" stroke-width="3"/>`);
+
+  const ICONS = { kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";

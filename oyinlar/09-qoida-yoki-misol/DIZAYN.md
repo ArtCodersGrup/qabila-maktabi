@@ -19,7 +19,7 @@ O'yindan keyin bola:
 1. "Agar … bo'lsa … aks holda …" ko'rinishidagi **qoida** yozadi va uni misollarda sinaydi.
 2. Qoida yozib bo'ladigan ishni (aniq belgi, aniq chegara) qoida yozib bo'lmaydiganidan **ajratadi**.
 3. Qoida ishlamaganda **misollardan o'rgatish** kerakligini biladi — buni **mashinali o'rganish** deyishadi.
-4. Mashinali o'rganish sunʼiy intellektning **bir qismi** ekanini aytadi.
+4. Mashinali o'rganish sunʼiy intellektning **bir qismi** ekanini aytadi (oddiy qoidali dastur — masalan kalkulyator — sunʼiy intellekt emas).
 5. Yangi ishni ko'rganda "bunga qoida yozamizmi yoki misol beramizmi?" degan savolga javob beradi.
 
 ## 2. Asboblar
@@ -59,7 +59,7 @@ Bosh ekran
 ## 6. 3-bosqich: Qaysi biri kerak?
 
 1. **Qiyoslash:** ikki ustun — `Qoida yozamiz` (aniq belgi, aniq chegara, kam holat) va `Misol koʻrsatamiz` (chalkash, koʻp holat, rasm/ovoz/matn).
-2. **Ta'rif:** "Ikkalasi ham sunʼiy intellekt. Misoldan oʻrganadigani — **mashinali oʻrganish**."
+2. **Ta'rif:** "Aqlli ishni qoida bilan ham, misol bilan ham qilsa boʻladi. Misoldan oʻrganadigani — **mashinali oʻrganish**." (Kalkulyator kabi oddiy qoidali dastur sunʼiy intellekt hisoblanmaydi — 12-oʻyinda "Oddiy dastur" zonasi.)
 3. **Mashq** (3 ta to'g'ri): hayotdan misollar — "kalkulyator", "yuzni tanish", "budilnik", "ovozni matnga aylantirish", "svetofor taymeri", "qoʻlda yozilgan raqamni oʻqish", "narxni qoʻshish", "kasallikni rasmdan topish". Bola "Qoida" yoki "Misol" deb javob beradi.
 4. **Hikoya:**
    1. (kalkulyator) "Kalkulyator — qoida yozilgan dastur. U hech narsa oʻrganmaydi, lekin xato ham qilmaydi."
