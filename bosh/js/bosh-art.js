@@ -141,7 +141,18 @@
     return svg(`<rect x="4" y="4" width="56" height="56" rx="6" fill="${INK}"/>${cells}`);
   }
 
-  const ICONS = { kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel() };
+  // 15-o'yin: kinolenta — uchta kadr
+  const kadr = svg(`
+  <rect x="3" y="12" width="58" height="40" rx="4" fill="${INK}"/>
+  <path d="M7 16 h5 M19 16 h5 M31 16 h5 M43 16 h5 M55 16 h3 M7 48 h5 M19 48 h5 M31 48 h5 M43 48 h5 M55 48 h3" stroke="#FFF6E5" stroke-width="3"/>
+  <rect x="7" y="21" width="15" height="22" rx="2" fill="#9FC6E8"/>
+  <rect x="25" y="21" width="15" height="22" rx="2" fill="#9FC6E8"/>
+  <rect x="43" y="21" width="15" height="22" rx="2" fill="#9FC6E8"/>
+  <circle cx="12" cy="36" r="3.5" fill="#E0524A"/>
+  <circle cx="32" cy="29" r="3.5" fill="#E0524A"/>
+  <circle cx="52" cy="36" r="3.5" fill="#E0524A"/>`);
+
+  const ICONS = { kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";

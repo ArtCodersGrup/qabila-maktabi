@@ -1,0 +1,104 @@
+/* Multfilm daftari — faqat shu o'yinga xos uslublar. Umumiylari: ../../umumiy/css/asos.css */
+
+.vbox { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
+.task-view { display: flex; justify-content: center; width: 100%; }
+.count-line { font-size: 19px; font-weight: 800; text-align: center; }
+.count-line.muted { font-size: 17px; color: #7A7266; }
+.answer { font-size: 21px; font-weight: 900; color: var(--togri); text-align: center; }
+.facts { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 22px; font-weight: 900; }
+
+/* ---------- Kadr to'ri ---------- */
+.vframe {
+  --cell: 40px;
+  display: grid; grid-template-columns: repeat(6, var(--cell)); gap: 2px; padding: 5px;
+  border-radius: 10px; background: #C9C2B4; box-shadow: 0 2px 0 var(--soya);
+}
+.vframe.demo { --cell: 30px; }
+.vframe.sm { --cell: 20px; gap: 1px; padding: 3px; }
+.vframe.xs { --cell: 9px; gap: 1px; padding: 2px; border-radius: 5px; box-shadow: none; }
+.fcell { width: var(--cell); height: var(--cell); padding: 0; border: none; border-radius: 3px; }
+.vframe.xs .fcell { border-radius: 1px; }
+button.fcell:active { transform: scale(0.9); }
+.fcell.ghost { background: rgba(224, 82, 74, 0.28) !important; }
+.fcell.row-hl { box-shadow: inset 0 0 0 2px var(--asosiy); }
+.fcell.found { box-shadow: inset 0 0 0 4px var(--yana); }
+
+/* ---------- Tasma ---------- */
+.strip { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.strip-item { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.strip-n { font-size: 15px; font-weight: 900; }
+.strip-q {
+  display: grid; place-items: center; width: 70px; height: 70px; border: 2px dashed var(--yana);
+  border-radius: 6px; font-size: 26px; font-weight: 900; color: var(--yana);
+}
+.strip-item .vframe.xs { width: 70px; height: 70px; }
+
+/* ---------- Kadrlar juftligi ---------- */
+.fpair { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 16px; }
+.fcol { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.fcol-name { font-size: 17px; font-weight: 900; }
+
+/* ---------- Kichik ekran kartochkalari ---------- */
+.tcards { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; min-height: 70px; }
+.tcard { display: flex; flex-direction: column; align-items: center; gap: 2px; animation: pop 0.25s; }
+.tgrid { display: grid; grid-template-columns: repeat(4, 11px); gap: 1px; padding: 3px; border-radius: 5px; background: #C9C2B4; }
+.tcell { width: 11px; height: 11px; background: #fff; }
+.tcell.on { background: var(--matn); }
+.tcard-label { font-size: 16px; font-weight: 900; color: var(--asosiy); }
+
+/* ---------- Ikonkalar va soniya qutilari ---------- */
+.icons { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 420px; }
+.icon-item { display: flex; flex-direction: column; align-items: center; }
+.icon-art { display: block; width: 40px; }
+.icon-art svg { display: block; width: 100%; height: auto; }
+.icon-label { font-size: 15px; font-weight: 900; color: var(--asosiy); }
+.sec-box { display: flex; flex-direction: column; align-items: center; padding: 6px 10px; border-radius: 10px; background: #fff; box-shadow: 0 2px 0 var(--soya); animation: pop 0.25s; }
+.sec-name { font-size: 14px; font-weight: 800; color: #7A7266; }
+.sec-n { font-size: 18px; font-weight: 900; color: var(--asosiy); }
+
+/* ---------- Zinapoya, taqqoslash, tanlov ---------- */
+.ladder { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; animation: pop 0.3s; }
+.ladder .step { padding: 6px 12px; border-radius: 10px; background: #fff; box-shadow: 0 2px 0 var(--soya); font-size: 19px; font-weight: 900; }
+.ladder .step.new { background: var(--asosiy); color: #fff; }
+.ladder .arrow { font-size: 16px; font-weight: 800; color: #7A7266; }
+.cmp { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; }
+.cmp-card { padding: 12px 18px; border-radius: 14px; background: #fff; box-shadow: 0 3px 0 var(--soya); font-size: 28px; font-weight: 900; }
+.cmp-or { font-size: 18px; font-weight: 800; color: #7A7266; }
+.choice-row.nums .btn { min-width: 64px; font-size: 24px; }
+.choice-row.wide { flex-direction: column; align-items: stretch; width: 100%; max-width: 440px; }
+.choice-row.wide .btn { font-size: 18px; }
+
+/* ---------- Formula, hikoya, tabrik ---------- */
+.formula-box { display: flex; flex-direction: column; align-items: center; gap: 10px; max-width: 100%; text-align: center; }
+.formula-row { font-size: 21px; font-weight: 900; animation: pop 0.3s; }
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(240px, 66vw); }
+.story-art.small { width: min(130px, 34vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 12px; font-size: 20px; font-weight: 800; text-align: center; }
+
+/* Tor ekran: 2 ta kadr yonma-yon sig'sin, tasma bitta qatorda */
+@media (max-width: 400px) {
+  .formula-row { font-size: 18px; }
+  .strip-q, .strip-item .vframe.xs { width: 46px; height: 46px; }
+  .vframe.xs { --cell: 6px; }
+}
+
+/* Yotiq telefon */
+@media (orientation: landscape) and (max-height: 500px) {
+  .play.compact { grid-template-columns: minmax(150px, 24%) minmax(0, 1fr); }
+  .vbox { gap: 6px; }
+  .vframe { --cell: 28px; }
+  .vframe.demo { --cell: 26px; }
+  .vframe.sm { --cell: 20px; }
+  .strip-q, .strip-item .vframe.xs { width: 46px; height: 46px; }
+  .vframe.xs { --cell: 6px; }
+  .story-art { width: min(190px, 36vh); }
+  .facts { font-size: 17px; gap: 2px; }
+  .sec-box { flex-direction: row; gap: 4px; padding: 3px 6px; }
+  .sec-name { font-size: 12px; }
+  .sec-n { font-size: 14px; }
+  .icons { max-width: none; gap: 4px; }
+  .formula-row { font-size: 18px; }
+  .choice-row.wide { flex-direction: row; flex-wrap: wrap; }
+}
