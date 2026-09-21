@@ -172,7 +172,14 @@
     return svg(out);
   }
 
-  const ICONS = { kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti() };
+  // 18-o'yin: tangalar
+  const tanga = svg(`
+  <circle cx="24" cy="36" r="17" fill="#F0C040" stroke="${INK}" stroke-width="3"/>
+  <circle cx="24" cy="36" r="10" fill="none" stroke="#C98B2E" stroke-width="3"/>
+  <circle cx="46" cy="22" r="12" fill="#F0C040" stroke="${INK}" stroke-width="3"/>
+  <circle cx="48" cy="48" r="8" fill="#F0C040" stroke="${INK}" stroke-width="2.5"/>`);
+
+  const ICONS = { kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";
