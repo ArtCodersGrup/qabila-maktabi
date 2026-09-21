@@ -186,7 +186,16 @@
   <circle cx="50" cy="50" r="9" fill="#E0524A" stroke="${INK}" stroke-width="2"/>
   <path d="M50 41 q2 -5 6 -6" stroke="#1A9E77" stroke-width="3" fill="none" stroke-linecap="round"/>`);
 
-  const ICONS = { kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop };
+  // 20-o'yin: ikkilik qo'shish — chiroqlar va plyus
+  const hisob2 = svg(`
+  <circle cx="14" cy="18" r="8" fill="#F0C040" stroke="${INK}" stroke-width="2.5"/>
+  <circle cx="32" cy="18" r="8" fill="#D9D2C3" stroke="${INK}" stroke-width="2.5"/>
+  <circle cx="50" cy="18" r="8" fill="#F0C040" stroke="${INK}" stroke-width="2.5"/>
+  <path d="M32 32 V52 M22 42 H42" stroke="#1A9E77" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="14" cy="42" r="5" fill="#F0C040" stroke="${INK}" stroke-width="2"/>
+  <circle cx="50" cy="42" r="5" fill="#F0C040" stroke="${INK}" stroke-width="2"/>`);
+
+  const ICONS = { kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2 };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";

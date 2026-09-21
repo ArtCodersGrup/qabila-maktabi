@@ -107,9 +107,75 @@
     return { rows, result: toBase(total, 2) };
   }
 
+  // ---------- Ustunda bosqichma-bosqich hisoblash qadamlari (20–22-o'yinlar) ----------
+  // Har qadam: { i (o'ngdan ustun), digit (yoziladigan raqam), say (savol), hint (1-xatodan keyin),
+  //   carry: { i, text } (ko'chish yoki qarz yozuvi), mark (qarz bergan ustun) }
+  // Harfli raqam izohda qiymati bilan: "A(10)"
+  const dv = (v) => (v >= 10 ? `${DIGITS[v]}(${v})` : String(v));
+
+  function stepsAdd(a, c, b) {
+    const { cols } = addColumns(a, c, b);
+    const steps = cols.map((col, i) => {
+      const expr = `${dv(col.x)} + ${dv(col.y)}${col.carryIn ? " + 1" : ""} = ${col.total}`;
+      return {
+        i,
+        digit: DIGITS[col.digit],
+        say: `${expr}. Qaysi raqamni yozamiz?`,
+        hint: col.carryOut
+          ? `${col.total} ≥ ${b}: ${col.total} − ${b} = ${col.digit} ni yoz, 1 ni koʻchir.`
+          : `${col.total} < ${b}: shuni yoz — ${DIGITS[col.digit]}.`,
+        carry: col.carryOut ? { i: i + 1, text: "1" } : null,
+      };
+    });
+    const last = cols[cols.length - 1];
+    if (last.carryOut) {
+      steps.push({ i: cols.length, digit: "1", say: "Oxirgi koʻchgan 1 ni yangi xonaga yozamiz.", hint: "Koʻchgan 1 — yangi xonaga.", carry: null });
+    }
+    return steps;
+  }
+
+  function stepsSub(a, c, b) {
+    const { cols, result } = subColumns(a, c, b);
+    return cols.slice(0, result.length).map((col, i) => {
+      const before = col.x - col.borrowIn;
+      const gave = col.borrowIn ? `Bu xona qarz berdi: ${dv(col.x)} − 1 = ${before}. ` : "";
+      const say = col.borrowOut
+        ? `${gave}${before} dan ${dv(col.y)} ni ayirib boʻlmaydi — chapdan qarz: ${before} + ${b} = ${col.top}. ${col.top} − ${col.y} = ?`
+        : `${gave}${before} − ${dv(col.y)} = ?`;
+      return {
+        i,
+        digit: DIGITS[col.digit],
+        say,
+        hint: `${col.top} − ${col.y} = ${col.digit}${col.digit >= 10 ? ` — bu ${DIGITS[col.digit]}` : ""}.`,
+        carry: col.borrowOut ? { i, text: `+${b}` } : null,
+        mark: col.borrowOut ? i + 1 : null,
+      };
+    });
+  }
+
+  function stepsMul(a, d, b) {
+    const { cols, result } = mulDigit(a, d, b);
+    const steps = cols.map((col, i) => ({
+      i,
+      digit: DIGITS[col.digit],
+      say: `${dv(col.x)} × ${d}${col.carryIn ? ` + ${col.carryIn}` : ""} = ${col.total}. Qaysi raqamni yozamiz?`,
+      hint: col.carryOut
+        ? `${col.total} = ${col.carryOut}·${b} + ${col.digit} → ${DIGITS[col.digit]} ni yoz, ${col.carryOut} ni koʻchir.`
+        : `${col.total} < ${b}: shuni yoz — ${DIGITS[col.digit]}.`,
+      carry: col.carryOut ? { i: i + 1, text: String(col.carryOut) } : null,
+    }));
+    // Oxirgi ko'chish — yangi xona(lar)
+    for (let i = cols.length; i < result.length; i++) {
+      const ch = result[result.length - 1 - i];
+      steps.push({ i, digit: ch, say: "Oxirgi koʻchganni yangi xonaga yozamiz.", hint: `Koʻchgan son — ${ch}.`, carry: null });
+    }
+    return steps;
+  }
+
   const api = {
     DIGITS, digitValue, digitChar, toBase, fromBase, valid, sub, fmt, clean,
     places, expand, divSteps, digitAt, addColumns, subColumns, mulDigit, mulBinary,
+    dv, stepsAdd, stepsSub, stepsMul,
   };
 
   if (typeof module !== "undefined" && module.exports) module.exports = api;
