@@ -7,6 +7,38 @@
 .stone { display: block; width: 40px; height: 32px; animation: pop 0.25s; }
 .stone svg { display: block; width: 100%; height: 100%; }
 
+/* ---------- O'yin stoli: navbat, toshlar, ikki taraf ---------- */
+.gtable { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; max-width: 460px; }
+.turn {
+  min-height: 34px; padding: 4px 16px; border-radius: 999px; font-size: 20px; font-weight: 900;
+  background: #fff; box-shadow: 0 2px 0 var(--soya);
+}
+.turn:empty { visibility: hidden; }
+.turn.robot { color: #4A5560; box-shadow: 0 2px 0 var(--soya), inset 0 0 0 3px #B8C0C8; }
+.turn.me { color: var(--togri); box-shadow: 0 2px 0 var(--soya), inset 0 0 0 3px var(--togri); }
+.stones-box {
+  display: flex; flex-direction: column; align-items: center; gap: 4px; width: 100%;
+  padding: 10px; border-radius: 16px; background: #FDEFD4; box-shadow: inset 0 0 0 3px #E4D5B4;
+}
+.left-n { font-size: 18px; font-weight: 800; }
+.stone.taking { animation: flash 0.25s 2; }
+.trays { display: flex; justify-content: center; gap: 10px; width: 100%; }
+.tray {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 84px;
+  padding: 6px; border-radius: 14px; background: #fff; box-shadow: 0 2px 0 var(--soya);
+}
+.tray.active { box-shadow: 0 2px 0 var(--soya), inset 0 0 0 3px var(--yana); }
+.tray-head { display: flex; align-items: center; gap: 6px; font-size: 17px; font-weight: 800; }
+.tray-art { width: 22px; height: 28px; }
+.tray-art svg { display: block; width: 100%; height: 100%; }
+.tray-art .paper { display: none; }
+.mini { display: flex; flex-wrap: wrap; justify-content: center; gap: 3px; min-height: 22px; }
+.mini-stone { width: 24px; height: 19px; }
+.tray-n { font-size: 20px; font-weight: 900; }
+.current-box { display: flex; flex-direction: column; align-items: center; gap: 6px; min-height: 126px; }
+.pulled { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 14px; background: #fff; box-shadow: 0 2px 0 var(--soya); animation: pop 0.3s; }
+.pulled-text { font-size: 22px; font-weight: 900; }
+
 /* ---------- Qutilar va munchoqlar ---------- */
 .mboxes { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; width: 100%; }
 .mbox {
@@ -52,4 +84,9 @@
   .mbox.sm { width: 74px; }
   .stone { width: 32px; height: 26px; }
   .story-art { width: min(190px, 36vh); }
+  .gtable { max-width: none; flex-direction: row; align-items: flex-start; gap: 10px; }
+  .turn { order: -1; align-self: center; }
+  .stones-box { flex: 1; }
+  .trays { flex: 1; }
+  .current-box { min-height: 0; }
 }

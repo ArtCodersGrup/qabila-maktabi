@@ -45,12 +45,8 @@
 
   // 7.3: bola o'rgangan robot bilan o'ynaydi
   async function playTrained(state) {
-    const el = common.box(true);
-    const stonesView = boxesUi.stones(el, boxes.START);
-    const boxView = boxesUi.boxRow(el, { compact: true });
-    boxView.set(state, common.VISIBLE);
     await ui.say("elder", "Endi oʻrgangan robot bilan oʻynab koʻr!");
-    const game = await common.playRound(state, stonesView, boxView);
+    const game = await common.playRound(state);
     await ui.say("elder", game.won
       ? "Robot yutdi. Endi uni yutish qiyin!"
       : "Sen yutding! Demak robot hali toʻliq oʻrganmagan.");

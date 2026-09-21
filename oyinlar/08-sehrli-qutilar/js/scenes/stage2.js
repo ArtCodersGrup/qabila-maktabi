@@ -7,16 +7,10 @@
 
   // 6.1–6.2: ikkita o'yin, har biridan keyin mukofot
   async function gamesWithReward(state) {
-    const el = common.box(true);
-    const stonesView = boxesUi.stones(el, boxes.START);
-    const boxView = boxesUi.boxRow(el, { compact: true });
-    const results = boxesUi.resultLine(el);
-    boxView.set(state, common.VISIBLE);
     await ui.say("elder", "Endi har oʻyindan keyin robotga mukofot beramiz.");
     for (let k = 0; k < 2; k++) {
-      const game = await common.playRound(state, stonesView, boxView);
-      results.add(game.won);
-      await common.rewardStep(state, game.history, game.won, boxView);
+      const game = await common.playRound(state);
+      await common.rewardStep(state, game.history, game.won);
       await ui.say("elder", game.won
         ? "Yutgan yurishlarining munchogʻi koʻpaydi — endi ularni koʻproq tanlaydi."
         : "Yutqazgan yurishlarining munchogʻi kamaydi — endi ularni kamroq tanlaydi.");

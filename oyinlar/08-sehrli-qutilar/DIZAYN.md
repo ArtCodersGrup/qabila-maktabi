@@ -32,7 +32,8 @@ O'yindan keyin bola:
 
 ## 3. Asboblar
 
-- **Toshlar qatori** — qolgan toshlar (bosiladigan emas, faqat ko'rish).
+- **O'yin stoli** — tepada **"Navbat: Robot / Navbat: SEN"**, o'rtada stoldagi toshlar (soni yozilgan), pastda ikki taraf: **Robot** va **Sen**. Olingan toshlar o'sha tarafga to'planadi, shuning uchun kim nechta olgani doim ko'rinib turadi.
+- O'yin paytida ekranda **faqat bitta quti** (robot hozir ochayotgani) va undan tortilgan munchoq ko'rsatiladi; qutilar to'plami — tushuntirish, mukofot va o'qitish sahnalarida.
 - **Qutilar:** har bir holat uchun bitta quti (7, 6, 5, 4, 3, 2, 1 tosh qolganda). Ichida **ko'k munchoq** = "1 ta ol", **sariq munchoq** = "2 ta ol"; sonlari yozilib turadi.
 - **Tanlash:** robot qutini "silkitadi" va bitta munchoqni tortadi (ehtimol munchoqlar soniga mos).
 - **Mukofot paneli:** o'yin oxirida ishlatilgan qutilar yonadi, munchoq qo'shiladi (+1) yoki olinadi (−1, kamida 1 qoladi).

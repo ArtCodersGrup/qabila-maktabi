@@ -558,6 +558,72 @@ test("1961-yil mashinasi: 15 ta quti", () => {
     return card;
   }
 
+  // O'yin stoli: tepada navbat, o'rtada stoldagi toshlar, pastda ikki taraf (robot va bola) olgan toshlari
+  function gameTable(host) {
+    const turn = ui.h("div", { class: "turn", "aria-live": "polite" });
+    const stonesRow = ui.h("div", { class: "stones" });
+    const left = ui.h("div", { class: "left-n" });
+    const sides = {};
+    const makeSide = (who, label, svg) => {
+      const mini = ui.h("div", { class: "mini" });
+      const count = ui.h("span", { class: "tray-n", text: "0" });
+      const side = ui.h("div", { class: "tray " + who },
+        ui.h("div", { class: "tray-head" }, ui.h("span", { class: "tray-art", html: svg }), ui.h("span", { text: label })),
+        mini, count);
+      sides[who] = { side, mini, count, taken: 0 };
+      return side;
+    };
+    const el = ui.h("div", { class: "gtable" },
+      turn,
+      ui.h("div", { class: "stones-box" }, stonesRow, left),
+      ui.h("div", { class: "trays" },
+        makeSide("robot", "Robot", art.robot()),
+        makeSide("me", "Sen", art.apprentice())));
+    host.append(el);
+
+    let onTable = 0;
+    const drawStones = () => {
+      stonesRow.innerHTML = "";
+      for (let k = 0; k < onTable; k++) stonesRow.append(ui.h("span", { class: "stone", html: art.stone() }));
+      left.textContent = `Stolda: ${onTable} ta tosh`;
+      stonesRow.setAttribute("aria-label", `Stolda ${onTable} ta tosh`);
+    };
+
+    return {
+      el,
+      reset(n) {
+        onTable = n;
+        drawStones();
+        for (const who of Object.keys(sides)) {
+          sides[who].taken = 0;
+          sides[who].mini.innerHTML = "";
+          sides[who].count.textContent = "0";
+        }
+      },
+      turn(who) {
+        turn.textContent = who === "robot" ? "Navbat: Robot" : who === "me" ? "Navbat: SEN" : "";
+        turn.className = "turn" + (who ? " " + who : "");
+        sides.robot.side.classList.toggle("active", who === "robot");
+        sides.me.side.classList.toggle("active", who === "me");
+      },
+      // Toshlarni olish: avval belgilanadi, keyin o'sha tarafga ko'chadi
+      async take(who, count) {
+        const marks = [...stonesRow.children].slice(-count);
+        marks.forEach((node) => node.classList.add("taking"));
+        sound.play("tap");
+        await ui.sleep(520);
+        onTable -= count;
+        drawStones();
+        const side = sides[who];
+        side.taken += count;
+        for (let k = 0; k < count; k++) side.mini.append(ui.h("span", { class: "stone mini-stone fresh", html: art.stone() }));
+        side.count.textContent = String(side.taken);
+        await ui.sleep(260);
+      },
+      left: () => onTable,
+    };
+  }
+
   // Qutilar qatori: faqat kerakli holatlar ko'rsatiladi
   function boxRow(host, opts) {
     const o = opts || {};
@@ -628,7 +694,7 @@ test("1961-yil mashinasi: 15 ta quti", () => {
   // Munchoq belgisi (savollarda)
   const beadChip = (move) => ui.h("span", { class: `bead ${boxes.COLORS[move]} big` });
 
-  QK.boxesUi = { COLOR_NAME, stones, boxCard, boxRow, resultLine, moveButtons, optionButtons, beadChip };
+  QK.boxesUi = { COLOR_NAME, stones, gameTable, boxCard, boxRow, resultLine, moveButtons, optionButtons, beadChip };
 })(window);
 ```
 
@@ -693,6 +759,38 @@ test("1961-yil mashinasi: 15 ta quti", () => {
 .stone { display: block; width: 40px; height: 32px; animation: pop 0.25s; }
 .stone svg { display: block; width: 100%; height: 100%; }
 
+/* ---------- O'yin stoli: navbat, toshlar, ikki taraf ---------- */
+.gtable { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; max-width: 460px; }
+.turn {
+  min-height: 34px; padding: 4px 16px; border-radius: 999px; font-size: 20px; font-weight: 900;
+  background: #fff; box-shadow: 0 2px 0 var(--soya);
+}
+.turn:empty { visibility: hidden; }
+.turn.robot { color: #4A5560; box-shadow: 0 2px 0 var(--soya), inset 0 0 0 3px #B8C0C8; }
+.turn.me { color: var(--togri); box-shadow: 0 2px 0 var(--soya), inset 0 0 0 3px var(--togri); }
+.stones-box {
+  display: flex; flex-direction: column; align-items: center; gap: 4px; width: 100%;
+  padding: 10px; border-radius: 16px; background: #FDEFD4; box-shadow: inset 0 0 0 3px #E4D5B4;
+}
+.left-n { font-size: 18px; font-weight: 800; }
+.stone.taking { animation: flash 0.25s 2; }
+.trays { display: flex; justify-content: center; gap: 10px; width: 100%; }
+.tray {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 84px;
+  padding: 6px; border-radius: 14px; background: #fff; box-shadow: 0 2px 0 var(--soya);
+}
+.tray.active { box-shadow: 0 2px 0 var(--soya), inset 0 0 0 3px var(--yana); }
+.tray-head { display: flex; align-items: center; gap: 6px; font-size: 17px; font-weight: 800; }
+.tray-art { width: 22px; height: 28px; }
+.tray-art svg { display: block; width: 100%; height: 100%; }
+.tray-art .paper { display: none; }
+.mini { display: flex; flex-wrap: wrap; justify-content: center; gap: 3px; min-height: 22px; }
+.mini-stone { width: 24px; height: 19px; }
+.tray-n { font-size: 20px; font-weight: 900; }
+.current-box { display: flex; flex-direction: column; align-items: center; gap: 6px; min-height: 126px; }
+.pulled { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 14px; background: #fff; box-shadow: 0 2px 0 var(--soya); animation: pop 0.3s; }
+.pulled-text { font-size: 22px; font-weight: 900; }
+
 /* ---------- Qutilar va munchoqlar ---------- */
 .mboxes { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; width: 100%; }
 .mbox {
@@ -738,6 +836,11 @@ test("1961-yil mashinasi: 15 ta quti", () => {
   .mbox.sm { width: 74px; }
   .stone { width: 32px; height: 26px; }
   .story-art { width: min(190px, 36vh); }
+  .gtable { max-width: none; flex-direction: row; align-items: flex-start; gap: 10px; }
+  .turn { order: -1; align-self: center; }
+  .stones-box { flex: 1; }
+  .trays { flex: 1; }
+  .current-box { min-height: 0; }
 }
 ```
 
@@ -761,6 +864,7 @@ test("1961-yil mashinasi: 15 ta quti", () => {
     ui.setCompact(!!compact);
     ui.clearWork();
     ui.clearControl();
+    ui.paper(""); // shogirdning qogʻozi bu oʻyinda kerak emas
     const el = ui.h("div", { class: "qbox" });
     ui.work().append(el);
     return el;
@@ -769,48 +873,69 @@ test("1961-yil mashinasi: 15 ta quti", () => {
   const answerLine = (text) => ui.h("div", { class: "answer", text });
   const line = (text) => ui.h("div", { class: "count-line", text });
 
-  // Bitta o'yin: robot birinchi yuradi, keyin bola tugma bosadi
-  async function playRound(state, stonesView, boxView) {
+  // O'yin ekrani: stol (navbat, toshlar, taraflar) va hozirgi quti
+  function playScreen() {
+    const el = box(true);
+    const table = boxesUi.gameTable(el);
+    const boxHost = ui.h("div", { class: "current-box" });
+    el.append(boxHost);
+    return { el, table, boxHost };
+  }
+
+  // Bitta o'yin: robot birinchi yuradi, keyin bola tanlaydi
+  async function playRound(state) {
+    const { table, boxHost } = playScreen();
     let n = boxes.START;
     const history = [];
-    stonesView.set(n);
+    table.reset(n);
     for (;;) {
-      boxView.highlight(n);
-      ui.bubble("elder", `Robot ${n} li qutini ochdi va munchoq tortmoqda…`);
-      await ui.sleep(850);
+      table.turn("robot");
+      boxHost.innerHTML = "";
+      boxHost.append(boxesUi.boxCard(n, state[n], { open: true }));
+      ui.bubble("elder", `Robot ${n} li qutidan munchoq tortmoqda…`);
+      await ui.sleep(950);
       const move = boxes.pickMove(state, n, Math.random);
       history.push({ n, move });
-      boxView.flash(n);
-      sound.play("tap");
+      boxHost.innerHTML = "";
+      boxHost.append(ui.h("div", { class: "pulled" },
+        boxesUi.beadChip(move),
+        ui.h("span", { class: "pulled-text", text: `${move} ta ol` })));
+      sound.play("correct");
+      ui.bubble("elder", `Robot ${boxesUi.COLOR_NAME[boxes.COLORS[move]]} munchoq tortdi — ${move} ta oladi.`);
+      await ui.sleep(850);
+      await table.take("robot", move);
       n -= move;
-      stonesView.set(n);
-      await ui.sleep(550);
       if (n === 0) {
+        table.turn(null);
         sound.play("retry");
-        ui.bubble("elder", `Robot ${move} ta oldi — oxirgi tosh! Robot yutdi.`);
-        boxView.highlight(null);
-        await ui.sleep(1000);
+        ui.bubble("elder", "Oxirgi toshni robot oldi — robot yutdi!");
+        await ui.sleep(1200);
         return { history, won: true };
       }
-      ui.bubble("elder", `Robot ${move} ta oldi. Qoldi: ${n} ta. Endi sen!`);
-      boxView.highlight(null);
+      table.turn("me");
+      boxHost.innerHTML = "";
+      ui.bubble("elder", `Stolda ${n} ta tosh qoldi. Sen nechta olasan?`);
       const mine = await ui.settle((done) => boxesUi.moveButtons(n, (m) => { ui.clearControl(); done(m); }));
-      sound.play("tap");
+      await table.take("me", mine);
       n -= mine;
-      stonesView.set(n);
-      await ui.sleep(450);
       if (n === 0) {
+        table.turn(null);
         sound.play("win");
         ui.pose("apprentice", "happy", 900);
         ui.bubble("elder", "Oxirgi toshni sen olding — sen yutding!");
-        await ui.sleep(1000);
+        await ui.sleep(1200);
         return { history, won: false };
       }
     }
   }
 
-  // Mukofot: ishlatilgan qutilarga munchoq qo'shiladi yoki olinadi
-  async function rewardStep(state, history, won, boxView) {
+  // Mukofot ekrani: qutilar to'plami va ishlatilgan munchoqlarning o'zgarishi
+  async function rewardStep(state, history, won) {
+    const el = box(true);
+    el.append(line(won ? "Robot yutdi ✓" : "Robot yutqazdi ✗"));
+    const view = boxesUi.boxRow(el, { compact: true });
+    view.set(state, VISIBLE);
+    for (const step of history) view.highlight(step.n);
     ui.bubble("elder", won
       ? "Robot yutdi! Ishlatgan munchoqlaridan bittadan qoʻshamiz."
       : "Robot yutqazdi. Ishlatgan munchoqlaridan bittadan olamiz.");
@@ -819,16 +944,17 @@ test("1961-yil mashinasi: 15 ta quti", () => {
     });
     for (const step of history) {
       boxes.reward(state, [step], won);
-      boxView.set(state, VISIBLE);
-      boxView.highlight(step.n);
-      boxView.flash(step.n);
+      view.set(state, VISIBLE);
+      view.highlight(step.n);
+      view.flash(step.n);
       sound.play(won ? "correct" : "retry");
-      await ui.sleep(560);
+      await ui.sleep(620);
     }
-    boxView.highlight(null);
+    view.highlight(null);
+    await ui.sleep(300);
   }
 
-  QK.common = { VISIBLE, box, answerLine, line, playRound, rewardStep };
+  QK.common = { VISIBLE, box, answerLine, line, playScreen, playRound, rewardStep };
 })(window);
 ```
 
@@ -853,24 +979,29 @@ test("1961-yil mashinasi: 15 ta quti", () => {
     await ui.say("elder", "Yoʻq. U oʻynab, xato qilib oʻrganadi — mukofot yordamida.");
   }
 
-  // 5.1: o'yin qoidasi
+  // 5.1: o'yin qoidasi — stol ko'rsatiladi
   async function rules() {
-    const el = common.box(false);
-    const stonesView = boxesUi.stones(el, boxes.START);
+    const { table } = common.playScreen();
+    table.reset(boxes.START);
+    table.turn(null);
     await ui.say("elder", "Stolda 7 ta tosh. Navbat bilan 1 yoki 2 ta tosh olinadi.");
-    await ui.say("elder", "Oxirgi toshni olgan yutadi. Robot birinchi yuradi.");
-    return stonesView;
+    await ui.say("elder", "Olingan toshlar oʻz tarafingga toʻplanadi. Oxirgi toshni olgan yutadi!");
+    await ui.say("elder", "Robot birinchi yuradi.");
   }
 
-  // 5.2: bitta o'yin — munchoqlar teng, robot tasodifiy tanlaydi
-  async function firstGame(state) {
+  // 5.2: robotning "miyasi" — qutilar
+  async function showBoxes(state) {
     const el = common.box(true);
-    const stonesView = boxesUi.stones(el, boxes.START);
-    const boxView = boxesUi.boxRow(el, { compact: true });
-    boxView.set(state, common.VISIBLE);
+    const view = boxesUi.boxRow(el, { compact: true });
+    view.set(state, common.VISIBLE);
     await ui.say("elder", "Robotning miyasi — mana shu qutilar. Har holat uchun bittadan.");
-    await ui.say("elder", "Koʻk munchoq — «1 ta ol», sariq munchoq — «2 ta ol». Munchoqlar teng, shuning uchun tanlov tasodifiy.");
-    const game = await common.playRound(state, stonesView, boxView);
+    await ui.say("elder", "Koʻk munchoq — «1 ta ol», sariq munchoq — «2 ta ol».");
+    await ui.say("elder", "Hozir munchoqlar teng, shuning uchun robot tasodifiy tanlaydi. Oʻynab koʻramiz!");
+  }
+
+  // 5.3: bitta o'yin
+  async function firstGame(state) {
+    const game = await common.playRound(state);
     await ui.say("elder", game.won ? "Robot yutdi — lekin u hali hech narsa oʻrganmadi." : "Sen yutding! Robot hali oʻrganmagan.");
     return game;
   }
@@ -915,6 +1046,7 @@ test("1961-yil mashinasi: 15 ta quti", () => {
     const state = boxes.newBoxes();
     QK.state = state;
     await rules();
+    await showBoxes(state);
     await firstGame(state);
     await explain();
     await ui.say("elder", "Endi savollar. 3 ta toʻgʻri javob kerak!");
@@ -942,16 +1074,10 @@ test("1961-yil mashinasi: 15 ta quti", () => {
 
   // 6.1–6.2: ikkita o'yin, har biridan keyin mukofot
   async function gamesWithReward(state) {
-    const el = common.box(true);
-    const stonesView = boxesUi.stones(el, boxes.START);
-    const boxView = boxesUi.boxRow(el, { compact: true });
-    const results = boxesUi.resultLine(el);
-    boxView.set(state, common.VISIBLE);
     await ui.say("elder", "Endi har oʻyindan keyin robotga mukofot beramiz.");
     for (let k = 0; k < 2; k++) {
-      const game = await common.playRound(state, stonesView, boxView);
-      results.add(game.won);
-      await common.rewardStep(state, game.history, game.won, boxView);
+      const game = await common.playRound(state);
+      await common.rewardStep(state, game.history, game.won);
       await ui.say("elder", game.won
         ? "Yutgan yurishlarining munchogʻi koʻpaydi — endi ularni koʻproq tanlaydi."
         : "Yutqazgan yurishlarining munchogʻi kamaydi — endi ularni kamroq tanlaydi.");
@@ -1054,12 +1180,8 @@ test("1961-yil mashinasi: 15 ta quti", () => {
 
   // 7.3: bola o'rgangan robot bilan o'ynaydi
   async function playTrained(state) {
-    const el = common.box(true);
-    const stonesView = boxesUi.stones(el, boxes.START);
-    const boxView = boxesUi.boxRow(el, { compact: true });
-    boxView.set(state, common.VISIBLE);
     await ui.say("elder", "Endi oʻrgangan robot bilan oʻynab koʻr!");
-    const game = await common.playRound(state, stonesView, boxView);
+    const game = await common.playRound(state);
     await ui.say("elder", game.won
       ? "Robot yutdi. Endi uni yutish qiyin!"
       : "Sen yutding! Demak robot hali toʻliq oʻrganmagan.");

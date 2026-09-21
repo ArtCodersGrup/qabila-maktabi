@@ -16,24 +16,29 @@
     await ui.say("elder", "Yoʻq. U oʻynab, xato qilib oʻrganadi — mukofot yordamida.");
   }
 
-  // 5.1: o'yin qoidasi
+  // 5.1: o'yin qoidasi — stol ko'rsatiladi
   async function rules() {
-    const el = common.box(false);
-    const stonesView = boxesUi.stones(el, boxes.START);
+    const { table } = common.playScreen();
+    table.reset(boxes.START);
+    table.turn(null);
     await ui.say("elder", "Stolda 7 ta tosh. Navbat bilan 1 yoki 2 ta tosh olinadi.");
-    await ui.say("elder", "Oxirgi toshni olgan yutadi. Robot birinchi yuradi.");
-    return stonesView;
+    await ui.say("elder", "Olingan toshlar oʻz tarafingga toʻplanadi. Oxirgi toshni olgan yutadi!");
+    await ui.say("elder", "Robot birinchi yuradi.");
   }
 
-  // 5.2: bitta o'yin — munchoqlar teng, robot tasodifiy tanlaydi
-  async function firstGame(state) {
+  // 5.2: robotning "miyasi" — qutilar
+  async function showBoxes(state) {
     const el = common.box(true);
-    const stonesView = boxesUi.stones(el, boxes.START);
-    const boxView = boxesUi.boxRow(el, { compact: true });
-    boxView.set(state, common.VISIBLE);
+    const view = boxesUi.boxRow(el, { compact: true });
+    view.set(state, common.VISIBLE);
     await ui.say("elder", "Robotning miyasi — mana shu qutilar. Har holat uchun bittadan.");
-    await ui.say("elder", "Koʻk munchoq — «1 ta ol», sariq munchoq — «2 ta ol». Munchoqlar teng, shuning uchun tanlov tasodifiy.");
-    const game = await common.playRound(state, stonesView, boxView);
+    await ui.say("elder", "Koʻk munchoq — «1 ta ol», sariq munchoq — «2 ta ol».");
+    await ui.say("elder", "Hozir munchoqlar teng, shuning uchun robot tasodifiy tanlaydi. Oʻynab koʻramiz!");
+  }
+
+  // 5.3: bitta o'yin
+  async function firstGame(state) {
+    const game = await common.playRound(state);
     await ui.say("elder", game.won ? "Robot yutdi — lekin u hali hech narsa oʻrganmadi." : "Sen yutding! Robot hali oʻrganmagan.");
     return game;
   }
@@ -78,6 +83,7 @@
     const state = boxes.newBoxes();
     QK.state = state;
     await rules();
+    await showBoxes(state);
     await firstGame(state);
     await explain();
     await ui.say("elder", "Endi savollar. 3 ta toʻgʻri javob kerak!");
