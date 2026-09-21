@@ -36,6 +36,12 @@ Eslatma: progress brauzer xotirasida saqlanadi va `file://` bilan `http://localh
 | 14 | Piksel ustaxonasi | Rasm hajmi: piksel, ranglar va bitlar, rangli piksel 3 bayt, Mbayt, siqish |
 | 15 | Multfilm daftari | Video: kadrlar, kadr/soniya, video hajmi, Gbayt, faqat oʻzgargani |
 | 16 | Xotira ombori | Bitdan Tbaytgacha zinapoya, solishtirish, nechta sigʻadi, 1 Tbayt = 931 Gbayt |
+| 17 | Qabila choʻti | Sanoq tizimi nima: asos, raqamlar 0 … n−1 va A–F, 101₂ yozuvi, xona qiymatlari (10–12 yosh) |
+| 18 | Tangalar bozori | Istalgan tizimdan oʻnlikka: raqam × xona qiymati (10–12) |
+| 19 | Qoplarga joylash | Oʻnlikdan istalgan tizimga: kattadan boshlab, boʻlib-boʻlib, tekshirish (10–12) |
+| 20 | Ikkilik hisobchi | Ikkilikda qoʻshish, ayirish (qarz), koʻpaytirish (surish) (10–12) |
+| 21 | Oʻn oltilik ranglar | A–F, 2 ↔ 16, rang kodlari, 16-likda amallar (10–12) |
+| 22 | Sayyoralar sanogʻi | n-lik tizimda amallar, "qaysi tizimda 3 + 4 = 10?", Bobil va Mayya (10–12) |
 
 Tugagan bosqichlar brauzer xotirasida (`localStorage`) saqlanadi — sahifa yangilansa ham yoʻqolmaydi.
 

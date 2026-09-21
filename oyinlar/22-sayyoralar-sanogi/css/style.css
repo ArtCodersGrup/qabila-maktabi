@@ -1,0 +1,33 @@
+/* Sayyoralar sanog'i — faqat shu o'yinga xos uslublar. Umumiylari: ../../umumiy/css/asos.css, sanoq.css */
+
+.pbox { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
+.count-line { font-size: 19px; font-weight: 800; text-align: center; }
+.count-line.small { font-size: 16px; }
+.answer { font-size: 20px; font-weight: 900; color: var(--togri); text-align: center; }
+.big-value { font-size: 34px; font-weight: 900; color: var(--asosiy); text-align: center; }
+.planet-tag {
+  padding: 4px 14px; border-radius: 999px; background: var(--matn); color: #fff;
+  font-size: 17px; font-weight: 900;
+}
+
+/* ---------- Formula, hikoya, tabrik ---------- */
+.formula-box { display: flex; flex-direction: column; align-items: center; gap: 8px; max-width: 100%; text-align: center; }
+.formula-row { font-size: 20px; font-weight: 900; animation: pop 0.3s; }
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(240px, 66vw); }
+.story-art.small { width: min(130px, 34vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 12px; font-size: 20px; font-weight: 800; text-align: center; }
+
+@media (max-width: 400px) {
+  .formula-row { font-size: 17px; }
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+  .play.compact { grid-template-columns: minmax(150px, 24%) minmax(0, 1fr); }
+  .pbox { gap: 5px; }
+  .big-value { font-size: 26px; }
+  .planet-tag { font-size: 15px; padding: 2px 12px; }
+  .story-art { width: min(190px, 36vh); }
+  .formula-row { font-size: 17px; }
+}
