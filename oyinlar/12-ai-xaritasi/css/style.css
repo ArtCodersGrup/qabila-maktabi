@@ -1,0 +1,68 @@
+/* AI xaritasi — faqat shu o'yinga xos uslublar. Umumiylari: ../../umumiy/css/asos.css */
+
+.abox { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
+
+/* ---------- Xarita: ichma-ich zonalar ---------- */
+.atlas { width: 100%; max-width: 460px; }
+.zone {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 8px 10px 12px; border-radius: 28px; transition: box-shadow 0.2s;
+}
+.zone.hidden-zone { display: none; }
+.zone.hl { box-shadow: 0 0 0 4px var(--yana); }
+.z-plain { background: #F4EEE2; border: 3px dashed #B5AC98; border-radius: 16px; }
+.z-ai { width: 100%; background: #DCE8FA; border: 3px solid #2F6FDE; }
+.z-ml { width: 100%; background: #D6F0E4; border: 3px solid #1A9E77; }
+.z-dl { width: 100%; background: #EFE0FA; border: 3px solid #8E5BD0; }
+.zname { font-size: 17px; font-weight: 900; }
+.z-plain > .zname { color: #7A7262; }
+.z-ai > .zname { color: #2F6FDE; }
+.z-ml > .zname { color: #137A5C; }
+.z-dl > .zname { color: #6E3FAE; }
+.zchips { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; }
+.zchip { padding: 2px 8px; border-radius: 999px; background: #fff; box-shadow: 0 1px 0 var(--soya); font-size: 15px; font-weight: 800; animation: pop 0.3s; }
+
+/* ---------- Kartochka va tugmalar ---------- */
+.acard {
+  max-width: 420px; padding: 14px 16px; border-radius: 14px; background: #fff; box-shadow: 0 3px 0 var(--soya);
+  font-size: 21px; font-weight: 800; text-align: center;
+}
+.acard mark { background: #FFE3B8; color: inherit; border-radius: 4px; padding: 0 2px; }
+.alist { display: flex; flex-direction: column; gap: 6px; width: 100%; max-width: 380px; }
+.abtn { width: 100%; min-height: 52px; font-size: 18px; }
+.abtn.z-ai { box-shadow: 0 3px 0 var(--soya), inset 5px 0 0 #2F6FDE; }
+.abtn.z-ml { box-shadow: 0 3px 0 var(--soya), inset 5px 0 0 #1A9E77; }
+.abtn.z-dl { box-shadow: 0 3px 0 var(--soya), inset 5px 0 0 #8E5BD0; }
+.abtn.z-plain { box-shadow: 0 3px 0 var(--soya), inset 5px 0 0 #B5AC98; }
+
+/* ---------- Vazifalar va usullar ---------- */
+.tasks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; width: 100%; max-width: 360px; }
+.task { padding: 18px 10px; border-radius: 14px; background: #fff; box-shadow: 0 3px 0 var(--soya); font-size: 21px; font-weight: 900; text-align: center; }
+.t-korish { color: #2F6FDE; }
+.t-til { color: #1A9E77; }
+.t-harakat { color: #F08A24; }
+.t-hisob { color: #8E5BD0; }
+.ways { display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 420px; }
+.way { display: flex; flex-direction: column; gap: 2px; padding: 8px 12px; border-radius: 12px; background: #fff; box-shadow: 0 2px 0 var(--soya); font-size: 17px; font-weight: 700; animation: pop 0.3s; }
+.way-zone { font-size: 15px; font-weight: 900; }
+.way.z-plain .way-zone { color: #7A7262; }
+.way.z-ml .way-zone { color: #137A5C; }
+.way.z-dl .way-zone { color: #6E3FAE; }
+.count-line { font-size: 18px; font-weight: 800; text-align: center; }
+.answer { font-size: 19px; font-weight: 900; color: var(--togri); text-align: center; }
+
+/* ---------- Hikoya va tabrik ---------- */
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(240px, 66vw); }
+.story-art.small { width: min(110px, 28vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 12px; font-size: 20px; font-weight: 800; text-align: center; }
+
+/* Yotiq telefon */
+@media (orientation: landscape) and (max-height: 500px) {
+  .play.compact { grid-template-columns: minmax(150px, 24%) minmax(0, 1fr); }
+  .alist { flex-direction: row; flex-wrap: wrap; max-width: none; }
+  .abtn { width: auto; flex: 1 1 45%; }
+  .zone { padding: 4px 8px 8px; }
+  .story-art { width: min(190px, 36vh); }
+}

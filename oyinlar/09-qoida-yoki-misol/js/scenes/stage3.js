@@ -27,7 +27,7 @@
         ui.h("div", { text: "Juda koʻp holat" }),
         ui.h("div", { text: "Rasm, ovoz, matn" }))));
     await ui.say("elder", "Demak ikki yoʻl bor: qoida yozish va misol koʻrsatish.");
-    await ui.say("elder", "Ikkalasi ham sunʼiy intellekt. Misoldan oʻrganadigani — mashinali oʻrganish.");
+    await ui.say("elder", "Aqlli ishni qoida bilan ham, misol bilan ham qilsa boʻladi. Misoldan oʻrganadigani — mashinali oʻrganish.");
   }
 
   // 6.3: hayotdan misol — qoidami yoki misolmi?
