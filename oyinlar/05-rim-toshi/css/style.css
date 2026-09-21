@@ -52,7 +52,7 @@
   background: #E9DCC3; box-shadow: inset 0 0 0 4px #C9B48E;
 }
 .rules { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; width: 100%; max-width: 420px; }
-.rules .key { font-family: Georgia, "Times New Roman", serif; font-size: 20px; font-weight: 700; }
+.rules .key { font-family: Georgia, "Times New Roman", serif; font-size: 20px; font-weight: 700; white-space: nowrap; }
 .rules .key.hl { outline: 3px solid var(--yana); outline-offset: -3px; }
 .left-line { font-size: 20px; font-weight: 800; }
 
@@ -98,7 +98,7 @@
 @media (orientation: landscape) and (max-height: 500px) {
   .play.compact { grid-template-columns: minmax(150px, 24%) minmax(0, 1fr); }
   .rules { grid-template-columns: repeat(4, minmax(0, 1fr)); max-width: none; }
-  .rules .key { font-size: 18px; }
+  .rules .key { font-size: 18px; letter-spacing: -1px; }
   .rkb { grid-template-columns: repeat(6, minmax(0, 1fr)) minmax(0, 1.8fr); }
   .rkb .del, .rkb .ok { grid-column: auto; }
   .rkb-wrap { max-width: none; }

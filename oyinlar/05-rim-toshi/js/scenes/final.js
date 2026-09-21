@@ -27,7 +27,7 @@
     ui.bubble("elder", "Tabriklayman! Endi sen Rim raqamlarini bilasan!");
     ui.work().append(ui.h("div", { class: "summary" },
       ui.h("div", { text: "I V X L C — 1 5 10 50 100" }),
-      ui.h("div", { text: "Kichik belgi oldinda — ayiriladi: IV = 4" }),
+      ui.h("div", { text: "Kichik belgi oldinda — ayiriladi: IV\u00A0=\u00A04" }),
       ui.h("div", { text: "Oddiy sonda raqam qiymati xonasiga bogʻliq" })));
     return ui.choice([
       { label: "Qayta oʻynash", value: "replay" },

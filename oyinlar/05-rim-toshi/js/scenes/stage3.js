@@ -88,7 +88,8 @@
       hint: () => {
         view.showLabels();
         view.highlight(task.index);
-        ui.bubble("elder", `↻ ${task.digit} qaysi xonada turibdi: yuzlarmi, oʻnlarmi, birlarmi?`);
+        const names = roman.places(task.number).map((p) => romanUi.PLACE_NAMES[p.place] + "mi");
+        ui.bubble("elder", `↻ ${task.digit} qaysi xonada turibdi: ${names.join(", ")}?`);
       },
       solution: () => {
         view.showValues();

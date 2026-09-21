@@ -122,7 +122,8 @@
       },
       solution: () => {
         tray.set(roman.tidy(tray.get()), "*");
-        box.append(common.answerLine(`${a} + ${b} = ${answer}`));
+        box.replaceChild(common.expr(a, "+", b, answer), box.firstChild);
+        box.append(common.answerLine(`${task.a} + ${task.b} = ${task.answer}`));
       },
     });
   }
