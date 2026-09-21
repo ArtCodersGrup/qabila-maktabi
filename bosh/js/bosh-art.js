@@ -202,7 +202,13 @@
   <rect x="6" y="34" width="24" height="24" rx="5" fill="#1A9E77" stroke="${INK}" stroke-width="2.5"/>
   <rect x="34" y="34" width="24" height="24" rx="5" fill="#8E5BD0" stroke="${INK}" stroke-width="2.5"/>`);
 
-  const ICONS = { kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16 };
+  // 22-o'yin: halqali sayyora
+  const sayyora = svg(`
+  <circle cx="32" cy="32" r="18" fill="#F08A24" stroke="${INK}" stroke-width="3"/>
+  <ellipse cx="32" cy="34" rx="29" ry="8" fill="none" stroke="#8E5BD0" stroke-width="4"/>
+  <circle cx="54" cy="10" r="3" fill="#F0C040"/><circle cx="10" cy="54" r="2.5" fill="#F0C040"/>`);
+
+  const ICONS = { kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";
