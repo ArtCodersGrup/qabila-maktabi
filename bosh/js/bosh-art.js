@@ -179,7 +179,14 @@
   <circle cx="46" cy="22" r="12" fill="#F0C040" stroke="${INK}" stroke-width="3"/>
   <circle cx="48" cy="48" r="8" fill="#F0C040" stroke="${INK}" stroke-width="2.5"/>`);
 
-  const ICONS = { kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga };
+  // 19-o'yin: qop va olma
+  const qop = svg(`
+  <path d="M16 20 Q8 58 32 60 Q56 58 48 20 Z" fill="#C98B5E" stroke="${INK}" stroke-width="3"/>
+  <path d="M20 20 Q32 8 44 20" stroke="#8A5A2B" stroke-width="4" fill="none"/>
+  <circle cx="50" cy="50" r="9" fill="#E0524A" stroke="${INK}" stroke-width="2"/>
+  <path d="M50 41 q2 -5 6 -6" stroke="#1A9E77" stroke-width="3" fill="none" stroke-linecap="round"/>`);
+
+  const ICONS = { kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";
