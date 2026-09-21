@@ -1,0 +1,71 @@
+/* Qoida yoki misol? — faqat shu o'yinga xos uslublar. Umumiylari: ../../umumiy/css/asos.css */
+
+.rbox { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
+
+/* ---------- Narsalar taxtasi ---------- */
+.things { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; width: 100%; max-width: 420px; }
+.thing {
+  display: flex; flex-direction: column; align-items: center; gap: 2px; width: 76px; padding: 4px;
+  border-radius: 12px; background: #fff; box-shadow: 0 2px 0 var(--soya);
+}
+.thing.sm { width: 62px; }
+.thing.right { box-shadow: 0 2px 0 var(--soya), inset 0 0 0 3px var(--togri); }
+.thing.wrong { box-shadow: 0 2px 0 var(--soya), inset 0 0 0 3px var(--yana); animation: pop 0.3s; }
+.thing-art { width: 46px; height: 46px; }
+.thing.sm .thing-art { width: 38px; height: 38px; }
+.thing-art svg { display: block; width: 100%; height: 100%; }
+.thing-nums { font-size: 16px; font-weight: 800; opacity: 0.8; }
+.thing-mark { min-height: 22px; font-size: 17px; font-weight: 900; }
+.thing-mark.yes { color: var(--togri); }
+.thing-mark.no { color: #8A929A; }
+.thing-mark.miss::after { content: " ↻"; color: var(--yana); }
+
+/* ---------- Qoida yasagich ---------- */
+.rule-line {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px;
+  width: 100%; max-width: 460px; padding: 8px 10px; border-radius: 14px;
+  background: #fff; box-shadow: inset 0 0 0 3px var(--chiziq);
+}
+.rule-word { font-size: 19px; font-weight: 800; }
+.rule-line .key { min-width: 56px; padding: 0 10px; font-size: 20px; }
+.rule-line .key.wide { min-width: 116px; }
+.err-badge { font-size: 22px; font-weight: 900; color: var(--yana); min-height: 28px; }
+.err-badge.ok { color: var(--togri); }
+.count-line { font-size: 18px; font-weight: 800; text-align: center; }
+.answer { font-size: 19px; font-weight: 900; color: var(--togri); text-align: center; }
+.case-text {
+  max-width: 420px; padding: 14px 16px; border-radius: 14px; background: #fff; box-shadow: 0 3px 0 var(--soya);
+  font-size: 21px; font-weight: 800; text-align: center;
+}
+
+/* ---------- Qiyoslash va doiralar ---------- */
+.compare { display: flex; gap: 10px; width: 100%; max-width: 480px; }
+.col {
+  flex: 1; display: flex; flex-direction: column; gap: 6px; padding: 10px;
+  border-radius: 14px; background: #fff; box-shadow: 0 2px 0 var(--soya); font-size: 17px; font-weight: 700;
+}
+.col-head { font-size: 19px; font-weight: 900; }
+.rule-col .col-head { color: var(--asosiy); }
+.ex-col .col-head { color: var(--togri); }
+.legend { display: flex; flex-direction: column; gap: 6px; font-size: 17px; font-weight: 800; }
+.leg { display: flex; align-items: center; gap: 8px; }
+.leg span:first-child { width: 16px; height: 16px; border-radius: 50%; }
+.dot-ai { background: #DCE8FA; box-shadow: inset 0 0 0 3px #2F6FDE; }
+.dot-ml { background: #D6F0E4; box-shadow: inset 0 0 0 3px #1A9E77; }
+.dot-dl { background: #EFE0FA; box-shadow: inset 0 0 0 3px #8E5BD0; }
+
+/* ---------- Hikoya va tabrik ---------- */
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(240px, 66vw); }
+.story-art.small { width: min(110px, 28vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 12px; font-size: 20px; font-weight: 800; text-align: center; }
+
+/* Yotiq telefon */
+@media (orientation: landscape) and (max-height: 500px) {
+  .play.compact { grid-template-columns: minmax(150px, 24%) minmax(0, 1fr); }
+  .thing { width: 70px; }
+  .thing-art { width: 44px; height: 44px; }
+  .rule-line .key { min-height: 46px; }
+  .story-art { width: min(190px, 36vh); }
+}

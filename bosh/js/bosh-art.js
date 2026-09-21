@@ -80,7 +80,17 @@
   <circle cx="38" cy="35" r="5" fill="#F0C040" stroke="${INK}" stroke-width="2"/>
   <path d="M44 8 L48 16 L57 17 L50 23 L52 32 L44 27 L36 32 L38 23 L31 17 L40 16 Z" fill="#F0C040" stroke="${INK}" stroke-width="2" stroke-linejoin="round" transform="translate(4,-6) scale(0.6)"/>`);
 
-  const ICONS = { kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar };
+  // 9-o'yin: qaror (qoida) belgisi — romb va ikki yo'nalish
+  const qoida = svg(`
+  <path d="M32 6 L54 26 L32 46 L10 26 Z" fill="#FFFFFF" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M32 46 V52 H14 V58" stroke="#1A9E77" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M32 46 V52 H50 V58" stroke="#F08A24" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <circle cx="14" cy="59" r="4" fill="#1A9E77"/>
+  <circle cx="50" cy="59" r="4" fill="#F08A24"/>
+  <circle cx="24" cy="26" r="3.5" fill="#2F6FDE"/>
+  <circle cx="40" cy="26" r="3.5" fill="#8E5BD0"/>`);
+
+  const ICONS = { kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";
