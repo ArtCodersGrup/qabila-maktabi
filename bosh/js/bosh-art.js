@@ -102,7 +102,19 @@
     return svg(`${cells}<rect x="4" y="4" width="56" height="56" rx="6" fill="none" stroke="${INK}" stroke-width="3"/>`);
   }
 
-  const ICONS = { kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz() };
+  // 11-o'yin: qatlamli tarmoq
+  function tarmoq() {
+    const cols = [[12, [16, 32, 48]], [32, [12, 26, 40, 54]], [52, [24, 40]]];
+    let out = "";
+    for (let c = 0; c + 1 < cols.length; c++) {
+      for (const y1 of cols[c][1]) for (const y2 of cols[c + 1][1]) out += `<line x1="${cols[c][0]}" y1="${y1}" x2="${cols[c + 1][0]}" y2="${y2}" stroke="#C9BFA6" stroke-width="1.5"/>`;
+    }
+    const colors = ["#2F6FDE", "#F0C040", "#1A9E77"];
+    cols.forEach(([x, ys], c) => { for (const y of ys) out += `<circle cx="${x}" cy="${y}" r="5.5" fill="${colors[c]}" stroke="${INK}" stroke-width="2"/>`; });
+    return svg(out);
+  }
+
+  const ICONS = { kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq() };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";

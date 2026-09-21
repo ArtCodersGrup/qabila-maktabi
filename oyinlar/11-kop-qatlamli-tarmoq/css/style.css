@@ -1,0 +1,85 @@
+/* Ko'p qatlamli tarmoq — faqat shu o'yinga xos uslublar. Umumiylari: ../../umumiy/css/asos.css */
+
+.nbox { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
+
+/* ---------- Bitta neyron ---------- */
+.neuron-box { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.neuron { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 16px; background: #fff; box-shadow: 0 2px 0 var(--soya); }
+.n-inputs { display: flex; flex-direction: column; gap: 8px; }
+.in-row { display: flex; align-items: center; gap: 8px; }
+.lamp-in {
+  width: 48px; height: 48px; padding: 0; border: none; border-radius: 50%;
+  background: #D9D2C3; box-shadow: inset 0 0 0 3px #B5AC98;
+}
+.lamp-in.on { background: #F0C040; box-shadow: 0 0 0 5px rgba(240, 192, 64, 0.35), inset 0 0 0 3px #C99A1E; }
+button.lamp-in:active { transform: scale(0.94); }
+.w { min-width: 42px; padding: 2px 6px; border-radius: 8px; font-size: 19px; font-weight: 900; text-align: center; }
+.w.plus { color: var(--togri); background: #E3F3EC; }
+.w.minus { color: #B06A12; background: #FDEBD6; }
+.n-arrow { font-size: 28px; font-weight: 900; color: #A89F90; }
+.n-body { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.soma {
+  display: grid; place-items: center; width: 92px; height: 92px; border-radius: 50%;
+  background: #EFE9DC; box-shadow: inset 0 0 0 4px #C9BFA6; transition: background 0.2s, box-shadow 0.2s;
+}
+.soma.fired { background: #F0C040; box-shadow: 0 0 0 8px rgba(240, 192, 64, 0.35), inset 0 0 0 4px #C99A1E; animation: pop 0.3s; }
+.soma-sum { font-size: 24px; font-weight: 900; }
+.soma-thr { font-size: 17px; font-weight: 800; opacity: 0.8; }
+.n-line { min-height: 26px; font-size: 20px; font-weight: 900; }
+
+/* ---------- 3×3 rasm va qatlamlar ---------- */
+.sgrid { display: grid; grid-template-columns: repeat(3, 32px); gap: 3px; padding: 5px; border-radius: 10px; background: #fff; box-shadow: 0 2px 0 var(--soya); }
+.scell { width: 32px; height: 32px; padding: 0; border: none; border-radius: 6px; background: #EFE9DC; box-shadow: inset 0 0 0 1px #DCD3C0; }
+.scell.on { background: var(--matn); }
+button.scell { width: 48px; height: 48px; }
+.sgrid:has(button.scell) { grid-template-columns: repeat(3, 48px); }
+/* Tor ekranda qatlamlar yuqoridan pastga, kengida — chapdan o'ngga */
+.layers { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+.layer { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.layer-nodes { display: flex; flex-direction: row; align-items: center; gap: 8px; }
+.layer-name { font-size: 15px; font-weight: 800; opacity: 0.75; white-space: nowrap; }
+.l-arrow { font-size: 22px; font-weight: 900; color: #A89F90; transform: rotate(90deg); }
+@media (min-width: 460px) {
+  .layers { flex-direction: row; gap: 8px; }
+  .layer-nodes { flex-direction: column; }
+  .l-arrow { transform: none; }
+}
+.hnode {
+  display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%;
+  background: #EFE9DC; box-shadow: inset 0 0 0 3px #C9BFA6;
+}
+.hnode.fired { background: #F0C040; box-shadow: 0 0 0 5px rgba(240, 192, 64, 0.35), inset 0 0 0 3px #C99A1E; }
+.bar-v { width: 6px; height: 26px; border-radius: 3px; background: var(--matn); }
+.bar-h { width: 26px; height: 6px; border-radius: 3px; background: var(--matn); }
+.onode {
+  min-width: 78px; padding: 6px 8px; border-radius: 10px; background: #EFE9DC; box-shadow: inset 0 0 0 2px #C9BFA6;
+  font-size: 17px; font-weight: 900; text-align: center;
+}
+.onode.fired { background: var(--togri); color: #fff; box-shadow: none; animation: pop 0.3s; }
+
+/* ---------- Jadval ---------- */
+.ttable { display: flex; flex-direction: column; gap: 4px; width: 100%; max-width: 340px; }
+.trow { display: grid; grid-template-columns: 34px 34px 1fr 1fr; align-items: center; gap: 6px; padding: 4px 8px; border-radius: 10px; background: #fff; font-size: 17px; font-weight: 800; }
+.trow.head { background: none; font-size: 15px; opacity: 0.7; }
+.trow.good { box-shadow: inset 0 0 0 2px var(--togri); }
+.trow.bad { box-shadow: inset 0 0 0 2px var(--yana); }
+.lamp-dot { width: 22px; height: 22px; border-radius: 50%; background: #D9D2C3; }
+.lamp-dot.on { background: #F0C040; box-shadow: 0 0 0 3px rgba(240, 192, 64, 0.35); }
+.count-line { font-size: 18px; font-weight: 800; text-align: center; }
+.answer { font-size: 19px; font-weight: 900; color: var(--togri); text-align: center; }
+
+/* ---------- Hikoya va tabrik ---------- */
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(240px, 66vw); }
+.story-art.small { width: min(110px, 28vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 12px; font-size: 20px; font-weight: 800; text-align: center; }
+
+/* Yotiq telefon */
+@media (orientation: landscape) and (max-height: 500px) {
+  .play.compact { grid-template-columns: minmax(150px, 24%) minmax(0, 1fr); }
+  .soma { width: 72px; height: 72px; }
+  .lamp-in { width: 44px; height: 44px; }
+  .n-inputs { gap: 4px; }
+  .story-art { width: min(190px, 36vh); }
+}
