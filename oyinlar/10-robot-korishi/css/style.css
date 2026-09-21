@@ -1,0 +1,67 @@
+/* Robot nimani ko'radi? — faqat shu o'yinga xos uslublar. Umumiylari: ../../umumiy/css/asos.css */
+
+.vbox { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
+
+/* ---------- 6×6 to'r ---------- */
+.vgrid {
+  display: grid; grid-template-columns: repeat(6, 36px); gap: 3px; padding: 6px;
+  border-radius: 12px; background: #fff; box-shadow: 0 2px 0 var(--soya);
+}
+.vgrid.sm { grid-template-columns: repeat(6, 22px); gap: 2px; padding: 4px; }
+.vgrid.xs { grid-template-columns: repeat(6, 13px); gap: 1px; padding: 3px; box-shadow: none; background: none; }
+.vcell {
+  width: 36px; height: 36px; padding: 0; border: none; border-radius: 6px;
+  background: #EFE9DC; box-shadow: inset 0 0 0 1px #DCD3C0;
+}
+.vgrid.sm .vcell { width: 22px; height: 22px; border-radius: 4px; }
+.vgrid.xs .vcell { width: 13px; height: 13px; border-radius: 3px; }
+.vcell.on { background: var(--matn); }
+button.vcell:active { transform: scale(0.92); }
+.vgrid.flash { animation: flash 0.3s 2; }
+
+/* ---------- Sonlar jadvali ---------- */
+.vnums { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0 8px; max-width: 190px; line-height: 1.25; }
+.vnum { font-size: 17px; font-weight: 800; text-align: center; color: #A89F90; }
+.vnum.one { color: var(--matn); }
+
+/* ---------- Moslik ustunchalari ---------- */
+.vscores { display: flex; flex-direction: column; gap: 4px; width: 100%; max-width: 330px; min-height: 24px; }
+.vscore { display: flex; align-items: center; gap: 8px; padding: 2px 6px; border-radius: 8px; }
+.vscore.best { background: rgba(26, 158, 119, 0.14); }
+.vs-name { width: 92px; font-size: 17px; font-weight: 800; }
+.vs-bar { height: 12px; border-radius: 6px; background: var(--asosiy); }
+.vscore.best .vs-bar { background: var(--togri); }
+.vs-n { font-size: 16px; font-weight: 800; }
+.vfeature { font-size: 19px; font-weight: 900; color: var(--asosiy); min-height: 24px; }
+
+/* ---------- Shablonlar qatori va tugmalar ---------- */
+.vrow { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+.vtile { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.vtile-name { font-size: 17px; font-weight: 800; }
+.shape-btn { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 10px; min-height: 64px; }
+.shape-name { font-size: 16px; font-weight: 800; }
+.count-line { font-size: 18px; font-weight: 800; text-align: center; }
+.answer { font-size: 19px; font-weight: 900; color: var(--togri); text-align: center; }
+
+/* ---------- Hikoya va tabrik ---------- */
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(240px, 66vw); }
+.story-art.small { width: min(110px, 28vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 12px; font-size: 20px; font-weight: 800; text-align: center; }
+
+/* Keng ekran: to'r kattaroq bo'ladi */
+@media (min-width: 700px) {
+  .vgrid { grid-template-columns: repeat(6, 44px); }
+  .vcell { width: 44px; height: 44px; }
+}
+
+/* Yotiq telefon */
+@media (orientation: landscape) and (max-height: 500px) {
+  .play.compact { grid-template-columns: minmax(150px, 24%) minmax(0, 1fr); }
+  .vgrid { grid-template-columns: repeat(6, 30px); }
+  .vcell { width: 30px; height: 30px; }
+  .vnums { max-width: 160px; }
+  .vnum { font-size: 16px; }
+  .story-art { width: min(190px, 36vh); }
+}
