@@ -101,3 +101,51 @@ test("mulDigit va mulBinary", () => {
   assert.deepEqual(S.mulBinary("111", "101").rows, ["111", "0", "11100"]);
   assert.equal(S.mulBinary("111", "101").result, S.toBase(35, 2));
 });
+
+// Qadamlardagi raqamlardan natija qayta yig'iladi
+const fromSteps = (steps) => {
+  const out = [];
+  for (const st of steps) out[st.i] = st.digit;
+  return out.reverse().join("");
+};
+
+test("stepsAdd: raqamlar natijani beradi, ko'chish qadamlari", () => {
+  const steps = S.stepsAdd("1011", "110", 2);
+  assert.equal(fromSteps(steps), "10001");
+  assert.equal(steps[1].carry.text, "1");
+  assert.match(steps[1].say, /^1 \+ 1 = 2\./);
+  assert.match(steps[4].say, /koʻchgan 1/);
+  assert.match(S.stepsAdd("2A", "3F", 16)[0].say, /A\(10\) \+ F\(15\) = 25/);
+  for (let k = 0; k < 150; k++) {
+    const b = 2 + (k % 15);
+    const x = (k * 37) % 250;
+    const y = (k * 53) % 250;
+    assert.equal(S.clean(fromSteps(S.stepsAdd(S.toBase(x, b), S.toBase(y, b), b))), S.toBase(x + y, b));
+  }
+});
+
+test("stepsSub: qarz belgisi va natija (bosh nolsiz)", () => {
+  const steps = S.stepsSub("1101", "110", 2);
+  assert.equal(fromSteps(steps), "111");
+  const borrow = steps.find((st) => st.carry);
+  assert.equal(borrow.carry.text, "+2");
+  assert.equal(borrow.mark, borrow.i + 1);
+  assert.match(steps[1].say, /qarz/);
+  for (let k = 0; k < 150; k++) {
+    const b = 2 + (k % 15);
+    const x = 1 + ((k * 41) % 250);
+    const y = (k * 17) % x;
+    assert.equal(fromSteps(S.stepsSub(S.toBase(x, b), S.toBase(y, b), b)), S.toBase(x - y, b));
+  }
+});
+
+test("stepsMul: bir xonali songa, oxirgi ko'chish yangi xonada", () => {
+  assert.equal(fromSteps(S.stepsMul("1A", 3, 16)), "4E");
+  assert.equal(fromSteps(S.stepsMul("23", 4, 5)), "202");
+  for (let k = 0; k < 150; k++) {
+    const b = 2 + (k % 15);
+    const x = 1 + ((k * 29) % 200);
+    const d = 1 + (k % (b - 1));
+    assert.equal(fromSteps(S.stepsMul(S.toBase(x, b), d, b)), S.toBase(x * d, b));
+  }
+});

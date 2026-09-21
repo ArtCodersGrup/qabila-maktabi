@@ -221,6 +221,7 @@
   function guide(board, steps, base) {
     return ui.settle(async (done) => {
       for (const step of steps) {
+        QK.guideStep = step; // tekshirish uchun (avtomat o'ynovchi)
         board.mark(step.i);
         ui.bubble("elder", step.say);
         await ui.settle((next) => {

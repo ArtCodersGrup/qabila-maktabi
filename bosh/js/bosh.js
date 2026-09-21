@@ -34,6 +34,7 @@
     { n: 17, topic: "sanoq", dir: "17-qabila-choti", title: "Qabila choʻti", desc: "Asos, raqamlar va xona qiymatlari", key: "qabila-choti:v1", stages: 3, icon: "choti", age: "10–12" },
     { n: 18, topic: "sanoq", dir: "18-tangalar-bozori", title: "Tangalar bozori", desc: "Istalgan tizimdan oʻnlikka: raqam × xona qiymati", key: "tangalar-bozori:v1", stages: 3, icon: "tanga", age: "10–12" },
     { n: 19, topic: "sanoq", dir: "19-qoplarga-joylash", title: "Qoplarga joylash", desc: "Oʻnlikdan istalgan tizimga: boʻlib-boʻlib", key: "qoplarga-joylash:v1", stages: 3, icon: "qop", age: "10–12" },
+    { n: 20, topic: "sanoq", dir: "20-ikkilik-hisobchi", title: "Ikkilik hisobchi", desc: "Ikkilikda qoʻshish, ayirish va koʻpaytirish", key: "ikkilik-hisobchi:v1", stages: 3, icon: "hisob2", age: "10–12" },
   ];
 
   function h(tag, props, ...children) {
