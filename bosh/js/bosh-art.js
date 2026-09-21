@@ -90,7 +90,19 @@
   <circle cx="24" cy="26" r="3.5" fill="#2F6FDE"/>
   <circle cx="40" cy="26" r="3.5" fill="#8E5BD0"/>`);
 
-  const ICONS = { kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida };
+  // 10-o'yin: kataklardan iborat rasm (kompyuter ko'rish)
+  function koz() {
+    let cells = "";
+    const on = [9, 10, 13, 14, 17, 18, 19, 20, 21, 22, 25, 26, 29, 30];
+    for (let i = 0; i < 36; i++) {
+      const x = 6 + (i % 6) * 9;
+      const y = 6 + Math.floor(i / 6) * 9;
+      cells += `<rect x="${x}" y="${y}" width="8" height="8" rx="1.5" fill="${on.includes(i) ? INK : "#E6DFD0"}"/>`;
+    }
+    return svg(`${cells}<rect x="4" y="4" width="56" height="56" rx="6" fill="none" stroke="${INK}" stroke-width="3"/>`);
+  }
+
+  const ICONS = { kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz() };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";

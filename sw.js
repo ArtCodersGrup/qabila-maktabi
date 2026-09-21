@@ -1,6 +1,6 @@
 // Offline rejim: sayt fayllari keshlanadi. Bola saytni bir marta ochsa, keyin internetsiz ham oʻynay oladi.
 // Yangi fayl qoʻshilsa, FILES roʻyxatiga ham qoʻshiladi — buni bosh/tests/offline.test.js tekshiradi.
-const VERSION = "v2";
+const VERSION = "v3";
 const CACHE = "qabila-maktabi-" + VERSION;
 
 const FILES = [
@@ -129,6 +129,18 @@ const FILES = [
   "oyinlar/09-qoida-yoki-misol/js/scenes/stage1.js",
   "oyinlar/09-qoida-yoki-misol/js/scenes/stage2.js",
   "oyinlar/09-qoida-yoki-misol/js/scenes/stage3.js",
+  "oyinlar/10-robot-korishi/",
+  "oyinlar/10-robot-korishi/index.html",
+  "oyinlar/10-robot-korishi/css/style.css",
+  "oyinlar/10-robot-korishi/js/game-art.js",
+  "oyinlar/10-robot-korishi/js/main.js",
+  "oyinlar/10-robot-korishi/js/scenes/common.js",
+  "oyinlar/10-robot-korishi/js/scenes/final.js",
+  "oyinlar/10-robot-korishi/js/scenes/stage1.js",
+  "oyinlar/10-robot-korishi/js/scenes/stage2.js",
+  "oyinlar/10-robot-korishi/js/scenes/stage3.js",
+  "oyinlar/10-robot-korishi/js/vision-ui.js",
+  "oyinlar/10-robot-korishi/js/vision.js",
 ];
 
 self.addEventListener("install", (event) => {
