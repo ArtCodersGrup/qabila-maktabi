@@ -1,0 +1,58 @@
+/* Keyingi so'z — faqat shu o'yinga xos uslublar. Umumiylari: ../../umumiy/css/asos.css */
+
+.wbox { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
+
+/* ---------- So'z kartochkalari va gaplar ---------- */
+.wchip {
+  display: inline-grid; place-items: center; min-height: 44px; padding: 6px 12px;
+  border: none; border-radius: 12px; background: #fff; box-shadow: 0 2px 0 var(--soya);
+  color: var(--matn); font-size: 20px; font-weight: 800;
+}
+button.wchip { min-height: 48px; }
+button.wchip:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--soya); }
+.wchip.sm { min-height: 34px; padding: 4px 10px; font-size: 18px; border-radius: 9px; }
+.wchip.big { min-height: 52px; font-size: 24px; }
+.wchip.hl { box-shadow: 0 2px 0 var(--soya), inset 0 0 0 3px var(--yana); }
+.wchip.done { background: #E3F3EC; color: var(--togri); }
+.wchip.fresh { animation: pop 0.3s; }
+.corpus { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 6px 18px; width: 100%; max-width: 560px; }
+.wsent { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.wsent.fresh { animation: pop 0.35s; }
+
+/* ---------- Juftliklar jadvali ---------- */
+.ptable { display: flex; flex-direction: column; gap: 6px; width: 100%; max-width: 460px; }
+.prow { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 12px; }
+.prow.hl { background: rgba(240, 138, 36, 0.16); }
+.parrow { font-size: 22px; font-weight: 900; }
+.pnexts { display: flex; flex-direction: column; gap: 4px; }
+.pnext { display: flex; align-items: center; gap: 6px; }
+.bar { height: 12px; border-radius: 6px; background: var(--asosiy); }
+.pn { font-size: 18px; font-weight: 900; }
+
+/* ---------- Robot qatori va javob tugmalari ---------- */
+.rline {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px;
+  width: 100%; max-width: 420px; min-height: 68px; padding: 8px 12px; border-radius: 14px;
+  background: #fff; box-shadow: inset 0 0 0 3px var(--chiziq);
+}
+.sent-choice { display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 420px; }
+.sent-btn { display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 56px; padding: 6px 12px; }
+.count-line { font-size: 18px; font-weight: 800; text-align: center; }
+.answer { font-size: 20px; font-weight: 900; color: var(--togri); text-align: center; }
+
+/* ---------- Hikoya va tabrik ---------- */
+.story { display: flex; flex-direction: column; align-items: center; gap: 14px; width: 100%; }
+.story-art { width: min(240px, 66vw); }
+.story-art.small { width: min(110px, 28vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 12px; font-size: 20px; font-weight: 800; text-align: center; }
+
+/* Yotiq telefon: sahna ustuni tor, kartochkalar kichikroq */
+@media (orientation: landscape) and (max-height: 500px) {
+  .play.compact { grid-template-columns: minmax(150px, 24%) minmax(0, 1fr); }
+  .wchip { min-height: 40px; padding: 4px 10px; font-size: 18px; }
+  button.wchip { min-height: 44px; }
+  .wchip.big { min-height: 46px; font-size: 21px; }
+  .rline { min-height: 58px; }
+  .story-art { width: min(190px, 36vh); }
+}

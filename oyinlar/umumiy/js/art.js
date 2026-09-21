@@ -85,6 +85,27 @@
 </svg>`;
   }
 
+  // Robot (6- va 7-o'yin): qutisimon bosh, antenna, ko'krakdagi chiroqchalar
+  const robot = () => `<svg viewBox="0 0 120 150" aria-hidden="true">
+  <line x1="60" y1="30" x2="60" y2="16" stroke="${INK}" stroke-width="3"/>
+  <circle cx="60" cy="12" r="5" fill="#F08A24" stroke="${INK}" stroke-width="2"/>
+  <rect x="30" y="28" width="60" height="50" rx="14" fill="#B8C0C8" stroke="${INK}" stroke-width="3"/>
+  <circle cx="46" cy="50" r="7" fill="#2F6FDE"/>
+  <circle cx="74" cy="50" r="7" fill="#2F6FDE"/>
+  <circle cx="48" cy="48" r="2.5" fill="#FFFFFF"/>
+  <circle cx="76" cy="48" r="2.5" fill="#FFFFFF"/>
+  <rect x="48" y="64" width="24" height="6" rx="3" fill="${INK}"/>
+  <rect x="20" y="86" width="14" height="36" rx="7" fill="#B8C0C8" stroke="${INK}" stroke-width="3"/>
+  <rect x="86" y="86" width="14" height="36" rx="7" fill="#B8C0C8" stroke="${INK}" stroke-width="3"/>
+  <rect x="34" y="82" width="52" height="46" rx="10" fill="#CED6DC" stroke="${INK}" stroke-width="3"/>
+  <rect x="44" y="92" width="32" height="20" rx="4" fill="#FFF6E5" stroke="${INK}" stroke-width="2"/>
+  <circle cx="52" cy="102" r="3" fill="#1A9E77"/>
+  <circle cx="60" cy="102" r="3" fill="#F0C040"/>
+  <circle cx="68" cy="102" r="3" fill="#2F6FDE"/>
+  <rect x="42" y="128" width="13" height="18" rx="4" fill="#8A929A" stroke="${INK}" stroke-width="3"/>
+  <rect x="65" y="128" width="13" height="18" rx="4" fill="#8A929A" stroke="${INK}" stroke-width="3"/>
+</svg>`;
+
   const ICONS = {
     home: '<path d="M3 11 L12 3 L21 11 V21 H14 V15 H10 V21 H3 Z" fill="currentColor"/>',
     "sound-on": '<path d="M3 9 H7 L12 5 V19 L7 15 H3 Z" fill="currentColor"/><path d="M16 8 Q19 12 16 16 M18.5 5.5 Q23 12 18.5 18.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>',
@@ -93,5 +114,5 @@
   const icon = (name) => `<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[name]}</svg>`;
 
   root.QK = root.QK || {};
-  root.QK.art = { LETTER_COLORS, elder, apprentice, drum, icon };
+  root.QK.art = { LETTER_COLORS, elder, apprentice, drum, icon, robot };
 })(window);

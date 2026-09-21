@@ -14,6 +14,11 @@ test("qahramonlar, baraban, ikonkalar SVG qaytaradi", () => {
   for (const n of ["home", "sound-on", "sound-off"]) assert.match(art.icon(n), /^<svg[\s\S]*<path/);
 });
 
+test("robot: 6- va 7-o'yin ishlatadigan qahramon", () => {
+  assert.match(art.robot(), /^<svg[\s\S]*<\/svg>$/);
+  assert.ok(!art.robot().includes("<text"));
+});
+
 test("harf ranglari — QOIDALAR 6-bo'limidagi 4 ta rang", () => {
   assert.deepEqual(art.LETTER_COLORS, ["#2F6FDE", "#F08A24", "#1A9E77", "#8E5BD0"]);
 });
