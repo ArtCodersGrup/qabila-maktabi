@@ -12,6 +12,14 @@
     const state = store.load();
     sound.setMuted(state.muted);
     const saveState = () => store.save(state);
+    const SITE_HOME = "../../index.html"; // loyiha bosh sahifasi — barcha o'yinlar ro'yxati
+
+    // 🏠: bosqich ichida — o'yin bosh ekraniga, o'yin bosh ekranida — barcha o'yinlar ro'yxatiga
+    let onHome = false;
+    function setOnHome(value) {
+      onHome = value;
+      $("btn-home").setAttribute("aria-label", value ? "Barcha oʻyinlar" : "Oʻyin boshiga");
+    }
 
     function updateSoundButton() {
       const b = $("btn-sound");
@@ -20,6 +28,7 @@
     }
 
     function home() {
+      setOnHome(true);
       ui.newRun();
       ui.resetPoses();
       ui.setCompact(false);
@@ -30,7 +39,7 @@
       ui.bubble("elder", "Salom! Qaysi bosqichni oʻynaymiz?");
 
       // "Barcha oʻyinlar" — loyiha bosh sahifasi (Information/index.html); o'yin yolg'iz ochilsa ham ishlaydi
-      const back = ui.h("a", { class: "back-link", href: "../../index.html", text: "◀︎ Barcha oʻyinlar" });
+      const back = ui.h("a", { class: "back-link", href: SITE_HOME, text: "◀︎ Barcha oʻyinlar" });
       const heading = ui.h("h1", { class: "game-title", text: title });
       const cards = ui.h("div", { class: "cards" });
       stageTitles.forEach((titleText, k) => {
@@ -56,6 +65,7 @@
     // once — tugagan bosqichni faqat o'zini qayta o'ynash: davom etmaydi, bosh ekranga qaytadi
     async function play(stage, once) {
       const scenes = root.QK.scenes;
+      setOnHome(false);
       ui.newRun();
       ui.resetPoses();
       ui.hideProgress();
@@ -84,7 +94,11 @@
     $("btn-home").innerHTML = art.icon("home");
     updateSoundButton();
 
-    $("btn-home").addEventListener("click", () => { sound.play("tap"); home(); });
+    $("btn-home").addEventListener("click", () => {
+      sound.play("tap");
+      if (onHome) root.location.href = SITE_HOME;
+      else home();
+    });
     $("btn-sound").addEventListener("click", () => {
       state.muted = !state.muted;
       sound.setMuted(state.muted);

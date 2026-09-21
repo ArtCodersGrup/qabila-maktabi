@@ -33,6 +33,7 @@ Keyingi mavzu: sun'iy intellekt.
 - **Nuqtalar** — tugagan bosqichlar (har o'yinning o'z `localStorage` kaliti). Hammasi tugasa nom yonida ✓. Xotira o'qilmasa (masalan `file://` cheklovi) nuqtalar bo'sh turadi, sahifa baribir ishlaydi.
 - **Kartalar `<a>` havola** — bosish, klaviatura va "yangi oynada ochish" ishlaydi.
 - O'yin ichidagi bosh ekranda **"◀︎ Barcha oʻyinlar"** havolasi shu sahifaga qaytaradi (`umumiy/js/app.js`).
+- 🏠 tugmasi: bosqich ichida (hikoya, mashq, tabrik) — o'yinning bosh ekraniga; o'yinning bosh ekranida — shu sahifaga (`umumiy/js/app.js`).
 
 ## 3. Kod tuzilishi
 
