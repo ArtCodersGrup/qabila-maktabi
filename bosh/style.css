@@ -1,0 +1,42 @@
+/* Bosh sahifa — o'yinlar ro'yxati. Ranglar, shrift va qahramonlar: oyinlar/umumiy/css/asos.css */
+
+#app { height: auto; min-height: 100vh; min-height: 100dvh; gap: 18px; padding: 8px 16px 28px; }
+.bosh-top, .bosh-list, .bosh-foot { width: 100%; max-width: 760px; margin: 0 auto; }
+.bosh-title { margin: 8px 0 0; font-size: 30px; font-weight: 900; }
+.bosh-sub { margin: 2px 0 12px; font-size: 18px; font-weight: 700; opacity: 0.75; }
+.bosh-top .bubble { min-height: 0; padding: 12px 16px; }
+.bosh-actors { display: flex; align-items: flex-end; gap: 16px; }
+.bosh-top .actor { height: 96px; }
+
+.bosh-list { display: flex; flex-direction: column; gap: 20px; }
+.bosh-h2 { margin: 0; font-size: 22px; font-weight: 900; }
+.bosh-note { margin: 2px 0 10px; font-size: 17px; font-weight: 700; opacity: 0.7; }
+.bosh-cards { display: flex; flex-direction: column; gap: 10px; }
+.bosh-card {
+  display: flex; align-items: center; gap: 12px; min-height: 76px; padding: 10px 14px;
+  border-radius: 16px; background: #fff; box-shadow: 0 3px 0 var(--soya);
+  color: inherit; text-decoration: none;
+}
+.bosh-card:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--soya); }
+.bosh-icon { flex: none; width: 56px; height: 56px; }
+.bosh-icon svg { display: block; width: 100%; height: 100%; }
+.bosh-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.bosh-name { font-size: 20px; font-weight: 900; }
+.bosh-desc { font-size: 17px; font-weight: 600; opacity: 0.75; }
+.bosh-card.done .bosh-name::after { content: " ✓"; color: var(--togri); }
+.bosh-state { flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.bosh-dots { display: flex; gap: 5px; }
+.bosh-dots .dot { width: 13px; height: 13px; border-width: 2px; }
+.bosh-age { padding: 2px 8px; border-radius: 999px; background: var(--fon); font-size: 15px; font-weight: 800; }
+
+.bosh-foot { font-size: 16px; font-weight: 700; line-height: 1.6; opacity: 0.7; text-align: center; }
+
+/* Tor telefon: kartada faqat eng kerakli narsa qoladi */
+@media (max-width: 420px) {
+  .bosh-title { font-size: 26px; }
+  .bosh-top .actor { height: 80px; }
+  .bosh-icon { width: 46px; height: 46px; }
+  .bosh-name { font-size: 19px; }
+  .bosh-desc { font-size: 16px; }
+  .bosh-age { display: none; }
+}
