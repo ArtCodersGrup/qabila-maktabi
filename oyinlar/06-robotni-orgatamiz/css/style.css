@@ -1,0 +1,59 @@
+/* Robotni o'rgatamiz — faqat shu o'yinga xos uslublar. Umumiylari: ../../umumiy/css/asos.css */
+
+.lbox { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
+
+/* ---------- Maydon: misollar va chegara chizig'i ---------- */
+.field-wrap {
+  display: grid; align-items: center; justify-content: center; gap: 4px;
+  grid-template-columns: auto auto;
+  grid-template-areas: "ylab field" ". xlab";
+}
+.axis-y { grid-area: ylab; writing-mode: vertical-rl; transform: rotate(180deg); font-size: 18px; font-weight: 800; opacity: 0.75; }
+.axis-x { grid-area: xlab; font-size: 18px; font-weight: 800; opacity: 0.75; text-align: center; }
+.field-box { grid-area: field; width: min(262px, 64vw); aspect-ratio: 1; }
+.field { display: block; width: 100%; height: 100%; background: #fff; border-radius: 12px; box-shadow: 0 2px 0 var(--soya); }
+.glow { animation: pulse 1s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: 0.3; } }
+
+/* ---------- Yong'oq kartochkasi ---------- */
+.nut-holder { display: flex; justify-content: center; min-height: 104px; }
+.nut-card {
+  display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 100px;
+  padding: 8px 14px; border: none; border-radius: 14px; background: #fff; box-shadow: 0 3px 0 var(--soya);
+  color: inherit;
+}
+.nut-card:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 1px 0 var(--soya); }
+.nut-card:disabled { opacity: 1; }
+.nut-art { width: 64px; height: 64px; }
+.nut-art svg { display: block; width: 100%; height: 100%; }
+.nut-art.cracked { animation: pop 0.35s; }
+.nut-size { font-size: 18px; font-weight: 800; }
+.nut-card.sm { flex-direction: row; gap: 10px; min-height: 60px; padding: 6px 12px; }
+.nut-card.sm .nut-art { width: 44px; height: 44px; }
+
+/* ---------- Hisoblagichlar va tugmalar ---------- */
+.count-line { font-size: 18px; font-weight: 800; text-align: center; }
+.err-badge { font-size: 22px; font-weight: 900; color: var(--yana); }
+.err-badge.ok { color: var(--togri); }
+.line-pad { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; width: 100%; max-width: 320px; }
+.line-pad .key { font-size: 26px; }
+.btn.opt { padding: 8px 20px; }
+.btn.opt svg { display: block; width: 34px; height: 34px; }
+.answer { font-size: 20px; font-weight: 900; color: var(--togri); text-align: center; }
+
+/* ---------- Hikoya va tabrik ---------- */
+.story { display: flex; flex-direction: column; align-items: center; gap: 14px; width: 100%; }
+.story-art { width: min(240px, 66vw); }
+.story-art.small { width: min(110px, 28vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 12px; font-size: 20px; font-weight: 800; text-align: center; }
+
+/* Yotiq telefon: sahna ustuni tor, maydon kichik */
+@media (orientation: landscape) and (max-height: 500px) {
+  .play.compact { grid-template-columns: minmax(150px, 24%) minmax(0, 1fr); }
+  .field-box { width: min(170px, 42vh); }
+  .nut-holder { min-height: 86px; }
+  .nut-card { min-height: 82px; padding: 6px 10px; }
+  .nut-art { width: 48px; height: 48px; }
+  .story-art { width: min(180px, 34vh); }
+}

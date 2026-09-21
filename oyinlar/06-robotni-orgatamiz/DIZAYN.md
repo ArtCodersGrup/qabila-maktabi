@@ -3,7 +3,7 @@
 **Mavzu:** Sunʼiy intellekt — mashina misollardan qanday oʻrganadi
 **Yosh:** 8–12
 **Taxminiy davomiyligi:** 20–25 daqiqa
-**Holati:** yozilmoqda (2026-09-21)
+**Holati:** kod yozildi — muallif koʻrib chiqishini kutmoqda (2026-09-21)
 
 Umumiy qoidalar: [`../../QOIDALAR.md`](../../QOIDALAR.md). Oldingi o'yinlar: `01`–`05` (kodlash, Morze, Sezar, ikkilik, Rim raqamlari).
 
