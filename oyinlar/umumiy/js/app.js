@@ -29,6 +29,8 @@
       ui.clearControl();
       ui.bubble("elder", "Salom! Qaysi bosqichni oʻynaymiz?");
 
+      // "Barcha oʻyinlar" — loyiha bosh sahifasi (Information/index.html); o'yin yolg'iz ochilsa ham ishlaydi
+      const back = ui.h("a", { class: "back-link", href: "../../index.html", text: "◀︎ Barcha oʻyinlar" });
       const heading = ui.h("h1", { class: "game-title", text: title });
       const cards = ui.h("div", { class: "cards" });
       stageTitles.forEach((titleText, k) => {
@@ -44,7 +46,7 @@
         ui.h("span", { class: "card-title", text: titleText }),
         ui.h("span", { class: "card-state", text: state.done[k] ? "✓" : open ? "" : "🔒" })));
       });
-      ui.work().append(heading, cards);
+      ui.work().append(back, heading, cards);
 
       const next = state.done.indexOf(false);
       const first = next === -1 ? 1 : next + 1;

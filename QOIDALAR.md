@@ -118,6 +118,8 @@ Agar `ʻ` belgisi to'g'ri chiqmasa, tizim shrifti ishlatiladi.
 ```
 Information/
 ├── QOIDALAR.md                ← shu fayl
+├── index.html                 ← bosh sahifa: barcha o'yinlarga kirish
+├── bosh/                      ← bosh sahifa fayllari (uslub, ikonkalar, ro'yxat, test)
 └── oyinlar/
     ├── umumiy/                ← kamida 2 ta o'yin ishlatadigan kod (qahramonlar, UI, tovush, shrift)
     └── NN-oyin-nomi/          ← har bir o'yin o'z papkasida
@@ -133,6 +135,7 @@ Information/
 - Bir o'yinning fayllari boshqa o'yin papkasiga aralashmaydi.
 - Bir nechta o'yinga kerak bo'lgan kod `oyinlar/umumiy/` papkasida turadi. U yerga faqat **kamida 2 ta o'yin** ishlatadigan kod chiqariladi; bitta o'yinga xos narsa o'z papkasida qoladi.
 - `umumiy/` dagi kod o'zgarsa, **barcha o'yinlarning** testlari ishga tushiriladi.
+- Yangi o'yin tayyor bo'lgach, **bosh sahifadagi ro'yxatga** qo'shiladi (`bosh/js/bosh.js` dagi `GAMES`); `node --test bosh/tests/*.test.js` buni tekshiradi.
 
 ## 10. Ish tartibi
 
