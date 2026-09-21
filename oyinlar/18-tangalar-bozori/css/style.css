@@ -1,0 +1,64 @@
+/* Tangalar bozori — faqat shu o'yinga xos uslublar. Umumiylari: ../../umumiy/css/asos.css, sanoq.css */
+
+.tbox { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
+.count-line { font-size: 19px; font-weight: 800; text-align: center; }
+.answer { font-size: 21px; font-weight: 900; color: var(--togri); text-align: center; }
+.big-value { font-size: 36px; font-weight: 900; color: var(--asosiy); text-align: center; letter-spacing: 1px; }
+
+/* ---------- Son ustida xona qiymatlari ---------- */
+.placed { display: grid; gap: 0 12px; justify-items: center; padding: 6px 12px; border-radius: 12px; background: #fff; box-shadow: 0 2px 0 var(--soya); }
+.pl-place { font-size: 15px; font-weight: 900; color: var(--yana); }
+.pl-digit { font-size: 30px; font-weight: 900; line-height: 1.15; }
+.pl-value { font-size: 14px; font-weight: 900; color: var(--asosiy); }
+
+/* ---------- Tangalar ---------- */
+.coin-cols { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.coin-col { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.coin {
+  display: grid; place-items: center; width: 56px; height: 56px; padding: 0; border: 3px solid #C98B2E; border-radius: 50%;
+  background: #F0C040; color: var(--matn); font-size: 19px; font-weight: 900; box-shadow: 0 3px 0 var(--soya);
+}
+button.coin:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--soya); }
+.coin.small { width: 34px; height: 34px; border-width: 2px; font-size: 12px; box-shadow: none; animation: pop 0.25s; }
+.coin-badge { font-size: 14px; font-weight: 800; color: #7A7266; }
+.purse-wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; min-height: 40px; max-width: 420px; }
+.purse-label { font-size: 17px; font-weight: 800; }
+.purse { display: flex; flex-wrap: wrap; gap: 4px; }
+
+/* ---------- 16-lik: harflar ---------- */
+.hexstrip { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 10px; font-size: 16px; font-weight: 900; color: var(--asosiy); }
+.hx { padding: 2px 6px; border-radius: 6px; background: #fff; }
+.letter-row { display: flex; align-items: center; gap: 8px; }
+.letter-card {
+  min-width: 64px; height: 64px; padding: 0 10px; border: none; border-radius: 14px; background: var(--asosiy); color: #fff;
+  font-size: 34px; font-weight: 900; box-shadow: 0 4px 0 var(--soya);
+}
+.letter-card.flipped { background: var(--togri); animation: pop 0.25s; }
+.letter-rest { font-size: 34px; font-weight: 900; }
+
+/* ---------- Formula, hikoya, tabrik ---------- */
+.formula-box { display: flex; flex-direction: column; align-items: center; gap: 10px; max-width: 100%; text-align: center; }
+.formula-row { font-size: 21px; font-weight: 900; animation: pop 0.3s; }
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(240px, 66vw); }
+.story-art.small { width: min(130px, 34vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 12px; font-size: 20px; font-weight: 800; text-align: center; }
+
+@media (max-width: 400px) {
+  .formula-row { font-size: 18px; }
+  .coin { width: 50px; height: 50px; font-size: 17px; }
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+  .play.compact { grid-template-columns: minmax(150px, 24%) minmax(0, 1fr); }
+  .tbox { gap: 5px; }
+  .big-value { font-size: 26px; }
+  .coin { width: 48px; height: 48px; font-size: 16px; }
+  .coin.small { width: 26px; height: 26px; font-size: 10px; }
+  .pl-digit { font-size: 24px; }
+  .story-art { width: min(190px, 36vh); }
+  .formula-row { font-size: 17px; }
+  .formula-box { gap: 4px; }
+  .letter-card { height: 52px; font-size: 28px; }
+}
