@@ -65,6 +65,29 @@ test("reward: yutsa munchoq qo'shiladi, yutqazsa olinadi (kamida 1 qoladi)", () 
   assert.equal(small[3][2], 1);
 });
 
+test("smartOpponent: yutuqli yurishni biladi", () => {
+  assert.equal(B.smartOpponent(7, Math.random), 1);
+  assert.equal(B.smartOpponent(5, Math.random), 2);
+  assert.equal(B.smartOpponent(4, Math.random), 1);
+  assert.ok(B.legalMoves(6).includes(B.smartOpponent(6, Math.random)), "3 ga karrali holatda istalgan yurish");
+});
+
+test("tajribali murabbiy bilan mashq — robot kuchliroq bo'ladi", () => {
+  const strength = (opponent) => {
+    let sum = 0;
+    for (let run = 0; run < 40; run++) {
+      const boxes = B.newBoxes();
+      B.trainGames(boxes, 40, Math.random, opponent);
+      sum += (100 * boxes[7][1]) / (boxes[7][1] + boxes[7][2]); // 7 da to'g'ri yurish ulushi
+    }
+    return sum / 40;
+  };
+  const withSmart = strength(B.smartOpponent);
+  const withRandom = strength(B.randomOpponent);
+  assert.ok(withSmart > withRandom + 5, `murabbiy foyda bermadi: ${withRandom.toFixed(0)}% → ${withSmart.toFixed(0)}%`);
+  assert.ok(withSmart > 80, `40 oʻyindan keyin kuchsiz: ${withSmart.toFixed(0)}%`);
+});
+
 test("trainGames: robot o'ynab o'rganadi — yutuqlar ko'payadi", () => {
   let firstSum = 0;
   let lastSum = 0;

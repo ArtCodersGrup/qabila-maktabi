@@ -20,26 +20,28 @@
     const results = boxesUi.resultLine(el);
     const note = common.line("Oʻyinlar: 0 / 20");
     el.append(note);
-    await ui.say("elder", "Robot oʻzi bilan mashq qilsin — 20 marta oʻynaydi.");
-    ui.bubble("elder", "«20 marta oʻyna»ni bos.");
+    await ui.say("elder", "Robot mashq qilsin: 40 marta oʻynaydi. Raqibi — oʻyinni yaxshi biladigan murabbiy.");
+    await ui.say("elder", "Kuchli raqib bilan mashq qilsa, robot tezroq oʻrganadi: har xatosi darrov jazolanadi.");
+    ui.bubble("elder", "«40 marta oʻyna»ni bos.");
     await ui.settle((done) => {
-      ui.control().append(ui.button("20 marta oʻyna", () => { ui.clearControl(); done(); }, "big"));
+      ui.control().append(ui.button("40 marta oʻyna", () => { ui.clearControl(); done(); }, "big"));
     });
+    const ROUNDS = 40;
     let first = 0;
     let last = 0;
-    for (let k = 0; k < 20; k++) {
-      const game = boxes.playGame(state, Math.random, boxes.randomOpponent);
+    for (let k = 0; k < ROUNDS; k++) {
+      const game = boxes.playGame(state, Math.random, boxes.smartOpponent);
       boxes.reward(state, game.history, game.won);
       results.add(game.won);
       boxView.set(state, common.VISIBLE);
-      note.textContent = `Oʻyinlar: ${k + 1} / 20`;
+      note.textContent = `Oʻyinlar: ${k + 1} / ${ROUNDS}`;
       if (k < 10 && game.won) first++;
-      if (k >= 10 && game.won) last++;
+      if (k >= ROUNDS - 10 && game.won) last++;
       sound.play(game.won ? "correct" : "tap");
-      await ui.sleep(230);
+      await ui.sleep(150);
     }
     el.append(common.line(`Birinchi 10 ta oʻyin: ${first} ta yutuq · Oxirgi 10 ta: ${last} ta yutuq`));
-    await ui.say("elder", `Boshida ${first} ta yutdi, oxirida ${last} ta. Munchoqlar oʻzgardi!`);
+    await ui.say("elder", `Boshida ${first} ta yutgan edi, oxirida ${last} ta. Munchoqlar oʻzgardi!`);
     await ui.say("elder", "Robot sirni topdi: raqibga 3 ga karrali tosh qoldiradi.");
   }
 
@@ -48,8 +50,18 @@
     await ui.say("elder", "Endi oʻrgangan robot bilan oʻynab koʻr!");
     const game = await common.playRound(state);
     await ui.say("elder", game.won
-      ? "Robot yutdi. Endi uni yutish qiyin!"
+      ? "Robot yutdi. Endi uni yutish juda qiyin!"
       : "Sen yutding! Demak robot hali toʻliq oʻrganmagan.");
+  }
+
+  // 7.4: endi bola birinchi yuradi — sirni bilsa, yutadi
+  async function playFirst(state) {
+    await ui.say("elder", "Robot birinchi yursa, uni yutish deyarli imkonsiz. Lekin sir sende ham bor!");
+    await ui.say("elder", "Endi sen birinchi yur. Har safar robotga 6, 3 yoki 0 ta tosh qoldir.");
+    const game = await common.playRound(state, { childFirst: true });
+    await ui.say("elder", game.won
+      ? "Robot yutdi. Yana urinib koʻr: robotga 6, 3 yoki 0 qoldirsang — sen yutasan."
+      : "Sen yutding! Sirni ishlatding: har safar 3 ga karrali qoldirding.");
   }
 
   // 7.4: mashq
@@ -90,6 +102,7 @@
     QK.state = state;
     await trainFast(state);
     await playTrained(state);
+    await playFirst(state);
     await ui.say("elder", "Endi savollar. 3 ta toʻgʻri javob kerak!");
     await practice.exercises({
       next: (prev, correct) => boxes.makeStage3Task(correct, prev),

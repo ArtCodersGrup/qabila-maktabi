@@ -67,11 +67,12 @@ Bosh ekran
 
 ## 7. 3-bosqich: Robot kuchayadi
 
-1. **Tez o'qitish:** "Robot 20 marta oʻynasin" — o'yinlar tez o'tadi, natija chizig'i to'ladi (`✗ ✓ ✗ ✓ ✓ ✓ …`), qutilardagi munchoqlar o'sib boradi.
+1. **Tez o'qitish:** robot **40 marta** o'ynaydi, raqibi — **o'yinni biladigan murabbiy** (`smartOpponent`). Kuchli raqib har xatoni jazolagani uchun robot tezroq o'rganadi (o'lchandi: 20 o'yin + tasodifiy raqib → ehtiyotkor bola bilan 44% yutuq; 40 o'yin + murabbiy → 80%). O'yinlar tez o'tadi, natija chizig'i to'ladi, munchoqlar o'sib boradi.
 2. **Taqqoslash:** boshidagi va oxiridagi 10 o'yin yutuqlari: `3 / 10` → `9 / 10`.
-3. **Bola o'ynaydi:** endi robotni yutish qiyin. "Robot sirini topdi: 3 ga karrali qoldiradi."
-4. **Mashq** (3 ta to'g'ri): "Qutida koʻk {6} ta, sariq {1} ta — robot koʻpincha nima qiladi?"; "{5} tosh qolganda nechta olsa yutadi?" (3 ga karrali qoldirish).
-5. **Hikoya:**
+3. **Bola o'ynaydi:** endi robotni yutish qiyin (robot birinchi yurganda deyarli imkonsiz).
+4. **Qayta o'yin — bola birinchi yuradi:** Oqsoqol sirni aytadi ("robotga 6, 3 yoki 0 qoldir") va bola uni qo'llab yutadi. Bo'lim bolaning g'alabasi bilan tugaydi.
+5. **Mashq** (3 ta to'g'ri): "Qutida koʻk {6} ta, sariq {1} ta — robot koʻpincha nima qiladi?"; "{5} tosh qolganda nechta olsa yutadi?" (3 ga karrali qoldirish).
+6. **Hikoya:**
    1. (gugurt qutilari) "1961-yilda olim 304 ta gugurt qutisi bilan shunday mashina yasagan."
    2. (o'yin taxtasi) "Kompyuterlar shaxmat va Go'ni ham shunday — oʻynab, mukofot olib oʻrgangan."
    3. (yuradigan robot) "Robotlar yurishni ham shunday oʻrganadi: har urinishdan keyin mukofot."

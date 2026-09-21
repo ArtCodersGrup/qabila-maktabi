@@ -29,52 +29,58 @@
     return { el, table, boxHost };
   }
 
-  // Bitta o'yin: robot birinchi yuradi, keyin bola tanlaydi
-  async function playRound(state) {
+  // Bitta o'yin. opts.childFirst — bola birinchi yuradi.
+  async function playRound(state, opts) {
+    const first = !(opts && opts.childFirst);
     const { table, boxHost } = playScreen();
     let n = boxes.START;
     const history = [];
     table.reset(n);
+    let robotTurn = first;
     for (;;) {
-      table.turn("robot");
-      boxHost.innerHTML = "";
-      boxHost.append(boxesUi.boxCard(n, state[n], { open: true }));
-      ui.bubble("elder", `Robot ${n} li qutidan munchoq tortmoqda…`);
-      await ui.sleep(950);
-      const move = boxes.pickMove(state, n, Math.random);
-      history.push({ n, move });
-      boxHost.innerHTML = "";
-      boxHost.append(ui.h("div", { class: "pulled" },
-        boxesUi.beadChip(move),
-        ui.h("span", { class: "pulled-text", text: `${move} ta ol` })));
-      sound.play("correct");
-      ui.bubble("elder", `Robot ${boxesUi.COLOR_NAME[boxes.COLORS[move]]} munchoq tortdi — ${move} ta oladi.`);
-      await ui.sleep(850);
-      await table.take("robot", move);
-      n -= move;
-      if (n === 0) {
-        boxHost.innerHTML = ""; // tortilgan munchoq oʻyin tugagach kerak emas
-        table.finish("robot");
-        sound.play("retry");
-        ui.bubble("elder", "Oxirgi toshni robot oldi — robot yutdi!");
-        await ui.sleep(1200);
-        return { history, won: true };
+      if (robotTurn) {
+        table.turn("robot");
+        boxHost.innerHTML = "";
+        boxHost.append(boxesUi.boxCard(n, state[n], { open: true }));
+        ui.bubble("elder", `Robot ${n} li qutidan munchoq tortmoqda…`);
+        await ui.sleep(950);
+        const move = boxes.pickMove(state, n, Math.random);
+        history.push({ n, move });
+        boxHost.innerHTML = "";
+        boxHost.append(ui.h("div", { class: "pulled" },
+          boxesUi.beadChip(move),
+          ui.h("span", { class: "pulled-text", text: `${move} ta ol` })));
+        sound.play("correct");
+        ui.bubble("elder", `Robot ${boxesUi.COLOR_NAME[boxes.COLORS[move]]} munchoq tortdi — ${move} ta oladi.`);
+        await ui.sleep(850);
+        await table.take("robot", move);
+        n -= move;
+        if (n === 0) {
+          boxHost.innerHTML = "";
+          table.finish("robot");
+          sound.play("retry");
+          ui.bubble("elder", "Oxirgi toshni robot oldi — robot yutdi!");
+          await ui.sleep(1200);
+          return { history, won: true };
+        }
+      } else {
+        table.turn("me");
+        boxHost.innerHTML = "";
+        ui.bubble("elder", `Stolda ${n} ta tosh qoldi. Sen nechta olasan?`);
+        const mine = await ui.settle((done) => boxesUi.moveButtons(n, (m) => { ui.clearControl(); done(m); }));
+        await table.take("me", mine);
+        n -= mine;
+        if (n === 0) {
+          boxHost.innerHTML = "";
+          table.finish("me");
+          sound.play("win");
+          ui.pose("apprentice", "happy", 900);
+          ui.bubble("elder", "Oxirgi toshni sen olding — sen yutding!");
+          await ui.sleep(1200);
+          return { history, won: false };
+        }
       }
-      table.turn("me");
-      boxHost.innerHTML = "";
-      ui.bubble("elder", `Stolda ${n} ta tosh qoldi. Sen nechta olasan?`);
-      const mine = await ui.settle((done) => boxesUi.moveButtons(n, (m) => { ui.clearControl(); done(m); }));
-      await table.take("me", mine);
-      n -= mine;
-      if (n === 0) {
-        boxHost.innerHTML = ""; // tortilgan munchoq oʻyin tugagach kerak emas
-        table.finish("me");
-        sound.play("win");
-        ui.pose("apprentice", "happy", 900);
-        ui.bubble("elder", "Oxirgi toshni sen olding — sen yutding!");
-        await ui.sleep(1200);
-        return { history, won: false };
-      }
+      robotTurn = !robotTurn;
     }
   }
 

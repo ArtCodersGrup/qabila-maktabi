@@ -43,6 +43,9 @@
     return moves[Math.floor((rng || Math.random)() * moves.length)];
   };
 
+  // Tajribali murabbiy: yutuqli yurishni biladi (robotning xatosi darrov jazolanadi)
+  const smartOpponent = (n, rng) => winningMove(n) || randomOpponent(n, rng);
+
   // Bitta o'yin: robot birinchi yuradi. history — faqat robotning yurishlari.
   function playGame(boxes, rng, opponent) {
     let n = START;
@@ -185,7 +188,7 @@
 
   const api = {
     START, MOVES, BEADS, COLORS,
-    legalMoves, isWin, winningMove, newBoxes, pickMove, randomOpponent, playGame, reward, trainGames,
+    legalMoves, isWin, winningMove, newBoxes, pickMove, randomOpponent, smartOpponent, playGame, reward, trainGames,
     makeBoxTask, makeBeadTask, makeRewardTask, makeUsedTask, makeReadTask, makeStrategyTask,
     makeStage1Task, makeStage2Task, makeStage3Task,
   };

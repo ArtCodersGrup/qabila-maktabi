@@ -89,6 +89,29 @@ test("reward: yutsa munchoq qo'shiladi, yutqazsa olinadi (kamida 1 qoladi)", () 
   assert.equal(small[3][2], 1);
 });
 
+test("smartOpponent: yutuqli yurishni biladi", () => {
+  assert.equal(B.smartOpponent(7, Math.random), 1);
+  assert.equal(B.smartOpponent(5, Math.random), 2);
+  assert.equal(B.smartOpponent(4, Math.random), 1);
+  assert.ok(B.legalMoves(6).includes(B.smartOpponent(6, Math.random)), "3 ga karrali holatda istalgan yurish");
+});
+
+test("tajribali murabbiy bilan mashq — robot kuchliroq bo'ladi", () => {
+  const strength = (opponent) => {
+    let sum = 0;
+    for (let run = 0; run < 40; run++) {
+      const boxes = B.newBoxes();
+      B.trainGames(boxes, 40, Math.random, opponent);
+      sum += (100 * boxes[7][1]) / (boxes[7][1] + boxes[7][2]); // 7 da to'g'ri yurish ulushi
+    }
+    return sum / 40;
+  };
+  const withSmart = strength(B.smartOpponent);
+  const withRandom = strength(B.randomOpponent);
+  assert.ok(withSmart > withRandom + 5, `murabbiy foyda bermadi: ${withRandom.toFixed(0)}% → ${withSmart.toFixed(0)}%`);
+  assert.ok(withSmart > 80, `40 oʻyindan keyin kuchsiz: ${withSmart.toFixed(0)}%`);
+});
+
 test("trainGames: robot o'ynab o'rganadi — yutuqlar ko'payadi", () => {
   let firstSum = 0;
   let lastSum = 0;
@@ -232,6 +255,9 @@ test("bosqich mashqlari: turlar navbat bilan keladi", () => {
     return moves[Math.floor((rng || Math.random)() * moves.length)];
   };
 
+  // Tajribali murabbiy: yutuqli yurishni biladi (robotning xatosi darrov jazolanadi)
+  const smartOpponent = (n, rng) => winningMove(n) || randomOpponent(n, rng);
+
   // Bitta o'yin: robot birinchi yuradi. history — faqat robotning yurishlari.
   function playGame(boxes, rng, opponent) {
     let n = START;
@@ -374,7 +400,7 @@ test("bosqich mashqlari: turlar navbat bilan keladi", () => {
 
   const api = {
     START, MOVES, BEADS, COLORS,
-    legalMoves, isWin, winningMove, newBoxes, pickMove, randomOpponent, playGame, reward, trainGames,
+    legalMoves, isWin, winningMove, newBoxes, pickMove, randomOpponent, smartOpponent, playGame, reward, trainGames,
     makeBoxTask, makeBeadTask, makeRewardTask, makeUsedTask, makeReadTask, makeStrategyTask,
     makeStage1Task, makeStage2Task, makeStage3Task,
   };
@@ -947,52 +973,58 @@ test("1961-yil mashinasi: 15 ta quti", () => {
     return { el, table, boxHost };
   }
 
-  // Bitta o'yin: robot birinchi yuradi, keyin bola tanlaydi
-  async function playRound(state) {
+  // Bitta o'yin. opts.childFirst — bola birinchi yuradi.
+  async function playRound(state, opts) {
+    const first = !(opts && opts.childFirst);
     const { table, boxHost } = playScreen();
     let n = boxes.START;
     const history = [];
     table.reset(n);
+    let robotTurn = first;
     for (;;) {
-      table.turn("robot");
-      boxHost.innerHTML = "";
-      boxHost.append(boxesUi.boxCard(n, state[n], { open: true }));
-      ui.bubble("elder", `Robot ${n} li qutidan munchoq tortmoqda…`);
-      await ui.sleep(950);
-      const move = boxes.pickMove(state, n, Math.random);
-      history.push({ n, move });
-      boxHost.innerHTML = "";
-      boxHost.append(ui.h("div", { class: "pulled" },
-        boxesUi.beadChip(move),
-        ui.h("span", { class: "pulled-text", text: `${move} ta ol` })));
-      sound.play("correct");
-      ui.bubble("elder", `Robot ${boxesUi.COLOR_NAME[boxes.COLORS[move]]} munchoq tortdi — ${move} ta oladi.`);
-      await ui.sleep(850);
-      await table.take("robot", move);
-      n -= move;
-      if (n === 0) {
-        boxHost.innerHTML = ""; // tortilgan munchoq oʻyin tugagach kerak emas
-        table.finish("robot");
-        sound.play("retry");
-        ui.bubble("elder", "Oxirgi toshni robot oldi — robot yutdi!");
-        await ui.sleep(1200);
-        return { history, won: true };
+      if (robotTurn) {
+        table.turn("robot");
+        boxHost.innerHTML = "";
+        boxHost.append(boxesUi.boxCard(n, state[n], { open: true }));
+        ui.bubble("elder", `Robot ${n} li qutidan munchoq tortmoqda…`);
+        await ui.sleep(950);
+        const move = boxes.pickMove(state, n, Math.random);
+        history.push({ n, move });
+        boxHost.innerHTML = "";
+        boxHost.append(ui.h("div", { class: "pulled" },
+          boxesUi.beadChip(move),
+          ui.h("span", { class: "pulled-text", text: `${move} ta ol` })));
+        sound.play("correct");
+        ui.bubble("elder", `Robot ${boxesUi.COLOR_NAME[boxes.COLORS[move]]} munchoq tortdi — ${move} ta oladi.`);
+        await ui.sleep(850);
+        await table.take("robot", move);
+        n -= move;
+        if (n === 0) {
+          boxHost.innerHTML = "";
+          table.finish("robot");
+          sound.play("retry");
+          ui.bubble("elder", "Oxirgi toshni robot oldi — robot yutdi!");
+          await ui.sleep(1200);
+          return { history, won: true };
+        }
+      } else {
+        table.turn("me");
+        boxHost.innerHTML = "";
+        ui.bubble("elder", `Stolda ${n} ta tosh qoldi. Sen nechta olasan?`);
+        const mine = await ui.settle((done) => boxesUi.moveButtons(n, (m) => { ui.clearControl(); done(m); }));
+        await table.take("me", mine);
+        n -= mine;
+        if (n === 0) {
+          boxHost.innerHTML = "";
+          table.finish("me");
+          sound.play("win");
+          ui.pose("apprentice", "happy", 900);
+          ui.bubble("elder", "Oxirgi toshni sen olding — sen yutding!");
+          await ui.sleep(1200);
+          return { history, won: false };
+        }
       }
-      table.turn("me");
-      boxHost.innerHTML = "";
-      ui.bubble("elder", `Stolda ${n} ta tosh qoldi. Sen nechta olasan?`);
-      const mine = await ui.settle((done) => boxesUi.moveButtons(n, (m) => { ui.clearControl(); done(m); }));
-      await table.take("me", mine);
-      n -= mine;
-      if (n === 0) {
-        boxHost.innerHTML = ""; // tortilgan munchoq oʻyin tugagach kerak emas
-        table.finish("me");
-        sound.play("win");
-        ui.pose("apprentice", "happy", 900);
-        ui.bubble("elder", "Oxirgi toshni sen olding — sen yutding!");
-        await ui.sleep(1200);
-        return { history, won: false };
-      }
+      robotTurn = !robotTurn;
     }
   }
 
@@ -1222,26 +1254,28 @@ test("1961-yil mashinasi: 15 ta quti", () => {
     const results = boxesUi.resultLine(el);
     const note = common.line("Oʻyinlar: 0 / 20");
     el.append(note);
-    await ui.say("elder", "Robot oʻzi bilan mashq qilsin — 20 marta oʻynaydi.");
-    ui.bubble("elder", "«20 marta oʻyna»ni bos.");
+    await ui.say("elder", "Robot mashq qilsin: 40 marta oʻynaydi. Raqibi — oʻyinni yaxshi biladigan murabbiy.");
+    await ui.say("elder", "Kuchli raqib bilan mashq qilsa, robot tezroq oʻrganadi: har xatosi darrov jazolanadi.");
+    ui.bubble("elder", "«40 marta oʻyna»ni bos.");
     await ui.settle((done) => {
-      ui.control().append(ui.button("20 marta oʻyna", () => { ui.clearControl(); done(); }, "big"));
+      ui.control().append(ui.button("40 marta oʻyna", () => { ui.clearControl(); done(); }, "big"));
     });
+    const ROUNDS = 40;
     let first = 0;
     let last = 0;
-    for (let k = 0; k < 20; k++) {
-      const game = boxes.playGame(state, Math.random, boxes.randomOpponent);
+    for (let k = 0; k < ROUNDS; k++) {
+      const game = boxes.playGame(state, Math.random, boxes.smartOpponent);
       boxes.reward(state, game.history, game.won);
       results.add(game.won);
       boxView.set(state, common.VISIBLE);
-      note.textContent = `Oʻyinlar: ${k + 1} / 20`;
+      note.textContent = `Oʻyinlar: ${k + 1} / ${ROUNDS}`;
       if (k < 10 && game.won) first++;
-      if (k >= 10 && game.won) last++;
+      if (k >= ROUNDS - 10 && game.won) last++;
       sound.play(game.won ? "correct" : "tap");
-      await ui.sleep(230);
+      await ui.sleep(150);
     }
     el.append(common.line(`Birinchi 10 ta oʻyin: ${first} ta yutuq · Oxirgi 10 ta: ${last} ta yutuq`));
-    await ui.say("elder", `Boshida ${first} ta yutdi, oxirida ${last} ta. Munchoqlar oʻzgardi!`);
+    await ui.say("elder", `Boshida ${first} ta yutgan edi, oxirida ${last} ta. Munchoqlar oʻzgardi!`);
     await ui.say("elder", "Robot sirni topdi: raqibga 3 ga karrali tosh qoldiradi.");
   }
 
@@ -1250,8 +1284,18 @@ test("1961-yil mashinasi: 15 ta quti", () => {
     await ui.say("elder", "Endi oʻrgangan robot bilan oʻynab koʻr!");
     const game = await common.playRound(state);
     await ui.say("elder", game.won
-      ? "Robot yutdi. Endi uni yutish qiyin!"
+      ? "Robot yutdi. Endi uni yutish juda qiyin!"
       : "Sen yutding! Demak robot hali toʻliq oʻrganmagan.");
+  }
+
+  // 7.4: endi bola birinchi yuradi — sirni bilsa, yutadi
+  async function playFirst(state) {
+    await ui.say("elder", "Robot birinchi yursa, uni yutish deyarli imkonsiz. Lekin sir sende ham bor!");
+    await ui.say("elder", "Endi sen birinchi yur. Har safar robotga 6, 3 yoki 0 ta tosh qoldir.");
+    const game = await common.playRound(state, { childFirst: true });
+    await ui.say("elder", game.won
+      ? "Robot yutdi. Yana urinib koʻr: robotga 6, 3 yoki 0 qoldirsang — sen yutasan."
+      : "Sen yutding! Sirni ishlatding: har safar 3 ga karrali qoldirding.");
   }
 
   // 7.4: mashq
@@ -1292,6 +1336,7 @@ test("1961-yil mashinasi: 15 ta quti", () => {
     QK.state = state;
     await trainFast(state);
     await playTrained(state);
+    await playFirst(state);
     await ui.say("elder", "Endi savollar. 3 ta toʻgʻri javob kerak!");
     await practice.exercises({
       next: (prev, correct) => boxes.makeStage3Task(correct, prev),
