@@ -3,7 +3,7 @@
   "use strict";
 
   const QK = root.QK;
-  const { lamps, ui, art, lampsUi, common } = QK;
+  const { lamps, ui, art, lampsUi, common, practice } = QK;
 
   async function intro() {
     ui.setCompact(false);
@@ -68,7 +68,7 @@
       row = lampsUi.lampRow(box, { count: 3, states: lamps.PLAIN });
     }
     const table = lampsUi.codeTable(box);
-    return common.tries({
+    return practice.tries({
       setup: (submit) => {
         if (task.type === "decode") lampsUi.meaningButtons((i) => submit(i));
         else ui.control().append(ui.button("Yuborish", () => submit(row.get())));
@@ -104,7 +104,7 @@
     await ui.say("elder", "3 ta chiroq — 8 ta naqsh. Har biriga maʼno berdik!");
     await explain();
     await ui.say("elder", "Endi qoʻshni qabila bilan gaplashamiz. 3 ta toʻgʻri javob kerak!");
-    await common.exercises({
+    await practice.exercises({
       next: (prev) => lamps.makeCodeTask(prev),
       run: codeTask,
       praise: (t) => `Bu — «${lamps.MEANINGS[t.meaning]}».`,

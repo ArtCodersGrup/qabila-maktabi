@@ -157,7 +157,7 @@ for name in ["stage1.js", "stage2.js", "stage3.js"]:
     s = p.read_text()
     for fn in ["tries", "numberTries", "exercises"]:
         s = s.replace("common." + fn, "practice." + fn)
-    s = s.replace("practice.numberTries({\n      answer:", "practice.numberTries({\n      maxLen: 2,\n      answer:")
+    s = s.replace("practice.numberTries({", "practice.numberTries({ maxLen: 2,")
     s = s.replace("common.practice", "practice")  # ehtiyot chorasi
     # destrukturizatsiya: practice qo'shiladi, common faqat findAll bo'lgan fayllarda qoladi
     line = [l for l in s.split("\n") if l.startswith("  const { lamps")][0]
@@ -1832,7 +1832,7 @@ PY
 - [ ] **5-qadam: barcha o'yinlar testlari (umumiy kod o'zgargan — QOIDALAR 9)**
 
 ```bash
-cd /Users/bicoder/Documents/Information/oyinlar && for d in 0*/; do (cd "$d" && echo "== $d" && node --test tests/*.test.js 2>&1 | grep -E "^# (pass|fail)"); done
+cd /Users/bicoder/Documents/Information/oyinlar && for d in 0*/; do (cd "$d" && echo "== $d" && node --test tests/*.test.js 2>&1 | grep -E "^ℹ (pass|fail)"); done
 ```
 
 - [ ] **6-qadam: brauzerda to'liq o'ynab chiqish**
