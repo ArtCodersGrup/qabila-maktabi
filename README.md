@@ -1,5 +1,7 @@
 # Qabila maktabi
 
+**Sayt: https://artcodersgrup.github.io/qabila-maktabi/**
+
 8–12 yoshli bolalarga informatika, kodlash va sunʼiy intellekt qanday ishlashini **2D oʻyinlar orqali koʻrsatuvchi** sayt. Hammasi oʻzbek tilida (lotin yozuvi).
 
 Har bir oʻyin bitta mavzuni oʻrgatadi: bola avval oʻzi qiladi, keyin oʻyin unga nom beradi, oxirida tasodifiy mashqlar beriladi (3 ta toʻgʻri javob — bosqich tugadi).
@@ -8,7 +10,9 @@ Har bir oʻyin bitta mavzuni oʻrgatadi: bola avval oʻzi qiladi, keyin oʻyin u
 
 **Kompyuterda:** `index.html` ni ikki marta bosing — tamom. Oʻrnatish, server va internet kerak emas (rasm, shrift, ovoz va saqlangan progress — hammasi `file://` da ishlaydi).
 
-**Telefonda:** `sayt-ishga-tushir.command` faylini ikki marta bosing — u mahalliy serverni yoqadi va havolani koʻrsatadi (masalan `http://192.168.1.103:8777/`). Telefon kompyuter bilan bir xil Wi-Fi'da boʻlsin. Toʻxtatish: oynada Control + C.
+**Telefonda (onlayn):** yuqoridagi havolani oching. Brauzer menyusidan **«Ekranga qoʻshish»** ni tanlasangiz, ilova kabi oʻrnatiladi va keyin **internetsiz ham** ishlaydi.
+
+**Telefonda (internetsiz, uy tarmogʻida):** `sayt-ishga-tushir.command` faylini ikki marta bosing — u mahalliy serverni yoqadi va havolani koʻrsatadi (masalan `http://192.168.1.103:8777/`). Telefon kompyuter bilan bir xil Wi-Fi'da boʻlsin. Toʻxtatish: oynada Control + C.
 
 Eslatma: progress brauzer xotirasida saqlanadi va `file://` bilan `http://localhost` alohida hisoblanadi — bitta usulni tanlab ishlatgan maʼqul.
 
