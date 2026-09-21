@@ -1,0 +1,67 @@
+/* Qoplarga joylash — faqat shu o'yinga xos uslublar. Umumiylari: ../../umumiy/css/asos.css, sanoq.css */
+
+.qbox { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
+.count-line { font-size: 19px; font-weight: 800; text-align: center; }
+.count-line.ans { font-size: 24px; font-weight: 900; color: var(--asosiy); }
+.answer { font-size: 21px; font-weight: 900; color: var(--togri); text-align: center; }
+.big-value { font-size: 34px; font-weight: 900; color: var(--asosiy); text-align: center; }
+.facts { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 22px; font-weight: 900; }
+
+/* ---------- Tangalar (kattadan boshlab) ---------- */
+.qcoins, .hint-coins { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.qcoin-col { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 4px; border-radius: 12px; }
+.qcoin-col.hl { background: rgba(47, 111, 222, 0.14); }
+.qcoin {
+  display: grid; place-items: center; width: 52px; height: 52px; border: 3px solid #C98B2E; border-radius: 50%;
+  background: #F0C040; font-size: 18px; font-weight: 900;
+}
+.hint-coins .qcoin { width: 44px; height: 44px; font-size: 16px; }
+.qdigit { min-height: 32px; font-size: 28px; font-weight: 900; color: var(--togri); }
+
+/* ---------- Bo'lish jadvali: qoldiqlar pastdan yuqoriga ---------- */
+.dtable { position: relative; display: flex; flex-direction: column; gap: 4px; padding: 6px 44px 6px 12px; border-radius: 14px; background: #fff; box-shadow: 0 3px 0 var(--soya); }
+.drow { display: flex; align-items: center; gap: 10px; animation: pop 0.25s; }
+.dcalc { min-width: 120px; font-size: 21px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.dlabel { font-size: 15px; font-weight: 800; color: #7A7266; }
+.drem {
+  min-width: 48px; height: 40px; padding: 0 8px; border: none; border-radius: 10px;
+  background: #FFF1D6; color: var(--matn); font-size: 21px; font-weight: 900; box-shadow: inset 0 0 0 2px var(--yana);
+}
+.drem:disabled { opacity: 1; cursor: default; }
+.drem.taken { background: var(--togri); color: #fff; box-shadow: none; }
+/* Pastdan yuqoriga o'q (qoldiqlar ustuni yonida) */
+.dtable.arrow::after {
+  content: "↑"; position: absolute; right: 10px; top: 6px; bottom: 6px; width: 24px;
+  display: grid; place-items: center; border-radius: 8px; background: rgba(240, 138, 36, 0.15);
+  color: var(--yana); font-size: 26px; font-weight: 900;
+}
+
+/* ---------- Formula, hikoya, tabrik ---------- */
+.formula-box { display: flex; flex-direction: column; align-items: center; gap: 8px; max-width: 100%; text-align: center; }
+.formula-row { font-size: 20px; font-weight: 900; animation: pop 0.3s; }
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(240px, 66vw); }
+.story-art.small { width: min(130px, 34vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 12px; font-size: 20px; font-weight: 800; text-align: center; }
+
+@media (max-width: 400px) {
+  .formula-row { font-size: 17px; }
+  .qcoin { width: 46px; height: 46px; font-size: 16px; }
+  .dcalc { min-width: 100px; font-size: 19px; }
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+  .play.compact { grid-template-columns: minmax(150px, 24%) minmax(0, 1fr); }
+  .qbox { gap: 5px; }
+  .big-value { font-size: 24px; }
+  .facts { font-size: 18px; gap: 2px; }
+  .qcoin { width: 44px; height: 44px; font-size: 16px; }
+  .qdigit { min-height: 26px; font-size: 22px; }
+  .dtable { gap: 2px; padding: 4px 40px 4px 10px; }
+  .dcalc { font-size: 18px; }
+  .drem { height: 32px; font-size: 18px; }
+  .story-art { width: min(190px, 36vh); }
+  .formula-row { font-size: 17px; }
+  .formula-box { gap: 4px; }
+}
