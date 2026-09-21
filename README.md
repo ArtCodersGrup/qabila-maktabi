@@ -6,7 +6,11 @@ Har bir oʻyin bitta mavzuni oʻrgatadi: bola avval oʻzi qiladi, keyin oʻyin u
 
 ## Ochish
 
-`index.html` ni brauzerda oching — ikki marta bosish yetarli. **Oʻrnatish, server va internet kerak emas.** Telefon (barmoq) va kompyuter (sichqoncha/klaviatura) da ishlaydi.
+**Kompyuterda:** `index.html` ni ikki marta bosing — tamom. Oʻrnatish, server va internet kerak emas (rasm, shrift, ovoz va saqlangan progress — hammasi `file://` da ishlaydi).
+
+**Telefonda:** `sayt-ishga-tushir.command` faylini ikki marta bosing — u mahalliy serverni yoqadi va havolani koʻrsatadi (masalan `http://192.168.1.103:8777/`). Telefon kompyuter bilan bir xil Wi-Fi'da boʻlsin. Toʻxtatish: oynada Control + C.
+
+Eslatma: progress brauzer xotirasida saqlanadi va `file://` bilan `http://localhost` alohida hisoblanadi — bitta usulni tanlab ishlatgan maʼqul.
 
 ## Oʻyinlar
 
