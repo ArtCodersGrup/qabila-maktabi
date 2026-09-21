@@ -9,6 +9,8 @@ const ROOT = path.join(__dirname, "../..");
 const read = (p) => fs.readFileSync(path.join(ROOT, p), "utf8");
 const FILES = JSON.parse(read("sw.js").match(/const FILES = \[([\s\S]*?)\];/)[1].replace(/,\s*$/, "").replace(/^/, "[") + "]");
 const manifest = JSON.parse(read("manifest.json"));
+// Alohida sahifalar: o'yinlar (NN-nomi) va musobaqa
+const pageDirs = () => fs.readdirSync(path.join(ROOT, "oyinlar")).filter((d) => /^\d\d-/.test(d) || d === "musobaqa");
 
 // Saytga kerak bo'lgan fayllar (testlar va hujjatlar kirmaydi)
 function siteFiles() {
@@ -17,7 +19,7 @@ function siteFiles() {
   for (const f of fs.readdirSync(path.join(ROOT, "oyinlar/umumiy/css"))) out.push("oyinlar/umumiy/css/" + f);
   out.push("oyinlar/umumiy/fonts/Nunito.woff2");
   for (const f of fs.readdirSync(path.join(ROOT, "oyinlar/umumiy/js"))) out.push("oyinlar/umumiy/js/" + f);
-  for (const dir of fs.readdirSync(path.join(ROOT, "oyinlar")).filter((d) => /^\d\d-/.test(d))) {
+  for (const dir of pageDirs()) {
     out.push(`oyinlar/${dir}/index.html`, `oyinlar/${dir}/css/style.css`);
     const js = path.join(ROOT, "oyinlar", dir, "js");
     for (const f of fs.readdirSync(js)) {
@@ -46,7 +48,7 @@ test("sw.js dagi har bir fayl mavjud", () => {
 
 test("papka manzillari ham keshlanadi (o'yinga to'g'ridan-to'g'ri kirish uchun)", () => {
   assert.ok(FILES.includes("./"));
-  for (const dir of fs.readdirSync(path.join(ROOT, "oyinlar")).filter((d) => /^\d\d-/.test(d))) {
+  for (const dir of pageDirs()) {
     assert.ok(FILES.includes(`oyinlar/${dir}/`), dir);
   }
 });
@@ -63,7 +65,7 @@ test("manifest: nom, boshlanish manzili va ikonkalar", () => {
 test("har bir sahifa offline.js ni ulaydi", () => {
   assert.match(read("index.html"), /oyinlar\/umumiy\/js\/offline\.js/);
   assert.match(read("index.html"), /rel="manifest"/);
-  for (const dir of fs.readdirSync(path.join(ROOT, "oyinlar")).filter((d) => /^\d\d-/.test(d))) {
+  for (const dir of pageDirs()) {
     assert.match(read(`oyinlar/${dir}/index.html`), /\.\.\/umumiy\/js\/offline\.js/, dir);
   }
 });

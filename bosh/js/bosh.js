@@ -39,6 +39,9 @@
     { n: 22, topic: "sanoq", dir: "22-sayyoralar-sanogi", title: "Sayyoralar sanogʻi", desc: "n-lik tizimda amallar va jumboqlar", key: "sayyoralar-sanogi:v1", stages: 3, icon: "sayyora", age: "10–12" },
   ];
 
+  // Musobaqa rejimi — o'yin emas (bosqichi yo'q), ro'yxat tepasida alohida karta
+  const CONTEST = { dir: "musobaqa", title: "Musobaqa", desc: "Ikki kishi bitta ekranda: savollar, soat va 3 ta yurak", icon: "musobaqa" };
+
   function h(tag, props, ...children) {
     const el = root.document.createElement(tag);
     for (const [key, value] of Object.entries(props || {})) {
@@ -74,6 +77,16 @@
     if (paper) paper.style.visibility = "hidden"; // bosh sahifada qog'oz kerak emas
     const list = root.document.getElementById("list");
     list.innerHTML = "";
+    list.append(h("section", { class: "bosh-section" },
+      h("h2", { class: "bosh-h2", text: "Musobaqa" }),
+      h("p", { class: "bosh-note", text: "Oʻrganganingni doʻsting bilan sinab koʻr" }),
+      h("div", { class: "bosh-cards" },
+        h("a", { class: "bosh-card bosh-contest", href: `oyinlar/${CONTEST.dir}/index.html` },
+          h("span", { class: "bosh-icon", html: root.QK.boshArt.icon(CONTEST.icon) }),
+          h("span", { class: "bosh-text" },
+            h("span", { class: "bosh-name", text: CONTEST.title }),
+            h("span", { class: "bosh-desc", text: CONTEST.desc })),
+          h("span", { class: "bosh-state" }, h("span", { class: "bosh-age", text: "2 kishi" }))))));
     for (const section of SECTIONS) {
       const games = GAMES.filter((g) => g.topic === section.id);
       if (!games.length) continue;
@@ -87,6 +100,6 @@
   }
 
   root.QK = root.QK || {};
-  root.QK.bosh = { AGE, SECTIONS, GAMES, render };
+  root.QK.bosh = { AGE, SECTIONS, GAMES, CONTEST, render };
   if (root.document) render();
 })(window);

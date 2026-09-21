@@ -10,7 +10,7 @@ const ROOT = path.join(__dirname, "../..");
 const win = {};
 loadScript(path.join(ROOT, "bosh/js/bosh-art.js"), win);
 loadScript(path.join(ROOT, "bosh/js/bosh.js"), win);
-const { GAMES, SECTIONS } = win.QK.bosh;
+const { GAMES, SECTIONS, CONTEST } = win.QK.bosh;
 
 test("barcha o'yin papkalari ro'yxatda bor va aksincha", () => {
   const dirs = fs.readdirSync(path.join(ROOT, "oyinlar")).filter((d) => /^\d\d-/.test(d));
@@ -37,6 +37,12 @@ test("har o'yin mavjud bo'limda va ikonkasi bor", () => {
     assert.ok(!win.QK.boshArt.icon(game.icon).includes("<text"), game.icon);
   }
   assert.equal(win.QK.boshArt.icon("yoq"), "");
+});
+
+test("musobaqa kartasi: sahifasi va ikonkasi bor", () => {
+  assert.ok(fs.existsSync(path.join(ROOT, "oyinlar", CONTEST.dir, "index.html")));
+  assert.match(win.QK.boshArt.icon(CONTEST.icon), /^<svg[\s\S]*<\/svg>$/);
+  assert.ok(!win.QK.boshArt.icon(CONTEST.icon).includes("<text"));
 });
 
 test("har bo'limda kamida bitta o'yin bor", () => {

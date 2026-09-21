@@ -1,6 +1,6 @@
 // Offline rejim: sayt fayllari keshlanadi. Bola saytni bir marta ochsa, keyin internetsiz ham oʻynay oladi.
 // Yangi fayl qoʻshilsa, FILES roʻyxatiga ham qoʻshiladi — buni bosh/tests/offline.test.js tekshiradi.
-const VERSION = "v16";
+const VERSION = "v17";
 const CACHE = "qabila-maktabi-" + VERSION;
 
 const FILES = [
@@ -285,6 +285,14 @@ const FILES = [
   "oyinlar/22-sayyoralar-sanogi/js/scenes/stage1.js",
   "oyinlar/22-sayyoralar-sanogi/js/scenes/stage2.js",
   "oyinlar/22-sayyoralar-sanogi/js/scenes/stage3.js",
+  "oyinlar/musobaqa/",
+  "oyinlar/musobaqa/index.html",
+  "oyinlar/musobaqa/css/style.css",
+  "oyinlar/musobaqa/js/main.js",
+  "oyinlar/musobaqa/js/maydon.js",
+  "oyinlar/musobaqa/js/musobaqa-art.js",
+  "oyinlar/musobaqa/js/musobaqa.js",
+  "oyinlar/musobaqa/js/savollar.js",
 ];
 
 self.addEventListener("install", (event) => {

@@ -43,6 +43,8 @@ Eslatma: progress brauzer xotirasida saqlanadi va `file://` bilan `http://localh
 | 21 | Oʻn oltilik ranglar | A–F, 2 ↔ 16, rang kodlari, 16-likda amallar (10–12) |
 | 22 | Sayyoralar sanogʻi | n-lik tizimda amallar, "qaysi tizimda 3 + 4 = 10?", Bobil va Mayya (10–12) |
 
+**Musobaqa** (`oyinlar/musobaqa/`): ikki bola bitta ekranda navbat bilan savolga javob beradi. Har kimning oʻz soati (shaxmat soatidek), 3 ta yuragi va bitta oʻtkazishi bor; savollar tanlangan mavzu va qiyinlikdan tasodifiy yasaladi.
+
 Tugagan bosqichlar brauzer xotirasida (`localStorage`) saqlanadi — sahifa yangilansa ham yoʻqolmaydi.
 
 ## Papkalar
@@ -52,6 +54,7 @@ index.html          bosh sahifa: barcha oʻyinlarga kirish
 bosh/               bosh sahifa fayllari (uslub, ikonkalar, roʻyxat, test)
 oyinlar/umumiy/     umumiy kod: qahramonlar (SVG), ekran qismlari, tovush (Web Audio), shrift
 oyinlar/NN-nomi/    har bir oʻyin: DIZAYN.md, REJA.md, index.html, js/, css/, tests/
+oyinlar/musobaqa/   ikki kishilik musobaqa: savollar oʻyinlar mantiqidan yasaladi
 QOIDALAR.md         barcha oʻyinlar uchun umumiy qoidalar (yosh, til, qurilmalar, xato javob, ranglar)
 ```
 
