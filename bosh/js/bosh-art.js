@@ -133,7 +133,15 @@
   <rect x="28" y="21" width="8" height="10" rx="2" fill="#E0B04A" stroke="${INK}" stroke-width="2"/>`);
   }
 
-  const ICONS = { kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq() };
+  // 14-o'yin: rangli piksellar
+  function piksel() {
+    const colors = ["#E0524A", "#F0C040", "#1A9E77", "#2F6FDE", "#FFFFFF", "#E0524A", "#8E5BD0", "#F0C040", "#1A9E77"];
+    let cells = "";
+    colors.forEach((c, i) => { cells += `<rect x="${7 + (i % 3) * 17}" y="${7 + Math.floor(i / 3) * 17}" width="15" height="15" rx="2.5" fill="${c}"/>`; });
+    return svg(`<rect x="4" y="4" width="56" height="56" rx="6" fill="${INK}"/>${cells}`);
+  }
+
+  const ICONS = { kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel() };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";

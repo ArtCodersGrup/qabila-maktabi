@@ -1,4 +1,4 @@
-// Bayt sandig'i: umumiy sahna qismlari.
+// Piksel ustaxonasi: umumiy sahna qismlari.
 (function (root) {
   "use strict";
 
@@ -10,7 +10,7 @@
     ui.clearWork();
     ui.clearControl();
     ui.paper("");
-    const el = ui.h("div", { class: "bbox" });
+    const el = ui.h("div", { class: "pbox" });
     ui.work().append(el);
     return el;
   }

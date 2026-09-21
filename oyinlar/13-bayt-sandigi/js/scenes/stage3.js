@@ -87,10 +87,10 @@
         answer: task.answer,
         hint: () => {
           view.replaceChildren(bytesUi.pages(task.pages, true));
-          el.append(common.line(Array(task.pages).fill("2").join(" + ") + " = ?"));
+          common.add(el, common.line(Array(task.pages).fill("2").join(" + ") + " = ?"));
           ui.bubble("elder", "↻ Har sahifa ostida 2 Kbayt. Hammasini qoʻsh.");
         },
-        solution: () => el.append(common.answerLine(`${task.pages} × 2 = ${task.answer} Kbayt`)),
+        solution: () => common.add(el, common.answerLine(`${task.pages} × 2 = ${task.answer} Kbayt`)),
       });
     }
     if (task.type === "toKb") {
@@ -101,10 +101,10 @@
         hint: () => {
           const table = ui.h("div", { class: "kb-table" });
           for (let k = 1; k <= 6; k++) table.append(ui.h("div", { text: `${k} Kbayt = ${k * bytes.KB} bayt` }));
-          el.append(table);
+          common.add(el, table);
           ui.bubble("elder", "↻ Jadvaldan shu sonni top.");
         },
-        solution: () => el.append(common.answerLine(`${task.answer} × 1024 = ${task.bytes} → ${task.answer} Kbayt`)),
+        solution: () => common.add(el, common.answerLine(`${task.answer} × 1024 = ${task.bytes} → ${task.answer} Kbayt`)),
       });
     }
     const kbBytes = task.kb * bytes.KB;
@@ -117,12 +117,12 @@
       setup: (submit) => compareButtons(task, submit),
       check: (value) => value === task.answer,
       hint: () => {
-        el.append(common.line(`${task.kb} Kbayt = ${task.kb} × 1024 = ${kbBytes} bayt`));
+        common.add(el, common.line(`${task.kb} Kbayt = ${task.kb} × 1024 = ${kbBytes} bayt`));
         ui.bubble("elder", "↻ Ikkalasini baytda solishtir.");
       },
       solution: () => {
         const sign = kbBytes > task.bytes ? ">" : "<";
-        el.append(common.answerLine(`${kbBytes} bayt ${sign} ${task.bytes} bayt`));
+        common.add(el, common.answerLine(`${kbBytes} bayt ${sign} ${task.bytes} bayt`));
       },
     });
   }

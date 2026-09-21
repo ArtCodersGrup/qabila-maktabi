@@ -112,7 +112,7 @@
       answer: task.answer,
       hint: () => {
         if (task.type === "toBits") {
-          el.append(common.line(Array(task.bytes).fill("8").join(" + ") + " = ?"));
+          common.add(el, common.line(Array(task.bytes).fill("8").join(" + ") + " = ?"));
           ui.bubble("elder", "↻ Har sandiqda 8 bit. Hammasini qoʻsh.");
         } else {
           view.replaceChildren(bytesUi.chests(task.bytes));
@@ -120,7 +120,7 @@
         }
       },
       solution: () => {
-        el.append(common.answerLine(task.type === "toBits"
+        common.add(el, common.answerLine(task.type === "toBits"
           ? `${task.bytes} × 8 = ${task.bits} bit`
           : `${task.bits} : 8 = ${task.bytes} bayt`));
       },
