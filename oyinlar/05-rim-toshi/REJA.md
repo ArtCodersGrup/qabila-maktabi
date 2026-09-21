@@ -1812,19 +1812,17 @@ cd /Users/bicoder/Documents/Information/oyinlar/05-rim-toshi && for f in $(grep 
 ```bash
 cd /Users/bicoder/Documents/Information/oyinlar/05-rim-toshi && python3 - <<'PY'
 import re, pathlib
-src = {p: p.read_text() for p in pathlib.Path("js").rglob("*.js")}
+src = {str(p): p.read_text() for p in pathlib.Path("js").rglob("*.js")}
+def names_in(block):
+    return {n.strip().split(":")[0] for n in re.split(r"[,\n]", block) if n.strip() and not n.strip().startswith("//")}
 api = {}
 for p, s in src.items():
-    for m in re.finditer(r"QK\.(roman|romanUi|common|practice|art)\s*=\s*\{([^}]*)\}", s):
-        api.setdefault(m.group(1), set()).update(n.strip().split(":")[0] for n in m.group(2).split(",") if n.strip())
-api.setdefault("practice", set()).update({"PRAISE", "tries", "numberTries", "exercises"})
-api.setdefault("art", set()).update({"elder", "apprentice", "drum", "icon", "stone", "story"})
-api.setdefault("roman", set()).update(re.findall(r"^\s{4}([a-zA-Z0-9_]+)[,:]", src[pathlib.Path("js/roman.js")], re.M))
-bad = []
-for p, s in src.items():
-    for obj, name in re.findall(r"\b(roman|romanUi|common|practice|art)\.([a-zA-Z0-9_]+)", s):
-        if obj in api and name not in api[obj] and name not in {"length"}:
-            bad.append(f"{p}: {obj}.{name}")
+    for m in re.finditer(r"QK\.(romanUi|common)\s*=\s*\{([^}]*)\}", s):
+        api.setdefault(m.group(1), set()).update(names_in(m.group(2)))
+api["roman"] = names_in(re.search(r"const api = \{(.*?)\n  \};", src["js/roman.js"], re.S).group(1))
+api["practice"] = {"PRAISE", "tries", "numberTries", "exercises"}
+api["art"] = {"elder", "apprentice", "drum", "icon", "stone", "story", "LETTER_COLORS"}
+bad = [f"{p}: {o}.{n}" for p, s in src.items() for o, n in re.findall(r"\b(roman|romanUi|common|practice|art)\.([a-zA-Z0-9_]+)", s) if o in api and n not in api[o]]
 print("\n".join(sorted(set(bad))) or "eksportlar mos")
 PY
 ```

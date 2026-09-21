@@ -1,0 +1,110 @@
+/* Rim toshi — faqat shu o'yinga xos uslublar. Umumiylari: ../../umumiy/css/asos.css */
+
+.rbox { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+
+/* ---------- Rim belgilari ---------- */
+.rword { display: inline-flex; flex-wrap: wrap; justify-content: center; gap: 4px; }
+.rtile {
+  display: inline-grid; place-items: center; width: 40px; height: 48px; border-radius: 8px;
+  color: #fff; font-family: Georgia, "Times New Roman", serif; font-size: 28px; font-weight: 700;
+}
+.rtile.sm { width: 28px; height: 34px; border-radius: 6px; font-size: 22px; }
+.rtile.lg { width: 52px; height: 62px; font-size: 38px; }
+.rtile.fresh { animation: pop 0.3s; }
+.r-I { background: var(--c0); }
+.r-V { background: var(--c1); }
+.r-X { background: var(--c2); }
+.r-L { background: var(--c3); }
+.r-C { background: #6B4E3D; }
+.r-D { background: #B0831E; }
+.r-M { background: var(--matn); }
+
+/* ---------- Belgi kartochkalari (1-bosqich) ---------- */
+.cards5 { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.sym-card {
+  display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 68px;
+  padding: 8px; border: none; border-radius: 14px; background: #fff; box-shadow: 0 3px 0 var(--soya);
+}
+.sym-card:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--soya); }
+.sym-val { min-height: 32px; font-size: 24px; font-weight: 900; color: var(--asosiy); }
+.sym-card.open .sym-val { animation: pop 0.3s; }
+
+/* ---------- Yoyilma va xonalar ---------- */
+.bk { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.bk-col { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 4px; border-radius: 10px; }
+.bk-col.hl { outline: 3px solid var(--yana); outline-offset: -1px; }
+.bk-val { font-size: 22px; font-weight: 900; }
+.pairs { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; }
+.pv { display: flex; justify-content: center; gap: 10px; }
+.pv-col { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 4px; border-radius: 12px; }
+.pv-col.hl { outline: 3px solid var(--yana); outline-offset: -1px; }
+.pv-label { min-height: 24px; font-size: 18px; font-weight: 800; color: var(--asosiy); }
+.pv-digit {
+  display: grid; place-items: center; width: 60px; height: 68px; border-radius: 12px;
+  background: #fff; box-shadow: 0 3px 0 var(--soya); font-size: 42px; font-weight: 900;
+}
+.pv-val { min-height: 30px; font-size: 22px; font-weight: 900; }
+
+/* ---------- Lagan va qoidalar ---------- */
+.tray {
+  display: flex; flex-wrap: wrap; align-content: center; justify-content: center; gap: 6px;
+  width: 100%; max-width: 440px; min-height: 76px; padding: 12px 16px; border-radius: 38px;
+  background: #E9DCC3; box-shadow: inset 0 0 0 4px #C9B48E;
+}
+.rules { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; width: 100%; max-width: 420px; }
+.rules .key { font-family: Georgia, "Times New Roman", serif; font-size: 20px; font-weight: 700; }
+.rules .key.hl { outline: 3px solid var(--yana); outline-offset: -3px; }
+.left-line { font-size: 20px; font-weight: 800; }
+
+/* ---------- Rim klaviaturasi ---------- */
+.rkb-wrap { display: flex; flex-direction: column; gap: 6px; width: 100%; max-width: 420px; }
+.rkb-display {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px;
+  min-height: 52px; padding: 4px 10px; border-radius: 12px; background: #fff;
+  box-shadow: inset 0 0 0 3px var(--chiziq);
+}
+.rkb-val { font-size: 24px; font-weight: 900; color: var(--asosiy); }
+.rkb { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+.rkb .sym { font-family: Georgia, "Times New Roman", serif; font-size: 28px; font-weight: 700; }
+.rkb .del { grid-column: span 2; }
+.rkb .ok { grid-column: span 3; font-size: 22px; }
+
+/* ---------- Tosh, misol, javob ---------- */
+.stone { position: relative; width: min(280px, 72vw); }
+.stone-art svg { display: block; width: 100%; height: auto; }
+.stone-text {
+  position: absolute; inset: 0; display: grid; place-items: center; padding: 0 12%;
+  font-family: Georgia, "Times New Roman", serif; font-size: 34px; font-weight: 700; letter-spacing: 4px;
+  color: #4A4336; text-align: center; white-space: pre-wrap;
+}
+.expr { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; font-size: 28px; font-weight: 900; }
+.target { font-size: 44px; font-weight: 900; line-height: 1; }
+.formula-row { font-size: 22px; font-weight: 800; text-align: center; animation: pop 0.3s; }
+.formula-row.big { font-size: 32px; font-weight: 900; }
+.answer { font-size: 22px; font-weight: 900; color: var(--togri); text-align: center; }
+
+/* ---------- Hikoya va tabrik ---------- */
+.story { display: flex; flex-direction: column; align-items: center; gap: 14px; width: 100%; }
+.story-art { width: min(260px, 70vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.story-caption { font-size: 24px; font-weight: 900; text-align: center; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 12px; font-size: 20px; font-weight: 800; text-align: center; }
+
+/* Klaviatura paytida (ixcham rejim) tosh va raqamlar kichrayadi */
+.compact .stone { width: min(200px, 56vw); }
+.compact .stone-text { font-size: 26px; letter-spacing: 2px; }
+
+/* Yotiq telefon: sahna ustuni tor, qoidalar bitta qator, klaviatura bitta qator */
+@media (orientation: landscape) and (max-height: 500px) {
+  .play.compact { grid-template-columns: minmax(150px, 24%) minmax(0, 1fr); }
+  .rules { grid-template-columns: repeat(4, minmax(0, 1fr)); max-width: none; }
+  .rules .key { font-size: 18px; }
+  .rkb { grid-template-columns: repeat(6, minmax(0, 1fr)) minmax(0, 1.8fr); }
+  .rkb .del, .rkb .ok { grid-column: auto; }
+  .rkb-wrap { max-width: none; }
+  .tray { min-height: 60px; padding: 8px 12px; }
+  .compact .stone { width: 150px; }
+  .compact .stone-text { font-size: 22px; letter-spacing: 1px; }
+  .compact .pv-digit { width: 48px; height: 54px; font-size: 34px; }
+  .compact .target { font-size: 36px; }
+}
