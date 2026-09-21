@@ -195,7 +195,14 @@
   <circle cx="14" cy="42" r="5" fill="#F0C040" stroke="${INK}" stroke-width="2"/>
   <circle cx="50" cy="42" r="5" fill="#F0C040" stroke="${INK}" stroke-width="2"/>`);
 
-  const ICONS = { kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2 };
+  // 21-o'yin: rang kvadratlari 2 × 2
+  const rang16 = svg(`
+  <rect x="6" y="6" width="24" height="24" rx="5" fill="#FF8800" stroke="${INK}" stroke-width="2.5"/>
+  <rect x="34" y="6" width="24" height="24" rx="5" fill="#2F6FDE" stroke="${INK}" stroke-width="2.5"/>
+  <rect x="6" y="34" width="24" height="24" rx="5" fill="#1A9E77" stroke="${INK}" stroke-width="2.5"/>
+  <rect x="34" y="34" width="24" height="24" rx="5" fill="#8E5BD0" stroke="${INK}" stroke-width="2.5"/>`);
+
+  const ICONS = { kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16 };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";
