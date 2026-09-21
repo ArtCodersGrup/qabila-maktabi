@@ -54,7 +54,17 @@
   <path d="M16 22 L16 42 M24 22 L24 42 M32 22 L32 42" stroke="#857C6B" stroke-width="4" stroke-linecap="round"/>
   <path d="M41 22 L47 42 L53 22" stroke="#857C6B" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`);
 
-  const ICONS = { kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim };
+  // 6-o'yin: robot boshi
+  const robot = svg(`
+  <line x1="32" y1="14" x2="32" y2="6" stroke="${INK}" stroke-width="3"/>
+  <circle cx="32" cy="5" r="4" fill="#F08A24" stroke="${INK}" stroke-width="2"/>
+  <rect x="10" y="14" width="44" height="34" rx="10" fill="#B8C0C8" stroke="${INK}" stroke-width="3"/>
+  <circle cx="23" cy="29" r="6" fill="#2F6FDE"/>
+  <circle cx="41" cy="29" r="6" fill="#2F6FDE"/>
+  <rect x="24" y="39" width="16" height="5" rx="2.5" fill="${INK}"/>
+  <rect x="18" y="50" width="28" height="10" rx="4" fill="#CED6DC" stroke="${INK}" stroke-width="3"/>`);
+
+  const ICONS = { kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";
