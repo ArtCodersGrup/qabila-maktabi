@@ -1,0 +1,58 @@
+/* O'n oltilik ranglar — faqat shu o'yinga xos uslublar. Umumiylari: ../../umumiy/css/asos.css, sanoq.css */
+
+.xbox { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
+.count-line { font-size: 19px; font-weight: 800; text-align: center; }
+.count-line.small { font-size: 16px; }
+.answer { font-size: 20px; font-weight: 900; color: var(--togri); text-align: center; }
+.big-value { font-size: 32px; font-weight: 900; color: var(--asosiy); text-align: center; letter-spacing: 1px; }
+
+/* ---------- Tetradalar ---------- */
+.tetrads { display: grid; grid-template-columns: repeat(4, auto); gap: 4px 12px; padding: 8px 12px; border-radius: 12px; background: #fff; box-shadow: 0 2px 0 var(--soya); }
+.tt { display: flex; gap: 6px; font-size: 16px; font-weight: 800; font-family: ui-monospace, Menlo, Consolas, monospace; }
+.tt b { color: var(--asosiy); }
+.tt.hl { background: rgba(240, 138, 36, 0.2); border-radius: 6px; }
+
+/* ---------- Guruh tugmalari ---------- */
+.flips { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+.flip {
+  min-width: 96px; height: 60px; padding: 0 12px; border: none; border-radius: 14px; background: #fff;
+  box-shadow: 0 3px 0 var(--soya), inset 0 0 0 3px var(--asosiy);
+  font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 26px; font-weight: 900; letter-spacing: 2px;
+}
+.flip.open { background: var(--asosiy); color: #fff; box-shadow: 0 3px 0 var(--soya); animation: pop 0.25s; }
+
+/* ---------- Rang namunasi va tugmalari ---------- */
+.swatch { display: flex; align-items: center; gap: 14px; }
+.sw-box { width: 80px; height: 80px; border-radius: 14px; box-shadow: inset 0 0 0 3px var(--matn); }
+.sw-info { display: flex; flex-direction: column; gap: 2px; font-size: 17px; font-weight: 800; }
+.sw-code { font-size: 24px; font-weight: 900; font-family: ui-monospace, Menlo, Consolas, monospace; }
+.color-btn { width: 72px; height: 64px; padding: 0; box-shadow: 0 4px 0 var(--soya), inset 0 0 0 3px var(--matn); }
+
+/* ---------- A–F va 16 ga karralilar ---------- */
+.hexstrip { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 8px; font-size: 15px; font-weight: 900; color: var(--asosiy); max-width: 420px; }
+.hx { padding: 2px 6px; border-radius: 6px; background: #fff; }
+.hexstrip.mult { color: #7A7266; font-size: 14px; }
+
+/* ---------- Hikoya va tabrik ---------- */
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(240px, 66vw); }
+.story-art.small { width: min(130px, 34vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 12px; font-size: 20px; font-weight: 800; text-align: center; }
+
+@media (max-width: 400px) {
+  .tt { font-size: 14px; }
+  .tetrads { gap: 3px 8px; padding: 6px 8px; }
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+  .play.compact { grid-template-columns: minmax(150px, 24%) minmax(0, 1fr); }
+  .xbox { gap: 5px; }
+  .big-value { font-size: 24px; }
+  .tetrads { grid-template-columns: repeat(8, auto); gap: 2px 8px; padding: 4px 8px; }
+  .tt { font-size: 13px; }
+  .flip { height: 48px; font-size: 22px; }
+  .sw-box { width: 60px; height: 60px; }
+  .hexstrip { font-size: 13px; max-width: none; }
+  .story-art { width: min(190px, 36vh); }
+}
