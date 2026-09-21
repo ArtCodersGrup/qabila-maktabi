@@ -3,7 +3,7 @@
   "use strict";
 
   const QK = root.QK;
-  const { lamps, ui, art, common } = QK;
+  const { lamps, ui, art, common, practice } = QK;
 
   // Hikoya: art — rasm (QK.art.story), caption — rasm ostidagi yozuv, lines — Oqsoqol gaplari
   const SCENES = [
@@ -53,7 +53,7 @@
     ui.bubble("elder", `${q.text} uchun eng kamida nechta ${kind} chiroq kerak?`);
     const box = ui.h("div", { class: "lbox" });
     ui.work().append(box);
-    return common.numberTries({
+    return practice.numberTries({ maxLen: 2,
       answer: q.answer,
       hint: () => {
         box.innerHTML = "";
@@ -84,7 +84,7 @@
     await ui.say("elder", `2 ta rangli chiroq — 9 ta naqsh: 3 × 3 = 3${ui.sup(2)}.`);
     await explain();
     await ui.say("elder", "Endi hisoblaymiz: nechta chiroq kerak? 3 ta toʻgʻri javob!");
-    await common.exercises({
+    await practice.exercises({
       next: (prev) => lamps.makeLampsQuestion(prev),
       run: lampsTask,
       praise: (q) => `${q.answer} ta chiroq yetadi.`,

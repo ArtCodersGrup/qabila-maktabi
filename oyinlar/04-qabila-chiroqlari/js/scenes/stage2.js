@@ -3,7 +3,7 @@
   "use strict";
 
   const QK = root.QK;
-  const { lamps, ui, sound, lampsUi, common } = QK;
+  const { lamps, ui, sound, lampsUi, practice } = QK;
 
   // 6.1: 4-2-1 qiymatlari va "5 ni yasa"
   async function makeFive() {
@@ -64,7 +64,7 @@
       shown.lock();
       const note = ui.h("div", { class: "lamp-sum" });
       box.append(note);
-      return common.numberTries({
+      return practice.numberTries({ maxLen: 2,
         answer: task.value,
         hint: () => {
           note.textContent = `${lamps.sumText(pattern)} = ?`;
@@ -78,7 +78,7 @@
     }
     ui.bubble("elder", `${task.value} ni yubor: yoniq chiroqlar qiymati ${task.value} boʻlsin.`);
     const row = lampsUi.lampRow(box, { count: task.lamps, states: lamps.PLAIN, values, bits: true, sum: true });
-    return common.tries({
+    return practice.tries({
       setup: (submit) => ui.control().append(ui.button("Yuborish", () => submit(row.get()))),
       check: (p) => {
         const ok = lamps.toNumber(p) === task.value;
@@ -100,7 +100,7 @@
     await makeFive();
     await explain();
     await ui.say("elder", "Endi oʻzing! Oxirgi misolda chiroqlar 4 ta boʻladi: 8, 4, 2, 1.");
-    await common.exercises({
+    await practice.exercises({
       next: (prev, correct) => lamps.makeBinaryTask(correct, prev),
       run: binaryTask,
       praise: (t) => `${lamps.patternKey(lamps.fromNumber(t.value, t.lamps))} — bu ${t.value}.`,

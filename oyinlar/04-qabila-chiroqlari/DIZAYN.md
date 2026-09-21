@@ -90,7 +90,8 @@ Bosh ekran
 | `js/lamps.js` | Sof hisob: naqshlar, ikkilik ↔ son, 4-2-1 qiymatlar, eng kamida nechta chiroq, ma'nolar, topshiriqlar. Node testlari. |
 | `js/game-art.js` | Chiroq SVG (holatlar), hikoya rasmlari |
 | `js/lamps-ui.js` | Chiroqlar qatori, naqsh, devor, kod jadvali, ma'no tugmalari |
-| `js/scenes/common.js` | Naqshlarni topish, mashq sikli, urinishlar |
+| `js/scenes/common.js` | Naqshlarni topish |
+| `../umumiy/js/practice.js` | Mashq sikli va urinishlar (4- va 5-oʻyin uchun umumiy) |
 | `js/scenes/stage1.js`, `stage2.js`, `stage3.js`, `final.js` | Bosqichlar, hikoya, tabrik |
 | `js/main.js` | `QK.app.start` (kalit `qabila-chiroqlari:v1`) |
 

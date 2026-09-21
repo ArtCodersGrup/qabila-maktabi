@@ -157,7 +157,7 @@ for name in ["stage1.js", "stage2.js", "stage3.js"]:
     s = p.read_text()
     for fn in ["tries", "numberTries", "exercises"]:
         s = s.replace("common." + fn, "practice." + fn)
-    s = s.replace("practice.numberTries({\n      answer:", "practice.numberTries({\n      maxLen: 2,\n      answer:")
+    s = s.replace("practice.numberTries({", "practice.numberTries({ maxLen: 2,")
     s = s.replace("common.practice", "practice")  # ehtiyot chorasi
     # destrukturizatsiya: practice qo'shiladi, common faqat findAll bo'lgan fayllarda qoladi
     line = [l for l in s.split("\n") if l.startswith("  const { lamps")][0]
@@ -725,7 +725,7 @@ cd /Users/bicoder/Documents/Information && git add -A && git commit -m "05-rim-t
   background: #E9DCC3; box-shadow: inset 0 0 0 4px #C9B48E;
 }
 .rules { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; width: 100%; max-width: 420px; }
-.rules .key { font-family: Georgia, "Times New Roman", serif; font-size: 20px; font-weight: 700; }
+.rules .key { font-family: Georgia, "Times New Roman", serif; font-size: 20px; font-weight: 700; white-space: nowrap; }
 .rules .key.hl { outline: 3px solid var(--yana); outline-offset: -3px; }
 .left-line { font-size: 20px; font-weight: 800; }
 
@@ -771,7 +771,7 @@ cd /Users/bicoder/Documents/Information && git add -A && git commit -m "05-rim-t
 @media (orientation: landscape) and (max-height: 500px) {
   .play.compact { grid-template-columns: minmax(150px, 24%) minmax(0, 1fr); }
   .rules { grid-template-columns: repeat(4, minmax(0, 1fr)); max-width: none; }
-  .rules .key { font-size: 18px; }
+  .rules .key { font-size: 18px; letter-spacing: -1px; }
   .rkb { grid-template-columns: repeat(6, minmax(0, 1fr)) minmax(0, 1.8fr); }
   .rkb .del, .rkb .ok { grid-column: auto; }
   .rkb-wrap { max-width: none; }
@@ -1552,7 +1552,8 @@ cd /Users/bicoder/Documents/Information/oyinlar/05-rim-toshi && node --check js/
       },
       solution: () => {
         tray.set(roman.tidy(tray.get()), "*");
-        box.append(common.answerLine(`${a} + ${b} = ${answer}`));
+        box.replaceChild(common.expr(a, "+", b, answer), box.firstChild);
+        box.append(common.answerLine(`${task.a} + ${task.b} = ${task.answer}`));
       },
     });
   }
@@ -1705,7 +1706,8 @@ cd /Users/bicoder/Documents/Information/oyinlar/05-rim-toshi && node --check js/
       hint: () => {
         view.showLabels();
         view.highlight(task.index);
-        ui.bubble("elder", `↻ ${task.digit} qaysi xonada turibdi: yuzlarmi, oʻnlarmi, birlarmi?`);
+        const names = roman.places(task.number).map((p) => romanUi.PLACE_NAMES[p.place] + "mi");
+        ui.bubble("elder", `↻ ${task.digit} qaysi xonada turibdi: ${names.join(", ")}?`);
       },
       solution: () => {
         view.showValues();
@@ -1788,7 +1790,7 @@ cd /Users/bicoder/Documents/Information/oyinlar/05-rim-toshi && node --check js/
     ui.bubble("elder", "Tabriklayman! Endi sen Rim raqamlarini bilasan!");
     ui.work().append(ui.h("div", { class: "summary" },
       ui.h("div", { text: "I V X L C — 1 5 10 50 100" }),
-      ui.h("div", { text: "Kichik belgi oldinda — ayiriladi: IV = 4" }),
+      ui.h("div", { text: "Kichik belgi oldinda — ayiriladi: IV\u00A0=\u00A04" }),
       ui.h("div", { text: "Oddiy sonda raqam qiymati xonasiga bogʻliq" })));
     return ui.choice([
       { label: "Qayta oʻynash", value: "replay" },
@@ -1812,19 +1814,17 @@ cd /Users/bicoder/Documents/Information/oyinlar/05-rim-toshi && for f in $(grep 
 ```bash
 cd /Users/bicoder/Documents/Information/oyinlar/05-rim-toshi && python3 - <<'PY'
 import re, pathlib
-src = {p: p.read_text() for p in pathlib.Path("js").rglob("*.js")}
+src = {str(p): p.read_text() for p in pathlib.Path("js").rglob("*.js")}
+def names_in(block):
+    return {n.strip().split(":")[0] for n in re.split(r"[,\n]", block) if n.strip() and not n.strip().startswith("//")}
 api = {}
 for p, s in src.items():
-    for m in re.finditer(r"QK\.(roman|romanUi|common|practice|art)\s*=\s*\{([^}]*)\}", s):
-        api.setdefault(m.group(1), set()).update(n.strip().split(":")[0] for n in m.group(2).split(",") if n.strip())
-api.setdefault("practice", set()).update({"PRAISE", "tries", "numberTries", "exercises"})
-api.setdefault("art", set()).update({"elder", "apprentice", "drum", "icon", "stone", "story"})
-api.setdefault("roman", set()).update(re.findall(r"^\s{4}([a-zA-Z0-9_]+)[,:]", src[pathlib.Path("js/roman.js")], re.M))
-bad = []
-for p, s in src.items():
-    for obj, name in re.findall(r"\b(roman|romanUi|common|practice|art)\.([a-zA-Z0-9_]+)", s):
-        if obj in api and name not in api[obj] and name not in {"length"}:
-            bad.append(f"{p}: {obj}.{name}")
+    for m in re.finditer(r"QK\.(romanUi|common)\s*=\s*\{([^}]*)\}", s):
+        api.setdefault(m.group(1), set()).update(names_in(m.group(2)))
+api["roman"] = names_in(re.search(r"const api = \{(.*?)\n  \};", src["js/roman.js"], re.S).group(1))
+api["practice"] = {"PRAISE", "tries", "numberTries", "exercises"}
+api["art"] = {"elder", "apprentice", "drum", "icon", "stone", "story", "LETTER_COLORS"}
+bad = [f"{p}: {o}.{n}" for p, s in src.items() for o, n in re.findall(r"\b(roman|romanUi|common|practice|art)\.([a-zA-Z0-9_]+)", s) if o in api and n not in api[o]]
 print("\n".join(sorted(set(bad))) or "eksportlar mos")
 PY
 ```
@@ -1832,7 +1832,7 @@ PY
 - [ ] **5-qadam: barcha o'yinlar testlari (umumiy kod o'zgargan — QOIDALAR 9)**
 
 ```bash
-cd /Users/bicoder/Documents/Information/oyinlar && for d in 0*/; do (cd "$d" && echo "== $d" && node --test tests/*.test.js 2>&1 | grep -E "^# (pass|fail)"); done
+cd /Users/bicoder/Documents/Information/oyinlar && for d in 0*/; do (cd "$d" && echo "== $d" && node --test tests/*.test.js 2>&1 | grep -E "^ℹ (pass|fail)"); done
 ```
 
 - [ ] **6-qadam: brauzerda to'liq o'ynab chiqish**
