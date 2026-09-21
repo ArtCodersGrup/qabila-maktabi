@@ -1,0 +1,125 @@
+/* Bayt sandig'i — faqat shu o'yinga xos uslublar. Umumiylari: ../../umumiy/css/asos.css */
+
+.bbox { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
+.task-view { display: flex; justify-content: center; width: 100%; }
+.count-line { font-size: 20px; font-weight: 800; text-align: center; }
+.count-line.need { color: var(--asosiy); }
+.count-line.muted { font-size: 17px; color: #7A7266; }
+.answer { font-size: 21px; font-weight: 900; color: var(--togri); text-align: center; }
+
+/* ---------- Bitlar ---------- */
+.bits-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; max-width: 340px; }
+.bit { width: 30px; height: 30px; border-radius: 50%; background: #D9D2C3; box-shadow: inset 0 0 0 2px var(--matn); }
+.bit.on { background: #F0C040; }
+/* Ko'p bit (mashqdagi 16–72 ta) — kichikroq */
+.task-view .bits-row { gap: 4px; max-width: 320px; }
+.task-view .bit { width: 20px; height: 20px; }
+.bits-host { min-height: 36px; }
+
+/* ---------- Belgilar to'plamlari ---------- */
+.setlist { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 520px; }
+.set-chip {
+  display: flex; flex-direction: column; align-items: center; padding: 6px 12px;
+  border-radius: 12px; background: #fff; box-shadow: 0 2px 0 var(--soya); animation: pop 0.3s;
+}
+.set-sample { font-size: 20px; font-weight: 900; color: var(--asosiy); }
+.set-name { font-size: 16px; font-weight: 800; }
+.control-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px 16px; }
+.control-row .counter-val { min-width: 100px; }
+
+/* ---------- Sandiq (bayt) ---------- */
+.chest { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.chest-art { display: block; width: 160px; }
+.chest-art svg { display: block; width: 100%; height: auto; }
+.chest-char { font-size: 30px; font-weight: 900; line-height: 1; }
+.chest-code { font-size: 22px; font-weight: 900; letter-spacing: 2px; color: var(--asosiy); }
+.chest.sm .chest-art { width: 58px; }
+.chest.sm .chest-char { font-size: 20px; }
+.chest-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; max-width: 560px; }
+.chest-slot {
+  width: 64px; height: 58px; border: 2px dashed var(--chiziq); border-radius: 10px;
+  display: grid; place-items: center;
+}
+.chest-slot.full { border-color: transparent; animation: pop 0.25s; }
+
+/* ---------- Xabar va belgi tugmalari ---------- */
+.pack-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 16px; }
+.msg {
+  padding: 10px 16px; border-radius: 12px; background: #fff; box-shadow: 0 2px 0 var(--soya);
+  font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 26px; font-weight: 800;
+  white-space: pre; max-width: 100%; overflow-x: auto;
+}
+.msg-split { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; max-width: 420px; }
+.msg-cell {
+  display: grid; place-items: center; width: 30px; height: 38px; border-radius: 8px;
+  background: #fff; box-shadow: inset 0 0 0 2px var(--chiziq); font-size: 22px; font-weight: 900;
+}
+.msg-cell.space { color: var(--yana); }
+.char-pad { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 480px; }
+.char-key {
+  min-width: 48px; min-height: 52px; padding: 0 6px; border: none; border-radius: 12px;
+  background: #fff; font-size: 26px; font-weight: 900; box-shadow: 0 3px 0 var(--soya);
+}
+.char-key.space { min-width: 64px; color: var(--yana); }
+.char-key:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--soya); }
+.char-key:disabled { opacity: 0.25; }
+
+/* ---------- Ikkilantirish va kilobayt ---------- */
+.dbl-num { font-size: 64px; font-weight: 900; color: var(--asosiy); line-height: 1.1; }
+.dbl-num.pop { animation: pop 0.25s; }
+.kbgrid {
+  display: grid; grid-template-columns: repeat(32, 7px); gap: 1px; padding: 6px;
+  border-radius: 10px; background: #fff; box-shadow: 0 2px 0 var(--soya);
+}
+.kbcell { width: 7px; height: 7px; border-radius: 1px; background: #EFE9DC; }
+.kbcell.on { background: var(--asosiy); }
+.big-value { font-size: 40px; font-weight: 900; color: var(--asosiy); }
+.kb-table { display: grid; grid-template-columns: repeat(2, auto); gap: 4px 18px; font-size: 18px; font-weight: 800; }
+
+/* ---------- Sahifalar ---------- */
+.pages { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 380px; }
+.page { display: flex; flex-direction: column; align-items: center; }
+.page-art { display: block; width: 40px; }
+.page-art svg { display: block; width: 100%; height: auto; }
+.page-label { font-size: 18px; font-weight: 900; color: var(--asosiy); }
+
+/* ---------- Taqqoslash ---------- */
+.cmp { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; }
+.cmp-card {
+  padding: 12px 18px; border-radius: 14px; background: #fff; box-shadow: 0 3px 0 var(--soya);
+  font-size: 28px; font-weight: 900;
+}
+.cmp-or { font-size: 18px; font-weight: 800; color: #7A7266; }
+
+/* ---------- Formula, hikoya, tabrik ---------- */
+.formula-box { display: flex; flex-direction: column; align-items: center; gap: 10px; max-width: 100%; text-align: center; }
+.formula-row { font-size: 24px; font-weight: 900; animation: pop 0.3s; }
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(240px, 66vw); }
+.story-art.small { width: min(130px, 34vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 12px; font-size: 20px; font-weight: 800; text-align: center; }
+
+/* Tor ekran: 2 qator formula sig'sin */
+@media (max-width: 400px) {
+  .formula-row { font-size: 20px; }
+  .kb-table { font-size: 16px; }
+}
+
+/* Yotiq telefon */
+@media (orientation: landscape) and (max-height: 500px) {
+  .play.compact { grid-template-columns: minmax(150px, 24%) minmax(0, 1fr); }
+  .kbgrid { grid-template-columns: repeat(32, 5px); }
+  .kbcell { width: 5px; height: 5px; }
+  .dbl-num { font-size: 48px; }
+  .chest-art { width: 130px; }
+  .story-art { width: min(190px, 36vh); }
+  .char-key { min-height: 48px; font-size: 22px; }
+  .bbox { gap: 6px; }
+  .set-chip { flex-direction: row; gap: 6px; padding: 4px 10px; }
+  .set-sample { font-size: 17px; }
+  .msg { padding: 6px 12px; font-size: 20px; }
+  .chest-slot { width: 52px; height: 46px; }
+  .chest.sm .chest-art { width: 46px; }
+  .chest.sm .chest-char { font-size: 16px; }
+}

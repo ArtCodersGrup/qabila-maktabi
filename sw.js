@@ -1,6 +1,6 @@
 // Offline rejim: sayt fayllari keshlanadi. Bola saytni bir marta ochsa, keyin internetsiz ham oʻynay oladi.
 // Yangi fayl qoʻshilsa, FILES roʻyxatiga ham qoʻshiladi — buni bosh/tests/offline.test.js tekshiradi.
-const VERSION = "v5";
+const VERSION = "v6";
 const CACHE = "qabila-maktabi-" + VERSION;
 
 const FILES = [
@@ -165,6 +165,18 @@ const FILES = [
   "oyinlar/12-ai-xaritasi/js/scenes/stage1.js",
   "oyinlar/12-ai-xaritasi/js/scenes/stage2.js",
   "oyinlar/12-ai-xaritasi/js/scenes/stage3.js",
+  "oyinlar/13-bayt-sandigi/",
+  "oyinlar/13-bayt-sandigi/index.html",
+  "oyinlar/13-bayt-sandigi/css/style.css",
+  "oyinlar/13-bayt-sandigi/js/bytes-ui.js",
+  "oyinlar/13-bayt-sandigi/js/bytes.js",
+  "oyinlar/13-bayt-sandigi/js/game-art.js",
+  "oyinlar/13-bayt-sandigi/js/main.js",
+  "oyinlar/13-bayt-sandigi/js/scenes/common.js",
+  "oyinlar/13-bayt-sandigi/js/scenes/final.js",
+  "oyinlar/13-bayt-sandigi/js/scenes/stage1.js",
+  "oyinlar/13-bayt-sandigi/js/scenes/stage2.js",
+  "oyinlar/13-bayt-sandigi/js/scenes/stage3.js",
 ];
 
 self.addEventListener("install", (event) => {
