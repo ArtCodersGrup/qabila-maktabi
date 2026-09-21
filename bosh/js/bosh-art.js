@@ -72,7 +72,15 @@
   <rect x="10" y="32" width="14" height="7" rx="3.5" fill="#1A9E77"/>
   <rect x="28" y="32" width="26" height="7" rx="3.5" fill="#8E5BD0"/>`);
 
-  const ICONS = { kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap };
+  // 8-o'yin: munchoqli quti
+  const qutilar = svg(`
+  <rect x="6" y="18" width="52" height="34" rx="6" fill="#C9945A" stroke="${INK}" stroke-width="3"/>
+  <rect x="14" y="26" width="36" height="18" rx="3" fill="#B07A44"/>
+  <circle cx="24" cy="35" r="5" fill="#2F6FDE" stroke="${INK}" stroke-width="2"/>
+  <circle cx="38" cy="35" r="5" fill="#F0C040" stroke="${INK}" stroke-width="2"/>
+  <path d="M44 8 L48 16 L57 17 L50 23 L52 32 L44 27 L36 32 L38 23 L31 17 L40 16 Z" fill="#F0C040" stroke="${INK}" stroke-width="2" stroke-linejoin="round" transform="translate(4,-6) scale(0.6)"/>`);
+
+  const ICONS = { kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";
