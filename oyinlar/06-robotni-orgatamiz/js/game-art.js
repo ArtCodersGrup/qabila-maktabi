@@ -1,31 +1,10 @@
-// 6-o'yinga xos SVG rasmlar: robot, yong'oq (yopiq/to'la/bo'sh) va hikoya sahnalari.
+// 6-o'yinga xos SVG rasmlar: yong'oq (yopiq/to'la/bo'sh) va hikoya sahnalari. Robot — umumiy/js/art.js da.
 // DOM bilan ishlamaydi — Node'da test qilinadi. Rasm ichida matn/son yo'q.
 (function (root) {
   "use strict";
 
   const INK = "#2B2B3A";
   const METAL = "#B8C0C8";
-
-  // Robot: qutisimon bosh, antenna, ko'krakdagi chiroqchalar
-  const robot = () => `<svg viewBox="0 0 120 150" aria-hidden="true">
-  <line x1="60" y1="30" x2="60" y2="16" stroke="${INK}" stroke-width="3"/>
-  <circle cx="60" cy="12" r="5" fill="#F08A24" stroke="${INK}" stroke-width="2"/>
-  <rect x="30" y="28" width="60" height="50" rx="14" fill="${METAL}" stroke="${INK}" stroke-width="3"/>
-  <circle cx="46" cy="50" r="7" fill="#2F6FDE"/>
-  <circle cx="74" cy="50" r="7" fill="#2F6FDE"/>
-  <circle cx="48" cy="48" r="2.5" fill="#FFFFFF"/>
-  <circle cx="76" cy="48" r="2.5" fill="#FFFFFF"/>
-  <rect x="48" y="64" width="24" height="6" rx="3" fill="${INK}"/>
-  <rect x="20" y="86" width="14" height="36" rx="7" fill="${METAL}" stroke="${INK}" stroke-width="3"/>
-  <rect x="86" y="86" width="14" height="36" rx="7" fill="${METAL}" stroke="${INK}" stroke-width="3"/>
-  <rect x="34" y="82" width="52" height="46" rx="10" fill="#CED6DC" stroke="${INK}" stroke-width="3"/>
-  <rect x="44" y="92" width="32" height="20" rx="4" fill="#FFF6E5" stroke="${INK}" stroke-width="2"/>
-  <circle cx="52" cy="102" r="3" fill="#1A9E77"/>
-  <circle cx="60" cy="102" r="3" fill="#F0C040"/>
-  <circle cx="68" cy="102" r="3" fill="#2F6FDE"/>
-  <rect x="42" y="128" width="13" height="18" rx="4" fill="#8A929A" stroke="${INK}" stroke-width="3"/>
-  <rect x="65" y="128" width="13" height="18" rx="4" fill="#8A929A" stroke="${INK}" stroke-width="3"/>
-</svg>`;
 
   // Yong'oq: "closed" — yopiq, "full" — chaqilgan, mag'izli, "empty" — chaqilgan, bo'sh
   function nut(state) {
@@ -115,5 +94,5 @@
   // Hikoya rasmi; noma'lum nom — bo'sh satr
   const story = (name) => STORY[name] || "";
 
-  Object.assign(root.QK.art, { robot, nut, story });
+  Object.assign(root.QK.art, { nut, story });
 })(window);

@@ -64,7 +64,15 @@
   <rect x="24" y="39" width="16" height="5" rx="2.5" fill="${INK}"/>
   <rect x="18" y="50" width="28" height="10" rx="4" fill="#CED6DC" stroke="${INK}" stroke-width="3"/>`);
 
-  const ICONS = { kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot };
+  // 7-o'yin: gap pufagi va so'z kartochkalari
+  const gap = svg(`
+  <path d="M6 12 H58 a4 4 0 0 1 4 4 V40 a4 4 0 0 1 -4 4 H26 l-10 10 V44 H6 a4 4 0 0 1 -4 -4 V16 a4 4 0 0 1 4 -4 Z" fill="#FFFFFF" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/>
+  <rect x="10" y="20" width="20" height="7" rx="3.5" fill="#2F6FDE"/>
+  <rect x="34" y="20" width="20" height="7" rx="3.5" fill="#F08A24"/>
+  <rect x="10" y="32" width="14" height="7" rx="3.5" fill="#1A9E77"/>
+  <rect x="28" y="32" width="26" height="7" rx="3.5" fill="#8E5BD0"/>`);
+
+  const ICONS = { kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";
