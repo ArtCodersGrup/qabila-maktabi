@@ -53,7 +53,8 @@
       await table.take("robot", move);
       n -= move;
       if (n === 0) {
-        table.turn(null);
+        boxHost.innerHTML = ""; // tortilgan munchoq oʻyin tugagach kerak emas
+        table.finish("robot");
         sound.play("retry");
         ui.bubble("elder", "Oxirgi toshni robot oldi — robot yutdi!");
         await ui.sleep(1200);
@@ -66,7 +67,8 @@
       await table.take("me", mine);
       n -= mine;
       if (n === 0) {
-        table.turn(null);
+        boxHost.innerHTML = ""; // tortilgan munchoq oʻyin tugagach kerak emas
+        table.finish("me");
         sound.play("win");
         ui.pose("apprentice", "happy", 900);
         ui.bubble("elder", "Oxirgi toshni sen olding — sen yutding!");

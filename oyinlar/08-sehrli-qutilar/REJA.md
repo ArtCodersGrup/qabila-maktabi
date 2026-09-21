@@ -558,6 +558,38 @@ test("1961-yil mashinasi: 15 ta quti", () => {
     return card;
   }
 
+  // Toshlarni stoldan tarafga "uchirish" (nusxa yasab, joyidan joyiga suradi)
+  async function flyTo(nodes, target) {
+    if (!nodes.length) return;
+    const quick = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (quick) {
+      await ui.sleep(120);
+      return;
+    }
+    const to = target.getBoundingClientRect();
+    const clones = nodes.map((node) => {
+      const box = node.getBoundingClientRect();
+      const clone = node.cloneNode(true);
+      clone.className = "stone flying";
+      clone.style.left = `${box.left}px`;
+      clone.style.top = `${box.top}px`;
+      clone.style.width = `${box.width}px`;
+      clone.style.height = `${box.height}px`;
+      document.body.append(clone);
+      node.style.visibility = "hidden";
+      return { clone, box };
+    });
+    await new Promise((done) => requestAnimationFrame(() => requestAnimationFrame(done)));
+    clones.forEach(({ clone, box }, i) => {
+      const dx = to.left + to.width / 2 - (box.left + box.width / 2);
+      const dy = to.top + Math.min(to.height, 24) / 2 - (box.top + box.height / 2);
+      clone.style.transitionDelay = `${i * 130}ms`;
+      clone.style.transform = `translate(${dx}px, ${dy}px) scale(0.62)`;
+    });
+    await ui.sleep(560 + nodes.length * 130);
+    clones.forEach(({ clone }) => clone.remove());
+  }
+
   // O'yin stoli: tepada navbat, o'rtada stoldagi toshlar, pastda ikki taraf (robot va bola) olgan toshlari
   function gameTable(host) {
     const turn = ui.h("div", { class: "turn", "aria-live": "polite" });
@@ -567,10 +599,13 @@ test("1961-yil mashinasi: 15 ta quti", () => {
     const makeSide = (who, label, svg) => {
       const mini = ui.h("div", { class: "mini" });
       const count = ui.h("span", { class: "tray-n", text: "0" });
+      const win = ui.h("span", { class: "tray-win" });
       const side = ui.h("div", { class: "tray " + who },
         ui.h("div", { class: "tray-head" }, ui.h("span", { class: "tray-art", html: svg }), ui.h("span", { text: label })),
-        mini, count);
-      sides[who] = { side, mini, count, taken: 0 };
+        mini,
+        ui.h("div", { class: "tray-foot" }, count, ui.h("span", { class: "tray-lbl", text: "ta tosh" })),
+        win);
+      sides[who] = { side, mini, count, win, taken: 0, last: null };
       return side;
     };
     const el = ui.h("div", { class: "gtable" },
@@ -596,8 +631,11 @@ test("1961-yil mashinasi: 15 ta quti", () => {
         drawStones();
         for (const who of Object.keys(sides)) {
           sides[who].taken = 0;
+          sides[who].last = null;
           sides[who].mini.innerHTML = "";
           sides[who].count.textContent = "0";
+          sides[who].win.textContent = "";
+          sides[who].side.classList.remove("winner");
         }
       },
       turn(who) {
@@ -606,19 +644,34 @@ test("1961-yil mashinasi: 15 ta quti", () => {
         sides.robot.side.classList.toggle("active", who === "robot");
         sides.me.side.classList.toggle("active", who === "me");
       },
-      // Toshlarni olish: avval belgilanadi, keyin o'sha tarafga ko'chadi
+      // Toshlarni olish: tosh stoldan o'sha tarafga uchib o'tadi
       async take(who, count) {
-        const marks = [...stonesRow.children].slice(-count);
-        marks.forEach((node) => node.classList.add("taking"));
-        sound.play("tap");
-        await ui.sleep(520);
+        const side = sides[who];
+        const taken = [...stonesRow.children].slice(-count);
+        await flyTo(taken, side.mini);
         onTable -= count;
         drawStones();
-        const side = sides[who];
         side.taken += count;
-        for (let k = 0; k < count; k++) side.mini.append(ui.h("span", { class: "stone mini-stone fresh", html: art.stone() }));
+        for (let k = 0; k < count; k++) {
+          const stone = ui.h("span", { class: "stone mini-stone fresh", html: art.stone() });
+          side.mini.append(stone);
+          side.last = stone;
+        }
         side.count.textContent = String(side.taken);
+        sound.play("tap");
         await ui.sleep(260);
+      },
+
+      // O'yin tugadi: yutgan taraf va oxirgi tosh belgilanadi
+      finish(who) {
+        turn.textContent = who === "robot" ? "Robot yutdi!" : "Sen yutding!";
+        turn.className = "turn done " + who;
+        for (const key of Object.keys(sides)) {
+          sides[key].side.classList.remove("active");
+          sides[key].side.classList.toggle("winner", key === who);
+          sides[key].win.textContent = key === who ? "Yutdi! ✓" : "";
+        }
+        if (sides[who].last) sides[who].last.classList.add("last");
       },
       left: () => onTable,
     };
@@ -773,7 +826,10 @@ test("1961-yil mashinasi: 15 ta quti", () => {
   padding: 10px; border-radius: 16px; background: #FDEFD4; box-shadow: inset 0 0 0 3px #E4D5B4;
 }
 .left-n { font-size: 18px; font-weight: 800; }
-.stone.taking { animation: flash 0.25s 2; }
+.stone.flying {
+  position: fixed; z-index: 60; pointer-events: none; margin: 0;
+  transition: transform 0.55s cubic-bezier(0.4, 0.1, 0.2, 1);
+}
 .trays { display: flex; justify-content: center; gap: 10px; width: 100%; }
 .tray {
   flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 84px;
@@ -786,7 +842,16 @@ test("1961-yil mashinasi: 15 ta quti", () => {
 .tray-art .paper { display: none; }
 .mini { display: flex; flex-wrap: wrap; justify-content: center; gap: 3px; min-height: 22px; }
 .mini-stone { width: 24px; height: 19px; }
-.tray-n { font-size: 20px; font-weight: 900; }
+.tray-foot { display: flex; align-items: baseline; gap: 4px; }
+.tray-n { font-size: 22px; font-weight: 900; }
+.tray-lbl { font-size: 15px; font-weight: 700; opacity: 0.7; }
+.tray.winner { box-shadow: 0 2px 0 var(--soya), inset 0 0 0 4px var(--togri); animation: pop 0.4s; }
+.tray-win { min-height: 20px; font-size: 17px; font-weight: 900; color: var(--togri); }
+.mini-stone.last { box-shadow: 0 0 0 3px var(--yana); border-radius: 50%; animation: pulse 1s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: 0.45; } }
+.turn.done { font-size: 22px; }
+.turn.done.robot { color: #4A5560; }
+.turn.done.me { color: var(--togri); }
 .current-box { display: flex; flex-direction: column; align-items: center; gap: 6px; min-height: 126px; }
 .pulled { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 14px; background: #fff; box-shadow: 0 2px 0 var(--soya); animation: pop 0.3s; }
 .pulled-text { font-size: 22px; font-weight: 900; }
@@ -906,7 +971,8 @@ test("1961-yil mashinasi: 15 ta quti", () => {
       await table.take("robot", move);
       n -= move;
       if (n === 0) {
-        table.turn(null);
+        boxHost.innerHTML = ""; // tortilgan munchoq oʻyin tugagach kerak emas
+        table.finish("robot");
         sound.play("retry");
         ui.bubble("elder", "Oxirgi toshni robot oldi — robot yutdi!");
         await ui.sleep(1200);
@@ -919,7 +985,8 @@ test("1961-yil mashinasi: 15 ta quti", () => {
       await table.take("me", mine);
       n -= mine;
       if (n === 0) {
-        table.turn(null);
+        boxHost.innerHTML = ""; // tortilgan munchoq oʻyin tugagach kerak emas
+        table.finish("me");
         sound.play("win");
         ui.pose("apprentice", "happy", 900);
         ui.bubble("elder", "Oxirgi toshni sen olding — sen yutding!");

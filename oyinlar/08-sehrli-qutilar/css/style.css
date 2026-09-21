@@ -21,7 +21,10 @@
   padding: 10px; border-radius: 16px; background: #FDEFD4; box-shadow: inset 0 0 0 3px #E4D5B4;
 }
 .left-n { font-size: 18px; font-weight: 800; }
-.stone.taking { animation: flash 0.25s 2; }
+.stone.flying {
+  position: fixed; z-index: 60; pointer-events: none; margin: 0;
+  transition: transform 0.55s cubic-bezier(0.4, 0.1, 0.2, 1);
+}
 .trays { display: flex; justify-content: center; gap: 10px; width: 100%; }
 .tray {
   flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 84px;
@@ -34,7 +37,16 @@
 .tray-art .paper { display: none; }
 .mini { display: flex; flex-wrap: wrap; justify-content: center; gap: 3px; min-height: 22px; }
 .mini-stone { width: 24px; height: 19px; }
-.tray-n { font-size: 20px; font-weight: 900; }
+.tray-foot { display: flex; align-items: baseline; gap: 4px; }
+.tray-n { font-size: 22px; font-weight: 900; }
+.tray-lbl { font-size: 15px; font-weight: 700; opacity: 0.7; }
+.tray.winner { box-shadow: 0 2px 0 var(--soya), inset 0 0 0 4px var(--togri); animation: pop 0.4s; }
+.tray-win { min-height: 20px; font-size: 17px; font-weight: 900; color: var(--togri); }
+.mini-stone.last { box-shadow: 0 0 0 3px var(--yana); border-radius: 50%; animation: pulse 1s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: 0.45; } }
+.turn.done { font-size: 22px; }
+.turn.done.robot { color: #4A5560; }
+.turn.done.me { color: var(--togri); }
 .current-box { display: flex; flex-direction: column; align-items: center; gap: 6px; min-height: 126px; }
 .pulled { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 14px; background: #fff; box-shadow: 0 2px 0 var(--soya); animation: pop 0.3s; }
 .pulled-text { font-size: 22px; font-weight: 900; }

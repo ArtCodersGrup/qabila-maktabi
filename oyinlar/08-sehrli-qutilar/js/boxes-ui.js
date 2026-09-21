@@ -38,6 +38,38 @@
     return card;
   }
 
+  // Toshlarni stoldan tarafga "uchirish" (nusxa yasab, joyidan joyiga suradi)
+  async function flyTo(nodes, target) {
+    if (!nodes.length) return;
+    const quick = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (quick) {
+      await ui.sleep(120);
+      return;
+    }
+    const to = target.getBoundingClientRect();
+    const clones = nodes.map((node) => {
+      const box = node.getBoundingClientRect();
+      const clone = node.cloneNode(true);
+      clone.className = "stone flying";
+      clone.style.left = `${box.left}px`;
+      clone.style.top = `${box.top}px`;
+      clone.style.width = `${box.width}px`;
+      clone.style.height = `${box.height}px`;
+      document.body.append(clone);
+      node.style.visibility = "hidden";
+      return { clone, box };
+    });
+    await new Promise((done) => requestAnimationFrame(() => requestAnimationFrame(done)));
+    clones.forEach(({ clone, box }, i) => {
+      const dx = to.left + to.width / 2 - (box.left + box.width / 2);
+      const dy = to.top + Math.min(to.height, 24) / 2 - (box.top + box.height / 2);
+      clone.style.transitionDelay = `${i * 130}ms`;
+      clone.style.transform = `translate(${dx}px, ${dy}px) scale(0.62)`;
+    });
+    await ui.sleep(560 + nodes.length * 130);
+    clones.forEach(({ clone }) => clone.remove());
+  }
+
   // O'yin stoli: tepada navbat, o'rtada stoldagi toshlar, pastda ikki taraf (robot va bola) olgan toshlari
   function gameTable(host) {
     const turn = ui.h("div", { class: "turn", "aria-live": "polite" });
@@ -47,10 +79,13 @@
     const makeSide = (who, label, svg) => {
       const mini = ui.h("div", { class: "mini" });
       const count = ui.h("span", { class: "tray-n", text: "0" });
+      const win = ui.h("span", { class: "tray-win" });
       const side = ui.h("div", { class: "tray " + who },
         ui.h("div", { class: "tray-head" }, ui.h("span", { class: "tray-art", html: svg }), ui.h("span", { text: label })),
-        mini, count);
-      sides[who] = { side, mini, count, taken: 0 };
+        mini,
+        ui.h("div", { class: "tray-foot" }, count, ui.h("span", { class: "tray-lbl", text: "ta tosh" })),
+        win);
+      sides[who] = { side, mini, count, win, taken: 0, last: null };
       return side;
     };
     const el = ui.h("div", { class: "gtable" },
@@ -76,8 +111,11 @@
         drawStones();
         for (const who of Object.keys(sides)) {
           sides[who].taken = 0;
+          sides[who].last = null;
           sides[who].mini.innerHTML = "";
           sides[who].count.textContent = "0";
+          sides[who].win.textContent = "";
+          sides[who].side.classList.remove("winner");
         }
       },
       turn(who) {
@@ -86,19 +124,34 @@
         sides.robot.side.classList.toggle("active", who === "robot");
         sides.me.side.classList.toggle("active", who === "me");
       },
-      // Toshlarni olish: avval belgilanadi, keyin o'sha tarafga ko'chadi
+      // Toshlarni olish: tosh stoldan o'sha tarafga uchib o'tadi
       async take(who, count) {
-        const marks = [...stonesRow.children].slice(-count);
-        marks.forEach((node) => node.classList.add("taking"));
-        sound.play("tap");
-        await ui.sleep(520);
+        const side = sides[who];
+        const taken = [...stonesRow.children].slice(-count);
+        await flyTo(taken, side.mini);
         onTable -= count;
         drawStones();
-        const side = sides[who];
         side.taken += count;
-        for (let k = 0; k < count; k++) side.mini.append(ui.h("span", { class: "stone mini-stone fresh", html: art.stone() }));
+        for (let k = 0; k < count; k++) {
+          const stone = ui.h("span", { class: "stone mini-stone fresh", html: art.stone() });
+          side.mini.append(stone);
+          side.last = stone;
+        }
         side.count.textContent = String(side.taken);
+        sound.play("tap");
         await ui.sleep(260);
+      },
+
+      // O'yin tugadi: yutgan taraf va oxirgi tosh belgilanadi
+      finish(who) {
+        turn.textContent = who === "robot" ? "Robot yutdi!" : "Sen yutding!";
+        turn.className = "turn done " + who;
+        for (const key of Object.keys(sides)) {
+          sides[key].side.classList.remove("active");
+          sides[key].side.classList.toggle("winner", key === who);
+          sides[key].win.textContent = key === who ? "Yutdi! ✓" : "";
+        }
+        if (sides[who].last) sides[who].last.classList.add("last");
       },
       left: () => onTable,
     };
