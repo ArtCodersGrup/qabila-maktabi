@@ -1,0 +1,62 @@
+/* Qabila cho'ti — faqat shu o'yinga xos uslublar. Umumiylari: ../../umumiy/css/asos.css, sanoq.css */
+
+.sbox { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
+.count-line { font-size: 19px; font-weight: 800; text-align: center; }
+.answer { font-size: 22px; font-weight: 900; color: var(--togri); text-align: center; }
+.big-value { font-size: 34px; font-weight: 900; color: var(--asosiy); text-align: center; }
+.facts { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 22px; font-weight: 900; }
+
+/* ---------- Raqamlar qatori (asos tanlagich) ---------- */
+.digits { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; max-width: 420px; }
+.digit-tile {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-width: 40px; height: 48px; padding: 0 6px; border-radius: 10px; background: #fff;
+  box-shadow: 0 2px 0 var(--soya); animation: pop 0.2s;
+}
+.dt-ch { font-size: 22px; font-weight: 900; line-height: 1; }
+.digit-tile.letter { background: var(--asosiy); color: #fff; }
+.dt-val { font-size: 12px; font-weight: 800; }
+.strip-host { min-height: 60px; }
+
+/* ---------- Tizim turlari ---------- */
+.kinds { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+.kind-card {
+  display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 150px; padding: 10px 14px;
+  border-radius: 14px; background: #fff; box-shadow: 0 3px 0 var(--soya); font-size: 17px; font-weight: 800; animation: pop 0.3s;
+}
+.kind-title { font-size: 20px; font-weight: 900; color: var(--asosiy); }
+.kind-ex { color: #7A7266; }
+
+/* ---------- Xona qutilari (o'ngda 1) ---------- */
+.places { display: flex; flex-direction: row-reverse; flex-wrap: wrap-reverse; justify-content: center; gap: 8px; }
+.place-box {
+  min-width: 52px; padding: 8px 10px; border-radius: 10px; background: #fff; box-shadow: 0 2px 0 var(--soya);
+  font-size: 22px; font-weight: 900; text-align: center; animation: pop 0.25s;
+}
+.nplaces { display: grid; gap: 0 14px; justify-items: center; }
+.np-place { font-size: 15px; font-weight: 900; color: var(--yana); }
+.np-digit { font-size: 30px; font-weight: 900; }
+
+/* ---------- Formula, hikoya, tabrik ---------- */
+.formula-box { display: flex; flex-direction: column; align-items: center; gap: 10px; max-width: 100%; text-align: center; }
+.formula-row { font-size: 22px; font-weight: 900; animation: pop 0.3s; }
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(240px, 66vw); }
+.story-art.small { width: min(130px, 34vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 12px; font-size: 20px; font-weight: 800; text-align: center; }
+
+@media (max-width: 400px) {
+  .formula-row { font-size: 19px; }
+  .big-value { font-size: 28px; }
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+  .play.compact { grid-template-columns: minmax(150px, 24%) minmax(0, 1fr); }
+  .sbox { gap: 6px; }
+  .big-value { font-size: 24px; }
+  .facts { font-size: 18px; gap: 2px; }
+  .digit-tile { height: 40px; min-width: 34px; }
+  .story-art { width: min(190px, 36vh); }
+  .formula-row { font-size: 18px; }
+}

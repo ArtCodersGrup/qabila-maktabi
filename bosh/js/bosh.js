@@ -3,7 +3,7 @@
 (function (root) {
   "use strict";
 
-  const AGE = "8–12";
+  const AGE = "8–12"; // o'yinning o'z yoshi bo'lsa (game.age) — o'sha ko'rsatiladi
 
   const SECTIONS = [
     { id: "kod", title: "Kodlash va shifrlash", note: "Maʼlumotni belgilarga aylantiramiz" },
@@ -31,6 +31,7 @@
     { n: 14, topic: "olchov", dir: "14-piksel-ustaxonasi", title: "Piksel ustaxonasi", desc: "Rasm necha bayt: piksel, rang va megabayt", key: "piksel-ustaxonasi:v1", stages: 3, icon: "piksel" },
     { n: 15, topic: "olchov", dir: "15-multfilm-daftari", title: "Multfilm daftari", desc: "Video: kadrlar, gigabayt va siqish", key: "multfilm-daftari:v1", stages: 3, icon: "kadr" },
     { n: 16, topic: "olchov", dir: "16-xotira-ombori", title: "Xotira ombori", desc: "Bitdan terabaytgacha: solishtirish va nechta sigʻadi", key: "xotira-ombori:v1", stages: 3, icon: "ombor" },
+    { n: 17, topic: "sanoq", dir: "17-qabila-choti", title: "Qabila choʻti", desc: "Asos, raqamlar va xona qiymatlari", key: "qabila-choti:v1", stages: 3, icon: "choti", age: "10–12" },
   ];
 
   function h(tag, props, ...children) {
@@ -58,7 +59,7 @@
       h("span", { class: "bosh-text" },
         h("span", { class: "bosh-name", text: `${game.n}. ${game.title}` }),
         h("span", { class: "bosh-desc", text: game.desc })),
-      h("span", { class: "bosh-state" }, dots, h("span", { class: "bosh-age", text: AGE })));
+      h("span", { class: "bosh-state" }, dots, h("span", { class: "bosh-age", text: game.age || AGE })));
   }
 
   function render() {

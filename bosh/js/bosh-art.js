@@ -159,7 +159,20 @@
   <rect x="22" y="22" width="20" height="20" rx="4" fill="#FFF6E5" stroke="${INK}" stroke-width="2.5"/>
   <circle cx="32" cy="32" r="5" fill="#F0C040" stroke="${INK}" stroke-width="2"/>`);
 
-  const ICONS = { kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor };
+  // 17-o'yin: cho't
+  function choti() {
+    const counts = [1, 3, 2];
+    const colors = ["#8E5BD0", "#1A9E77", "#F08A24"];
+    let out = `<rect x="6" y="6" width="52" height="52" rx="6" fill="none" stroke="#8A5A2B" stroke-width="5"/>`;
+    counts.forEach((n, i) => {
+      const x = 20 + i * 12;
+      out += `<rect x="${x - 1}" y="10" width="2" height="44" fill="#5A3A1E"/>`;
+      for (let k = 0; k < n; k++) out += `<rect x="${x - 5}" y="${46 - k * 7}" width="10" height="6" rx="3" fill="${colors[i]}"/>`;
+    });
+    return svg(out);
+  }
+
+  const ICONS = { kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti() };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";

@@ -14,7 +14,8 @@ const manifest = JSON.parse(read("manifest.json"));
 function siteFiles() {
   const out = ["index.html", "manifest.json", "bosh/style.css", "bosh/icon.svg", "bosh/icon-192.png", "bosh/icon-512.png"];
   for (const f of fs.readdirSync(path.join(ROOT, "bosh/js"))) out.push("bosh/js/" + f);
-  out.push("oyinlar/umumiy/css/asos.css", "oyinlar/umumiy/fonts/Nunito.woff2");
+  for (const f of fs.readdirSync(path.join(ROOT, "oyinlar/umumiy/css"))) out.push("oyinlar/umumiy/css/" + f);
+  out.push("oyinlar/umumiy/fonts/Nunito.woff2");
   for (const f of fs.readdirSync(path.join(ROOT, "oyinlar/umumiy/js"))) out.push("oyinlar/umumiy/js/" + f);
   for (const dir of fs.readdirSync(path.join(ROOT, "oyinlar")).filter((d) => /^\d\d-/.test(d))) {
     out.push(`oyinlar/${dir}/index.html`, `oyinlar/${dir}/css/style.css`);
