@@ -1,0 +1,55 @@
+/* Sehrli qutilar — faqat shu o'yinga xos uslublar. Umumiylari: ../../umumiy/css/asos.css */
+
+.qbox { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
+
+/* ---------- Toshlar ---------- */
+.stones { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; min-height: 40px; }
+.stone { display: block; width: 40px; height: 32px; animation: pop 0.25s; }
+.stone svg { display: block; width: 100%; height: 100%; }
+
+/* ---------- Qutilar va munchoqlar ---------- */
+.mboxes { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; width: 100%; }
+.mbox {
+  display: flex; flex-direction: column; align-items: center; gap: 2px; width: 132px; padding: 6px;
+  border-radius: 12px; background: #fff; box-shadow: 0 2px 0 var(--soya);
+}
+.mbox.sm { width: 84px; padding: 4px; }
+.mbox.hl { box-shadow: 0 2px 0 var(--soya), inset 0 0 0 3px var(--yana); }
+.mbox.flash { animation: pop 0.35s; }
+.mbox-art { width: 64px; height: 45px; }
+.mbox.sm .mbox-art { width: 44px; height: 31px; }
+.mbox-art svg { display: block; width: 100%; height: 100%; }
+.mbox-title { font-size: 18px; font-weight: 800; }
+.mbox.sm .mbox-title { font-size: 16px; }
+.brow { display: flex; align-items: center; gap: 4px; min-height: 22px; }
+.beads { display: flex; flex-wrap: wrap; gap: 2px; max-width: 74px; }
+.mbox.sm .beads { max-width: 44px; }
+.bead { display: inline-block; width: 12px; height: 12px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px rgba(43, 43, 58, 0.5); }
+.bead.kok { background: #2F6FDE; }
+.bead.sariq { background: #F0C040; }
+.bead.big { width: 46px; height: 46px; box-shadow: inset 0 0 0 4px rgba(43, 43, 58, 0.5); }
+.bn { font-size: 17px; font-weight: 900; min-width: 16px; }
+.bead-show { display: flex; justify-content: center; padding: 8px; }
+
+/* ---------- Natijalar ---------- */
+.results { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; min-height: 26px; }
+.res { font-size: 20px; font-weight: 900; }
+.res.win { color: var(--togri); }
+.res.lose { color: var(--yana); }
+.count-line { font-size: 18px; font-weight: 800; text-align: center; }
+.answer { font-size: 20px; font-weight: 900; color: var(--togri); text-align: center; }
+
+/* ---------- Hikoya va tabrik ---------- */
+.story { display: flex; flex-direction: column; align-items: center; gap: 14px; width: 100%; }
+.story-art { width: min(240px, 66vw); }
+.story-art.small { width: min(110px, 28vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 12px; font-size: 20px; font-weight: 800; text-align: center; }
+
+/* Yotiq telefon: sahna ustuni tor, qutilar kichikroq */
+@media (orientation: landscape) and (max-height: 500px) {
+  .play.compact { grid-template-columns: minmax(150px, 24%) minmax(0, 1fr); }
+  .mbox.sm { width: 74px; }
+  .stone { width: 32px; height: 26px; }
+  .story-art { width: min(190px, 36vh); }
+}
