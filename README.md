@@ -25,6 +25,17 @@ Eslatma: progress brauzer xotirasida saqlanadi va `file://` bilan `http://localh
 | 3 | Sezar maktubi | Sezar shifri: harflarni surish, kalit, kalitsiz ochish |
 | 4 | Qabila chiroqlari | Ikkilik kod: 2ⁿ naqsh, bit va bayt, rangli chiroqlar |
 | 5 | Rim toshi | Rim raqamlari, Rimliklar usulida hisob, pozitsion tizim, al-Xorazmiy |
+| 6 | Robotni oʻrgatamiz | Mashina misollardan oʻrganadi: eng yaqin misol, chegara chizigʻi, sinov |
+| 7 | Keyingi soʻz | Til modeli: soʻz juftliklarini sanash, keyingi soʻzni tanlash |
+| 8 | Sehrli qutilar | Mukofot bilan oʻrganish (MENACE) |
+| 9 | Qoida yoki misol? | Qoida yozilgan dastur va misoldan oʻrganish |
+| 10 | Robot nimani koʻradi? | Kompyuter koʻrish: piksellar, shablon, belgi |
+| 11 | Koʻp qatlamli tarmoq | Neyron, qatlamlar, chuqur oʻrganish |
+| 12 | AI xaritasi | Oddiy dastur ⊃ AI ⊃ ML ⊃ DL; usul va vazifa |
+| 13 | Bayt sandigʻi | Nega 8 bit = 1 bayt, matn hajmi (1 belgi = 1 bayt), 1 Kbayt = 1024 bayt |
+| 14 | Piksel ustaxonasi | Rasm hajmi: piksel, ranglar va bitlar, rangli piksel 3 bayt, Mbayt, siqish |
+| 15 | Multfilm daftari | Video: kadrlar, kadr/soniya, video hajmi, Gbayt, faqat oʻzgargani |
+| 16 | Xotira ombori | Bitdan Tbaytgacha zinapoya, solishtirish, nechta sigʻadi, 1 Tbayt = 931 Gbayt |
 
 Tugagan bosqichlar brauzer xotirasida (`localStorage`) saqlanadi — sahifa yangilansa ham yoʻqolmaydi.
 

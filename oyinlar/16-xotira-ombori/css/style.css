@@ -1,0 +1,88 @@
+/* Xotira ombori — faqat shu o'yinga xos uslublar. Umumiylari: ../../umumiy/css/asos.css */
+
+.obox { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
+.count-line { font-size: 19px; font-weight: 800; text-align: center; }
+.answer { font-size: 21px; font-weight: 900; color: var(--togri); text-align: center; }
+.big-value { font-size: 32px; font-weight: 900; color: var(--asosiy); text-align: center; }
+.facts { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 22px; font-weight: 900; }
+
+/* ---------- Zinapoya: tik ekranda pastdan yuqoriga ---------- */
+.ladder-v { display: flex; flex-direction: column-reverse; align-items: flex-start; gap: 2px; min-height: 40px; }
+.rung {
+  min-width: 96px; padding: 6px 14px; border-radius: 10px; background: #fff;
+  box-shadow: 0 2px 0 var(--soya); text-align: center; animation: pop 0.25s;
+}
+.rung.lit { background: var(--asosiy); color: #fff; }
+.rung-unit { font-size: 20px; font-weight: 900; }
+.rung-x { padding-left: 18px; font-size: 15px; font-weight: 900; color: var(--yana); }
+.ax-h { display: none; }
+.units-row .btn { min-width: 96px; }
+
+/* ---------- Fayllar ---------- */
+.file-pad { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 520px; }
+.file-card {
+  display: grid; grid-template-columns: 36px auto; grid-template-rows: auto auto; column-gap: 8px;
+  align-items: center; min-height: 56px; padding: 6px 12px; border: none; border-radius: 14px;
+  background: #fff; box-shadow: 0 3px 0 var(--soya); text-align: left;
+}
+button.file-card:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--soya); }
+button.file-card:disabled { opacity: 0.3; }
+.file-icon { grid-row: span 2; display: block; width: 36px; }
+.file-icon svg { display: block; width: 100%; height: auto; }
+.file-name { font-size: 16px; font-weight: 800; }
+.file-size { font-size: 18px; font-weight: 900; color: var(--asosiy); }
+.shelf { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; max-width: 560px; }
+.shelf-slot { min-width: 64px; min-height: 60px; border: 2px dashed var(--chiziq); border-radius: 12px; display: grid; place-items: center; }
+.shelf-slot.full { border-color: transparent; animation: pop 0.25s; }
+.shelf .file-card { padding: 4px 8px; min-height: 0; box-shadow: none; background: #F4F1EA; }
+.shelf .file-name { font-size: 14px; }
+.shelf .file-size { font-size: 15px; }
+.shelf .file-icon { width: 28px; }
+
+/* ---------- Xotira chizig'i ---------- */
+.sbar-wrap { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 100%; max-width: 360px; }
+.sbar-label { font-size: 19px; font-weight: 900; }
+.sbar { display: flex; gap: 3px; width: 100%; height: 44px; padding: 4px; border-radius: 12px; background: #fff; box-shadow: inset 0 0 0 3px var(--matn); }
+.sbar-part { flex: 1; border-radius: 6px; background: #EFE9DC; transition: background 0.3s; }
+.sbar-part.on { background: var(--togri); }
+
+/* ---------- Taqqoslash ---------- */
+.cmp { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; }
+.cmp-card { padding: 12px 18px; border-radius: 14px; background: #fff; box-shadow: 0 3px 0 var(--soya); font-size: 28px; font-weight: 900; }
+.cmp-or { font-size: 18px; font-weight: 800; color: #7A7266; }
+
+/* ---------- Formula, hikoya, tabrik ---------- */
+.formula-box { display: flex; flex-direction: column; align-items: center; gap: 8px; max-width: 100%; text-align: center; }
+.formula-row { font-size: 21px; font-weight: 900; animation: pop 0.3s; }
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(240px, 66vw); }
+.story-art.small { width: min(130px, 34vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 12px; font-size: 19px; font-weight: 800; text-align: center; }
+
+@media (max-width: 400px) {
+  .formula-row { font-size: 18px; }
+  .big-value { font-size: 26px; }
+  .cmp-card { font-size: 24px; padding: 10px 14px; }
+}
+
+/* Yotiq telefon: zinapoya chapdan o'ngga, ixchamroq */
+@media (orientation: landscape) and (max-height: 500px) {
+  .play.compact { grid-template-columns: minmax(150px, 24%) minmax(0, 1fr); }
+  .obox { gap: 6px; }
+  .ladder-v { flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: center; gap: 4px; }
+  .ladder-v > * { margin-left: 0 !important; }
+  .rung { min-width: 0; padding: 4px 10px; }
+  .rung-unit { font-size: 17px; }
+  .rung-x { padding-left: 0; font-size: 13px; }
+  .ax-v { display: none; }
+  .ax-h { display: inline; }
+  .units-row .btn { min-width: 80px; }
+  .file-card { min-height: 48px; padding: 4px 10px; }
+  .story-art { width: min(190px, 36vh); }
+  .facts { font-size: 18px; gap: 2px; }
+  .formula-row { font-size: 17px; }
+  .formula-box { gap: 4px; }
+  .big-value { font-size: 24px; }
+  .sbar { height: 34px; }
+}

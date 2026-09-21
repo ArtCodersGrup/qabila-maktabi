@@ -152,7 +152,14 @@
   <circle cx="32" cy="29" r="3.5" fill="#E0524A"/>
   <circle cx="52" cy="36" r="3.5" fill="#E0524A"/>`);
 
-  const ICONS = { kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr };
+  // 16-o'yin: ichma-ich qutilar (xotira ombori)
+  const ombor = svg(`
+  <rect x="4" y="4" width="56" height="56" rx="7" fill="#C98B5E" stroke="${INK}" stroke-width="3"/>
+  <rect x="13" y="13" width="38" height="38" rx="6" fill="#E6B98E" stroke="${INK}" stroke-width="2.5"/>
+  <rect x="22" y="22" width="20" height="20" rx="4" fill="#FFF6E5" stroke="${INK}" stroke-width="2.5"/>
+  <circle cx="32" cy="32" r="5" fill="#F0C040" stroke="${INK}" stroke-width="2"/>`);
+
+  const ICONS = { kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";
