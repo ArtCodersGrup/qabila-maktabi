@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Qabila maktabi">
+  <rect width="512" height="512" rx="104" fill="#FFF6E5"/>
+  <circle cx="256" cy="286" r="150" fill="#FDEFD4"/>
+  <path d="M150 396 L362 350" stroke="#8A5A2B" stroke-width="30" stroke-linecap="round"/>
+  <path d="M150 350 L362 396" stroke="#A9743F" stroke-width="30" stroke-linecap="round"/>
+  <path d="M256 150 C300 212 330 244 330 288 C330 336 296 366 256 366 C216 366 182 336 182 288 C182 244 212 212 256 150 Z" fill="#F08A24"/>
+  <path d="M256 224 C280 264 296 282 296 306 C296 332 278 348 256 348 C234 348 216 332 216 306 C216 282 232 264 256 224 Z" fill="#F0C040"/>
+  <circle cx="150" cy="176" r="18" fill="#2F6FDE"/>
+  <circle cx="256" cy="104" r="18" fill="#1A9E77"/>
+  <circle cx="362" cy="176" r="18" fill="#8E5BD0"/>
+</svg>
