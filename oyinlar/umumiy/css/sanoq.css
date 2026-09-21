@@ -1,0 +1,65 @@
+/* Sanoq tizimlari — umumiy uslublar (17–22-o'yinlar): cho't, ustun taxtasi, raqam tugmalari.
+   Faqat shu o'yinlar ulaydi (asos.css dan keyin). */
+
+/* ---------- Cho't ---------- */
+.choti {
+  display: flex; gap: 14px; padding: 10px 14px 8px; border-radius: 14px;
+  background: #C98B5E; box-shadow: 0 3px 0 var(--soya);
+}
+.rod { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.rod-place { min-height: 20px; font-size: 16px; font-weight: 900; color: #FFF6E5; }
+.rod-stick {
+  display: flex; flex-direction: column-reverse; align-items: center; gap: 2px;
+  width: 36px; height: calc(var(--beads) * 16px + 8px); padding: 4px 0; border-radius: 8px;
+  background: linear-gradient(90deg, transparent 16px, #5A3A1E 16px, #5A3A1E 20px, transparent 20px);
+  transition: background-color 0.2s;
+}
+.bead { flex: none; width: 32px; height: 14px; border-radius: 7px; box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.25); }
+.rod.full .rod-stick { background-color: rgba(240, 192, 64, 0.55); }
+.rod.full .bead { animation: flash 0.22s 2; }
+.rod.got .rod-stick, .rod.gave .rod-stick { background-color: rgba(255, 246, 229, 0.45); }
+.choti.nodigits .rod-digit { color: transparent; }
+.rod-digit {
+  min-width: 36px; height: 32px; border-radius: 8px; background: #FFF6E5;
+  font-size: 22px; font-weight: 900; line-height: 32px; text-align: center;
+}
+
+/* ---------- Ustun taxtasi ---------- */
+.ustun-wrap { display: flex; align-items: flex-end; gap: 8px; }
+.ustun {
+  --ucell: 36px;
+  display: grid; row-gap: 2px; padding: 6px 12px 10px; border-radius: 14px;
+  background: #fff; box-shadow: 0 3px 0 var(--soya);
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+}
+.ucell { display: grid; place-items: center; height: 36px; border-radius: 6px; font-size: 28px; font-weight: 800; }
+.ucarry { height: 20px; font-size: 15px; font-weight: 900; color: var(--yana); font-family: "Nunito", system-ui, sans-serif; }
+.usign { font-size: 26px; color: var(--asosiy); }
+.ures { background: #F4F1EA; }
+.ures.filled { background: none; color: var(--togri); animation: pop 0.2s; }
+.ucell.hl { background: rgba(47, 111, 222, 0.12); }
+.ures.hl { box-shadow: inset 0 0 0 2px var(--asosiy); }
+.udigit.gave { color: #A89F90; text-decoration: line-through; }
+.uline { height: 3px; margin: 2px 0; border-radius: 2px; background: var(--matn); }
+.ubase { font-size: 16px; font-weight: 800; color: #7A7266; }
+
+/* ---------- Raqam tugmalari ---------- */
+.dbuttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 480px; }
+.dbuttons .key { width: 56px; }
+.dbuttons.many { max-width: 360px; }
+.dbuttons.many .key { width: 48px; }
+
+@media (max-width: 400px) {
+  .ustun { --ucell: 30px; padding: 6px 8px 8px; }
+  .ucell { font-size: 24px; }
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+  .ustun { --ucell: 28px; padding: 4px 8px 6px; }
+  .ucell { height: 28px; font-size: 22px; }
+  .ucarry { height: 16px; font-size: 13px; }
+  .rod-stick { height: calc(var(--beads) * 11px + 6px); }
+  .bead { height: 9px; }
+  .rod-digit { height: 26px; line-height: 26px; font-size: 18px; }
+  .dbuttons.many { max-width: 470px; }
+}

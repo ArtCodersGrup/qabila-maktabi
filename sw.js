@@ -1,6 +1,6 @@
 // Offline rejim: sayt fayllari keshlanadi. Bola saytni bir marta ochsa, keyin internetsiz ham oʻynay oladi.
 // Yangi fayl qoʻshilsa, FILES roʻyxatiga ham qoʻshiladi — buni bosh/tests/offline.test.js tekshiradi.
-const VERSION = "v9";
+const VERSION = "v10";
 const CACHE = "qabila-maktabi-" + VERSION;
 
 const FILES = [
@@ -14,11 +14,14 @@ const FILES = [
   "bosh/js/bosh-art.js",
   "bosh/js/bosh.js",
   "oyinlar/umumiy/css/asos.css",
+  "oyinlar/umumiy/css/sanoq.css",
   "oyinlar/umumiy/fonts/Nunito.woff2",
   "oyinlar/umumiy/js/app.js",
   "oyinlar/umumiy/js/art.js",
   "oyinlar/umumiy/js/offline.js",
   "oyinlar/umumiy/js/practice.js",
+  "oyinlar/umumiy/js/sanoq-ui.js",
+  "oyinlar/umumiy/js/sanoq.js",
   "oyinlar/umumiy/js/sound.js",
   "oyinlar/umumiy/js/storage.js",
   "oyinlar/umumiy/js/ui.js",
@@ -213,6 +216,17 @@ const FILES = [
   "oyinlar/16-xotira-ombori/js/scenes/stage3.js",
   "oyinlar/16-xotira-ombori/js/units-ui.js",
   "oyinlar/16-xotira-ombori/js/units.js",
+  "oyinlar/17-qabila-choti/",
+  "oyinlar/17-qabila-choti/index.html",
+  "oyinlar/17-qabila-choti/css/style.css",
+  "oyinlar/17-qabila-choti/js/game-art.js",
+  "oyinlar/17-qabila-choti/js/main.js",
+  "oyinlar/17-qabila-choti/js/scenes/common.js",
+  "oyinlar/17-qabila-choti/js/scenes/final.js",
+  "oyinlar/17-qabila-choti/js/scenes/stage1.js",
+  "oyinlar/17-qabila-choti/js/scenes/stage2.js",
+  "oyinlar/17-qabila-choti/js/scenes/stage3.js",
+  "oyinlar/17-qabila-choti/js/tizim.js",
 ];
 
 self.addEventListener("install", (event) => {

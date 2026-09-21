@@ -15,7 +15,8 @@ games = sorted(d.name for d in (root / "oyinlar").iterdir() if d.name[:2].isdigi
 
 files = ["./", "index.html", "manifest.json", "bosh/style.css", "bosh/icon.svg", "bosh/icon-192.png", "bosh/icon-512.png"]
 files += sorted(f"bosh/js/{p.name}" for p in (root / "bosh/js").glob("*.js"))
-files += ["oyinlar/umumiy/css/asos.css", "oyinlar/umumiy/fonts/Nunito.woff2"]
+files += sorted(f"oyinlar/umumiy/css/{p.name}" for p in (root / "oyinlar/umumiy/css").glob("*.css"))
+files += ["oyinlar/umumiy/fonts/Nunito.woff2"]
 files += sorted(f"oyinlar/umumiy/js/{p.name}" for p in (root / "oyinlar/umumiy/js").glob("*.js"))
 for game in games:
     files += [f"oyinlar/{game}/", f"oyinlar/{game}/index.html", f"oyinlar/{game}/css/style.css"]

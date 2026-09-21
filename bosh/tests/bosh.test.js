@@ -44,3 +44,10 @@ test("har bo'limda kamida bitta o'yin bor", () => {
     assert.ok(GAMES.some((g) => g.topic === section.id), section.id);
   }
 });
+
+test("yosh belgisi: umumiy yoki o'yinning o'zi (sanoq tizimlari bloki — 10–12)", () => {
+  for (const game of GAMES) {
+    if (game.age != null) assert.match(game.age, /^\d+–\d+$/, game.dir);
+    if (game.n >= 17) assert.equal(game.age, "10–12", game.dir);
+  }
+});
