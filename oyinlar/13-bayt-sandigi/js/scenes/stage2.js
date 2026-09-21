@@ -61,13 +61,13 @@
     return practice.numberTries({
       answer: task.answer,
       hint: () => {
-        el.append(bytesUi.messageView(task.message, true));
+        common.add(el, bytesUi.messageView(task.message, true));
         ui.bubble("elder", task.type === "bytes"
           ? "↻ Belgilarga ajratdim, boʻsh joy — ␣. Hammasini sana."
           : "↻ Belgilarni sana. Har belgi — 8 bit.");
       },
       solution: () => {
-        el.append(common.answerLine(task.type === "bytes"
+        common.add(el, common.answerLine(task.type === "bytes"
           ? `${n} ta belgi — ${n} bayt`
           : `${n} × 8 = ${n * 8} bit`));
       },
