@@ -29,6 +29,7 @@
 .bosh-dots .dot { width: 13px; height: 13px; border-width: 2px; }
 .bosh-age { padding: 2px 8px; border-radius: 999px; background: var(--fon); font-size: 15px; font-weight: 800; }
 .bosh-pc { font-size: 18px; line-height: 1; } /* o'yinga klaviatura kerak */
+.bosh-h3 { margin: 8px 0 0; font-size: 17px; font-weight: 800; color: #7A7266; } /* musobaqalar: bitta ekranda / onlayn */
 
 .bosh-foot { font-size: 16px; font-weight: 700; line-height: 1.6; opacity: 0.7; text-align: center; }
 

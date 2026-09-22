@@ -1,6 +1,6 @@
 // Offline rejim: sayt fayllari keshlanadi. Bola saytni bir marta ochsa, keyin internetsiz ham oʻynay oladi.
 // Yangi fayl qoʻshilsa, FILES roʻyxatiga ham qoʻshiladi — buni bosh/tests/offline.test.js tekshiradi.
-const VERSION = "v25";
+const VERSION = "v28";
 const CACHE = "qabila-maktabi-" + VERSION;
 
 const FILES = [
@@ -16,16 +16,20 @@ const FILES = [
   "oyinlar/umumiy/css/asos.css",
   "oyinlar/umumiy/css/mantiq.css",
   "oyinlar/umumiy/css/sanoq.css",
+  "oyinlar/umumiy/css/savol.css",
   "oyinlar/umumiy/fonts/Nunito.woff2",
   "oyinlar/umumiy/js/app.js",
   "oyinlar/umumiy/js/art.js",
   "oyinlar/umumiy/js/mantiq-ui.js",
   "oyinlar/umumiy/js/offline.js",
+  "oyinlar/umumiy/js/onlayn.js",
   "oyinlar/umumiy/js/practice.js",
   "oyinlar/umumiy/js/sanoq-ui.js",
   "oyinlar/umumiy/js/sanoq.js",
+  "oyinlar/umumiy/js/savol-ui.js",
   "oyinlar/umumiy/js/sound.js",
   "oyinlar/umumiy/js/storage.js",
+  "oyinlar/umumiy/js/supabase.min.js",
   "oyinlar/umumiy/js/ui.js",
   "oyinlar/01-qabila-kodlari/",
   "oyinlar/01-qabila-kodlari/index.html",
@@ -337,6 +341,17 @@ const FILES = [
   "oyinlar/poyga/css/style.css",
   "oyinlar/poyga/js/main.js",
   "oyinlar/poyga/js/race.js",
+  "oyinlar/onlayn/",
+  "oyinlar/onlayn/index.html",
+  "oyinlar/onlayn/css/style.css",
+  "oyinlar/onlayn/js/sinov.js",
+  "oyinlar/tog/",
+  "oyinlar/tog/index.html",
+  "oyinlar/tog/css/style.css",
+  "oyinlar/tog/js/game-art.js",
+  "oyinlar/tog/js/mashq.js",
+  "oyinlar/tog/js/tog-ui.js",
+  "oyinlar/tog/js/tog.js",
 ];
 
 // Yangi versiya fayllari brauzerning oddiy keshidan emas, serverdan olinadi (cache: "reload").

@@ -49,9 +49,16 @@
   ];
 
   // Musobaqalar — o'yin emas (bosqichi yo'q), ro'yxat tepasida alohida bo'lim: savol-javob va tez yozish poygasi
+  // mode: offline — bitta ekranda, internetsiz; online — har kim o'z qurilmasida (internet kerak)
   const CONTESTS = [
-    { dir: "musobaqa", title: "Savol-javob", desc: "Ikki kishi bitta ekranda: savollar, soat va 3 ta yurak", icon: "musobaqa" },
-    { dir: "poyga", title: "Tez yozish poygasi", desc: "Navbat bilan bir xil matnni yozasizlar: kim aniq va tez?", icon: "poyga", pc: true },
+    { dir: "musobaqa", mode: "offline", title: "Savol-javob", desc: "Ikki kishi bitta ekranda: savollar, soat va 3 ta yurak", icon: "musobaqa" },
+    { dir: "poyga", mode: "offline", title: "Tez yozish poygasi", desc: "Navbat bilan bir xil matnni yozasizlar: kim aniq va tez?", icon: "poyga", pc: true },
+    { dir: "onlayn", mode: "online", title: "Aloqa sinovi", desc: "Ikki qurilmani ulab koʻramiz — onlayn musobaqalar uchun tayyorgarlik", icon: "onlayn" },
+    { dir: "tog", mode: "online", title: "Togʻga chiqish", desc: "Savolga javob ber — pogʻona yuqoriga. Qolib ketsang, chiqib ketasan", icon: "tog", badge: "robotlar bilan" },
+  ];
+  const MODES = [
+    { id: "offline", title: "Bitta ekranda", note: "Internet kerak emas" },
+    { id: "online", title: "Onlayn", note: "Har kim oʻz qurilmasida, internet kerak" },
   ];
 
   // O'yinning bosh sahifadagi tartib raqami (1, 2, 3 …) — bo'limlar tartibida
@@ -94,19 +101,22 @@
     if (paper) paper.style.visibility = "hidden"; // bosh sahifada qog'oz kerak emas
     const list = root.document.getElementById("list");
     list.innerHTML = "";
-    const contests = h("div", { class: "bosh-cards" });
-    CONTESTS.forEach((c) => contests.append(
-      h("a", { class: "bosh-card bosh-contest", href: `oyinlar/${c.dir}/index.html` },
-        h("span", { class: "bosh-icon", html: root.QK.boshArt.icon(c.icon) }),
-        h("span", { class: "bosh-text" },
-          h("span", { class: "bosh-name", text: c.title }),
-          h("span", { class: "bosh-desc", text: c.desc })),
-        h("span", { class: "bosh-state" }, h("span", { class: "bosh-age", text: "2 kishi" }),
-          c.pc ? h("span", { class: "bosh-pc", title: "Klaviatura kerak", "aria-label": "Klaviatura kerak", text: "💻" }) : null))));
-    list.append(h("section", { class: "bosh-section" },
+    const section = h("section", { class: "bosh-section" },
       h("h2", { class: "bosh-h2", text: "Musobaqalar" }),
-      h("p", { class: "bosh-note", text: "Oʻrganganingni doʻsting bilan sinab koʻr" }),
-      contests));
+      h("p", { class: "bosh-note", text: "Oʻrganganingni doʻsting bilan sinab koʻr" }));
+    for (const mode of MODES) {
+      const cards = h("div", { class: "bosh-cards" });
+      CONTESTS.filter((c) => c.mode === mode.id).forEach((c) => cards.append(
+        h("a", { class: "bosh-card bosh-contest", href: `oyinlar/${c.dir}/index.html` },
+          h("span", { class: "bosh-icon", html: root.QK.boshArt.icon(c.icon) }),
+          h("span", { class: "bosh-text" },
+            h("span", { class: "bosh-name", text: c.title }),
+            h("span", { class: "bosh-desc", text: c.desc })),
+          h("span", { class: "bosh-state" }, h("span", { class: "bosh-age", text: c.badge || (mode.id === "online" ? "🌐 onlayn" : "2 kishi") }),
+            c.pc ? h("span", { class: "bosh-pc", title: "Klaviatura kerak", "aria-label": "Klaviatura kerak", text: "💻" }) : null))));
+      section.append(h("h3", { class: "bosh-h3", text: `${mode.title} · ${mode.note}` }), cards);
+    }
+    list.append(section);
     for (const section of SECTIONS) {
       const games = GAMES.filter((g) => g.topic === section.id);
       if (!games.length) continue;
@@ -120,6 +130,6 @@
   }
 
   root.QK = root.QK || {};
-  root.QK.bosh = { AGE, SECTIONS, GAMES, CONTESTS, number, render };
+  root.QK.bosh = { AGE, SECTIONS, GAMES, CONTESTS, MODES, number, render };
   if (root.document) render();
 })(window);

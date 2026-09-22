@@ -12,7 +12,7 @@ import sys
 
 root = pathlib.Path(__file__).resolve().parent.parent
 games = sorted(d.name for d in (root / "oyinlar").iterdir() if d.name[:2].isdigit())
-pages = games + ["musobaqa", "poyga"]  # musobaqalar (savol-javob, tez yozish poygasi) — alohida sahifalar
+pages = games + ["musobaqa", "poyga", "onlayn", "tog"]  # musobaqalar (savol-javob, tez yozish poygasi, onlayn) — alohida sahifalar
 
 files = ["./", "index.html", "manifest.json", "bosh/style.css", "bosh/icon.svg", "bosh/icon-192.png", "bosh/icon-512.png"]
 files += sorted(f"bosh/js/{p.name}" for p in (root / "bosh/js").glob("*.js"))
