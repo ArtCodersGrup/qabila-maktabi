@@ -28,9 +28,11 @@
 12. Xonani **o'qituvchi ochadi va o'zi o'ynamaydi**; hisob-kitob uning qurilmasida (2.4).
 13. Qahramonlar — **12 ta hayvon**, ism so'ralmaydi, bitta qahramon bitta kishiga (2.7).
 14. Har kimga **boshqa sonli** savol (2.6). Teng holatda o'sha pog'onaga birinchi chiqqani oldinda (2.8). Uzilish qoidalari (2.9).
-15. **Chiqib ketgan bola muxlis bo'ladi** — mexanikasi 2.5 da (muallif fikri bilan kengaytirildi).
+15. **Chiqib ketgan bola — oddiy tomoshabin** (2.5). Muxlislik, sharpa va bayroqcha g'oyalaridan voz kechildi.
+16. **Tog'larning nomi bor, nomiga qarab balandligi o'zgaradi** (2.10): Chimyon 15, Hazrati Sulton 20, Pomir 25, Himolay 30 pog'ona.
+17. **O'qituvchi o'yinchini chiqarib yuborishi mumkin**; o'yin boshlangach kirgan bola faqat kutadi (2.9).
 
-## 2. Men taklif qilganlar (tasdiqlash kerak)
+## 2. Tafsilotlar (hammasi muallif bilan kelishilgan, 2026-09-22)
 
 ### 2.1. Birinchi daqiqada hamma chiqib ketmasligi uchun
 **Muammo:** 4 pog'ona — atigi 4 ta savol. Tez bola 1 ta savolga ~8 soniya sarflasa, 4 pog'onaga ~30 soniyada chiqadi. Birinchi savolni hali o'qiyotgan bolalar esa 0 da turadi. Qoida darhol ishlasa, **o'yin 30 soniyada tugaydi**: bitta g'olib, qolganlar o'ynamay qoladi.
@@ -38,9 +40,7 @@
 Bu va boshqa sonlar (4 pog'ona, 15 pog'ona, 10 daqiqa, pauza) kodda **bitta joyda** turadi — sinfda sinab ko'rib, oson o'zgartiriladi.
 
 ### 2.2. Tog' qiyinlashib boradi
-- 1–5-pog'ona — **Oson**
-- 6–10-pog'ona — **O'rta**
-- 11–15-pog'ona — **Qiyin**
+Pastki uchdan bir qismi — **Oson**, o'rtasi — **O'rta**, yuqorisi — **Qiyin** savollar (aniq chegaralar 2.10 dagi jadvalda, tog'ga qarab).
 
 Qiyin savol ko'proq vaqt oladi, shuning uchun yetakchi tepada sekinlashadi, orqadagilar yetib olish imkoniga ega bo'ladi. Bu muallifning "boshidan qiyinga tomon" fikriga ham mos.
 
@@ -54,18 +54,9 @@ Qiyin savol ko'proq vaqt oladi, shuning uchun yetakchi tepada sekinlashadi, orqa
 - **Bolalar qurilmasi** (telefon yoki kompyuter): kod → qahramon tanlash → kutish → o'yin.
 - Sababi: xonani ochgan bola chiqib ketsa, hammaning o'yini to'xtaydi. O'qituvchi qurilmasi esa butun o'yinni "ushlab turadi" (2.8).
 
-### 2.5. Muxlis (chiqib ketgan bola nima qiladi)
-**Muallif fikri (2026-09-22):** chiqib ketgan bola hali chiqib ketmagan **bitta o'yinchining muxlisi** bo'ladi: uning savollarini ko'radi va kuzatadi, o'sha o'yinchining yonida **sharpa** (xira qahramon) bo'lib, qo'lida bayroqcha bilan ko'rinadi. **Muxlislik majburiy emas** — xohlamagan bola shunchaki tog'ni kuzatadi.
-
-**Qanday qilamiz (mening taklifim):** muxlis o'zi javob beradi, lekin **boshqa sonlar bilan**:
-- Muxlis do'stining savoli bilan **bir xil turdagi**, lekin boshqa sonli savolni oladi.
-- To'g'ri javob bersa, uning sharpasi do'stining yonida bir pog'ona ko'tariladi. Bu do'stining o'rniga **ta'sir qilmaydi** — sharpa poygadan tashqarida.
-- Sharpa do'stidan o'zib ketsa: "Sen do'stingdan tez topding!" degan yozuv chiqadi, bayroqcha yonadi.
-- **Nega boshqa sonlar bilan:** muxlis do'stining aynan savolini ko'rsa, sinfda yonidan javobni aytib yuboradi. Bunda esa u ham o'ynaydi, ham hech kimga yordam bera olmaydi.
-
-**Muxlis ekranida:** tepada do'stining qahramoni va pog'onasi, pastda o'zining savoli va sharpasi. "Boshqa do'stga o'tish" va "Faqat kuzatish" tugmalari bor.
-
-**Bayroqcha (qo'llab-quvvatlash):** muxlis "🚩 Bo'l!" tugmasini bosadi — do'stining ekranida bayroqcha bir lahza silkinadi. 10 soniyada bir marta bosiladi, shunda chalg'itmaydi. Yozuv yuborish yo'q, faqat bayroqcha.
+### 2.5. Chiqib ketgan bola — tomoshabin
+**Muallif qarori (2026-09-22):** muxlislik, sharpa va bayroqcha g'oyalaridan **voz kechildi**. Yutqazgan bola **oddiy tomoshabin** bo'ladi: ekranida tog' va qolgan o'yinchilar ko'rinib turadi, o'yin oxirigacha kuzatadi. Savol berilmaydi, hech narsa yubormaydi.
+Shuning uchun bitta o'yin qisqa (4–5 daqiqa) bo'lishi muhim: chiqib ketgan bola uzoq kutmaydi, keyingi o'yinda qayta qatnashadi.
 
 ### 2.6. Ko'chirib bo'lmaydi
 Sinfda hamma yonma-yon o'tiradi. Har kimga **boshqa sonli** savol beriladi: musobaqadagi `savollar.js` har kim uchun alohida yasaydi, hamma savollar esa bir xil mavzu va qiyinlikdan.
@@ -79,31 +70,32 @@ Sinfda hamma yonma-yon o'tiradi. Har kimga **boshqa sonli** savol beriladi: muso
 - 10 daqiqa tugaganda bir xil balandlikda turganlar orasida o'sha pog'onaga **birinchi chiqqani** oldinda turadi.
 - Shoxsupada 1-, 2-, 3-o'rin.
 
-### 2.9. Uzilish
+### 2.9. Chiqarib yuborish va kech kelganlar (muallif tasdiqladi)
+- **O'qituvchi o'yinchini chiqarib yuborishi mumkin:** ro'yxatdagi qahramon yonidagi tugma. Kod tarqalib ketsa yoki begona kirsa kerak bo'ladi. Chiqarib yuborilgan bola shu kod bilan qayta kira olmaydi.
+- **O'yin boshlangandan keyin kirgan bola faqat kutadi:** u xonada turadi, tog'ni kuzatadi va **keyingi o'yinda** qatnashadi. Boshlangan o'yinga qo'shilmaydi.
+
+### 2.11. Uzilish
 - Internet uzilgan bola joyida qotib turadi.
 - **30 soniya ichida** o'sha kod bilan qaytib kirsa, qahramoni va pog'onasi saqlangan bo'ladi.
 - Qaytmasa, chiqib ketgan hisoblanadi.
 - O'qituvchi qurilmasi uzilsa, o'yin hamma uchun **pauza** bo'ladi va u qaytgach davom etadi.
 
-### 2.10. Tog' balandligi (pog'onalar soni)
-**Muallif so'radi:** 15 ta emas, 30 ta qilaylikmi?
+### 2.10. Tog'lar: nomi va balandligi
+**Muallif qarori (2026-09-22):** tog'larga nom beriladi, nomiga qarab balandligi (pog'onalar soni) o'zgaradi. O'qituvchi o'yin boshida tog'ni tanlaydi.
 
-Hisob: bitta savol bolaga taxminan **8–15 soniya** oladi (o'qish + javob), xatolarda pauza ham qo'shiladi.
+| Tog' | Haqiqiy balandligi | Pog'ona | Chegara (qolib ketish) | Taxminiy vaqt | Qiyinlik |
+|---|---|---|---|---|---|
+| **Chimyon** | 3 309 m | 15 | 4 | 3–4 daqiqa | 1–5 Oson · 6–10 Oʻrta · 11–15 Qiyin |
+| **Hazrati Sulton** | 4 643 m | 20 | 4 | 4–5 daqiqa | 1–7 · 8–14 · 15–20 |
+| **Pomir** | 7 495 m | 25 | 5 | 5–6 daqiqa | 1–9 · 10–17 · 18–25 |
+| **Himolay** | 8 849 m | 30 | 6 | 6–8 daqiqa | 1–10 · 11–20 · 21–30 |
 
-| Balandlik | Tez bola yetib boradi | Sekinroq bola |
-|---|---|---|
-| 15 pog'ona | ~2,5 daqiqa | ~4 daqiqa |
-| 20 pog'ona | ~3,5 daqiqa | ~5 daqiqa |
-| 30 pog'ona | ~5 daqiqa | 10 daqiqada yetib bormaydi |
-
-**Taklif:** balandlik — **o'qituvchi sozlamasi**: 15 (qisqa) / 20 / 30 (uzun), boshida **20** turadi. 45 daqiqalik darsda 3–4 marta o'ynab, orada gaplashish uchun bitta o'yin 4–5 daqiqa bo'lgani ma'qul.
-
-30 pog'ona tanlansa, qolgan sonlar ham o'zgaradi:
-- qolib ketish chegarasi 4 emas, **6 pog'ona** (30 ta pog'onada 4 juda kichik — tez-tez chiqib ketiladi);
-- qoida 15-pog'onadan boshlab ishlaydi;
-- qiyinlik: 1–10 Oson, 11–20 O'rta, 21–30 Qiyin.
-
-Ekranda har doim **8 pog'ona atrofi** ko'rinadi (bolaning o'zi o'rtada), shuning uchun tog' baland bo'lsa ham pog'onalar kichrayib ketmaydi.
+- Boshida **Hazrati Sulton (20)** turadi — 45 daqiqalik darsda 3–4 marta o'ynash uchun qulay.
+- Har tog'ning o'z manzarasi: Chimyon — archazor va yashil yon bagʻir, Hazrati Sulton — qoyalar, Pomir — muzlik, Himolay — qor va bulutlar (bola bulutdan yuqoriga chiqadi).
+- Tanlash ekranida tog'ning **haqiqiy balandligi metrda** yoziladi — bola yo'l-yo'lakay geografiyani ham biladi. Hazrati Sulton — O'zbekistondagi eng baland cho'qqi, Himolaydagi Jomolungma — dunyodagi eng balandi.
+- Qolib ketish qoidasi har doim **yarim yo'ldan keyin** ishlaydi (Chimyonda 8-pog'ona, Himolayda 15-pog'ona).
+- Ekranda har doim **8 pog'ona atrofi** ko'rinadi, shuning uchun baland tog'da ham pog'onalar kichrayib ketmaydi.
+- Vaqt: Chimyon va Hazrati Sulton — 10 daqiqa, Pomir va Himolay — 15 daqiqa (o'qituvchi o'zgartira oladi).
 
 ## 3. Ekranlar
 
@@ -112,26 +104,27 @@ Ekranda har doim **8 pog'ona atrofi** ko'rinadi (bolaning o'zi o'rtada), shuning
 ┌────────────────────────────────────────────┐
 │ Xona kodi: 4827          ⏱ 07:42   ⏸  ⏹    │
 │                                            │
-│   ⛰ 15  shogird                            │
+│   ⛰ Hazrati Sulton (4 643 m) — 20-pog'ona  │
 │   14 ─────────────                         │
 │   13 ── 🦊 Tulki                           │
 │   12 ── 🐐 Echki  🦅 Burgut                │
 │   ...                                      │
-│    8 ── ⚠️ chegara: yetakchidan 4 past     │
+│   10 ── ⚠️ chegara: yetakchidan 4 past     │
 │   ...                                      │
 │    0 ── 🧓 oqsoqol                         │
 │  "Burgut 12-pog'onaga chiqdi!"             │
 └────────────────────────────────────────────┘
 ```
-- Kutish xonasi: kod katta harflarda, kirganlar qahramonlari bilan (12 tagacha), "Boshlash" (kamida 2 o'yinchi bo'lsa).
-- Sozlash: mavzular (musobaqadagi 7 mavzu), vaqt (5 / 10 / 15 daqiqa).
+- Kutish xonasi: kod katta harflarda, kirganlar qahramonlari bilan (12 tagacha), har birining yonida **chiqarib yuborish** tugmasi, "Boshlash" (kamida 2 o'yinchi bo'lsa).
+- Sozlash: **tog'** (Chimyon / Hazrati Sulton / Pomir / Himolay — 2.10), mavzular (musobaqadagi 7 mavzu), vaqt.
+- O'yin paytida: tog' nomi va balandligi, taymer, har o'yinchining ulanish holati (uzildi / 60 soniyadan beri javob yo'q), chiqarib yuborish tugmasi.
 
 ### 3.2. Bola (telefon — tik ekran)
 - **Tepada:** tog'ning o'zi turgan qismi — o'zi va yaqinidagilar, cho'qqigacha qancha qolgani ("Yana 4 pog'ona").
 - **O'rtada:** savol.
 - **Pastda:** javob tugmalari yoki raqam klaviaturasi (musobaqadagidek).
 - **Pauza:** savol o'rnida "↻ Xato. To'g'ri javob: 56. Tepaga chiqa olmading — kut: 0:09" va taymer.
-- **Chiqib ketdi:** "Qolib ketding — endi muxlissan" va tog'ni kuzatish.
+- **Chiqib ketdi:** "Qolib ketding" degan yozuv, keyin tog'ni kuzatish (savol berilmaydi).
 - **Oxiri:** shoxsupa va o'zining natijasi: pog'ona, to'g'ri va xato javoblar soni.
 
 ## 4. Ovoz
@@ -169,10 +162,8 @@ Har pog'onada qadam ovozi. Xato — yumshoq "retry" (qo'rqituvchi emas, QOIDALAR
 ## 8. Bu versiyaga kirmaydi
 Ism va login, chat, reyting jadvali (kunlik yoki umumiy), 12 dan ko'p o'yinchi, bir vaqtda bir nechta xona uchun bitta o'qituvchi ekrani.
 
-## 9. Ochiq savollar (muallifga)
+## 9. Keyingi qadamlar
 
-1. **Muxlis:** do'stining aynan savolini ko'rsinmi yoki bir xil turdagi, boshqa sonli savolni (2.5 dagi taklifim)?
-2. **Balandlik:** o'qituvchi tanlaydigan qilaylikmi (15 / 20 / 30, boshida 20)?
-3. **Chiqarib yuborish:** o'qituvchida "o'yinchini chiqarib yuborish" tugmasi bo'lsinmi? Kod tarqalib ketsa yoki begona kirsa kerak bo'ladi.
-4. **Kech qolganlar:** o'yin boshlangandan keyin kirgan bola faqat muxlis bo'lsinmi?
-5. **Bayroqcha:** muxlisning "🚩 Bo'l!" tugmasi 10 soniyada bir marta bosilsinmi?
+1. **Supabase** (0-bosqich): loyiha yaratilishi kerak — "kelajagim" to'xtatilgach. Usiz onlayn qismni sinab bo'lmaydi.
+2. Shundan keyin: hisob-kitob (sof mantiq + testlar) → robot o'yinchilar bilan sinov → ekranlar → sinfda sinov.
+3. Sinfdagi sinovdan keyin sozlanadigan sonlar: pog'ona, chegara, pauza, vaqt.
