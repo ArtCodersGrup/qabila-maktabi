@@ -7,13 +7,14 @@
   // Ommaviy (publishable) kalit — saytda ochiq turishi odatiy: ma'lumotlar bazasi RLS bilan himoyalangan.
   // Maxfiy (service) kalit bu yerga HECH QACHON yozilmaydi.
   const CONFIG = {
-    url: "https://toxhqvnybictnvtguijn.supabase.co",
-    key: "__PUBLISHABLE_KEY__",
+    url: "https://kgwbpsvvclupvhsydedk.supabase.co",
+    key: "sb_publishable__Al5XrNtL5EZ-9Jj0GzehA_-G5uCh4m",
   };
 
   const CODE_TTL = 10 * 60 * 1000; // xona kodi 10 daqiqa amal qiladi
+  const HOST_WAIT = 6000; // xona egasini shuncha kutamiz (sekin tarmoqda presence kech keladi)
   const SIDES = ["left", "right"]; // chap — Oy (xonani ochgan), o'ng — Quyosh (kod bilan kirgan)
-  const KINDS = ["sinov", "poyga", "savol"]; // xona turlari (bazadagi check bilan bir xil)
+  const KINDS = ["sinov", "poyga", "savol", "tog"]; // xona turlari (bazadagi check bilan bir xil)
 
   // ---------- Sof qismlar ----------
   // 4 xonali kod: 1000–9999 (boshida 0 bo'lmaydi — aytish va yozish oson)
@@ -30,6 +31,17 @@
     const data = msg.data == null ? {} : msg.data;
     if (typeof data !== "object" || Array.isArray(data)) return false;
     return Object.values(data).every((v) => typeof v === "number" || typeof v === "boolean" || (typeof v === "string" && /^[a-z0-9:_-]{0,32}$/i.test(v)));
+  }
+
+  // Xona egasi (chap tomon) presence'da ko'rinishini kutamiz. Qat'iy pauza yaramaydi:
+  // maktab tarmog'ida serverga yo'l 700 ms ham bo'ladi, shuncha kutib "xona yo'q" deb xato aytardi.
+  async function waitForHost(ch, ms) {
+    const dead = Date.now() + ms;
+    for (;;) {
+      const info = roomInfo(ch.presenceState());
+      if (info.sides.includes("left") || Date.now() >= dead) return info;
+      await new Promise((r) => setTimeout(r, 150));
+    }
   }
 
   // Presence holatidan: kim ulangan va xona qachon ochilgan
@@ -120,10 +132,14 @@
       if (closed) return;
       if (status === "SUBSCRIBED") {
         if (side === "right") {
-          // Kirishdan oldin tekshiramiz: xona bormi, eskirmaganmi, to'la emasmi (presence birinchi sync ni kutamiz)
-          await new Promise((r) => setTimeout(r, 700));
-          const info = roomInfo(ch.presenceState());
+          // Kirishdan oldin tekshiramiz: xona bormi, eskirmaganmi, to'la emasmi
+          let info = await waitForHost(ch, HOST_WAIT);
+          if (closed) return;
           if (!info.sides.includes("left")) { emit("missing"); close(); return; }
+          // Egasi topildi — uchinchi qurilma bor-yo'qligini ko'rish uchun biroz kutamiz
+          await new Promise((r) => setTimeout(r, 400));
+          if (closed) return;
+          info = roomInfo(ch.presenceState());
           if (info.sides.includes("right")) { emit("full"); close(); return; }
           if (info.hostAt && Date.now() - info.hostAt > CODE_TTL) { emit("expired"); close(); return; }
         }
@@ -146,7 +162,7 @@
     };
   }
 
-  const api = { CONFIG, CODE_TTL, SIDES, KINDS, makeCode, validCode, channelName, validMessage, roomInfo, available, ping, join };
+  const api = { CONFIG, CODE_TTL, HOST_WAIT, SIDES, KINDS, makeCode, validCode, channelName, validMessage, roomInfo, available, ping, join };
 
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else {

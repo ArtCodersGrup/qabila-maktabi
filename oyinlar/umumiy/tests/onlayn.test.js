@@ -34,7 +34,9 @@ test("presence: kim ulangan, xona to'lami, ochilgan vaqti", () => {
   assert.deepEqual(two.sides, ["left", "right"]);
   assert.equal(O.roomInfo({ left: [{ at: 5 }], right: [{}, {}] }).extra, true, "bir tomonda ikki kishi");
   assert.equal(O.CODE_TTL, 600000);
-  assert.deepEqual(O.KINDS, ["sinov", "poyga", "savol"]);
+  // Bazadagi xonalar.turi check ro'yxati bilan bir xil bo'lishi shart
+  assert.deepEqual(O.KINDS, ["sinov", "poyga", "savol", "tog"]);
+  assert.ok(O.HOST_WAIT >= 3000, "sekin tarmoqda xona egasi kech ko'rinadi");
 });
 
 test("sozlama: faqat ommaviy kalit, maxfiy kalit yo'q", () => {

@@ -97,7 +97,8 @@
       on: {
         status(s) {
           QK.probe = Object.assign(QK.probe || {}, { status: s, code, side });
-          if (s === "waiting") ui.bubble("elder", side === "left" ? `${NAMES.right} kutilmoqda: ikkinchi qurilmada shu kodni kiriting.` : `${NAMES.left} kutilmoqda…`);
+          if (s === "connecting" && side === "right") ui.bubble("elder", "Xonaga kirilmoqda…");
+          else if (s === "waiting") ui.bubble("elder", side === "left" ? `${NAMES.right} kutilmoqda: ikkinchi qurilmada shu kodni kiriting.` : `${NAMES.left} kutilmoqda…`);
           else if (s === "ready") { sound.play("win"); ui.bubble("elder", "✓ Ikkala qurilma ulandi! «Salom» tugmasini bosib koʻr."); ready(); }
           else if (s === "peer-left") { sound.play("retry"); ui.bubble("elder", `${NAMES[other]} uzildi. U qaytib kirishini kuting yoki chiqing.`); buttons([{ label: "Chiqish", onClick: leave, secondary: true }]); }
           else if (s === "missing" || s === "full" || s === "expired") {
@@ -140,9 +141,8 @@
       buttons([{ label: "Qayta", onClick: guest }, { label: "Orqaga", onClick: start, secondary: true }]);
       return;
     }
-    const room = box();
-    room.append(h("div", { class: "code-lead", text: "Xonaga kirilmoqda…" }));
-    connect(room, "right", code);
+    // Holat pufakda ko'rinadi; xona raqami roomScreen ichida ("Xona: NNNN")
+    connect(box(), "right", code);
   }
 
   // ---------- Sahifa ----------
