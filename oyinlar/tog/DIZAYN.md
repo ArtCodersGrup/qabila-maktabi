@@ -148,6 +148,19 @@ Har pog'onada qadam ovozi. Xato — yumshoq "retry" (qo'rqituvchi emas, QOIDALAR
 - **Sonlar** — bitta joyda: 15 pog'ona, 4 pog'ona chegara, qoida 8-pog'onadan, 10 daqiqa, 10/20 soniya pauza, 12 o'yinchi.
 
 ## 6. Tekshiruv
+
+### 6.1. Robot o'yinchilar bilan sinov natijasi (2026-09-22)
+12 ta robot: bittasi savolga 6–20 soniya sarflaydi, xato ehtimoli 5–40%; qiyin savol sekinroq va xatoliroq. Hazrati Sulton (20 pog'ona), 40 ta o'yin, medianalar:
+
+| Qoida | O'yin davomiyligi | Birinchi chiqib ketish | 1-daqiqada qolgan | Eng past pog'ona |
+|---|---|---|---|---|
+| **Chegara 4, yarim yo'ldan (kelishilgan qoida)** | **3,5 daqiqa** | 1,5 daqiqa | 12/12 | 3 |
+| Chegara 4, 3/4 yo'ldan | 3,8 daqiqa | 2,6 daqiqa | 12/12 | 5 |
+| Oxirgi o'rindagi chiqadi (har 2 pog'ona) | 4 daqiqa | 1,5 daqiqa | 12/12 | 3 |
+
+**Xulosa:** kelishilgan qoida yaxshi ishlaydi — birinchi daqiqada hech kim chiqib ketmaydi, o'yin 3–4 daqiqa davom etadi va har doim g'olib aniqlanadi.
+Sinfda sinab ko'rilgach, ikki "murvat" tayyor turadi: qoidani 3/4 yo'ldan boshlash (sekin bolaga ko'proq imkon) yoki "oxirgi o'rindagi chiqadi" qoidasiga o'tish (bittadan chiqariladi). Ikkalasi ham kodda bor va testlar bilan qoplangan.
+
 - Hisob (kim oldinda, kim chiqib ketdi, g'olib, teng holat) — alohida sof faylda, Node testlari bilan.
 - **Robot o'yinchilar:** sinov uchun 12 ta "robot" turli tezlikda va turli xato bilan javob beradi. Ular bilan qoidalarni sinfdan oldin tekshiraman: o'yin necha daqiqa davom etadi, qachon kim chiqib ketadi.
 - Brauzerda: bitta o'qituvchi va bir nechta bola oynasi, haqiqiy Supabase orqali.
@@ -162,7 +175,9 @@ Har pog'onada qadam ovozi. Xato — yumshoq "retry" (qo'rqituvchi emas, QOIDALAR
 ## 8. Bu versiyaga kirmaydi
 Ism va login, chat, reyting jadvali (kunlik yoki umumiy), 12 dan ko'p o'yinchi, bir vaqtda bir nechta xona uchun bitta o'qituvchi ekrani.
 
-## 9. Keyingi qadamlar
+## 9. Holat va keyingi qadamlar
+
+**Bajarildi (2026-09-22):** o'yin hisob-kitobi `js/tog.js` (tog'lar, qahramonlar, pog'ona, pauza, qolib ketish, g'olib, reyting, chiqarib yuborish) va uning testlari `tests/tog.test.js` + robot o'yinchilar `tests/robot.js`.
 
 1. **Supabase** (0-bosqich): loyiha yaratilishi kerak — "kelajagim" to'xtatilgach. Usiz onlayn qismni sinab bo'lmaydi.
 2. Shundan keyin: hisob-kitob (sof mantiq + testlar) → robot o'yinchilar bilan sinov → ekranlar → sinfda sinov.
