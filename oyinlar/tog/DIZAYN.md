@@ -12,7 +12,7 @@
 
 1. **Xona:** bitta qurilma xona ochadi, qolganlar 4 xonali kod bilan kiradi. Ko'pi bilan **12 ta o'yinchi**.
 2. **Qahramon:** har bir o'yinchi qahramonchalardan birini tanlaydi.
-3. **Tog':** **pog'onalar** (15 / 20 / 30 — o'qituvchi tanlaydi, 2.10). Pastda **oqsoqol** turadi, cho'qqida **shogird** kutib turadi. O'yinchi yuqoriga chiqqan sari ekran ham ko'tariladi va oqsoqol pastda ko'rinmay qoladi.
+3. **Tog':** **pog'onalar** (tog'ga qarab 15–30 — o'qituvchi tanlaydi, 2.11). Pastda **oqsoqol** turadi, cho'qqida **shogird** kutib turadi. O'yinchi yuqoriga chiqqan sari ekran ham ko'tariladi va oqsoqol pastda ko'rinmay qoladi.
 4. **Savollar:** har kimga o'z savoli chiqadi, javob bergach yangisi keladi. **To'g'ri** — bir pog'ona yuqoriga.
 5. **Xato — pastga tushish yo'q, pauza:** o'sha o'yinchining o'zida 10 yoki 20 soniyalik pauza. Ekranda "To'g'ri javob: … Tepaga chiqa olmading — kut" va orqaga sanayotgan taymer. Keyin yangi savol.
 6. **Qolib ketish:** birinchi o'rindagidan **4 pog'ona** orqada qolgan o'yinchi yutqazadi. Boshqalar yechib o'tib ketaveradi.
@@ -29,7 +29,7 @@
 13. Qahramonlar — **12 ta hayvon**, ism so'ralmaydi, bitta qahramon bitta kishiga (2.7).
 14. Har kimga **boshqa sonli** savol (2.6). Teng holatda o'sha pog'onaga birinchi chiqqani oldinda (2.8). Uzilish qoidalari (2.9).
 15. **Chiqib ketgan bola — oddiy tomoshabin** (2.5). Muxlislik, sharpa va bayroqcha g'oyalaridan voz kechildi.
-16. **Tog'larning nomi bor, nomiga qarab balandligi o'zgaradi** (2.10): Chimyon 15, Hazrati Sulton 20, Pomir 25, Himolay 30 pog'ona.
+16. **Tog'larning nomi bor, nomiga qarab balandligi o'zgaradi** (2.10): Chimyon 15, Hazrati Sulton 20, Pomir 25, Himolay 30 pog'ona (2.11).
 17. **O'qituvchi o'yinchini chiqarib yuborishi mumkin**; o'yin boshlangach kirgan bola faqat kutadi (2.9).
 
 ## 2. Tafsilotlar (hammasi muallif bilan kelishilgan, 2026-09-22)
@@ -40,7 +40,7 @@
 Bu va boshqa sonlar (4 pog'ona, 15 pog'ona, 10 daqiqa, pauza) kodda **bitta joyda** turadi — sinfda sinab ko'rib, oson o'zgartiriladi.
 
 ### 2.2. Tog' qiyinlashib boradi
-Pastki uchdan bir qismi — **Oson**, o'rtasi — **O'rta**, yuqorisi — **Qiyin** savollar (aniq chegaralar 2.10 dagi jadvalda, tog'ga qarab).
+Pastki uchdan bir qismi — **Oson**, o'rtasi — **O'rta**, yuqorisi — **Qiyin** savollar (aniq chegaralar 2.11 dagi jadvalda, tog'ga qarab).
 
 Qiyin savol ko'proq vaqt oladi, shuning uchun yetakchi tepada sekinlashadi, orqadagilar yetib olish imkoniga ega bo'ladi. Bu muallifning "boshidan qiyinga tomon" fikriga ham mos.
 
@@ -74,13 +74,13 @@ Sinfda hamma yonma-yon o'tiradi. Har kimga **boshqa sonli** savol beriladi: muso
 - **O'qituvchi o'yinchini chiqarib yuborishi mumkin:** ro'yxatdagi qahramon yonidagi tugma. Kod tarqalib ketsa yoki begona kirsa kerak bo'ladi. Chiqarib yuborilgan bola shu kod bilan qayta kira olmaydi.
 - **O'yin boshlangandan keyin kirgan bola faqat kutadi:** u xonada turadi, tog'ni kuzatadi va **keyingi o'yinda** qatnashadi. Boshlangan o'yinga qo'shilmaydi.
 
-### 2.11. Uzilish
+### 2.10. Uzilish
 - Internet uzilgan bola joyida qotib turadi.
 - **30 soniya ichida** o'sha kod bilan qaytib kirsa, qahramoni va pog'onasi saqlangan bo'ladi.
 - Qaytmasa, chiqib ketgan hisoblanadi.
 - O'qituvchi qurilmasi uzilsa, o'yin hamma uchun **pauza** bo'ladi va u qaytgach davom etadi.
 
-### 2.10. Tog'lar: nomi va balandligi
+### 2.11. Tog'lar: nomi va balandligi
 **Muallif qarori (2026-09-22):** tog'larga nom beriladi, nomiga qarab balandligi (pog'onalar soni) o'zgaradi. O'qituvchi o'yin boshida tog'ni tanlaydi.
 
 | Tog' | Haqiqiy balandligi | Pog'ona | Chegara (qolib ketish) | Taxminiy vaqt | Qiyinlik |
@@ -116,7 +116,7 @@ Sinfda hamma yonma-yon o'tiradi. Har kimga **boshqa sonli** savol beriladi: muso
 └────────────────────────────────────────────┘
 ```
 - Kutish xonasi: kod katta harflarda, kirganlar qahramonlari bilan (12 tagacha), har birining yonida **chiqarib yuborish** tugmasi, "Boshlash" (kamida 2 o'yinchi bo'lsa).
-- Sozlash: **tog'** (Chimyon / Hazrati Sulton / Pomir / Himolay — 2.10), mavzular (musobaqadagi 7 mavzu), vaqt.
+- Sozlash: **tog'** (Chimyon / Hazrati Sulton / Pomir / Himolay — 2.11), mavzular (musobaqadagi 7 mavzu), vaqt.
 - O'yin paytida: tog' nomi va balandligi, taymer, har o'yinchining ulanish holati (uzildi / 60 soniyadan beri javob yo'q), chiqarib yuborish tugmasi.
 
 ### 3.2. Bola (telefon — tik ekran)
