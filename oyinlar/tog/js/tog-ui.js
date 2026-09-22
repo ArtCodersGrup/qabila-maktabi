@@ -22,12 +22,29 @@
 
     function render(state, meId) {
       const me = state.oyinchilar[meId];
-      const markaz = me ? me.pogona : T.leader(state);
       // Past ekranda kamroq pog'ona ko'rsatamiz — qahramonlar juda kichrayib ketmasin
-      const oyna = Math.max(4, Math.min(OYNA, Math.round((el.clientHeight || 240) / 30)));
-      const yuqori = Math.min(t.pogona, Math.max(oyna - 1, markaz + 3));
-      const past = Math.max(0, yuqori - oyna + 1);
-      const qism = Math.round((markaz / t.pogona) * 4) / 4; // manzara sakrab turmasin
+      const oyna = Math.max(4, Math.round((el.clientHeight || 240) / 30));
+      let yuqori;
+      let past;
+      if (me) {
+        // Bolaning ekrani: o'zi markazda
+        const oynam = Math.min(OYNA, oyna);
+        yuqori = Math.min(t.pogona, Math.max(oynam - 1, me.pogona + 3));
+        past = Math.max(0, yuqori - oynam + 1);
+      } else {
+        // O'qituvchi doskasi: iloji boricha hamma ko'rinsin (eng pastdagidan yetakchigacha)
+        const tirik = Object.values(state.oyinchilar).filter((p) => !p.chiqdi).map((p) => p.pogona);
+        const eng = tirik.length ? Math.min.apply(null, tirik) : 0;
+        const top = tirik.length ? Math.max.apply(null, tirik) : 0;
+        if (t.pogona + 1 <= oyna) { past = 0; yuqori = t.pogona; }
+        else {
+          yuqori = Math.min(t.pogona, Math.max(top + 1, oyna - 1));
+          past = Math.max(0, Math.min(eng, yuqori - oyna + 1));
+          yuqori = Math.min(t.pogona, past + oyna - 1);
+        }
+      }
+      // Manzara qaysi balandlikni ko'rsatishi: bolada — o'zi, doskada — yetakchi. Sakrab turmasligi uchun choraklab
+      const qism = Math.round(((me ? me.pogona : T.leader(state)) / t.pogona) * 4) / 4;
       if (qism !== oxirgiQism) {
         fon.innerHTML = art.manzara(t.id, qism);
         oxirgiQism = qism;

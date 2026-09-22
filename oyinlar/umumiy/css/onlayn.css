@@ -1,0 +1,7 @@
+/* Onlayn xona: aloqa holati va xona kodi. Aloqa sinovi ham, tog' o'yini ham ishlatadi. */
+.net-status { padding: 10px 16px; border-radius: 14px; background: #fff; box-shadow: 0 3px 0 var(--soya); font-size: 19px; font-weight: 800; text-align: center; max-width: 440px; }
+.net-status.ok { color: var(--togri); }
+.net-status.bad { color: var(--yana); }
+.code-lead { font-size: 19px; font-weight: 800; }
+.code-big { font-size: 64px; font-weight: 900; letter-spacing: 12px; color: var(--asosiy); line-height: 1; animation: pop 0.3s; }
+.code-small { font-size: 17px; font-weight: 800; color: #7A7266; }

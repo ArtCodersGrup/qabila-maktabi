@@ -1,6 +1,6 @@
 // Offline rejim: sayt fayllari keshlanadi. Bola saytni bir marta ochsa, keyin internetsiz ham oʻynay oladi.
 // Yangi fayl qoʻshilsa, FILES roʻyxatiga ham qoʻshiladi — buni bosh/tests/offline.test.js tekshiradi.
-const VERSION = "v28";
+const VERSION = "v29";
 const CACHE = "qabila-maktabi-" + VERSION;
 
 const FILES = [
@@ -15,6 +15,7 @@ const FILES = [
   "bosh/js/bosh.js",
   "oyinlar/umumiy/css/asos.css",
   "oyinlar/umumiy/css/mantiq.css",
+  "oyinlar/umumiy/css/onlayn.css",
   "oyinlar/umumiy/css/sanoq.css",
   "oyinlar/umumiy/css/savol.css",
   "oyinlar/umumiy/fonts/Nunito.woff2",
@@ -348,8 +349,12 @@ const FILES = [
   "oyinlar/tog/",
   "oyinlar/tog/index.html",
   "oyinlar/tog/css/style.css",
+  "oyinlar/tog/js/ekran.js",
   "oyinlar/tog/js/game-art.js",
+  "oyinlar/tog/js/main.js",
   "oyinlar/tog/js/mashq.js",
+  "oyinlar/tog/js/onlayn-tog.js",
+  "oyinlar/tog/js/protokol.js",
   "oyinlar/tog/js/tog-ui.js",
   "oyinlar/tog/js/tog.js",
 ];

@@ -17,10 +17,17 @@ test("xabar: faqat ruxsat etilgan tur, tomon va erkin matnsiz ma'lumot", () => {
   assert.ok(O.validMessage(ok, types));
   assert.ok(O.validMessage({ type: "javob", t: 2, from: "right" }, types), "ma'lumotsiz");
   assert.ok(!O.validMessage({ ...ok, type: "chat" }, types), "ro'yxatda yo'q tur");
-  assert.ok(!O.validMessage({ ...ok, from: "boshqa" }, types), "noma'lum tomon");
+  // Kim yuborgani — qisqa kalit (ikki kishilik xonada "left"/"right", tog'da yashirin raqam).
+  // Tomonni tekshirish ikki kishilik xonaning o'zida (join) qilinadi.
+  assert.ok(O.validMessage({ ...ok, from: "k7f3a9" }, types), "ko'p kishilik xona raqami");
+  assert.ok(!O.validMessage({ ...ok, from: "Salom, men Alisher" }, types), "ism yoki gap");
+  assert.ok(!O.validMessage({ ...ok, from: "" }, types), "bo'sh");
   assert.ok(!O.validMessage({ ...ok, t: "1" }, types), "vaqt son emas");
   assert.ok(!O.validMessage({ ...ok, data: { text: "Salom, qalaysan?" } }, types), "erkin matn");
-  assert.ok(!O.validMessage({ ...ok, data: [1, 2] }, types), "ro'yxat");
+  assert.ok(!O.validMessage({ ...ok, data: [1, 2] }, types), "ma'lumotning o'zi ro'yxat");
+  assert.ok(O.validMessage({ ...ok, data: { pog: [0, 3, 7], qah: ["tulki", "ayiq"] } }, types), "sonlar va kalitlar ro'yxati");
+  assert.ok(!O.validMessage({ ...ok, data: { nom: ["Alisher Navoiy"] } }, types), "ro'yxat ichida erkin matn");
+  assert.ok(!O.validMessage({ ...ok, data: { pog: new Array(33).fill(1) } }, types), "juda uzun ro'yxat");
   assert.ok(!O.validMessage({ ...ok, data: { deep: { a: 1 } } }, types), "ichma-ich obyekt");
   assert.ok(O.validMessage({ ...ok, data: { level: "proverb", done: true, pos: 12 } }, types), "qisqa kalit so'z, mantiq, son");
   assert.ok(!O.validMessage(null, types));
