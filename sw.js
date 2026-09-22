@@ -1,6 +1,6 @@
 // Offline rejim: sayt fayllari keshlanadi. Bola saytni bir marta ochsa, keyin internetsiz ham oʻynay oladi.
 // Yangi fayl qoʻshilsa, FILES roʻyxatiga ham qoʻshiladi — buni bosh/tests/offline.test.js tekshiradi.
-const VERSION = "v17";
+const VERSION = "v18";
 const CACHE = "qabila-maktabi-" + VERSION;
 
 const FILES = [
@@ -295,10 +295,12 @@ const FILES = [
   "oyinlar/musobaqa/js/savollar.js",
 ];
 
+// Yangi versiya fayllari brauzerning oddiy keshidan emas, serverdan olinadi (cache: "reload").
+// Aks holda GitHub Pages 10 daqiqa kesh bergani uchun yangi kesh ichiga eski fayllar tushib qoladi.
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE)
-      .then((cache) => cache.addAll(FILES))
+      .then((cache) => cache.addAll(FILES.map((file) => new Request(file, { cache: "reload" }))))
       .then(() => self.skipWaiting())
   );
 });
@@ -311,14 +313,14 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-// Avval keshdan beramiz (tez va internetsiz ishlaydi), orqa fonda yangilaymiz
+// Avval keshdan beramiz (tez va internetsiz ishlaydi), orqa fonda serverdan tekshirib yangilaymiz
 self.addEventListener("fetch", (event) => {
   const request = event.request;
   if (request.method !== "GET") return;
   if (new URL(request.url).origin !== self.location.origin) return;
   event.respondWith(
     caches.open(CACHE).then((cache) => cache.match(request).then((hit) => {
-      const fresh = fetch(request)
+      const fresh = fetch(request, { cache: "no-cache" })
         .then((response) => {
           if (response && response.ok) cache.put(request, response.clone());
           return response;

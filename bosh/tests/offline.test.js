@@ -69,3 +69,12 @@ test("har bir sahifa offline.js ni ulaydi", () => {
     assert.match(read(`oyinlar/${dir}/index.html`), /\.\.\/umumiy\/js\/offline\.js/, dir);
   }
 });
+
+test("yangi versiya serverdan olinadi va bosh sahifa o'zi yangilanadi", () => {
+  const sw = read("sw.js");
+  assert.match(sw, /new Request\(file, \{ cache: "reload" \}\)/, "o'rnatishda brauzer keshi chetlab o'tiladi");
+  assert.match(sw, /fetch\(request, \{ cache: "no-cache" \}\)/, "orqa fonda serverdan tekshiriladi");
+  const offline = read("oyinlar/umumiy/js/offline.js");
+  assert.match(offline, /controllerchange/);
+  assert.match(offline, /location\.reload\(\)/);
+});
