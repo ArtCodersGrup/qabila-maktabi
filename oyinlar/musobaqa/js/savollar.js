@@ -1,6 +1,6 @@
-// Musobaqa savollari (DIZAYN 4-bo'lim): 5 mavzu × 3 qiyinlik. Har tur tasodifiy savol yasaydi,
+// Musobaqa savollari (DIZAYN 4-bo'lim): 6 mavzu × 3 qiyinlik. Har tur tasodifiy savol yasaydi,
 // deck() esa raund uchun juft savol beradi: bir xil tur va qiyinlik, sonlari boshqa, takrorsiz.
-// Mavjud o'yinlar mantiqi qayta ishlatiladi: QK.sanoq, roman, caesar, morse, neural, atlas, bytes, units.
+// Mavjud o'yinlar mantiqi qayta ishlatiladi: QK.sanoq, roman, caesar, morse, neural, atlas, bytes, units, typing.
 // Ekran bilan ishlamaydi, Node'da test qilinadi.
 (function (root) {
   "use strict";
@@ -13,6 +13,7 @@
     { id: "olchov", title: "Axborot oʻlchovi" },
     { id: "sanoq", title: "Sanoq tizimlari" },
     { id: "ai", title: "Sunʼiy intellekt" },
+    { id: "klaviatura", title: "Klaviatura" },
   ];
   const LEVELS = [
     { id: 1, title: "Oson" },
@@ -965,6 +966,282 @@
   };
 
   // ======================================================================
+  // 6. Klaviatura (23-o'yin: o'n barmoq; tezkor tugmalar)
+  // ======================================================================
+
+  const FINGER_NAMES = {
+    lp: "Chap jimjiloq", lr: "Chap nomsiz", lm: "Chap oʻrta", li: "Chap koʻrsatkich",
+    ri: "Oʻng koʻrsatkich", rm: "Oʻng oʻrta", rr: "Oʻng nomsiz", rp: "Oʻng jimjiloq", th: "Bosh barmoq",
+  };
+  const FINGER_ORDER = ["lp", "lr", "lm", "li", "ri", "rm", "rr", "rp"];
+  const ROW_NAMES = { top: "Yuqori qator", home: "Asosiy qator", bottom: "Pastki qator" };
+  const LETTERS = (row) => QK().typing.ROWS[row].filter((k) => /^[a-z]$/.test(k));
+  const rowOf = (k) => Object.keys(ROW_NAMES).find((row) => QK().typing.ROWS[row].includes(k));
+
+  // Qaysi barmoq: 1 — asosiy qator, 2 — yuqori va pastki qator
+  const barmoq = {
+    topic: "klaviatura",
+    levels: [1, 2],
+    make(level, rng, fresh) {
+      const { fingerOf } = QK().typing;
+      const pool = (level === 1 ? LETTERS("home") : LETTERS("top").concat(LETTERS("bottom"))).filter(fresh);
+      if (!pool.length) return null;
+      const key = pick(rng, pool);
+      const f = fingerOf(key);
+      const i = FINGER_ORDER.indexOf(f);
+      const mirror = FINGER_ORDER[7 - i]; // boshqa qo'ldagi xuddi shu barmoq
+      const near = [FINGER_ORDER[i - 1], FINGER_ORDER[i + 1]].filter((x) => x && x[0] === f[0]);
+      const answer = FINGER_NAMES[f];
+      return {
+        id: key,
+        data: { key },
+        text: `${key.toUpperCase()} tugmasini qaysi barmoq bosadi?`,
+        blocks: [big(key.toUpperCase())],
+        input: choice(withOptions(rng, answer, [mirror, ...shuffle(rng, near), "th"].map((x) => FINGER_NAMES[x]))),
+        answer,
+        explain: `${key.toUpperCase()} — ${answer.toLowerCase()} barmoq.`,
+      };
+    },
+  };
+
+  const qator = {
+    topic: "klaviatura",
+    levels: [1],
+    make(level, rng, fresh) {
+      const pool = ["top", "home", "bottom"].flatMap(LETTERS).filter(fresh);
+      if (!pool.length) return null;
+      const key = pick(rng, pool);
+      const answer = ROW_NAMES[rowOf(key)];
+      return {
+        id: key,
+        data: { key },
+        text: `${key.toUpperCase()} harfi klaviaturaning qaysi qatorida?`,
+        blocks: [big(key.toUpperCase())],
+        input: choice(Object.values(ROW_NAMES)),
+        answer,
+        explain: `${key.toUpperCase()} — ${answer.toLowerCase()}da.`,
+      };
+    },
+  };
+
+  // O'zbekcha harflar: ikki tugma bilan (ʻ — klaviaturadagi apostrof tugmasi)
+  const TWO_KEYS = [
+    { letter: "Oʻ", answer: "O + ʻ", wrong: ["O + Shift", "U + ʻ", "O + ;"] },
+    { letter: "Gʻ", answer: "G + ʻ", wrong: ["G + Shift", "Q + ʻ", "G + H"] },
+    { letter: "Sh", answer: "S + H", wrong: ["S + Shift", "C + H", "S + ʻ"] },
+    { letter: "Ch", answer: "C + H", wrong: ["S + H", "C + ʻ", "K + H"] },
+    { letter: "Ng", answer: "N + G", wrong: ["G + N", "N + ʻ", "M + G"] },
+  ];
+
+  const ikkiTugma = {
+    topic: "klaviatura",
+    levels: [1],
+    make(level, rng, fresh) {
+      const pool = TWO_KEYS.filter((t) => fresh(t.letter));
+      if (!pool.length) return null;
+      const t = pick(rng, pool);
+      return {
+        id: t.letter,
+        data: { letter: t.letter },
+        text: `${t.letter} harfi klaviaturada qanday yoziladi?`,
+        blocks: [big(t.letter)],
+        input: choice(withOptions(rng, t.answer, t.wrong)),
+        answer: t.answer,
+        explain: `${t.letter} — ikki tugma: ${t.answer}.`,
+      };
+    },
+  };
+
+  const shiftQaysi = {
+    topic: "klaviatura",
+    levels: [2],
+    make(level, rng, fresh) {
+      const { fingerOf, shiftFor } = QK().typing;
+      const pool = ["top", "home", "bottom"].flatMap(LETTERS).filter(fresh);
+      if (!pool.length) return null;
+      const key = pick(rng, pool);
+      const letter = key.toUpperCase();
+      const answer = shiftFor(letter) === "shift-l" ? "Chap Shift" : "Oʻng Shift";
+      const hand = fingerOf(key)[0] === "l" ? "chap" : "oʻng";
+      return {
+        id: key,
+        data: { key },
+        text: `Katta ${letter} yozish uchun qaysi Shift ni bosasan?`,
+        blocks: [big(letter)],
+        input: choice(["Chap Shift", "Oʻng Shift"]),
+        answer,
+        explain: `${letter} — ${hand} qoʻlda. Shift ni boshqa qoʻl bosadi: ${answer.toLowerCase().replace("shift", "Shift")}.`,
+      };
+    },
+  };
+
+  // Aniqlik: to'g'ri belgilar : hamma bosishlar × 100 (butun son chiqadiganlari)
+  const ACCURACY = [];
+  for (const s of [10, 20, 25, 50]) {
+    for (let c = Math.ceil(s * 0.7); c <= s; c++) if ((c * 100) % s === 0) ACCURACY.push([c, s]);
+  }
+
+  const aniqlik = {
+    topic: "klaviatura",
+    levels: [3],
+    make(level, rng, fresh) {
+      const pool = ACCURACY.filter(([c, s]) => fresh(`${c}/${s}`));
+      if (!pool.length) return null;
+      const [c, s] = pick(rng, pool);
+      const a = (c * 100) / s;
+      return {
+        id: `${c}/${s}`,
+        data: { c, s },
+        text: `Qatorda ${c} ta belgi bor edi. Sen tugmalarni ${s} marta bosding. Aniqliging necha foiz?`,
+        input: num(3),
+        answer: String(a),
+        explain: `${c} : ${s} × 100 = ${a}%${a >= 90 ? " — qator oʻtadi." : " — 90% dan past, qator oʻtmaydi."}`,
+      };
+    },
+  };
+
+  // Tezlik: belgilar × 60 : soniyalar (butun son)
+  const SPEED = [];
+  for (const sec of [10, 15, 20, 30]) {
+    for (let c = 10; (c * 60) / sec <= 180; c += 5) SPEED.push([c, sec]);
+  }
+
+  const tezlik = {
+    topic: "klaviatura",
+    levels: [3],
+    make(level, rng, fresh) {
+      const pool = SPEED.filter(([c, sec]) => fresh(`${c}/${sec}`));
+      if (!pool.length) return null;
+      const [c, sec] = pick(rng, pool);
+      const cpm = (c * 60) / sec;
+      return {
+        id: `${c}/${sec}`,
+        data: { c, sec },
+        text: `Sen ${sec} soniyada ${c} ta belgi yozding. Tezliging — 1 daqiqada nechta belgi?`,
+        input: num(3),
+        answer: String(cpm),
+        explain: `1 daqiqa = 60 soniya = ${60 / sec} × ${sec} soniya. ${c} × ${60 / sec} = ${cpm} belgi/daqiqa.`,
+      };
+    },
+  };
+
+  // Poyga g'olibi (23-o'yin qoidasi): aniqligi 90% dan past yuta olmaydi, keyin — kim tezroq
+  const poyga = {
+    topic: "klaviatura",
+    levels: [3],
+    make(level, rng) {
+      const { raceResult } = QK().typing;
+      for (;;) {
+        const a = { accuracy: pick(rng, [80, 85, 88, 90, 92, 95, 98, 100]), ms: ri(rng, 8, 20) * 1000 };
+        const b = { accuracy: pick(rng, [80, 85, 88, 90, 92, 95, 98, 100]), ms: ri(rng, 8, 20) * 1000 };
+        const r = raceResult(a, b);
+        if (r.reason === "draw") continue;
+        const answer = r.winner === "left" ? "Oy" : r.winner === "right" ? "Quyosh" : "Hech kim";
+        const why = r.reason === "low" ? "Ikkalasining ham aniqligi 90% dan past."
+          : r.reason === "accuracy" ? `${r.winner === "left" ? "Quyosh" : "Oy"}ning aniqligi 90% dan past.`
+            : `Ikkalasi ham aniq yozdi, ${answer} tezroq.`;
+        return {
+          id: `${a.accuracy}:${a.ms}|${b.accuracy}:${b.ms}`,
+          data: { a, b },
+          text: `Poyga. Oy: aniqlik ${a.accuracy}%, ${a.ms / 1000} soniya. Quyosh: aniqlik ${b.accuracy}%, ${b.ms / 1000} soniya. Kim yutdi?`,
+          input: choice(["Oy", "Quyosh", "Hech kim"]),
+          answer,
+          explain: `${answer}. ${why}`,
+        };
+      }
+    },
+  };
+
+  // Tezkor tugmalar (Windows; Mac'da Ctrl o'rniga ⌘). Tekislash — Word dasturida.
+  const SHORTCUTS = [
+    { keys: "Ctrl + C", act: "Nusxa olish", level: 1 },
+    { keys: "Ctrl + V", act: "Qoʻyish", level: 1 },
+    { keys: "Ctrl + Z", act: "Bekor qilish", level: 1 },
+    { keys: "Ctrl + S", act: "Saqlash", level: 1 },
+    { keys: "Ctrl + X", act: "Kesib olish", level: 2 },
+    { keys: "Ctrl + A", act: "Hammasini belgilash", level: 2 },
+    { keys: "Ctrl + P", act: "Chop etish", level: 2 },
+    { keys: "Ctrl + F", act: "Qidirish", level: 2 },
+    { keys: "Ctrl + Y", act: "Bekor qilinganni qaytarish", level: 2 },
+    { keys: "Ctrl + B", act: "Qalin qilish", level: 3 },
+    { keys: "Ctrl + I", act: "Kursiv (qiya) qilish", level: 3 },
+    { keys: "Ctrl + U", act: "Tagiga chizish", level: 3 },
+    { keys: "Ctrl + E", act: "Markazga tekislash", level: 3 },
+    { keys: "Ctrl + L", act: "Chapga tekislash", level: 3 },
+    { keys: "Ctrl + R", act: "Oʻngga tekislash", level: 3 },
+  ];
+  // Chalg'ituvchi variantlar: avval shu qiyinlikdagilar, keyin qolganlari
+  const others = (rng, s, level) => shuffle(rng, SHORTCUTS.filter((x) => x !== s && x.level === level))
+    .concat(shuffle(rng, SHORTCUTS.filter((x) => x !== s && x.level !== level)));
+
+  const tezkorNima = {
+    topic: "klaviatura",
+    levels: [1, 2, 3],
+    make(level, rng, fresh) {
+      const pool = SHORTCUTS.filter((s) => s.level === level && fresh(s.keys));
+      if (!pool.length) return null;
+      const s = pick(rng, pool);
+      return {
+        id: s.keys,
+        data: { keys: s.keys },
+        text: `${s.keys} nima qiladi?`,
+        blocks: [big(s.keys)],
+        input: choice(withOptions(rng, s.act, others(rng, s, level).map((x) => x.act))),
+        answer: s.act,
+        explain: `${s.keys} — ${s.act.toLowerCase()}.`,
+      };
+    },
+  };
+
+  const tezkorQaysi = {
+    topic: "klaviatura",
+    levels: [1, 2, 3],
+    make(level, rng, fresh) {
+      const pool = SHORTCUTS.filter((s) => s.level === level && fresh(s.act));
+      if (!pool.length) return null;
+      const s = pick(rng, pool);
+      return {
+        id: s.act,
+        data: { act: s.act },
+        text: `«${s.act}» uchun qaysi tezkor tugmalar?`,
+        input: choice(withOptions(rng, s.keys, others(rng, s, level).map((x) => x.keys))),
+        answer: s.keys,
+        explain: `${s.act} — ${s.keys}.`,
+      };
+    },
+  };
+
+  // Vaziyat: nima qilasan? (2 — bitta tugma, 3 — ikki tugma ketma-ket)
+  const SITUATIONS = [
+    { level: 2, text: "Adashib gapni oʻchirib yubording. Uni qanday qaytarasan?", answer: "Ctrl + Z", wrong: ["Ctrl + S", "Ctrl + V", "Ctrl + A"] },
+    { level: 2, text: "Ishing yoʻqolib qolmasin. Nima qilasan?", answer: "Ctrl + S", wrong: ["Ctrl + Z", "Ctrl + P", "Ctrl + C"] },
+    { level: 2, text: "Uzun matndan «qabila» soʻzini topmoqchisan.", answer: "Ctrl + F", wrong: ["Ctrl + A", "Ctrl + P", "Ctrl + E"] },
+    { level: 2, text: "Mac kompyuterida Ctrl oʻrniga qaysi tugma bosiladi?", answer: "⌘ (Command)", wrong: ["Shift", "Alt", "Fn"] },
+    { level: 3, text: "Soʻzni bir joydan olib, boshqa joyga koʻchirmoqchisan.", answer: "Ctrl + X, keyin Ctrl + V", wrong: ["Ctrl + C, keyin Ctrl + Z", "Ctrl + V, keyin Ctrl + X", "Ctrl + A, keyin Ctrl + S"] },
+    { level: 3, text: "Gapdan nusxa olib, pastda yana bir marta yozmoqchisan.", answer: "Ctrl + C, keyin Ctrl + V", wrong: ["Ctrl + X, keyin Ctrl + Z", "Ctrl + V, keyin Ctrl + C", "Ctrl + C, keyin Ctrl + S"] },
+    { level: 3, text: "Butun matnni qalin qilmoqchisan.", answer: "Ctrl + A, keyin Ctrl + B", wrong: ["Ctrl + B, keyin Ctrl + A", "Ctrl + A, keyin Ctrl + I", "Ctrl + S, keyin Ctrl + B"] },
+    { level: 3, text: "Wordʼda sarlavhani belgilab, oʻrtaga qoʻymoqchisan.", answer: "Ctrl + E", wrong: ["Ctrl + L", "Ctrl + R", "Ctrl + C"] },
+  ];
+
+  const vaziyat = {
+    topic: "klaviatura",
+    levels: [2, 3],
+    make(level, rng, fresh) {
+      const pool = SITUATIONS.filter((s) => s.level === level && fresh(s.text));
+      if (!pool.length) return null;
+      const s = pick(rng, pool);
+      return {
+        id: s.text,
+        data: { text: s.text },
+        text: s.text,
+        input: choice(withOptions(rng, s.answer, s.wrong)),
+        answer: s.answer,
+        explain: `${s.answer}.`,
+      };
+    },
+  };
+
+  // ======================================================================
   // Turlar, tekshirish va juft savollar
   // ======================================================================
 
@@ -974,6 +1251,7 @@
     bayt, piksel, kadr, birlik,
     rimOqish, rimYozish, onlikka, onlikdan, tizim,
     togri, aimi, neyron, xarita, keyingi,
+    barmoq, qator, ikkiTugma, shiftQaysi, aniqlik, tezlik, poyga, tezkorNima, tezkorQaysi, vaziyat,
   };
 
   const kindsOf = (topic, level) => Object.keys(KINDS).filter((k) => KINDS[k].topic === topic && KINDS[k].levels.includes(level));
@@ -1055,7 +1333,7 @@
   const topicTitle = (id) => (TOPICS.find((t) => t.id === id) || {}).title;
   const levelTitle = (id) => (LEVELS.find((l) => l.id === id) || {}).title;
 
-  const api = { TOPICS, LEVELS, KINDS, FACTS, MORSE_WORDS, kindsOf, make, check, deck, topicTitle, levelTitle };
+  const api = { TOPICS, LEVELS, KINDS, FACTS, MORSE_WORDS, SHORTCUTS, TWO_KEYS, SITUATIONS, FINGER_NAMES, kindsOf, make, check, deck, topicTitle, levelTitle };
 
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else {

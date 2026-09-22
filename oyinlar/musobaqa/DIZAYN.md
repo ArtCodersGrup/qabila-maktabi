@@ -5,7 +5,7 @@
 **Davomiyligi:** 3, 5 yoki 10 daqiqa har bir oʻyinchiga
 **Holati:** kod yozildi, brauzerda 3 oʻlchamda oʻynab chiqildi — muallif koʻrishini kutmoqda (2026-09-22)
 
-Umumiy qoidalar: [`../../QOIDALAR.md`](../../QOIDALAR.md). Savollar 1–22-oʻyinlar mavzularidan olinadi.
+Umumiy qoidalar: [`../../QOIDALAR.md`](../../QOIDALAR.md). Savollar oʻyinlar mavzularidan olinadi (1–23-oʻyinlar va tezkor tugmalar).
 Bu oʻyin emas, **musobaqa rejimi**: bosqichlar ham, tushuntirish ham yoʻq. Bola mavzuni oldin oʻyinda oʻrgangan boʻladi.
 
 ---
@@ -130,6 +130,20 @@ Sezar savolida **alifbo qatori** (29 harf) koʻrsatiladi.
 
 Neyron qoidasi 11-oʻyindagidek: yigʻindi ≥ chegara — yonadi.
 
+### 4.6. Klaviatura (23-oʻyin va tezkor tugmalar) — 2026-09-22 da qoʻshildi
+| Tur | Oson | Oʻrta | Qiyin |
+|---|---|---|---|
+| **Qaysi barmoq?** (variant) | asosiy qator harfi | yuqori va pastki qator harfi | — |
+| **Qaysi qator?** (variant) | har qanday harf | — | — |
+| **Ikki tugma** (variant) | Oʻ, Gʻ, Sh, Ch, Ng qanday yoziladi | — | — |
+| **Qaysi Shift?** (variant) | — | katta harf uchun chap yoki oʻng Shift | — |
+| **Aniqlik / tezlik** (son) | — | — | "20 belgi, 25 bosish — necha foiz?", "30 soniyada 40 belgi — belgi/daqiqa?" |
+| **Poyga** (variant) | — | — | Oy yoki Quyosh yutdi (aniqlik ≥ 90%, keyin vaqt) |
+| **Tezkor tugma nima qiladi / qaysi tugma** (variant) | Ctrl + C, V, Z, S | Ctrl + X, A, P, F, Y | Ctrl + B, I, U, E, L, R |
+| **Vaziyat** (variant) | — | bitta tugma: oʻchirib yubording, saqlash, qidirish, Mac'da ⌘ | ikki tugma ketma-ket: koʻchirish (X, V), nusxa (C, V), hammasini qalin (A, B) |
+
+Barmoq, Shift va poyga qoidasi 23-oʻyin mantiqidan (`23-on-barmoq/js/typing.js`). Tezkor tugmalar hali oʻyinda oʻrgatilmagan (tezkor tugmalar oʻyini muhokamada) — roʻyxat `savollar.js` dagi `SHORTCUTS`; oʻyin yozilganda uning mantiqiga koʻchiriladi. Tekislash (E, L, R) — Word dasturidagi tugmalar.
+
 ## 5. Koʻrinish
 
 - **Ranglar:** Oy — `#2F6FDE` (koʻk), Quyosh — `#8E5BD0` (binafsha). Yashil — toʻgʻri, toʻq sariq — "yana"; qizil ishlatilmaydi.
@@ -149,7 +163,7 @@ Neyron qoidasi 11-oʻyindagidek: yigʻindi ≥ chegara — yonadi.
 | `js/maydon.js` | Ekran: panellar, savol kartasi, javob tugmalari, muxlislar, pauza oynasi |
 | `js/main.js` | Oqim: sozlash → tanga → musobaqa → natija; soat sikli; saqlash |
 
-Qayta ishlatiladigan mantiq (oʻyinlar papkasidan): `umumiy/js/sanoq.js`, `05/js/roman.js`, `03/js/caesar.js`, `02/js/morse.js`, `11/js/neural.js`, `12/js/atlas.js`.
+Qayta ishlatiladigan mantiq (oʻyinlar papkasidan): `umumiy/js/sanoq.js`, `05/js/roman.js`, `03/js/caesar.js`, `02/js/morse.js`, `11/js/neural.js`, `12/js/atlas.js`, `13/js/bytes.js`, `16/js/units.js`, `23/js/typing.js`.
 
 Bosh sahifada roʻyxat tepasida **"Musobaqa"** kartasi. Offline roʻyxati (`bosh/sw-royxat.py`) musobaqa papkasini ham oladi.
 

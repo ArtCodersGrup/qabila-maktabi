@@ -8,9 +8,9 @@ const win = {};
 for (const f of [
   "../../umumiy/js/sanoq.js", "../../05-rim-toshi/js/roman.js", "../../03-sezar-maktubi/js/caesar.js",
   "../../02-qabila-morzesi/js/morse.js", "../../11-kop-qatlamli-tarmoq/js/neural.js", "../../12-ai-xaritasi/js/atlas.js",
-  "../../13-bayt-sandigi/js/bytes.js", "../../16-xotira-ombori/js/units.js", "../js/savollar.js",
+  "../../13-bayt-sandigi/js/bytes.js", "../../16-xotira-ombori/js/units.js", "../../23-on-barmoq/js/typing.js", "../js/savollar.js",
 ]) loadScript(path.join(__dirname, f), win);
-const { savollar: S, sanoq, roman, caesar, morse, neural, units } = win.QK;
+const { savollar: S, sanoq, roman, caesar, morse, neural, units, typing } = win.QK;
 
 // Urug'li tasodif (mulberry32) — natija har safar bir xil
 function rng(seed) {
@@ -172,6 +172,17 @@ const ANSWER = {
     assert.deepEqual(q.input.options.slice().sort(), Object.keys(counts).sort());
     return list[0][0];
   },
+  // Klaviatura: 23-o'yin mantiqi bilan qayta hisoblanadi
+  barmoq: (q) => S.FINGER_NAMES[typing.fingerOf(q.data.key)],
+  qator: (q) => ({ top: "Yuqori qator", home: "Asosiy qator", bottom: "Pastki qator" })[Object.keys(typing.ROWS).find((r) => typing.ROWS[r].includes(q.data.key))],
+  ikkiTugma: (q) => S.TWO_KEYS.find((t) => t.letter === q.data.letter).answer,
+  shiftQaysi: (q) => (typing.shiftFor(q.data.key.toUpperCase()) === "shift-l" ? "Chap Shift" : "Oʻng Shift"),
+  aniqlik: (q) => Math.floor((q.data.c * 100) / q.data.s),
+  tezlik: (q) => (q.data.c * 60) / q.data.sec,
+  poyga: (q) => ({ left: "Oy", right: "Quyosh" })[typing.raceResult(q.data.a, q.data.b).winner] || "Hech kim",
+  tezkorNima: (q) => S.SHORTCUTS.find((s) => s.keys === q.data.keys).act,
+  tezkorQaysi: (q) => S.SHORTCUTS.find((s) => s.act === q.data.act).keys,
+  vaziyat: (q) => S.SITUATIONS.find((s) => s.text === q.data.text).answer,
 };
 
 test("har turdagi javob mustaqil hisobga mos", () => {
@@ -268,4 +279,20 @@ test("har mavzu va qiyinlikda takrorsiz kamida 15 raund, 10 daqiqaga ham yetadi 
       for (let k = 0; k < 135; k++) assert.ok(d.next(), `${t.id}/${l.id}`);
     }
   }
+});
+
+test("klaviatura: barmoq va Shift 23-o'yindagidek, tezkor tugmalar takrorsiz, sonlar butun", () => {
+  assert.equal(new Set(S.SHORTCUTS.map((s) => s.keys)).size, S.SHORTCUTS.length);
+  assert.equal(new Set(S.SHORTCUTS.map((s) => s.act)).size, S.SHORTCUTS.length);
+  for (const l of [1, 2, 3]) assert.ok(S.SHORTCUTS.filter((s) => s.level === l).length >= 4, `${l}-daraja`);
+  const r = rng(23);
+  for (let k = 0; k < 100; k++) {
+    const b = S.make("barmoq", 1, r);
+    assert.ok(typing.ROWS.home.includes(b.data.key), b.key);
+    const a = S.make("aniqlik", 3, r);
+    assert.ok(Number(a.answer) >= 70 && Number(a.answer) <= 100 && a.data.c <= a.data.s, a.key);
+    const t = S.make("tezlik", 3, r);
+    assert.ok(Number.isInteger(Number(t.answer)) && Number(t.answer) <= 180, t.key);
+  }
+  assert.equal(S.make("shiftQaysi", 2, () => 0).answer, "Oʻng Shift"); // Q — chap qo'l → o'ng Shift
 });
