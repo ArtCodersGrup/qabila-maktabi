@@ -1,0 +1,55 @@
+/* Savol kartasi bloklari va javob tugmalari (musobaqa va tog' o'yini). Asos: asos.css */
+
+.q-text { font-size: 20px; font-weight: 800; }
+.q-big { font-size: 34px; font-weight: 900; letter-spacing: 1px; white-space: nowrap; }
+.q-places { display: flex; gap: 0; margin-top: -8px; font-size: 16px; font-weight: 800; opacity: 0.6; letter-spacing: 1px; }
+.q-places span { min-width: 1ch; }
+.q-lines { margin: 0; padding: 0; list-style: none; font-size: 19px; font-weight: 700; }
+.q-lines li { padding: 1px 0; }
+.q-strip { display: flex; flex-wrap: wrap; justify-content: center; gap: 3px; max-width: 520px; }
+.q-strip span {
+  min-width: 26px; height: 28px; padding: 0 3px; border-radius: 6px; background: var(--fon);
+  display: grid; place-items: center; font-size: 16px; font-weight: 800;
+}
+.q-strip span.mark { background: var(--p); color: #fff; }
+.q-tiles { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.q-tiles .tile { width: auto; min-width: 40px; padding: 0 6px; background: var(--p); }
+.q-chars { display: flex; flex-wrap: wrap; justify-content: center; gap: 3px; }
+.q-chars span {
+  min-width: 26px; height: 34px; border: 2px solid var(--chiziq); border-radius: 6px;
+  display: grid; place-items: center; font-size: 20px; font-weight: 900;
+}
+.q-grid { display: grid; gap: 2px; }
+.q-grid span { width: 14px; height: 14px; border: 1px solid var(--chiziq); background: #fff; }
+.q-grid span.on { background: var(--matn); border-color: var(--matn); }
+.q-morse { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; }
+.morse-group { display: inline-flex; align-items: center; gap: 4px; }
+.m-dot, .m-dash { display: inline-block; height: 12px; border-radius: 6px; background: var(--matn); }
+.m-dot { width: 12px; }
+.m-dash { width: 32px; }
+.q-guide { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 12px; font-size: 16px; font-weight: 800; }
+.q-guide span { display: inline-flex; align-items: center; gap: 6px; }
+.q-guide .m-dot { width: 8px; height: 8px; }
+.q-guide .m-dash { width: 20px; height: 8px; }
+.q-neuron { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; }
+.n-in {
+  display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 999px;
+  background: var(--fon); font-size: 19px; font-weight: 900;
+}
+.n-lamp { width: 18px; height: 18px; border-radius: 50%; border: 3px solid var(--matn); }
+.n-lamp.on { background: #F0C040; }
+.n-th { font-size: 18px; font-weight: 800; }
+.q-result { width: 100%; padding: 10px 12px; border-radius: 12px; font-size: 19px; font-weight: 800; animation: pop 0.25s; }
+.q-result.ok { background: #DDF0EA; color: var(--togri); }
+.q-result.miss { background: #FDEEE0; }
+.q-result .why { display: block; margin-top: 4px; font-size: 17px; font-weight: 700; color: var(--matn); }
+.choice-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; width: 100%; max-width: 560px; }
+.choice-grid .btn { min-height: 56px; padding: 8px 10px; font-size: 19px; line-height: 1.2; }
+.choice-grid .btn.single { grid-column: 1 / -1; }
+@media (max-width: 420px) and (orientation: portrait) {
+  .q-text { font-size: 19px; }
+  .q-big { font-size: 30px; }}
+
+@media (orientation: landscape) and (max-height: 480px) {
+  .q-big { font-size: 28px; }
+  .choice-grid .btn { min-height: 48px; }}

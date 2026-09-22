@@ -177,8 +177,16 @@ Ism va login, chat, reyting jadvali (kunlik yoki umumiy), 12 dan ko'p o'yinchi, 
 
 ## 9. Holat va keyingi qadamlar
 
-**Bajarildi (2026-09-22):** o'yin hisob-kitobi `js/tog.js` (tog'lar, qahramonlar, pog'ona, pauza, qolib ketish, g'olib, reyting, chiqarib yuborish) va uning testlari `tests/tog.test.js` + robot o'yinchilar `tests/robot.js`.
+**Bajarildi (2026-09-22):**
+- Hisob-kitob `js/tog.js` (tog'lar, qahramonlar, pog'ona, pauza, qolib ketish, g'olib, reyting, chiqarib yuborish), testlari `tests/tog.test.js`, robot o'yinchilar `tests/robot.js`.
+- Rasmlar `js/game-art.js`: 12 hayvon boshi (quloq/shox shakli har xil), har tog'ning manzarasi (osmon, qoya, archa/qoya/muz/qor), cho'qqi bayrog'i. Testi `tests/game-art.test.js`.
+- Ekran qismlari `js/tog-ui.js`: manzara va pog'onalar (balandlikka qarab 4–8 pog'ona ko'rinadi, bitta pog'onada 6 tagacha qahramon, qolgani "+N"), yon reyting, savol kartasi, pauza oynasi, natija ro'yxati.
+- **Robotlar bilan mashq** `js/mashq.js` + `index.html` + `css/style.css`: qahramon tanlash → tog' tanlash → o'yin. Raqiblar — 11 ta robot (6–20 s javob, 5–40 % xato, tepada sekinroq). Savollar musobaqaning `savollar.js` faylidan, qiyinligi balandlikka qarab. Internet kerak emas.
+- Savol bloklari va javob tugmalari musobaqadan `umumiy/js/savol-ui.js` + `umumiy/css/savol.css` ga ajratildi — ikkala o'yin bitta koddan foydalanadi.
+- Brauzerda sinaldi (1280×800, 360×740, 740×360): cho'qqiga chiqish, xato → pauza, qolib ketish → tomoshabin, natija ekrani. Past ekranda savol tog'ning yonida turadi, chol-shogird zonasi yashiriladi.
 
-1. **Supabase** (0-bosqich): loyiha yaratilishi kerak — "kelajagim" to'xtatilgach. Usiz onlayn qismni sinab bo'lmaydi.
-2. Shundan keyin: hisob-kitob (sof mantiq + testlar) → robot o'yinchilar bilan sinov → ekranlar → sinfda sinov.
+**Keyingi qadamlar:**
+
+1. **Supabase** (0-bosqich): loyiha yaratilishi kerak — "kelajagim" to'xtatilgach. Usiz onlayn xonani sinab bo'lmaydi.
+2. Onlayn xona: o'qituvchi qurilmasi xonani ochadi, holat Supabase Realtime orqali tarqaladi. Ekranlar tayyor — faqat robotlar o'rniga bolalar keladi.
 3. Sinfdagi sinovdan keyin sozlanadigan sonlar: pog'ona, chegara, pauza, vaqt.

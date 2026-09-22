@@ -54,6 +54,7 @@
     { dir: "musobaqa", mode: "offline", title: "Savol-javob", desc: "Ikki kishi bitta ekranda: savollar, soat va 3 ta yurak", icon: "musobaqa" },
     { dir: "poyga", mode: "offline", title: "Tez yozish poygasi", desc: "Navbat bilan bir xil matnni yozasizlar: kim aniq va tez?", icon: "poyga", pc: true },
     { dir: "onlayn", mode: "online", title: "Aloqa sinovi", desc: "Ikki qurilmani ulab koʻramiz — onlayn musobaqalar uchun tayyorgarlik", icon: "onlayn" },
+    { dir: "tog", mode: "online", title: "Togʻga chiqish", desc: "Savolga javob ber — pogʻona yuqoriga. Qolib ketsang, chiqib ketasan", icon: "tog", badge: "robotlar bilan" },
   ];
   const MODES = [
     { id: "offline", title: "Bitta ekranda", note: "Internet kerak emas" },
@@ -111,7 +112,7 @@
           h("span", { class: "bosh-text" },
             h("span", { class: "bosh-name", text: c.title }),
             h("span", { class: "bosh-desc", text: c.desc })),
-          h("span", { class: "bosh-state" }, h("span", { class: "bosh-age", text: mode.id === "online" ? "🌐 onlayn" : "2 kishi" }),
+          h("span", { class: "bosh-state" }, h("span", { class: "bosh-age", text: c.badge || (mode.id === "online" ? "🌐 onlayn" : "2 kishi") }),
             c.pc ? h("span", { class: "bosh-pc", title: "Klaviatura kerak", "aria-label": "Klaviatura kerak", text: "💻" }) : null))));
       section.append(h("h3", { class: "bosh-h3", text: `${mode.title} · ${mode.note}` }), cards);
     }

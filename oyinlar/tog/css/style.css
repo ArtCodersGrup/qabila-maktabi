@@ -1,0 +1,119 @@
+/* Togʻga chiqish — faqat shu sahifaga xos uslublar. Savol kartasi: ../../umumiy/css/savol.css */
+
+/* O'yin ekrani tik cho'ziladi: manzara bo'sh joyni oladi, savol kartasi doim ko'rinib turadi */
+.tbox { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
+.zone-work > .tbox.tog-oyin { margin: 0; flex: 1 1 auto; min-height: 0; }
+.tog-note { max-width: 460px; margin: 0; font-size: 17px; font-weight: 700; text-align: center; }
+
+/* ---------- Qahramon va togʻ tanlash ---------- */
+.qahramonlar { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; width: min(100%, 460px); }
+.qahramon {
+  display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 2px;
+  border: 3px solid transparent; border-radius: 14px; background: #fff; box-shadow: 0 3px 0 var(--soya);
+}
+.qahramon:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--soya); }
+.qahramon-rasm svg, .chiquvchi-rasm svg, .reyting-rasm svg, .natija-rasm svg { display: block; width: 100%; height: auto; }
+.qahramon-rasm { width: 46px; }
+.qahramon-nom { font-size: 13px; font-weight: 800; }
+.toglar { display: flex; flex-direction: column; gap: 8px; width: min(100%, 420px); }
+.tog-karta {
+  display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; padding: 10px 14px; text-align: left;
+  border: none; border-radius: 16px; background: #fff; box-shadow: 0 3px 0 var(--soya);
+}
+.tog-nom { font-size: 21px; font-weight: 900; }
+.tog-metr { font-size: 19px; font-weight: 900; color: var(--asosiy); text-align: right; }
+.tog-pogona { grid-column: 1 / -1; font-size: 15px; font-weight: 700; color: #7A7266; }
+
+/* ---------- Oʻyin maydoni ---------- */
+.tog-soat { font-size: 18px; font-weight: 900; }
+.tog-maydon { display: flex; align-items: stretch; justify-content: center; gap: 10px; width: 100%; flex: 1 1 auto; min-height: 0; }
+.tog-scene {
+  position: relative; flex: 1 1 auto; max-width: 520px; min-height: 90px;
+  border-radius: 16px; overflow: hidden; box-shadow: 0 3px 0 var(--soya);
+  container-type: size; /* ichidagi o'lchamlar manzara balandligiga qarab kichrayadi */
+}
+.manzara { position: absolute; inset: 0; }
+.manzara .manzara-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.manzara .bezak-svg { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 45%; }
+.pogonalar { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 6px 8px; }
+.pogona { position: relative; display: flex; align-items: center; gap: 6px; min-height: 0; flex: 1; }
+.pogona-raqam { width: 22px; font-size: min(13px, 4.6cqh); font-weight: 900; color: #5C6570; text-align: right; }
+.pogona-chiziq { flex: 1; height: 3px; border-radius: 2px; background: rgba(43, 43, 58, 0.25); }
+.pogona.chogqi .pogona-chiziq { background: var(--togri); }
+.pogona-kimlar { position: absolute; left: 30px; right: 2px; bottom: calc(50% - 1px); display: flex; flex-wrap: nowrap; align-items: flex-end; gap: 2px; }
+.chiquvchi { display: flex; flex-direction: column; align-items: center; animation: pop 0.3s; }
+.chiquvchi-rasm { width: min(30px, 11cqh); }
+.chiquvchi-nom { display: none; font-size: min(11px, 4cqh); font-weight: 800; }
+.chiquvchi.men .chiquvchi-nom { display: block; }
+.chiquvchi.men .chiquvchi-rasm { width: min(38px, 14cqh); }
+/* Bir pog'onada ko'p bo'lsa: qolganlari "+N" bo'lib turadi (tor ekranda kesilmasin) */
+.pogona-yana { padding: 0 5px; border-radius: 8px; background: rgba(255, 255, 255, 0.8); font-size: min(12px, 4.4cqh); font-weight: 900; color: #5C6570; }
+.chiquvchi.men { padding: 0 3px; border-radius: 10px; background: rgba(47, 111, 222, 0.18); }
+.chiquvchi.chiqdi { opacity: 0.35; }
+.chiquvchi.pauzada .chiquvchi-rasm { animation: flash 0.8s infinite; }
+.chogqi-bayroq { width: min(26px, 10cqh); }
+.kichik-shogird, .kichik-oqsoqol { width: min(26px, 10cqh); }
+.kichik-shogird svg, .kichik-oqsoqol svg, .chogqi-bayroq svg { display: block; width: 100%; height: auto; }
+
+/* ---------- Reyting ---------- */
+.reyting { width: 150px; display: flex; flex-direction: column; gap: 3px; overflow: auto; }
+.reyting-qator { display: flex; align-items: center; gap: 5px; padding: 3px 6px; border-radius: 10px; background: #fff; font-size: 15px; font-weight: 800; }
+.reyting-qator.men { background: #E3ECFB; }
+.reyting-qator.chiqdi { opacity: 0.45; }
+.reyting-orin { width: 16px; color: #7A7266; }
+.reyting-rasm { width: 22px; }
+.reyting-nom { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ---------- Savol, pauza, tomoshabin ---------- */
+.tog-pastki { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; }
+.savol-karta { display: flex; flex-direction: column; align-items: center; gap: 8px; width: min(100%, 560px); padding: 10px 14px; border-radius: 14px; background: #fff; box-shadow: 0 3px 0 var(--soya); text-align: center; }
+.pauza { display: flex; flex-direction: column; align-items: center; gap: 4px; width: min(100%, 460px); padding: 12px; border-radius: 14px; background: #FDEEE0; }
+.pauza-bosh { font-size: 19px; font-weight: 900; color: var(--yana); }
+.pauza-javob { font-size: 20px; font-weight: 900; }
+.pauza-sanoq { font-size: 28px; font-weight: 900; color: var(--matn); }
+.tomoshabin { padding: 10px 14px; border-radius: 14px; background: #fff; font-size: 18px; font-weight: 800; text-align: center; }
+
+/* ---------- Natija ---------- */
+.natija { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; }
+.natija-golib { display: flex; align-items: center; gap: 10px; }
+.natija-rasm { width: 56px; }
+.natija-golib h1 { margin: 0; font-size: 26px; font-weight: 900; }
+.natija-sabab { margin: 0; font-size: 17px; font-weight: 700; color: #7A7266; }
+.natija-royxat { display: flex; flex-direction: column; gap: 4px; width: min(100%, 460px); }
+.natija-qator { display: flex; align-items: center; gap: 6px; padding: 5px 8px; border-radius: 12px; background: #fff; font-size: 16px; font-weight: 800; }
+.natija-qator.men { background: #E3ECFB; }
+.natija-hisob { font-size: 14px; font-weight: 700; color: #7A7266; }
+.natija-men { margin: 0; font-size: 17px; font-weight: 800; text-align: center; }
+
+/* ---------- Tor ekran ---------- */
+/* Kichik ekranda o'yin butun joyni oladi: sahna zonasi yashirinadi */
+@media (max-width: 560px), (orientation: landscape) and (max-height: 520px) {
+  #play.tog-full { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; grid-template-areas: "work" "control"; }
+  #play.tog-full .zone-stage { display: none; }
+}
+
+/* Tor yoki past ekranda reyting faqat rasm va pog'ona: ism o'rniga hayvonning o'zi tanitadi */
+@media (max-width: 560px), (orientation: landscape) and (max-height: 520px) {
+  .reyting { width: 62px; }
+  .reyting-qator { gap: 3px; padding: 2px 4px; font-size: 14px; }
+  .reyting .reyting-nom { display: none; }
+  .reyting .reyting-qator.men .reyting-nom { display: block; }
+}
+@media (max-width: 560px) {
+  .qahramon-rasm { width: 38px; }
+  .qahramon-nom { font-size: 11px; }
+}
+/* Past ekran (yotiq telefon): savol togʻning yonida turadi, ustida emas */
+@media (orientation: landscape) and (max-height: 520px) {
+  .tog-oyin {
+    display: grid; gap: 4px 8px; align-items: stretch;
+    grid-template-columns: minmax(0, 1fr) minmax(140px, 38%);
+    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-areas: "soat soat" "maydon pastki";
+  }
+  .tog-oyin .tog-soat { grid-area: soat; font-size: 15px; }
+  .tog-oyin .tog-maydon { grid-area: maydon; }
+  .tog-oyin .tog-pastki { grid-area: pastki; min-height: 0; overflow: auto; justify-content: flex-start; }
+  .savol-karta, .pauza, .tomoshabin { padding: 6px 10px; gap: 4px; }
+  .pauza-sanoq { font-size: 22px; }
+}
