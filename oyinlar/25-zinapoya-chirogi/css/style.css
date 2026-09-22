@@ -1,0 +1,84 @@
+/* Zinapoya chirog'i — faqat shu o'yinga xos uslublar. Umumiylari: asos.css, mantiq.css (kalitlar va jadval) */
+
+.gbox { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.pair { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px 24px; width: 100%; }
+.col { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.three { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: center; gap: 12px; }
+.three .ttable { font-size: 18px; }
+.three .ttable td { padding: 4px 10px; }
+.answer { font-size: 21px; font-weight: 900; color: var(--togri); text-align: center; }
+.note { font-size: 19px; font-weight: 800; color: var(--asosiy); text-align: center; }
+
+/* ---------- Sxemalar (yozuvlar rasm ustida) ---------- */
+.scheme { position: relative; }
+.scheme.stair { width: min(100%, 360px); aspect-ratio: 260 / 170; }
+.scheme.gates { width: min(100%, 380px); container-type: inline-size; }
+.scheme-pic, .scheme-pic svg { display: block; width: 100%; height: 100%; }
+.s-label, .in-label, .out-label {
+  position: absolute; transform: translateX(-50%); white-space: nowrap;
+  padding: 0 5px; border-radius: 8px; background: var(--fon); font-weight: 900; line-height: 1.2;
+}
+.s-label { font-size: 17px; }
+.in-label { font-size: 17px; transform: translate(-100%, -50%); }
+.out-label { font-size: 13px; }
+.g-label { position: absolute; transform: translate(-50%, -50%); font-size: 15px; font-weight: 900; }
+.g-label.unknown { color: var(--yana); font-size: 20px; }
+/* Quti yozuvi — 17 birlik (quti 60 birlik): sxema kichraysa, yozuv ham kichrayadi va qutidan chiqmaydi */
+@supports (width: 1cqw) {
+  .g-label { font-size: min(18px, calc(100cqw * 17 / var(--vw))); }
+  .g-label.unknown { font-size: min(24px, calc(100cqw * 24 / var(--vw))); }
+}
+.lamp-q { position: absolute; transform: translate(-50%, -50%); font-size: 20px; font-weight: 900; color: var(--asosiy); }
+.lamp-q[hidden] { display: none; }
+
+/* ---------- A + B natijasi ---------- */
+.sum-view { display: flex; align-items: center; gap: 10px; font-size: 28px; font-weight: 900; }
+.digit-box { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.digit {
+  display: grid; place-items: center; width: 48px; height: 52px; border-radius: 12px;
+  background: #fff; box-shadow: inset 0 0 0 3px var(--chiziq); font-size: 30px;
+}
+.digit.v1 { background: #FFE9A8; box-shadow: inset 0 0 0 3px #E0B04A; }
+.digit-cap { font-size: 13px; font-weight: 800; color: #7A7266; }
+
+/* ---------- Qo'shish jadvali: belgilangan ustun ---------- */
+.add-table td.v1 { color: #fff; background: #E0A800; }
+.add-table .col-mark { box-shadow: inset 0 0 0 9999px rgba(240, 138, 36, 0.35); }
+.add-table th.col-mark { background: var(--yana); box-shadow: none; }
+
+/* ---------- Ustunda qo'shish ---------- */
+.col-add { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; padding: 10px 18px; border-radius: 14px; background: #fff; box-shadow: 0 3px 0 var(--soya); }
+.col-row { display: flex; gap: 6px; }
+.col-sign, .col-d { display: grid; place-items: center; width: 34px; height: 40px; font-size: 30px; font-weight: 900; }
+.col-line { width: 100%; height: 3px; border-radius: 2px; background: var(--matn); }
+.clicks { display: flex; flex-direction: column; gap: 8px; font-size: 21px; font-weight: 900; text-align: center; }
+
+/* ---------- Ta'rif, hikoya, tabrik ---------- */
+.formula-box { display: flex; flex-direction: column; align-items: center; gap: 8px; max-width: 100%; text-align: center; }
+.formula-row { font-size: 21px; font-weight: 900; animation: pop 0.3s; }
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(240px, 66vw); }
+.story-art.small { width: min(170px, 44vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 12px; font-size: 20px; font-weight: 800; text-align: center; }
+
+/* Keng ekran: uch-to'rt amalli sxemalar kattaroq */
+@media (min-width: 900px) and (min-height: 600px) {
+  .scheme.gates { width: min(100%, 440px); }
+}
+
+/* ---------- Tor ekran ---------- */
+@media (max-width: 480px) {
+  .gbox { gap: 8px; }
+  .scheme.stair { width: min(100%, 300px); }
+  .s-label, .in-label { font-size: 15px; }
+  .formula-row { font-size: 18px; }
+  .sum-view { font-size: 24px; }
+}
+/* Yotiq telefon: past ekran */
+@media (orientation: landscape) and (max-height: 520px) {
+  .scheme.stair { width: min(100%, 250px); }
+  .scheme.gates { width: min(100%, 300px); }
+  .digit { width: 40px; height: 42px; font-size: 24px; }
+  .story-art { width: min(190px, 36vh); }
+}

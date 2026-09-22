@@ -44,6 +44,7 @@ Eslatma: progress brauzer xotirasida saqlanadi va `file://` bilan `http://localh
 | 22 | Sayyoralar sanogʻi | n-lik tizimda amallar, "qaysi tizimda 3 + 4 = 10?", Bobil va Mayya (10–12) |
 | 23 | Oʻn barmoq | Klaviaturaga qaramay yozish: asosiy, yuqori va pastki qator, katta harf, aniqlik va tezlik, doʻst bilan poyga (💻 faqat kompyuterda) |
 | 24 | Mantiq kalitlari | Rost va yolgʻon, VA (ketma-ket kalitlar), YOKI (parallel), EMAS (teskari kalit), rostlik jadvali, hayotiy qoidalar, Jorj Bul |
+| 25 | Zinapoya chirogʻi | XOR (faqat bittasi), amallar zanjiri (sxema), yarim qoʻshuvchi: kompyuter qanday qoʻshadi (10–12) |
 
 **Musobaqa** (`oyinlar/musobaqa/`): ikki bola bitta ekranda navbat bilan savolga javob beradi. Har kimning oʻz soati (shaxmat soatidek), 3 ta yuragi va bitta oʻtkazishi bor; savollar tanlangan mavzu va qiyinlikdan tasodifiy yasaladi.
 

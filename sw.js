@@ -1,6 +1,6 @@
 // Offline rejim: sayt fayllari keshlanadi. Bola saytni bir marta ochsa, keyin internetsiz ham oʻynay oladi.
 // Yangi fayl qoʻshilsa, FILES roʻyxatiga ham qoʻshiladi — buni bosh/tests/offline.test.js tekshiradi.
-const VERSION = "v21";
+const VERSION = "v22";
 const CACHE = "qabila-maktabi-" + VERSION;
 
 const FILES = [
@@ -14,10 +14,12 @@ const FILES = [
   "bosh/js/bosh-art.js",
   "bosh/js/bosh.js",
   "oyinlar/umumiy/css/asos.css",
+  "oyinlar/umumiy/css/mantiq.css",
   "oyinlar/umumiy/css/sanoq.css",
   "oyinlar/umumiy/fonts/Nunito.woff2",
   "oyinlar/umumiy/js/app.js",
   "oyinlar/umumiy/js/art.js",
+  "oyinlar/umumiy/js/mantiq-ui.js",
   "oyinlar/umumiy/js/offline.js",
   "oyinlar/umumiy/js/practice.js",
   "oyinlar/umumiy/js/sanoq-ui.js",
@@ -310,6 +312,18 @@ const FILES = [
   "oyinlar/24-mantiq-kalitlari/js/scenes/stage1.js",
   "oyinlar/24-mantiq-kalitlari/js/scenes/stage2.js",
   "oyinlar/24-mantiq-kalitlari/js/scenes/stage3.js",
+  "oyinlar/25-zinapoya-chirogi/",
+  "oyinlar/25-zinapoya-chirogi/index.html",
+  "oyinlar/25-zinapoya-chirogi/css/style.css",
+  "oyinlar/25-zinapoya-chirogi/js/game-art.js",
+  "oyinlar/25-zinapoya-chirogi/js/gates-ui.js",
+  "oyinlar/25-zinapoya-chirogi/js/gates.js",
+  "oyinlar/25-zinapoya-chirogi/js/main.js",
+  "oyinlar/25-zinapoya-chirogi/js/scenes/common.js",
+  "oyinlar/25-zinapoya-chirogi/js/scenes/final.js",
+  "oyinlar/25-zinapoya-chirogi/js/scenes/stage1.js",
+  "oyinlar/25-zinapoya-chirogi/js/scenes/stage2.js",
+  "oyinlar/25-zinapoya-chirogi/js/scenes/stage3.js",
   "oyinlar/musobaqa/",
   "oyinlar/musobaqa/index.html",
   "oyinlar/musobaqa/css/style.css",
