@@ -12,20 +12,29 @@
 
 1. **Xona:** bitta qurilma xona ochadi, qolganlar 4 xonali kod bilan kiradi. Ko'pi bilan **12 ta o'yinchi**.
 2. **Qahramon:** har bir o'yinchi qahramonchalardan birini tanlaydi.
-3. **Tog':** **15 ta pog'ona**. Pastda **oqsoqol** turadi, cho'qqida **shogird** kutib turadi. O'yinchi yuqoriga chiqqan sari ekran ham ko'tariladi va oqsoqol pastda ko'rinmay qoladi.
+3. **Tog':** **pog'onalar** (15 / 20 / 30 — o'qituvchi tanlaydi, 2.10). Pastda **oqsoqol** turadi, cho'qqida **shogird** kutib turadi. O'yinchi yuqoriga chiqqan sari ekran ham ko'tariladi va oqsoqol pastda ko'rinmay qoladi.
 4. **Savollar:** har kimga o'z savoli chiqadi, javob bergach yangisi keladi. **To'g'ri** — bir pog'ona yuqoriga.
 5. **Xato — pastga tushish yo'q, pauza:** o'sha o'yinchining o'zida 10 yoki 20 soniyalik pauza. Ekranda "To'g'ri javob: … Tepaga chiqa olmading — kut" va orqaga sanayotgan taymer. Keyin yangi savol.
 6. **Qolib ketish:** birinchi o'rindagidan **4 pog'ona** orqada qolgan o'yinchi yutqazadi. Boshqalar yechib o'tib ketaveradi.
 7. **Umumiy vaqt:** masalan, **10 daqiqa**. Hech kim cho'qqiga chiqa olmasa, **eng balandda turganlar** g'olib.
 8. **G'alaba:**
-   - **15 ta to'g'ri javob** — cho'qqi, g'olib;
+   - **hamma pog'onani bosib o'tsa** (masalan, 15 ta to'g'ri javob) — cho'qqi, g'olib;
    - yoki bitta o'yinchi **ikkinchi o'rindagidan ham 4 pog'ona** o'zib ketsa — darhol g'olib (qolganlarning hammasi qolib ketgan bo'ladi).
+
+**2026-09-22 da muallif tasdiqladi** (pastdagi takliflarim):
+9. Qolib ketish qoidasi **yarim yo'ldan keyin** ishlaydi (2.1) — aks holda o'yin yarim daqiqada tugaydi.
+10. Tog' **qiyinlashib boradi** (2.2).
+11. Xato — 10 soniya, ketma-ket ikkinchi xato — 20 soniya; pauzada **to'g'ri javob ko'rsatiladi** (2.3).
+12. Xonani **o'qituvchi ochadi va o'zi o'ynamaydi**; hisob-kitob uning qurilmasida (2.4).
+13. Qahramonlar — **12 ta hayvon**, ism so'ralmaydi, bitta qahramon bitta kishiga (2.7).
+14. Har kimga **boshqa sonli** savol (2.6). Teng holatda o'sha pog'onaga birinchi chiqqani oldinda (2.8). Uzilish qoidalari (2.9).
+15. **Chiqib ketgan bola muxlis bo'ladi** — mexanikasi 2.5 da (muallif fikri bilan kengaytirildi).
 
 ## 2. Men taklif qilganlar (tasdiqlash kerak)
 
 ### 2.1. Birinchi daqiqada hamma chiqib ketmasligi uchun
 **Muammo:** 4 pog'ona — atigi 4 ta savol. Tez bola 1 ta savolga ~8 soniya sarflasa, 4 pog'onaga ~30 soniyada chiqadi. Birinchi savolni hali o'qiyotgan bolalar esa 0 da turadi. Qoida darhol ishlasa, **o'yin 30 soniyada tugaydi**: bitta g'olib, qolganlar o'ynamay qoladi.
-**Taklif:** qolib ketish qoidasi **yetakchi 8-pog'onaga chiqqandan keyin** ishlaydi, ya'ni tog'ning yuqori yarmida. Pastki yarmida hamma bemalol chiqadi, keyin poyga jiddiylashadi.
+**Qaror (muallif tasdiqladi):** qolib ketish qoidasi **yetakchi yarim yo'lni bosib o'tgandan keyin** ishlaydi (15 pog'onada — 8-pog'ona, 20 da — 10, 30 da — 15). Pastki yarmida hamma bemalol chiqadi, keyin poyga jiddiylashadi.
 Bu va boshqa sonlar (4 pog'ona, 15 pog'ona, 10 daqiqa, pauza) kodda **bitta joyda** turadi — sinfda sinab ko'rib, oson o'zgartiriladi.
 
 ### 2.2. Tog' qiyinlashib boradi
@@ -45,8 +54,18 @@ Qiyin savol ko'proq vaqt oladi, shuning uchun yetakchi tepada sekinlashadi, orqa
 - **Bolalar qurilmasi** (telefon yoki kompyuter): kod → qahramon tanlash → kutish → o'yin.
 - Sababi: xonani ochgan bola chiqib ketsa, hammaning o'yini to'xtaydi. O'qituvchi qurilmasi esa butun o'yinni "ushlab turadi" (2.8).
 
-### 2.5. Qolib ketgan bola zerikmasligi uchun
-Chiqib ketgan bola **muxlis** bo'lib qoladi: ekranida tog' va do'stlari ko'rinib turadi, o'yin oxirigacha kuzatadi. Qayta kira olmaydi.
+### 2.5. Muxlis (chiqib ketgan bola nima qiladi)
+**Muallif fikri (2026-09-22):** chiqib ketgan bola hali chiqib ketmagan **bitta o'yinchining muxlisi** bo'ladi: uning savollarini ko'radi va kuzatadi, o'sha o'yinchining yonida **sharpa** (xira qahramon) bo'lib, qo'lida bayroqcha bilan ko'rinadi. **Muxlislik majburiy emas** — xohlamagan bola shunchaki tog'ni kuzatadi.
+
+**Qanday qilamiz (mening taklifim):** muxlis o'zi javob beradi, lekin **boshqa sonlar bilan**:
+- Muxlis do'stining savoli bilan **bir xil turdagi**, lekin boshqa sonli savolni oladi.
+- To'g'ri javob bersa, uning sharpasi do'stining yonida bir pog'ona ko'tariladi. Bu do'stining o'rniga **ta'sir qilmaydi** — sharpa poygadan tashqarida.
+- Sharpa do'stidan o'zib ketsa: "Sen do'stingdan tez topding!" degan yozuv chiqadi, bayroqcha yonadi.
+- **Nega boshqa sonlar bilan:** muxlis do'stining aynan savolini ko'rsa, sinfda yonidan javobni aytib yuboradi. Bunda esa u ham o'ynaydi, ham hech kimga yordam bera olmaydi.
+
+**Muxlis ekranida:** tepada do'stining qahramoni va pog'onasi, pastda o'zining savoli va sharpasi. "Boshqa do'stga o'tish" va "Faqat kuzatish" tugmalari bor.
+
+**Bayroqcha (qo'llab-quvvatlash):** muxlis "🚩 Bo'l!" tugmasini bosadi — do'stining ekranida bayroqcha bir lahza silkinadi. 10 soniyada bir marta bosiladi, shunda chalg'itmaydi. Yozuv yuborish yo'q, faqat bayroqcha.
 
 ### 2.6. Ko'chirib bo'lmaydi
 Sinfda hamma yonma-yon o'tiradi. Har kimga **boshqa sonli** savol beriladi: musobaqadagi `savollar.js` har kim uchun alohida yasaydi, hamma savollar esa bir xil mavzu va qiyinlikdan.
@@ -65,6 +84,26 @@ Sinfda hamma yonma-yon o'tiradi. Har kimga **boshqa sonli** savol beriladi: muso
 - **30 soniya ichida** o'sha kod bilan qaytib kirsa, qahramoni va pog'onasi saqlangan bo'ladi.
 - Qaytmasa, chiqib ketgan hisoblanadi.
 - O'qituvchi qurilmasi uzilsa, o'yin hamma uchun **pauza** bo'ladi va u qaytgach davom etadi.
+
+### 2.10. Tog' balandligi (pog'onalar soni)
+**Muallif so'radi:** 15 ta emas, 30 ta qilaylikmi?
+
+Hisob: bitta savol bolaga taxminan **8–15 soniya** oladi (o'qish + javob), xatolarda pauza ham qo'shiladi.
+
+| Balandlik | Tez bola yetib boradi | Sekinroq bola |
+|---|---|---|
+| 15 pog'ona | ~2,5 daqiqa | ~4 daqiqa |
+| 20 pog'ona | ~3,5 daqiqa | ~5 daqiqa |
+| 30 pog'ona | ~5 daqiqa | 10 daqiqada yetib bormaydi |
+
+**Taklif:** balandlik — **o'qituvchi sozlamasi**: 15 (qisqa) / 20 / 30 (uzun), boshida **20** turadi. 45 daqiqalik darsda 3–4 marta o'ynab, orada gaplashish uchun bitta o'yin 4–5 daqiqa bo'lgani ma'qul.
+
+30 pog'ona tanlansa, qolgan sonlar ham o'zgaradi:
+- qolib ketish chegarasi 4 emas, **6 pog'ona** (30 ta pog'onada 4 juda kichik — tez-tez chiqib ketiladi);
+- qoida 15-pog'onadan boshlab ishlaydi;
+- qiyinlik: 1–10 Oson, 11–20 O'rta, 21–30 Qiyin.
+
+Ekranda har doim **8 pog'ona atrofi** ko'rinadi (bolaning o'zi o'rtada), shuning uchun tog' baland bo'lsa ham pog'onalar kichrayib ketmaydi.
 
 ## 3. Ekranlar
 
@@ -131,7 +170,9 @@ Har pog'onada qadam ovozi. Xato — yumshoq "retry" (qo'rqituvchi emas, QOIDALAR
 Ism va login, chat, reyting jadvali (kunlik yoki umumiy), 12 dan ko'p o'yinchi, bir vaqtda bir nechta xona uchun bitta o'qituvchi ekrani.
 
 ## 9. Ochiq savollar (muallifga)
-1. Qolib ketish qoidasi 8-pog'onadan boshlab ishlasinmi (2.1)?
-2. Xonani o'qituvchi ochsinmi va o'zi o'ynamasinmi (2.4)? Yoki bolalardan biri ham xona ochib, birga o'ynay oladimi?
-3. Pauzada to'g'ri javob ko'rinsinmi (2.3)?
-4. Qahramonlar hayvonlar bo'lsinmi yoki qabila bolalari (har xil kiyimda)?
+
+1. **Muxlis:** do'stining aynan savolini ko'rsinmi yoki bir xil turdagi, boshqa sonli savolni (2.5 dagi taklifim)?
+2. **Balandlik:** o'qituvchi tanlaydigan qilaylikmi (15 / 20 / 30, boshida 20)?
+3. **Chiqarib yuborish:** o'qituvchida "o'yinchini chiqarib yuborish" tugmasi bo'lsinmi? Kod tarqalib ketsa yoki begona kirsa kerak bo'ladi.
+4. **Kech qolganlar:** o'yin boshlangandan keyin kirgan bola faqat muxlis bo'lsinmi?
+5. **Bayroqcha:** muxlisning "🚩 Bo'l!" tugmasi 10 soniyada bir marta bosilsinmi?
