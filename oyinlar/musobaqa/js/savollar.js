@@ -1,6 +1,6 @@
-// Musobaqa savollari (DIZAYN 4-bo'lim): 6 mavzu × 3 qiyinlik. Har tur tasodifiy savol yasaydi,
+// Musobaqa savollari (DIZAYN 4-bo'lim): 7 mavzu × 3 qiyinlik. Har tur tasodifiy savol yasaydi,
 // deck() esa raund uchun juft savol beradi: bir xil tur va qiyinlik, sonlari boshqa, takrorsiz.
-// Mavjud o'yinlar mantiqi qayta ishlatiladi: QK.sanoq, roman, caesar, morse, neural, atlas, bytes, units, typing.
+// Mavjud o'yinlar mantiqi qayta ishlatiladi: QK.sanoq, roman, caesar, morse, neural, atlas, bytes, units, typing, logic, gates.
 // Ekran bilan ishlamaydi, Node'da test qilinadi.
 (function (root) {
   "use strict";
@@ -14,6 +14,7 @@
     { id: "sanoq", title: "Sanoq tizimlari" },
     { id: "ai", title: "Sunʼiy intellekt" },
     { id: "klaviatura", title: "Klaviatura" },
+    { id: "mantiq", title: "Mantiq" },
   ];
   const LEVELS = [
     { id: 1, title: "Oson" },
@@ -1242,6 +1243,245 @@
   };
 
   // ======================================================================
+  // 7. Mantiq (24–25-o'yinlar): VA, YOKI, EMAS, XOR, sxemalar, ikkilikda qo'shish
+  // ======================================================================
+
+  const OP_NAMES = { and: "VA", or: "YOKI", xor: "XOR" };
+  const vals = (a, b) => big(b == null ? `A = ${a}` : `A = ${a}, B = ${b}`);
+
+  // Bitta amal: 1 — VA, YOKI; 2 — XOR va EMAS A ham
+  const amal = {
+    topic: "mantiq",
+    levels: [1, 2],
+    make(level, rng, fresh) {
+      const ops = level === 1 ? ["and", "or"] : ["xor", "not", "and", "or"];
+      const pool = [];
+      for (const op of ops) for (const a of [0, 1]) for (const b of op === "not" ? [null] : [0, 1]) pool.push({ op, a, b, id: `${op}:${a}${b == null ? "" : b}` });
+      const list = pool.filter((p) => fresh(p.id));
+      if (!list.length) return null;
+      const p = pick(rng, list);
+      const G = QK().gates;
+      const answer = p.op === "not" ? 1 - p.a : G.apply(p.op, p.a, p.b);
+      const expr = p.op === "not" ? "EMAS A" : `A ${OP_NAMES[p.op]} B`;
+      const rule = { and: "ikkalasi ham 1 boʻlsa — 1", or: "kamida bittasi 1 boʻlsa — 1", xor: "faqat bittasi 1 boʻlsa — 1", not: "teskarisi" }[p.op];
+      return {
+        id: p.id,
+        data: { op: p.op, a: p.a, b: p.b },
+        text: `${expr} nechchi?`,
+        blocks: [vals(p.a, p.b)],
+        input: choice(["1", "0"]),
+        answer: String(answer),
+        explain: `${p.op === "not" ? `EMAS ${p.a}` : `${p.a} ${OP_NAMES[p.op]} ${p.b}`} = ${answer}: ${rule}.`,
+      };
+    },
+  };
+
+  // Rostmi? Ikki oddiy gap VA / YOKI bilan (24-o'yin: rost — 1, yolg'on — 0)
+  const TRUE_FACTS = ["Qor oq", "Bir haftada 7 kun bor", "Mushuk — hayvon", "2 + 2 = 4", "Yilda 12 oy bor", "Olma — meva"];
+  const FALSE_FACTS = ["Tuya ucha oladi", "3 + 3 = 7", "Baliq daraxtda yashaydi", "Bir kunda 30 soat bor", "Qor qora", "Tosh suvda suzadi"];
+
+  const rostmi = {
+    topic: "mantiq",
+    levels: [1],
+    make(level, rng) {
+      const all = TRUE_FACTS.map((f) => [f, 1]).concat(FALSE_FACTS.map((f) => [f, 0]));
+      const [f1, t1] = pick(rng, all);
+      let second;
+      do second = pick(rng, all); while (second[0] === f1);
+      const [f2, t2] = second;
+      const op = rng() < 0.5 ? "and" : "or";
+      const v = op === "and" ? t1 & t2 : t1 | t2;
+      const word = (t) => (t ? "rost (1)" : "yolgʻon (0)");
+      return {
+        id: `${f1}|${op}|${f2}`,
+        data: { f1, f2, op },
+        text: `Rostmi? «${f1} ${OP_NAMES[op]} ${f2.charAt(0).toLowerCase() + f2.slice(1)}»`,
+        input: choice(["Rost", "Yolgʻon"]),
+        answer: v ? "Rost" : "Yolgʻon",
+        explain: `«${f1}» — ${word(t1)}, «${f2}» — ${word(t2)}. ${t1} ${OP_NAMES[op]} ${t2} = ${v}.`,
+      };
+    },
+  };
+
+  // "B qanday bo'lsin?" (24-o'yin): 1, 0, farqi yo'q, bo'lmaydi
+  const kerakB = {
+    topic: "mantiq",
+    levels: [2],
+    make(level, rng, fresh) {
+      const L = QK().logic;
+      const pool = [];
+      for (const op of ["and", "or"]) for (const a of [0, 1]) for (const want of [0, 1]) pool.push({ op, a, want, id: `${op}:${a}:${want}` });
+      const list = pool.filter((p) => fresh(p.id));
+      if (!list.length) return null;
+      const p = pick(rng, list);
+      const need = L.needB(p.op, p.a, p.want);
+      const lines = [0, 1].map((b) => `B = ${b} → ${L.apply(p.op, p.a, b)}`).join(", ");
+      return {
+        id: p.id,
+        data: p,
+        text: `A = ${p.a}. «A ${OP_NAMES[p.op]} B» ${p.want} boʻlishi uchun B qanday boʻlsin?`,
+        input: choice(L.NEED_ORDER.map((k) => L.NEED_LABELS[k])),
+        answer: L.NEED_LABELS[need],
+        explain: `${lines}. Javob: ${L.NEED_LABELS[need]}.`,
+      };
+    },
+  };
+
+  // Hayotiy qoida (24-o'yin): 1 — faqat VA/YOKI, 2 — EMAS bilan
+  const hayot = {
+    topic: "mantiq",
+    levels: [1, 2],
+    make(level, rng, fresh) {
+      const L = QK().logic;
+      const pool = [];
+      for (const l of L.LIFE.filter((x) => x.expr.includes("EMAS") === (level === 2))) {
+        for (const [a, b] of [[0, 0], [0, 1], [1, 0], [1, 1]]) pool.push({ l, a, b, id: `${l.id}:${a}${b}` });
+      }
+      const list = pool.filter((p) => fresh(p.id));
+      if (!list.length) return null;
+      const { l, a, b, id } = pick(rng, list);
+      const v = L.evalLife(l, a, b);
+      const fact = (side, x) => (x ? side.on : side.off);
+      return {
+        id,
+        data: { life: l.id, a, b },
+        text: `Qoida: «${l.rule}» Hozir: ${fact(l.a, a).toLowerCase()}, ${fact(l.b, b).toLowerCase()}. ${l.q}`,
+        input: choice(["Ha", "Yoʻq"]),
+        answer: v ? "Ha" : "Yoʻq",
+        explain: `${L.lifeSteps(l, a, b)[0]} — ${v ? l.yes.toLowerCase() : l.no.toLowerCase()}.`,
+      };
+    },
+  };
+
+  // Jadvalga qarab amalni topish (25-o'yin)
+  const qaysiAmal = {
+    topic: "mantiq",
+    levels: [2],
+    make(level, rng, fresh) {
+      const G = QK().gates;
+      const list = ["and", "or", "xor"].filter(fresh);
+      if (!list.length) return null;
+      const op = pick(rng, list);
+      const t = G.table(op);
+      return {
+        id: op,
+        data: { op },
+        text: "Bu jadval qaysi amalniki?",
+        blocks: [{ type: "lines", items: G.PAIRS.map(([a, b], i) => `A = ${a}, B = ${b} → ${t[i]}`) }],
+        input: choice(["VA", "YOKI", "XOR"]),
+        answer: OP_NAMES[op],
+        explain: `${OP_NAMES[op]}: ${{ and: "ikkalasi ham 1 boʻlsa — 1", or: "kamida bittasi 1 boʻlsa — 1", xor: "faqat bittasi 1 boʻlsa — 1" }[op]}.`,
+      };
+    },
+  };
+
+  // Zinapoya chirog'i: har bosish almashtiradi — jami toq bo'lsa yoniq
+  const zinapoya = {
+    topic: "mantiq",
+    levels: [2],
+    make(level, rng) {
+      for (;;) {
+        const m = ri(rng, 0, 5);
+        const n = ri(rng, 0, 5);
+        if (m + n === 0) continue;
+        const on = (m + n) % 2 === 1;
+        return {
+          id: `${m}:${n}`,
+          data: { m, n },
+          text: `Zinapoya chirogʻi oʻchiq edi. Pastki kalitni ${m} marta, tepadagini ${n} marta bosding. Chiroq yonadimi?`,
+          input: choice(["Ha", "Yoʻq"]),
+          answer: on ? "Ha" : "Yoʻq",
+          explain: `${m} + ${n} = ${m + n} — ${on ? "toq, chiroq yoniq" : "juft, chiroq oʻchiq"}. Har bosish chiroqni almashtiradi.`,
+        };
+      }
+    },
+  };
+
+  // Ifoda (24-o'yin): qavsli ikki amal
+  const ifoda = {
+    topic: "mantiq",
+    levels: [3],
+    make(level, rng) {
+      const L = QK().logic;
+      const e = pick(rng, L.EXPRS.filter((x) => x.id !== "notA"));
+      const a = ri(rng, 0, 1);
+      const b = ri(rng, 0, 1);
+      const v = L.evalExpr(e, a, b);
+      return {
+        id: `${e.id}:${a}${b}`,
+        data: { expr: e.id, a, b },
+        text: `${e.text} nechchi?`,
+        blocks: [vals(a, b)],
+        input: choice(["1", "0"]),
+        answer: String(v),
+        explain: L.exprSteps(e, a, b).join("; "),
+      };
+    },
+  };
+
+  // Sxema (25-o'yin): ikki amalli zanjir
+  const sxema = {
+    topic: "mantiq",
+    levels: [3],
+    make(level, rng) {
+      const G = QK().gates;
+      const tpl = rng() < 0.6 ? "thenNot" : "notFirst";
+      const op = pick(rng, tpl === "thenNot" ? ["and", "or", "xor"] : ["and", "or"]);
+      const c = G.circuit(tpl, op);
+      const a = ri(rng, 0, 1);
+      const b = ri(rng, 0, 1);
+      const v = G.output(c, a, b);
+      return {
+        id: `${tpl}:${op}:${a}${b}`,
+        data: { tpl, op, a, b },
+        text: `Sxema: ${G.exprText(c)}. Chiqishdagi chiroq yonadimi?`,
+        blocks: [vals(a, b)],
+        input: choice(["Ha", "Yoʻq"]),
+        answer: v ? "Ha" : "Yoʻq",
+        explain: G.steps(c, a, b).join("; "),
+      };
+    },
+  };
+
+  // Ikkilikda qo'shish (25-o'yin): yarim qo'shuvchi yoki ikki xonali sonlar
+  const qoshish = {
+    topic: "mantiq",
+    levels: [3],
+    make(level, rng) {
+      const G = QK().gates;
+      if (rng() < 0.4) {
+        const a = ri(rng, 0, 1);
+        const b = ri(rng, 0, 1);
+        const h = G.halfAdd(a, b);
+        return {
+          id: `h${a}${b}`,
+          data: { a, b },
+          text: "Yarim qoʻshuvchi (yigʻindi — XOR, koʻchirish — VA) nima chiqaradi? Avval koʻchirish, keyin yigʻindi.",
+          blocks: [vals(a, b)],
+          input: choice(["00", "01", "10", "11"]),
+          answer: `${h.carry}${h.sum}`,
+          explain: `Koʻchirish: ${a} VA ${b} = ${h.carry}; yigʻindi: ${a} XOR ${b} = ${h.sum} → ${h.carry}${h.sum}`,
+        };
+      }
+      for (;;) {
+        const x = ri(rng, 0, 3);
+        const y = ri(rng, 0, 3);
+        if (x + y === 0) continue;
+        const r = G.add2(x, y);
+        return {
+          id: `a${x}${y}`,
+          data: { x, y },
+          text: "Ikkilikda qoʻsh:",
+          blocks: [big(`${G.bin(x, 2)} + ${G.bin(y, 2)}`)],
+          input: choice(G.add2Options(x, y, rng)),
+          answer: r.result,
+          explain: r.lines.join("; "),
+        };
+      }
+    },
+  };
+
+  // ======================================================================
   // Turlar, tekshirish va juft savollar
   // ======================================================================
 
@@ -1252,6 +1492,7 @@
     rimOqish, rimYozish, onlikka, onlikdan, tizim,
     togri, aimi, neyron, xarita, keyingi,
     barmoq, qator, ikkiTugma, shiftQaysi, aniqlik, tezlik, poyga, tezkorNima, tezkorQaysi, vaziyat,
+    rostmi, amal, kerakB, hayot, qaysiAmal, zinapoya, ifoda, sxema, qoshish,
   };
 
   const kindsOf = (topic, level) => Object.keys(KINDS).filter((k) => KINDS[k].topic === topic && KINDS[k].levels.includes(level));
@@ -1333,7 +1574,7 @@
   const topicTitle = (id) => (TOPICS.find((t) => t.id === id) || {}).title;
   const levelTitle = (id) => (LEVELS.find((l) => l.id === id) || {}).title;
 
-  const api = { TOPICS, LEVELS, KINDS, FACTS, MORSE_WORDS, SHORTCUTS, TWO_KEYS, SITUATIONS, FINGER_NAMES, kindsOf, make, check, deck, topicTitle, levelTitle };
+  const api = { TOPICS, LEVELS, KINDS, FACTS, MORSE_WORDS, TRUE_FACTS, FALSE_FACTS, SHORTCUTS, TWO_KEYS, SITUATIONS, FINGER_NAMES, kindsOf, make, check, deck, topicTitle, levelTitle };
 
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else {

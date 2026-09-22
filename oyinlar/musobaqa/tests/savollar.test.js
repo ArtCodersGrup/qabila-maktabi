@@ -8,9 +8,9 @@ const win = {};
 for (const f of [
   "../../umumiy/js/sanoq.js", "../../05-rim-toshi/js/roman.js", "../../03-sezar-maktubi/js/caesar.js",
   "../../02-qabila-morzesi/js/morse.js", "../../11-kop-qatlamli-tarmoq/js/neural.js", "../../12-ai-xaritasi/js/atlas.js",
-  "../../13-bayt-sandigi/js/bytes.js", "../../16-xotira-ombori/js/units.js", "../../23-on-barmoq/js/typing.js", "../js/savollar.js",
+  "../../13-bayt-sandigi/js/bytes.js", "../../16-xotira-ombori/js/units.js", "../../23-on-barmoq/js/typing.js", "../../24-mantiq-kalitlari/js/logic.js", "../../25-zinapoya-chirogi/js/gates.js", "../js/savollar.js",
 ]) loadScript(path.join(__dirname, f), win);
-const { savollar: S, sanoq, roman, caesar, morse, neural, units, typing } = win.QK;
+const { savollar: S, sanoq, roman, caesar, morse, neural, units, typing, logic, gates } = win.QK;
 
 // Urug'li tasodif (mulberry32) — natija har safar bir xil
 function rng(seed) {
@@ -183,6 +183,48 @@ const ANSWER = {
   tezkorNima: (q) => S.SHORTCUTS.find((s) => s.keys === q.data.keys).act,
   tezkorQaysi: (q) => S.SHORTCUTS.find((s) => s.act === q.data.act).keys,
   vaziyat: (q) => S.SITUATIONS.find((s) => s.text === q.data.text).answer,
+  // Mantiq: qiymatlar mustaqil hisoblanadi (bit amallari), keyin o'yinlar mantiqi bilan solishtiriladi
+  rostmi: (q) => {
+    const t = (f) => (S.TRUE_FACTS.includes(f) ? 1 : (assert.ok(S.FALSE_FACTS.includes(f), f), 0));
+    const v = q.data.op === "and" ? t(q.data.f1) & t(q.data.f2) : t(q.data.f1) | t(q.data.f2);
+    return v ? "Rost" : "Yolgʻon";
+  },
+  amal: (q) => {
+    const { op, a, b } = q.data;
+    return { and: a & b, or: a | b, xor: a ^ b, not: 1 - a }[op];
+  },
+  kerakB: (q) => {
+    const { op, a, want } = q.data;
+    const ok = [0, 1].filter((b) => (op === "and" ? a & b : a | b) === want);
+    return logic.NEED_LABELS[ok.length === 2 ? "any" : ok.length === 0 ? "none" : String(ok[0])];
+  },
+  hayot: (q) => {
+    const l = logic.LIFE.find((x) => x.id === q.data.life);
+    assert.equal(q.level === 2, l.expr.includes("EMAS"), `${q.key}: daraja`);
+    return logic.evalLife(l, q.data.a, q.data.b) ? "Ha" : "Yoʻq";
+  },
+  qaysiAmal: (q) => {
+    const outs = q.blocks[0].items.map((line) => Number(line.slice(-1)));
+    return { "0001": "VA", "0111": "YOKI", "0110": "XOR" }[outs.join("")];
+  },
+  zinapoya: (q) => ((q.data.m + q.data.n) % 2 ? "Ha" : "Yoʻq"),
+  ifoda: (q) => {
+    const { a, b } = q.data;
+    const n = (x) => 1 - x;
+    return { aAndNotB: a & n(b), notAOrB: n(a) | b, notAnd: n(a & b), notOr: n(a | b), notAAndNotB: n(a) & n(b) }[q.data.expr];
+  },
+  sxema: (q) => {
+    const { tpl, op, a, b } = q.data;
+    const f = { and: (x, y) => x & y, or: (x, y) => x | y, xor: (x, y) => x ^ y }[op];
+    const v = tpl === "thenNot" ? 1 - f(a, b) : f(1 - a, b);
+    return v ? "Ha" : "Yoʻq";
+  },
+  qoshish: (q) => {
+    const d = q.data;
+    if (d.x == null) return `${d.a & d.b}${d.a ^ d.b}`;
+    assert.equal(q.input.options.length, 4, q.key);
+    return (d.x + d.y).toString(2);
+  },
 };
 
 test("har turdagi javob mustaqil hisobga mos", () => {
@@ -295,4 +337,17 @@ test("klaviatura: barmoq va Shift 23-o'yindagidek, tezkor tugmalar takrorsiz, so
     assert.ok(Number.isInteger(Number(t.answer)) && Number(t.answer) <= 180, t.key);
   }
   assert.equal(S.make("shiftQaysi", 2, () => 0).answer, "Oʻng Shift"); // Q — chap qo'l → o'ng Shift
+});
+
+test("mantiq: har daraja uchun turlar, jadval va ifodalar o'yinlardagidek", () => {
+  for (const l of [1, 2, 3]) assert.ok(S.kindsOf("mantiq", l).length >= 2, `${l}-daraja`);
+  const r = rng(24);
+  for (let k = 0; k < 100; k++) {
+    const q = S.make("amal", 1, r);
+    assert.ok(["and", "or"].includes(q.data.op), q.key);
+    const e = S.make("ifoda", 3, r);
+    assert.equal(e.answer, String(logic.evalExpr(logic.EXPRS.find((x) => x.id === e.data.expr), e.data.a, e.data.b)));
+    const c = S.make("sxema", 3, r);
+    assert.equal(c.answer === "Ha", gates.output(gates.circuit(c.data.tpl, c.data.op), c.data.a, c.data.b) === 1);
+  }
 });

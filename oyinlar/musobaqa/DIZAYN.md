@@ -5,7 +5,7 @@
 **Davomiyligi:** 3, 5 yoki 10 daqiqa har bir oʻyinchiga
 **Holati:** kod yozildi, brauzerda 3 oʻlchamda oʻynab chiqildi — muallif koʻrishini kutmoqda (2026-09-22)
 
-Umumiy qoidalar: [`../../QOIDALAR.md`](../../QOIDALAR.md). Savollar oʻyinlar mavzularidan olinadi (1–23-oʻyinlar va tezkor tugmalar).
+Umumiy qoidalar: [`../../QOIDALAR.md`](../../QOIDALAR.md). Savollar oʻyinlar mavzularidan olinadi (1–25-oʻyinlar va tezkor tugmalar).
 Bu oʻyin emas, **musobaqa rejimi**: bosqichlar ham, tushuntirish ham yoʻq. Bola mavzuni oldin oʻyinda oʻrgangan boʻladi.
 
 ---
@@ -144,6 +144,21 @@ Neyron qoidasi 11-oʻyindagidek: yigʻindi ≥ chegara — yonadi.
 
 Barmoq, Shift va poyga qoidasi 23-oʻyin mantiqidan (`23-on-barmoq/js/typing.js`). Tezkor tugmalar hali oʻyinda oʻrgatilmagan (tezkor tugmalar oʻyini muhokamada) — roʻyxat `savollar.js` dagi `SHORTCUTS`; oʻyin yozilganda uning mantiqiga koʻchiriladi. Tekislash (E, L, R) — Word dasturidagi tugmalar.
 
+### 4.7. Mantiq (24–25-oʻyinlar) — 2026-09-22 da qoʻshildi
+| Tur | Oson | Oʻrta | Qiyin |
+|---|---|---|---|
+| **Rostmi?** (Rost / Yolgʻon) | ikki oddiy gap VA yoki YOKI bilan: «Qor oq VA 3 + 3 = 7» | — | — |
+| **Amal** (1 / 0) | A VA B, A YOKI B | XOR va EMAS A ham | — |
+| **Hayotiy qoida** (Ha / Yoʻq) | qoidada faqat VA, YOKI (choy, darvoza) | EMAS bilan (yomgʻir va soyabon, robot…) | — |
+| **B qanday boʻlsin?** (4 variant) | — | 1 / 0 / Farqi yoʻq / Boʻlmaydi | — |
+| **Qaysi amal?** (variant) | — | jadval → VA / YOKI / XOR | — |
+| **Zinapoya** (Ha / Yoʻq) | — | kalitlar 0–5 marta bosildi: yonadimi? | — |
+| **Ifoda** (1 / 0) | — | — | A VA (EMAS B), EMAS (A YOKI B) … |
+| **Sxema** (Ha / Yoʻq) | — | — | EMAS (A VA B), (EMAS A) YOKI B … |
+| **Qoʻshish** (variant) | — | — | yarim qoʻshuvchi (00…11) yoki ikki xonali: 01 + 11 |
+
+Qiymatlar 24-oʻyin (`logic.js`) va 25-oʻyin (`gates.js`) mantiqidan olinadi; testlar ularni mustaqil (bit amallari bilan) qayta hisoblaydi.
+
 ## 5. Koʻrinish
 
 - **Ranglar:** Oy — `#2F6FDE` (koʻk), Quyosh — `#8E5BD0` (binafsha). Yashil — toʻgʻri, toʻq sariq — "yana"; qizil ishlatilmaydi.
@@ -163,7 +178,7 @@ Barmoq, Shift va poyga qoidasi 23-oʻyin mantiqidan (`23-on-barmoq/js/typing.js`
 | `js/maydon.js` | Ekran: panellar, savol kartasi, javob tugmalari, muxlislar, pauza oynasi |
 | `js/main.js` | Oqim: sozlash → tanga → musobaqa → natija; soat sikli; saqlash |
 
-Qayta ishlatiladigan mantiq (oʻyinlar papkasidan): `umumiy/js/sanoq.js`, `05/js/roman.js`, `03/js/caesar.js`, `02/js/morse.js`, `11/js/neural.js`, `12/js/atlas.js`, `13/js/bytes.js`, `16/js/units.js`, `23/js/typing.js`.
+Qayta ishlatiladigan mantiq (oʻyinlar papkasidan): `umumiy/js/sanoq.js`, `05/js/roman.js`, `03/js/caesar.js`, `02/js/morse.js`, `11/js/neural.js`, `12/js/atlas.js`, `13/js/bytes.js`, `16/js/units.js`, `23/js/typing.js`, `24/js/logic.js`, `25/js/gates.js`.
 
 Bosh sahifada roʻyxat tepasida **"Musobaqa"** kartasi. Offline roʻyxati (`bosh/sw-royxat.py`) musobaqa papkasini ham oladi.
 
