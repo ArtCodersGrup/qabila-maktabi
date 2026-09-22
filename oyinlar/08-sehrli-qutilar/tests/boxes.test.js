@@ -3,6 +3,17 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const B = require("../js/boxes.js");
 
+// Urug'li tasodif (mulberry32) — o'rganish sinovlari har safar bir xil natija beradi
+function rng(seed) {
+  let a = seed >>> 0;
+  return () => {
+    a = (a + 0x6D2B79F5) >>> 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
 test("o'yin qoidasi: 7 tosh, 1 yoki 2 ta olinadi, oxirgisini olgan yutadi", () => {
   assert.equal(B.START, 7);
   assert.deepEqual(B.legalMoves(7), [1, 2]);
@@ -74,10 +85,11 @@ test("smartOpponent: yutuqli yurishni biladi", () => {
 
 test("tajribali murabbiy bilan mashq — robot kuchliroq bo'ladi", () => {
   const strength = (opponent) => {
+    const r = rng(2026);
     let sum = 0;
     for (let run = 0; run < 40; run++) {
       const boxes = B.newBoxes();
-      B.trainGames(boxes, 40, Math.random, opponent);
+      B.trainGames(boxes, 40, r, opponent);
       sum += (100 * boxes[7][1]) / (boxes[7][1] + boxes[7][2]); // 7 da to'g'ri yurish ulushi
     }
     return sum / 40;
@@ -93,9 +105,10 @@ test("trainGames: robot o'ynab o'rganadi — yutuqlar ko'payadi", () => {
   let lastSum = 0;
   let correct7 = 0;
   const runs = 5;
+  const r = rng(7);
   for (let run = 0; run < runs; run++) {
     const boxes = B.newBoxes();
-    const results = B.trainGames(boxes, 80, Math.random, B.randomOpponent);
+    const results = B.trainGames(boxes, 80, r, B.randomOpponent);
     assert.equal(results.length, 80);
     firstSum += results.slice(0, 20).filter(Boolean).length;
     lastSum += results.slice(-20).filter(Boolean).length;
