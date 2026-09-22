@@ -214,6 +214,17 @@
   ${["#8E5BD0", "#1A9E77", "#F08A24", "#2F6FDE", "#2F6FDE", "#F08A24", "#1A9E77", "#8E5BD0"].map((c, k) => `<rect x="${8 + k * 6.3}" y="20" width="5" height="8" rx="1.5" fill="${c}"/><rect x="${9.5 + k * 6.3}" y="31" width="5" height="8" rx="1.5" fill="${c}"/>`).join("")}
   <rect x="18" y="42" width="28" height="5" rx="2.5" fill="#8A929A"/>`);
 
+  // 24-o'yin: ikki kalit va yoniq chiroq
+  const mantiq = svg(`
+  <path d="M6 40 H16 M36 40 H26 M26 40 L36 30" stroke="${INK}" stroke-width="4" stroke-linecap="round" fill="none"/>
+  <path d="M16 40 L24 30" stroke="#F08A24" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="16" cy="40" r="3.5" fill="#FFFFFF" stroke="${INK}" stroke-width="2.5"/>
+  <circle cx="26" cy="40" r="3.5" fill="#FFFFFF" stroke="${INK}" stroke-width="2.5"/>
+  <path d="M36 40 H44" stroke="${INK}" stroke-width="4" stroke-linecap="round"/>
+  ${[0, 60, 120, 180, 240, 300].map((a) => `<rect x="50" y="8" width="4" height="7" rx="2" fill="#FFC83D" transform="rotate(${a} 52 26)"/>`).join("")}
+  <circle cx="52" cy="26" r="9" fill="#FFD54A" stroke="${INK}" stroke-width="3"/>
+  <path d="M44 40 H52 V35" stroke="${INK}" stroke-width="4" stroke-linecap="round" fill="none"/>`);
+
   // Musobaqa: Oy (ko'k) va Quyosh (binafsha) yonma-yon
   const musobaqa = svg(`
   <circle cx="21" cy="32" r="18" fill="#2F6FDE" stroke="${INK}" stroke-width="3"/>
@@ -222,7 +233,7 @@
   ${[0, 45, 90, 135, 180, 225, 270, 315].map((a) => `<rect x="41.5" y="18" width="3" height="5" rx="1.5" fill="#FFC83D" transform="rotate(${a} 43 32)"/>`).join("")}
   <circle cx="43" cy="32" r="6.5" fill="#FFC83D"/>`);
 
-  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura };
+  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";
