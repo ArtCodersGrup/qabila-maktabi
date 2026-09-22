@@ -243,6 +243,15 @@
   <rect x="52" y="10" width="4" height="44" rx="2" fill="#8A5A2B"/>
   <path d="M56 12 L64 17 L56 23 Z" fill="#1A9E77" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/>`);
 
+  // Onlayn: ikki qurilma va ular orasidagi to'lqinlar
+  const onlayn = svg(`
+  <rect x="4" y="18" width="18" height="30" rx="4" fill="#2F6FDE" stroke="${INK}" stroke-width="2.5"/>
+  <rect x="42" y="18" width="18" height="30" rx="4" fill="#8E5BD0" stroke="${INK}" stroke-width="2.5"/>
+  <rect x="8" y="23" width="10" height="18" rx="2" fill="#DCE8FA"/>
+  <rect x="46" y="23" width="10" height="18" rx="2" fill="#EDE3F8"/>
+  <path d="M27 27 Q32 33 27 39 M31 23 Q39 33 31 43" stroke="#1A9E77" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <path d="M37 27 Q32 33 37 39" stroke="#1A9E77" stroke-width="3" stroke-linecap="round" fill="none"/>`);
+
   // Musobaqa: Oy (ko'k) va Quyosh (binafsha) yonma-yon
   const musobaqa = svg(`
   <circle cx="21" cy="32" r="18" fill="#2F6FDE" stroke="${INK}" stroke-width="3"/>
@@ -251,7 +260,7 @@
   ${[0, 45, 90, 135, 180, 225, 270, 315].map((a) => `<rect x="41.5" y="18" width="3" height="5" rx="1.5" fill="#FFC83D" transform="rotate(${a} 43 32)"/>`).join("")}
   <circle cx="43" cy="32" r="6.5" fill="#FFC83D"/>`);
 
-  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, poyga };
+  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, poyga, onlayn };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";

@@ -1,6 +1,6 @@
 // Offline rejim: sayt fayllari keshlanadi. Bola saytni bir marta ochsa, keyin internetsiz ham oʻynay oladi.
 // Yangi fayl qoʻshilsa, FILES roʻyxatiga ham qoʻshiladi — buni bosh/tests/offline.test.js tekshiradi.
-const VERSION = "v25";
+const VERSION = "v26";
 const CACHE = "qabila-maktabi-" + VERSION;
 
 const FILES = [
@@ -21,11 +21,13 @@ const FILES = [
   "oyinlar/umumiy/js/art.js",
   "oyinlar/umumiy/js/mantiq-ui.js",
   "oyinlar/umumiy/js/offline.js",
+  "oyinlar/umumiy/js/onlayn.js",
   "oyinlar/umumiy/js/practice.js",
   "oyinlar/umumiy/js/sanoq-ui.js",
   "oyinlar/umumiy/js/sanoq.js",
   "oyinlar/umumiy/js/sound.js",
   "oyinlar/umumiy/js/storage.js",
+  "oyinlar/umumiy/js/supabase.min.js",
   "oyinlar/umumiy/js/ui.js",
   "oyinlar/01-qabila-kodlari/",
   "oyinlar/01-qabila-kodlari/index.html",
@@ -337,6 +339,10 @@ const FILES = [
   "oyinlar/poyga/css/style.css",
   "oyinlar/poyga/js/main.js",
   "oyinlar/poyga/js/race.js",
+  "oyinlar/onlayn/",
+  "oyinlar/onlayn/index.html",
+  "oyinlar/onlayn/css/style.css",
+  "oyinlar/onlayn/js/sinov.js",
 ];
 
 // Yangi versiya fayllari brauzerning oddiy keshidan emas, serverdan olinadi (cache: "reload").

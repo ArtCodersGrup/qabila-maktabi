@@ -110,8 +110,9 @@ Agar `ʻ` belgisi to'g'ri chiqmasa, tizim shrifti ishlatiladi.
 
 - Oddiy **HTML + CSS + JavaScript**, grafika — **SVG**.
 - Kutubxona, yig'ish (build) va o'rnatish **yo'q**.
+  **Istisno — onlayn musobaqalar** (2026-09-22, muallif roziligi): `umumiy/js/supabase.min.js` (supabase-js, MIT, versiyasi qotirilgan, o'zgartirilmagan). Faqat onlayn sahifalar ulaydi; o'yinlar va bitta ekrandagi musobaqalar busiz, internetsiz ishlaydi.
 - Skriptlar oddiy `<script>` bilan ulanadi (modul emas). Shunda `index.html` ni ikki marta bosib ochish mumkin.
-- O'yin ishlashi uchun **internet kerak emas**.
+- O'yin ishlashi uchun **internet kerak emas**. Faqat **onlayn musobaqalar** (`oyinlar/onlayn/` va keyingilari) internet bilan ishlaydi: Supabase Realtime, ism va chat yo'q, faqat 4 xonali xona kodi; saytga faqat ommaviy kalit yoziladi.
 - Brauzer xotirasi (`localStorage`) faqat qulaylik uchun: tugagan bosqichlar va ovoz tanlovi. U ishlamasa ham o'yin to'liq ishlaydi.
 - Hisob-kitob (mantiq) kodi ekran kodidan **alohida faylda** bo'ladi va avtomatik testlar bilan tekshiriladi.
 
@@ -140,7 +141,7 @@ Information/
 - Yangi o'yin tayyor bo'lgach, **bosh sahifadagi ro'yxatga** qo'shiladi (`bosh/js/bosh.js` dagi `GAMES`); `node --test bosh/tests/*.test.js` buni tekshiradi.
 - **Bosh sahifadagi tartib** — o'rganish yo'li: osondan qiyinga, boshqa o'yinga tayanadigan o'yin undan keyin (`SECTIONS` tartibi). Kartadagi raqam — shu tartibdagi o'rni, papka raqami emas (papka nomlari o'zgarmaydi).
 - O'yin ichida boshqa o'yinga raqam bilan havola ("5-oʻyindagi chiroqlarni esla") — **bosh sahifadagi raqam** bilan yoziladi va `bosh/tests/havolalar.json` ga qo'shiladi; tartib o'zgarsa, test eslatadi.
-- **Musobaqalar** (o'yin emas, bosqichi yo'q): `oyinlar/musobaqa/` (savol-javob) va `oyinlar/poyga/` (tez yozish poygasi) — bosh sahifada `CONTESTS`.
+- **Musobaqalar** (o'yin emas, bosqichi yo'q) — bosh sahifada `CONTESTS`, ikki guruh: **bitta ekranda** (`oyinlar/musobaqa/` savol-javob, `oyinlar/poyga/` tez yozish poygasi) va **onlayn** (`oyinlar/onlayn/` aloqa sinovi; onlayn o'yinlar keyin qo'shiladi).
 
 ## 10. Ish tartibi
 

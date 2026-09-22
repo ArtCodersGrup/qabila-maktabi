@@ -1,0 +1,24 @@
+/* Aloqa sinovi (onlayn musobaqalar tayyorgarligi). Asos: ../../umumiy/css/asos.css */
+
+.obox { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.o-note { max-width: 420px; margin: 0; font-size: 18px; font-weight: 700; text-align: center; }
+.net-status { padding: 10px 16px; border-radius: 14px; background: #fff; box-shadow: 0 3px 0 var(--soya); font-size: 19px; font-weight: 800; text-align: center; max-width: 440px; }
+.net-status.ok { color: var(--togri); }
+.net-status.bad { color: var(--yana); }
+.code-lead { font-size: 19px; font-weight: 800; }
+.code-big { font-size: 64px; font-weight: 900; letter-spacing: 12px; color: var(--asosiy); line-height: 1; animation: pop 0.3s; }
+.code-small { font-size: 17px; font-weight: 800; color: #7A7266; }
+.peers { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+.peer {
+  display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 120px; padding: 10px 14px;
+  border-radius: 16px; background: #fff; box-shadow: 0 3px 0 var(--soya); opacity: 0.55;
+}
+.peer.on { opacity: 1; }
+.peer .emblem { width: 44px; height: 44px; }
+.peer-name { font-size: 20px; font-weight: 900; }
+.side-left .peer-name { color: #2F6FDE; }
+.side-right .peer-name { color: #8E5BD0; }
+.peer-state { font-size: 15px; font-weight: 800; color: #7A7266; }
+.peer.on .peer-state { color: var(--togri); }
+.o-log { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; width: min(100%, 420px); }
+.o-log li { padding: 8px 12px; border-radius: 12px; background: #fff; font-size: 17px; font-weight: 700; animation: pop 0.25s; }
