@@ -119,33 +119,31 @@
     if (!match || match.phase !== "ask") return;
     running = false;
     const side = match.turn;
-    const q = match.question;
     const ok = match.answer(value);
     maydon.update(match);
     if (ok) {
       sound.play("correct");
-      maydon.showResult(card, "ok", q, value);
+      maydon.showResult(card, "ok");
       maydon.cheer(side, pick(PRAISE), "happy");
       await ui.sleep(1300);
     } else {
       sound.play("retry");
-      maydon.showResult(card, "wrong", q, value);
+      maydon.showResult(card, "wrong");
       maydon.cheer(side, match.players[side].hearts ? "Hechqisi yoʻq!" : "Eh, attang!", "sad");
-      await maydon.waitButton("Davom ▶︎");
+      await ui.sleep(1600); // to'g'ri javob ko'rsatilmaydi — o'qiydigan narsa yo'q, "Davom" kerak emas
     }
     advance();
   }
 
   async function onSkip(side) {
     if (!match || paused || !running || match.turn !== side) return;
-    const q = match.question;
     if (!match.skip()) return;
     running = false;
     sound.play("tap");
     maydon.clearPad();
     maydon.update(match);
-    maydon.showResult(card, "skip", q);
-    await maydon.waitButton("Davom ▶︎");
+    maydon.showResult(card, "skip");
+    await ui.sleep(1300);
     advance();
   }
 
@@ -161,7 +159,7 @@
     ui.clearControl();
     sound.play("dum");
     maydon.update(match);
-    maydon.showResult(card, "time", match.question);
+    maydon.showResult(card, "time");
     await ui.sleep(1800);
     finish();
   }

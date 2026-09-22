@@ -151,7 +151,8 @@
       chips(savollar.LEVELS, s.levels, true, (v) => { s.levels = v; }),
       h("h2", { text: "Vaqt (har kimga)" }),
       chips(minutes, [s.minutes], false, (v) => { s.minutes = v[0]; }),
-      h("p", { class: "setup-note", text: "Har kimda 3 ta yurak va bitta ↷ oʻtkazish. Xato javob bitta yurakni oladi." })));
+      h("p", { class: "setup-note", text: "Har kimda 3 ta yurak va bitta ↷ oʻtkazish. Xato javob bitta yurakni oladi." }),
+      h("p", { class: "setup-note", text: "Har raundda birinchi javob beradigan almashadi. Toʻgʻri javoblar — oxirida." })));
     ui.control().append(ui.button("Boshlash", () => onStart(s), "big"));
   }
 
@@ -187,7 +188,7 @@
       disc.style.transform = `rotateY(${end}deg)`;
     }
     await ui.sleep(1600);
-    result.textContent = starter === "right" ? "Quyosh! Oʻngdagi boshlaydi." : "Oy! Chapdagi boshlaydi.";
+    result.textContent = starter === "right" ? "Quyosh! Oʻngdagi boshlaydi, keyin navbat bilan." : "Oy! Chapdagi boshlaydi, keyin navbat bilan.";
     result.hidden = false;
     sound.play("correct");
     cheer(starter, "Birinchi biz!", "happy");
@@ -272,14 +273,16 @@
   }
 
   // kind: "ok" | "wrong" | "skip" | "time"
-  function showResult(body, kind, q, given) {
+  // Musobaqa paytida to'g'ri javob va yechim ko'rsatilmaydi: ikkinchi o'yinchi xuddi shu turdagi savolni oladi.
+  // To'g'ri javoblar — faqat oxirida, natija ekranidagi ro'yxatda.
+  function showResult(body, kind) {
     const box = h("div", { class: "q-result " + (kind === "ok" ? "ok" : "miss") });
-    if (kind === "ok") {
-      box.textContent = "✓ Toʻgʻri!";
-    } else {
-      const lead = { wrong: `↻ Sening javobing: ${given}.`, skip: "↷ Oʻtkazildi.", time: "⏱ Vaqt tugadi." }[kind];
-      box.append(h("span", { text: `${lead} Toʻgʻri javob: ${q.answer}` }), h("span", { class: "why", text: q.explain }));
-    }
+    box.textContent = {
+      ok: "✓ Toʻgʻri!",
+      wrong: "↻ Xato. Toʻgʻri javob musobaqa oxirida koʻrsatiladi.",
+      skip: "↷ Oʻtkazildi.",
+      time: "⏱ Vaqt tugadi.",
+    }[kind];
     body.append(box);
     if (box.scrollIntoView) box.scrollIntoView({ block: "nearest" });
   }
@@ -412,11 +415,12 @@
     const list = h("div", { class: "mistakes" });
     if (misses.length) {
       list.append(h("h2", { text: "Xatolar ustida ishlaymiz" }));
+      const given = (x) => ({ skip: "Oʻtkazildi.", time: "Vaqt tugadi." }[x.result] || `Sening javobing: ${x.given}.`);
       misses.forEach((x) => list.append(h("div", { class: "mistake", html: mart.emblem(x.side) },
         h("span", null,
           h("span", { text: questionText(x.question) + " " }),
-          h("span", { text: x.result === "skip" ? "Oʻtkazildi. " : `Javob: ${x.given}. ` }),
-          h("b", { text: `Toʻgʻri: ${x.question.answer}` })))));
+          h("span", { class: "given", text: given(x) + " " }),
+          h("b", { text: `Toʻgʻri javob: ${x.question.answer}` })))));
     }
 
     ui.work().append(h("div", { class: "result" },

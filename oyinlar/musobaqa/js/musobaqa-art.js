@@ -11,7 +11,9 @@
   const SUN = `<g>${[0, 45, 90, 135, 180, 225, 270, 315].map((a) =>
     `<rect x="18.5" y="3" width="3" height="7" rx="1.5" fill="${GOLD}" transform="rotate(${a} 20 20)"/>`).join("")}
     <circle cx="20" cy="20" r="8.5" fill="${GOLD}"/></g>`;
-  const MOON = `<path d="M24 7 A13 13 0 1 0 24 33 A10.5 10.5 0 1 1 24 7 Z" fill="${PALE}"/>
+  // O'roq: tashqi yarim aylana (r = 13) va ichki yarim ellips (rx = 7) — ular orasi oy. Ichki yoy ham aylana bo'lsa,
+  // brauzer radiusini 13 ga kattalashtiradi va o'roq yo'qoladi.
+  const MOON = `<path d="M24 7 A13 13 0 1 0 24 33 A7 13 0 1 1 24 7 Z" fill="${PALE}"/>
     <circle cx="16" cy="17" r="1.6" fill="#E8C96A"/><circle cx="13" cy="24" r="1.1" fill="#E8C96A"/>`;
   const mark = (side) => (side === "left" ? MOON : SUN);
 

@@ -1,4 +1,4 @@
-// Musobaqa holati (DIZAYN 2-bo'lim): navbat, shaxmat soati, 3 ta yurak, bir martalik o'tkazish,
+// Musobaqa holati (DIZAYN 2-bo'lim): navbat (raund boshlovchisi almashadi), shaxmat soati, 3 ta yurak, bir martalik o'tkazish,
 // raund oxirigacha o'ynash va natija. Taymer yo'q — vaqtni ekran kodi tick(ms) bilan beradi.
 // Ekran bilan ishlamaydi, Node'da test qilinadi.
 (function (root) {
@@ -46,7 +46,9 @@
       m.round++;
       m.half = 0;
       m.pair = pair;
-      m.turn = starter;
+      // Raundni navbat bilan boshlashadi: O'ng, Chap | Chap, O'ng | O'ng, Chap … — yangi turdagi savolga
+      // birinchi bo'lib duch kelish ham navbat bilan (ikkinchisi turini ko'rib olgani uchun unga osonroq)
+      m.turn = m.round % 2 === 1 ? starter : other(starter);
       m.question = pair[0];
       m.phase = "ask";
     }
@@ -62,6 +64,7 @@
       const p = m.players[m.turn];
       p.time = Math.max(0, p.time - ms);
       if (p.time > 0) return false;
+      m.history.push({ side: m.turn, round: m.round, question: m.question, given: null, result: "time" });
       // Boshlovchi yuragi tugab, raund oxirini kutyapti — ikkalasi ham chiqdi, vaqti ko'p qolgan yutadi
       if (m.waitingOut) finish(better("time"), "both");
       else finish(other(m.turn), "time");

@@ -23,8 +23,9 @@ Bu oʻyin emas, **musobaqa rejimi**: bosqichlar ham, tushuntirish ham yoʻq. Bol
 4. **Shaxmat soati.** Har kimning oʻz soati bor. Savol kimga berilgan boʻlsa, faqat oʻshaning soati yuradi.
    Soat **toʻxtaydi**: toʻgʻri/xato koʻrsatilayotganda, tanga paytida, pauzada va sahifa yashirilganda.
 5. **Raund — juft savol.** Raundda ikkala oʻyinchi navbat bilan bittadan savol oladi: **bir xil mavzu, bir xil tur, bir xil qiyinlik, lekin sonlari boshqa** (koʻchirib boʻlmaydi). Keyingi raundda mavzu tasodifiy almashadi.
-6. **3 ta yurak.** Xato javob bitta yurakni oladi, toʻgʻri javob koʻrsatiladi, navbat raqibga oʻtadi. Qayta urinish yoʻq.
-7. **Oʻtkazish** — har kimda **bir marta**: navbat jarimasiz raqibga oʻtadi, toʻgʻri javob koʻrsatiladi.
+   **Raundni navbat bilan boshlashadi** (muallif qarori, 2026-09-22): Oʻng, Chap | Chap, Oʻng | Oʻng, Chap … Yangi turdagi savolga birinchi boʻlib duch kelgan qiynaladi, ikkinchisi turini koʻrib olgan boʻladi — shuning uchun bu navbat bilan. Tanga faqat 1-raundni kim boshlashini aniqlaydi.
+6. **3 ta yurak.** Xato javob bitta yurakni oladi, navbat raqibga oʻtadi. Qayta urinish yoʻq. **Toʻgʻri javob va yechim musobaqa paytida koʻrsatilmaydi** (muallif qarori, 2026-09-22: ikkinchi oʻyinchi xuddi shu turdagi savolni oladi) — faqat oxirida.
+7. **Oʻtkazish** — har kimda **bir marta**: navbat jarimasiz raqibga oʻtadi (toʻgʻri javob — oxirida).
 8. **Yutqazish:**
    - **Vaqti tugagan** darhol yutqazadi.
    - **Yuraklari tugagan** yutqazadi, lekin **raund oxirigacha oʻynaladi**: agar raundni boshlagan bola oxirgi yuragini yoʻqotsa, ikkinchisi oʻz juft savoliga baribir javob beradi.
@@ -61,7 +62,7 @@ Sozlash ──► Tanga ──► Musobaqa (raundlar) ──► Natija
 - **Savol kartasi** (oʻrtada): yuqorida navbatdagi oʻyinchi rangidagi chiziq — "Quyosh navbati · Sanoq tizimlari · ★★☆". Ostida savol va kerak boʻlsa rasm/jadval.
 - **Javob:** raqam klaviaturasi, maxsus tugmalar (0 1; I V X L C; 0–9 A–F) yoki 2–4 ta variant.
 - **Toʻgʻri:** ✓ "Toʻgʻri!", muxlis sakraydi va bayrogʻini silkitadi ("Barakalla!"), ≈1,2 s dan keyin navbat almashadi.
-- **Xato:** yurak sinadi, "Toʻgʻri javob: …" va qisqa izoh (masalan `XIV = 10 + 4`), muxlis: "Hechqisi yoʻq!". "Davom ▶︎" tugmasi (soatlar toʻxtagan).
+- **Xato:** yurak sinadi, "↻ Xato. Toʻgʻri javob musobaqa oxirida koʻrsatiladi.", muxlis: "Hechqisi yoʻq!". 1,6 soniyadan keyin navbat raqibga (soatlar toʻxtagan).
 - **Oʻtkazish:** "Oʻtkazildi. Toʻgʻri javob: …", "Davom ▶︎".
 - Raundni boshlagan bola yuragini yoʻqotsa: "Oyning yuraklari tugadi. Quyosh oxirgi savolga javob beradi."
 - **🏠 yoki ⏸** — pauza oynasi: "Davom etish" · "Musobaqani tugatish" (sozlashga qaytadi).
@@ -70,7 +71,7 @@ Sozlash ──► Tanga ──► Musobaqa (raundlar) ──► Natija
 - Gʻolib belgisi va **"Quyosh yutdi!"** (yoki "Durang!"), sababi: "Oyning yuraklari tugadi" / "Oyning vaqti tugadi" / "Ikkalasi ham chiqdi — Quyoshning vaqti koʻproq qoldi" / "Savollar tugadi".
 - Gʻolib muxlisi quvonadi: "Tabriklaymiz!"; ikkinchisining muxlisi: "Yaxshi oʻynading!".
 - Jadval (har tomon): ✓ toʻgʻri · xato · ↷ oʻtkazilgan · qolgan vaqt · qolgan yurak.
-- **"Xatolar ustida ishlaymiz"** roʻyxati: savol, berilgan javob → toʻgʻri javob (oʻtkazilganlar ham).
+- **"Xatolar ustida ishlaymiz"** roʻyxati: savol, "Sening javobing: …" (yoki oʻtkazildi / vaqt tugadi) va "Toʻgʻri javob: …". Yechilish yoʻli koʻrsatilmaydi.
 - "Yana oʻynash" (oʻsha sozlamalar, yangi tanga) · "Sozlamalar".
 
 ## 4. Savollar
