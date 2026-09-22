@@ -1,0 +1,20 @@
+[
+  ["09-qoida-yoki-misol/js/scenes/stage3.js", "Sen (\\d+)-, (\\d+)- va (\\d+)-oʻyinlarda", ["06-robotni-orgatamiz", "07-keyingi-soz", "08-sehrli-qutilar"]],
+  ["09-qoida-yoki-misol/js/scenes/stage3.js", "Chuqur oʻrganish — (\\d+)-oʻyinda", ["11-kop-qatlamli-tarmoq"]],
+  ["02-qabila-morzesi/js/scenes/stage1.js", "(\\d+)-oʻyinda buni koʻrgan edik", ["01-qabila-kodlari"]],
+  ["17-qabila-choti/js/scenes/stage2.js", "Rim raqamlarini esla \\((\\d+)-oʻyin\\)", ["05-rim-toshi"]],
+  ["17-qabila-choti/js/scenes/stage3.js", "(\\d+)-oʻyindagi chiroqlarni esla", ["04-qabila-chiroqlari"]],
+  ["21-on-oltilik-ranglar/js/scenes/stage1.js", "\\((\\d+)-oʻyinni esla\\)", ["14-piksel-ustaxonasi"]],
+  ["11-kop-qatlamli-tarmoq/js/scenes/stage1.js", "(\\d+)-oʻyinda belgini biz tanlagan edik", ["10-robot-korishi"]],
+  ["11-kop-qatlamli-tarmoq/js/scenes/stage1.js", "Neyron (\\d+)-oʻyindagi chiroqqa", ["04-qabila-chiroqlari"]],
+  ["04-qabila-chiroqlari/js/scenes/stage1.js", "(\\d+)-oʻyindagi harflarni esla", ["01-qabila-kodlari"]],
+  ["10-robot-korishi/js/scenes/stage1.js", "(\\d+)-oʻyindagi chiroqlarni esla", ["04-qabila-chiroqlari"]],
+  ["25-zinapoya-chirogi/js/scenes/stage2.js", "(\\d+)-oʻyinni esla: bitta neyron", ["11-kop-qatlamli-tarmoq"]],
+  ["25-zinapoya-chirogi/js/scenes/stage3.js", "(\\d+)-oʻyinni esla: ikkilikda", ["20-ikkilik-hisobchi"]],
+  ["13-bayt-sandigi/js/scenes/stage1.js", "Xuddi (\\d+)-oʻyindagi chiroqlar", ["04-qabila-chiroqlari"]],
+  ["12-ai-xaritasi/js/scenes/stage2.js", "toʻliqmi\\? \\((\\d+)-oʻyin\\)", ["09-qoida-yoki-misol"]],
+  ["12-ai-xaritasi/js/scenes/stage2.js", "eng oʻxshash rasmga qarab \\((\\d+)-oʻyin\\)", ["06-robotni-orgatamiz"]],
+  ["12-ai-xaritasi/js/scenes/stage2.js", "chiziq → shakl \\((\\d+)-oʻyin\\)", ["11-kop-qatlamli-tarmoq"]],
+  ["12-ai-xaritasi/js/scenes/stage1.js", "chip: \"(\\d+)–(\\d+)-oʻyinlar\"", ["06-robotni-orgatamiz", "09-qoida-yoki-misol"]],
+  ["12-ai-xaritasi/js/scenes/stage1.js", "chip: \"(\\d+)-oʻyin\"", ["11-kop-qatlamli-tarmoq"]]
+]

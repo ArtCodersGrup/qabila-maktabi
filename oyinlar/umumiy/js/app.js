@@ -1,11 +1,10 @@
 // O'yin qobig'i: qahramonlar, bosh ekran, bosqichlar oqimi, ovoz tugmasi va ?bosqich=N.
 // Har bir o'yinning main.js i faqat QK.app.start({ title, storageKey, stageTitles }) ni chaqiradi.
 // Sahnalar QK.scenes da: intro(), stage1()..stageN(), stageDone(s, goingOn), finale() (ixtiyoriy), congrats().
-// extras (ixtiyoriy) — bosqichlardan keyin qo'shimcha kartalar: [{ scene, title, icon }], sahna QK.scenes[scene]().
 (function (root) {
   "use strict";
 
-  function start({ title, storageKey, stageTitles, extras = [] }) {
+  function start({ title, storageKey, stageTitles }) {
     const { storage, sound, art, ui } = root.QK;
     const $ = (id) => document.getElementById(id);
     const count = stageTitles.length;
@@ -56,16 +55,6 @@
         ui.h("span", { class: "card-title", text: titleText }),
         ui.h("span", { class: "card-state", text: state.done[k] ? "✓" : open ? "" : "🔒" })));
       });
-      extras.forEach((extra) => {
-        cards.append(ui.h("button", {
-          class: "card extra",
-          type: "button",
-          onClick: () => { sound.play("tap"); playExtra(extra.scene); },
-        },
-        ui.h("span", { class: "card-num", text: extra.icon }),
-        ui.h("span", { class: "card-title", text: extra.title }),
-        ui.h("span", { class: "card-state", text: "" })));
-      });
       ui.work().append(back, heading, cards);
 
       const next = state.done.indexOf(false);
@@ -98,17 +87,6 @@
       const next = await scenes.congrats();
       if (next === "replay") play(1);
       else home();
-    }
-
-    // Qo'shimcha karta (masalan, 23-o'yindagi poyga): sahna tugagach — o'yin bosh ekrani
-    async function playExtra(scene) {
-      setOnHome(false);
-      ui.newRun();
-      ui.resetPoses();
-      ui.hideProgress();
-      ui.clearControl();
-      await root.QK.scenes[scene]();
-      home();
     }
 
     $("actor-elder").innerHTML = art.elder();

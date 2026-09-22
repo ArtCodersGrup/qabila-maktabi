@@ -37,7 +37,7 @@
     morseUi.clearGuide();
     await ui.say("elder", "Har bir harfning oʻz kodi bor. Kod nuqta va chiziqlardan tuzilgan.");
     ui.work().append(morseUi.wordCodes("SALOM").el);
-    await ui.say("elder", "Kodlar har xil uzunlikda. Shuning uchun harflar orasida pauza qoʻyamiz — 1-oʻyinda buni koʻrgan edik!");
+    await ui.say("elder", "Kodlar har xil uzunlikda. Shuning uchun harflar orasida pauza qoʻyamiz — 2-oʻyinda buni koʻrgan edik!");
     ui.clearWork();
     ui.work().append(morseUi.wordCodes("ET").el);
     await ui.say("elder", "E va T ning kodi eng qisqa. Nega? Buni hikoyada bilib olasan.");

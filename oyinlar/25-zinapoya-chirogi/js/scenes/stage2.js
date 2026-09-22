@@ -37,7 +37,7 @@
       intro: "Endi YOKI, VA va EMAS dan kattaroq sxema. Jadval nima boʻladi?",
     });
     await ui.say("elder", "Jadval XOR bilan bir xil! «Faqat bittasi»ni VA, YOKI, EMAS dan yigʻdik.");
-    await ui.say("elder", "11-oʻyinni esla: bitta neyron XOR ni uddalay olmagan edi. Bu yerda ham bitta amal yetmaydi — ikki qavat kerak.");
+    await ui.say("elder", "15-oʻyinni esla: bitta neyron XOR ni uddalay olmagan edi. Bu yerda ham bitta amal yetmaydi — ikki qavat kerak.");
     await definition();
     await ui.say("elder", "Endi sxemalarni oʻzing hisobla. 3 ta toʻgʻri javob!");
     await common.exercises(2);

@@ -75,7 +75,7 @@
         ui.h("div", { text: "Rim raqamlari" }),
         ui.h("div", { class: "kind-ex", text: "XX: X — har joyda 10" }))));
     await ui.say("elder", "Pozitsion tizimda raqam qiymati turgan xonasiga bogʻliq.");
-    await ui.say("elder", "Nopozitsion tizimda belgi qiymati oʻzgarmaydi — Rim raqamlarini esla (5-oʻyin).");
+    await ui.say("elder", "Nopozitsion tizimda belgi qiymati oʻzgarmaydi — Rim raqamlarini esla (17-oʻyin).");
   }
 
   // 5.4: mashq — yozuv to'g'rimi / eng kichik asos / harf qiymati

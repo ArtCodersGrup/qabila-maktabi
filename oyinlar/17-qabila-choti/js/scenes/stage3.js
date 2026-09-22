@@ -7,7 +7,7 @@
   const S = sanoq;
 
   const BUILDS = [
-    { base: 2, count: 5, start: "2-likda xonalar: 1 dan boshlab, har gal 2 ga koʻpaytir!", end: "2-lik xonalar: 16, 8, 4, 2, 1 — 4-oʻyindagi chiroqlarni esla!" },
+    { base: 2, count: 5, start: "2-likda xonalar: 1 dan boshlab, har gal 2 ga koʻpaytir!", end: "2-lik xonalar: 16, 8, 4, 2, 1 — 5-oʻyindagi chiroqlarni esla!" },
     { base: 8, count: 3, start: "Endi 8-lik: har gal 8 ga koʻpaytir!", end: "8-lik xonalar: 64, 8, 1." },
     { base: 16, count: 3, start: "16-lik: har gal 16 ga koʻpaytir!", end: "16-lik xonalar: 256, 16, 1." },
   ];

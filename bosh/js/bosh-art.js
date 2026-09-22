@@ -233,6 +233,16 @@
   ${[0, 60, 120, 180, 240, 300].map((a) => `<rect x="24" y="2" width="3.5" height="6" rx="1.75" fill="#FFC83D" transform="rotate(${a} 26 16)"/>`).join("")}
   <circle cx="26" cy="16" r="7" fill="#FFD54A" stroke="${INK}" stroke-width="2.5"/>`);
 
+  // Tez yozish poygasi: yo'lak, ikki xabarchi (Oy va Quyosh rangida) va bayroq
+  const poyga = svg(`
+  <path d="M4 50 H50" stroke="#D9D2C3" stroke-width="4" stroke-dasharray="7 5" stroke-linecap="round"/>
+  <circle cx="16" cy="22" r="6" fill="#2F6FDE" stroke="${INK}" stroke-width="2.5"/>
+  <path d="M12 44 L16 30 L20 44" stroke="#2F6FDE" stroke-width="5" stroke-linecap="round" fill="none"/>
+  <circle cx="34" cy="26" r="6" fill="#8E5BD0" stroke="${INK}" stroke-width="2.5"/>
+  <path d="M30 46 L34 34 L38 46" stroke="#8E5BD0" stroke-width="5" stroke-linecap="round" fill="none"/>
+  <rect x="52" y="10" width="4" height="44" rx="2" fill="#8A5A2B"/>
+  <path d="M56 12 L64 17 L56 23 Z" fill="#1A9E77" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/>`);
+
   // Musobaqa: Oy (ko'k) va Quyosh (binafsha) yonma-yon
   const musobaqa = svg(`
   <circle cx="21" cy="32" r="18" fill="#2F6FDE" stroke="${INK}" stroke-width="3"/>
@@ -241,7 +251,7 @@
   ${[0, 45, 90, 135, 180, 225, 270, 315].map((a) => `<rect x="41.5" y="18" width="3" height="5" rx="1.5" fill="#FFC83D" transform="rotate(${a} 43 32)"/>`).join("")}
   <circle cx="43" cy="32" r="6.5" fill="#FFC83D"/>`);
 
-  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya };
+  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, poyga };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";

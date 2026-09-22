@@ -1,19 +1,22 @@
 // Bosh sahifa: o'yinlar ro'yxati mavzular bo'yicha, har birida tugagan bosqichlar.
 // YANGI O'YIN QO'SHILGANDA shu fayldagi GAMES ro'yxatiga qo'shiladi (bosh/tests/bosh.test.js tekshiradi).
+// n — papka raqami (o'zgarmaydi); bosh sahifadagi raqam — number(game), bo'limlar tartibidagi o'rni.
 // pc: true — o'yinga haqiqiy klaviatura kerak (kartada 💻 belgisi).
 (function (root) {
   "use strict";
 
   const AGE = "8–12"; // o'yinning o'z yoshi bo'lsa (game.age) — o'sha ko'rsatiladi
 
+  // Bo'limlar tartibi — o'rganish yo'li: osondan qiyinga, oldingi o'yinga tayanadiganlari keyin
+  // (masalan, 25-papka 11- va 20-papkalarga tayanadi). Kartadagi raqam — shu tartibdagi o'rni (number).
   const SECTIONS = [
+    { id: "klaviatura", title: "Klaviatura", note: "Tez va toʻgʻri yozishni oʻrganamiz" },
     { id: "kod", title: "Kodlash va shifrlash", note: "Maʼlumotni belgilarga aylantiramiz" },
     { id: "ikkilik", title: "Ikkilik kod", note: "Kompyuter tili: yoniq va oʻchiq" },
     { id: "olchov", title: "Axborot oʻlchovi", note: "Bit, bayt va fayllar hajmi" },
-    { id: "sanoq", title: "Sanoq tizimlari", note: "Sonlarni yozishning har xil usullari" },
     { id: "ai", title: "Sunʼiy intellekt: qanday oʻrganadi", note: "Misol, soʻz va mukofot bilan" },
     { id: "ai2", title: "Koʻrish, tarmoqlar va xarita", note: "Rasm, neyronlar va AI turlari" },
-    { id: "klaviatura", title: "Klaviatura", note: "Tez va toʻgʻri yozishni oʻrganamiz" },
+    { id: "sanoq", title: "Sanoq tizimlari", note: "Sonlarni yozishning har xil usullari" },
     { id: "mantiq", title: "Mantiq", note: "Rost va yolgʻon: VA, YOKI, EMAS" },
   ];
 
@@ -40,13 +43,20 @@
     { n: 20, topic: "sanoq", dir: "20-ikkilik-hisobchi", title: "Ikkilik hisobchi", desc: "Ikkilikda qoʻshish, ayirish va koʻpaytirish", key: "ikkilik-hisobchi:v1", stages: 3, icon: "hisob2", age: "10–12" },
     { n: 21, topic: "sanoq", dir: "21-on-oltilik-ranglar", title: "Oʻn oltilik ranglar", desc: "A–F, 2 ↔ 16, rang kodlari va amallar", key: "on-oltilik-ranglar:v1", stages: 3, icon: "rang16", age: "10–12" },
     { n: 22, topic: "sanoq", dir: "22-sayyoralar-sanogi", title: "Sayyoralar sanogʻi", desc: "n-lik tizimda amallar va jumboqlar", key: "sayyoralar-sanogi:v1", stages: 3, icon: "sayyora", age: "10–12" },
-    { n: 23, topic: "klaviatura", dir: "23-on-barmoq", title: "Oʻn barmoq", desc: "Klaviaturaga qaramay tez yozish; doʻst bilan poyga", key: "on-barmoq:v1", stages: 3, icon: "klaviatura", pc: true },
+    { n: 23, topic: "klaviatura", dir: "23-on-barmoq", title: "Oʻn barmoq", desc: "Klaviaturaga qaramay tez va toʻgʻri yozish", key: "on-barmoq:v1", stages: 3, icon: "klaviatura", pc: true },
     { n: 24, topic: "mantiq", dir: "24-mantiq-kalitlari", title: "Mantiq kalitlari", desc: "Kalitlar va chiroq: VA, YOKI, EMAS", key: "mantiq-kalitlari:v1", stages: 3, icon: "mantiq" },
     { n: 25, topic: "mantiq", dir: "25-zinapoya-chirogi", title: "Zinapoya chirogʻi", desc: "Faqat bittasi (XOR), sxemalar va kompyuter qanday qoʻshadi", key: "zinapoya-chirogi:v1", stages: 3, icon: "zinapoya", age: "10–12" },
   ];
 
-  // Musobaqa rejimi — o'yin emas (bosqichi yo'q), ro'yxat tepasida alohida karta
-  const CONTEST = { dir: "musobaqa", title: "Musobaqa", desc: "Ikki kishi bitta ekranda: savollar, soat va 3 ta yurak", icon: "musobaqa" };
+  // Musobaqalar — o'yin emas (bosqichi yo'q), ro'yxat tepasida alohida bo'lim: savol-javob va tez yozish poygasi
+  const CONTESTS = [
+    { dir: "musobaqa", title: "Savol-javob", desc: "Ikki kishi bitta ekranda: savollar, soat va 3 ta yurak", icon: "musobaqa" },
+    { dir: "poyga", title: "Tez yozish poygasi", desc: "Navbat bilan bir xil matnni yozasizlar: kim aniq va tez?", icon: "poyga", pc: true },
+  ];
+
+  // O'yinning bosh sahifadagi tartib raqami (1, 2, 3 …) — bo'limlar tartibida
+  const ORDER = SECTIONS.flatMap((sec) => GAMES.filter((g) => g.topic === sec.id));
+  const number = (game) => ORDER.indexOf(game) + 1;
 
   function h(tag, props, ...children) {
     const el = root.document.createElement(tag);
@@ -71,7 +81,7 @@
     return h("a", { class: "bosh-card" + (done === game.stages ? " done" : ""), href: `oyinlar/${game.dir}/index.html` },
       h("span", { class: "bosh-icon", html: root.QK.boshArt.icon(game.icon) }),
       h("span", { class: "bosh-text" },
-        h("span", { class: "bosh-name", text: `${game.n}. ${game.title}` }),
+        h("span", { class: "bosh-name", text: `${number(game)}. ${game.title}` }),
         h("span", { class: "bosh-desc", text: game.desc })),
       h("span", { class: "bosh-state" }, dots, h("span", { class: "bosh-age", text: game.age || AGE }),
         game.pc ? h("span", { class: "bosh-pc", title: "Klaviatura kerak", "aria-label": "Klaviatura kerak", text: "💻" }) : null));
@@ -84,16 +94,19 @@
     if (paper) paper.style.visibility = "hidden"; // bosh sahifada qog'oz kerak emas
     const list = root.document.getElementById("list");
     list.innerHTML = "";
+    const contests = h("div", { class: "bosh-cards" });
+    CONTESTS.forEach((c) => contests.append(
+      h("a", { class: "bosh-card bosh-contest", href: `oyinlar/${c.dir}/index.html` },
+        h("span", { class: "bosh-icon", html: root.QK.boshArt.icon(c.icon) }),
+        h("span", { class: "bosh-text" },
+          h("span", { class: "bosh-name", text: c.title }),
+          h("span", { class: "bosh-desc", text: c.desc })),
+        h("span", { class: "bosh-state" }, h("span", { class: "bosh-age", text: "2 kishi" }),
+          c.pc ? h("span", { class: "bosh-pc", title: "Klaviatura kerak", "aria-label": "Klaviatura kerak", text: "💻" }) : null))));
     list.append(h("section", { class: "bosh-section" },
-      h("h2", { class: "bosh-h2", text: "Musobaqa" }),
+      h("h2", { class: "bosh-h2", text: "Musobaqalar" }),
       h("p", { class: "bosh-note", text: "Oʻrganganingni doʻsting bilan sinab koʻr" }),
-      h("div", { class: "bosh-cards" },
-        h("a", { class: "bosh-card bosh-contest", href: `oyinlar/${CONTEST.dir}/index.html` },
-          h("span", { class: "bosh-icon", html: root.QK.boshArt.icon(CONTEST.icon) }),
-          h("span", { class: "bosh-text" },
-            h("span", { class: "bosh-name", text: CONTEST.title }),
-            h("span", { class: "bosh-desc", text: CONTEST.desc })),
-          h("span", { class: "bosh-state" }, h("span", { class: "bosh-age", text: "2 kishi" }))))));
+      contests));
     for (const section of SECTIONS) {
       const games = GAMES.filter((g) => g.topic === section.id);
       if (!games.length) continue;
@@ -107,6 +120,6 @@
   }
 
   root.QK = root.QK || {};
-  root.QK.bosh = { AGE, SECTIONS, GAMES, CONTEST, render };
+  root.QK.bosh = { AGE, SECTIONS, GAMES, CONTESTS, number, render };
   if (root.document) render();
 })(window);

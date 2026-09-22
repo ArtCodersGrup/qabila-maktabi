@@ -1,6 +1,6 @@
 // Offline rejim: sayt fayllari keshlanadi. Bola saytni bir marta ochsa, keyin internetsiz ham oʻynay oladi.
 // Yangi fayl qoʻshilsa, FILES roʻyxatiga ham qoʻshiladi — buni bosh/tests/offline.test.js tekshiradi.
-const VERSION = "v24";
+const VERSION = "v25";
 const CACHE = "qabila-maktabi-" + VERSION;
 
 const FILES = [
@@ -294,10 +294,10 @@ const FILES = [
   "oyinlar/23-on-barmoq/js/main.js",
   "oyinlar/23-on-barmoq/js/scenes/common.js",
   "oyinlar/23-on-barmoq/js/scenes/final.js",
-  "oyinlar/23-on-barmoq/js/scenes/race.js",
   "oyinlar/23-on-barmoq/js/scenes/stage1.js",
   "oyinlar/23-on-barmoq/js/scenes/stage2.js",
   "oyinlar/23-on-barmoq/js/scenes/stage3.js",
+  "oyinlar/23-on-barmoq/js/typing-play.js",
   "oyinlar/23-on-barmoq/js/typing-ui.js",
   "oyinlar/23-on-barmoq/js/typing.js",
   "oyinlar/24-mantiq-kalitlari/",
@@ -332,6 +332,11 @@ const FILES = [
   "oyinlar/musobaqa/js/musobaqa-art.js",
   "oyinlar/musobaqa/js/musobaqa.js",
   "oyinlar/musobaqa/js/savollar.js",
+  "oyinlar/poyga/",
+  "oyinlar/poyga/index.html",
+  "oyinlar/poyga/css/style.css",
+  "oyinlar/poyga/js/main.js",
+  "oyinlar/poyga/js/race.js",
 ];
 
 // Yangi versiya fayllari brauzerning oddiy keshidan emas, serverdan olinadi (cache: "reload").

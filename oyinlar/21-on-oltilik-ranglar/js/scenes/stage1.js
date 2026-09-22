@@ -52,7 +52,7 @@
   async function colors() {
     const el = common.box(false);
     el.append(amal16Ui.swatch("#FF8800"));
-    await ui.say("elder", "Rang kodi — uchta 16-lik son: qizil, yashil va koʻk chiroq (14-oʻyinni esla).");
+    await ui.say("elder", "Rang kodi — uchta 16-lik son: qizil, yashil va koʻk chiroq (7-oʻyinni esla).");
     await ui.say("elder", "FF — 255, toʻliq yoniq. 88 — 136, yarim. 00 — oʻchiq. Natija — toʻq sariq!");
   }
 

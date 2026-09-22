@@ -9,8 +9,8 @@ const ROOT = path.join(__dirname, "../..");
 const read = (p) => fs.readFileSync(path.join(ROOT, p), "utf8");
 const FILES = JSON.parse(read("sw.js").match(/const FILES = \[([\s\S]*?)\];/)[1].replace(/,\s*$/, "").replace(/^/, "[") + "]");
 const manifest = JSON.parse(read("manifest.json"));
-// Alohida sahifalar: o'yinlar (NN-nomi) va musobaqa
-const pageDirs = () => fs.readdirSync(path.join(ROOT, "oyinlar")).filter((d) => /^\d\d-/.test(d) || d === "musobaqa");
+// Alohida sahifalar: o'yinlar (NN-nomi) va musobaqalar (savol-javob, tez yozish poygasi)
+const pageDirs = () => fs.readdirSync(path.join(ROOT, "oyinlar")).filter((d) => /^\d\d-/.test(d) || d === "musobaqa" || d === "poyga");
 
 // Saytga kerak bo'lgan fayllar (testlar va hujjatlar kirmaydi)
 function siteFiles() {

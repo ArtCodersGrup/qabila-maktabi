@@ -1,10 +1,11 @@
-// Poyga: ikki kishi bitta kompyuterda navbat bilan bir xil matnni yozadi (DIZAYN 9-bo'lim).
-// Oy va Quyosh belgilari musobaqa rejimidan (../musobaqa/js/musobaqa-art.js).
+// Tez yozish poygasi: ikki kishi bitta kompyuterda navbat bilan bir xil matnni yozadi (23-o'yin DIZAYN 9-bo'lim).
+// Yozish — 23-o'yindan (typing.js, typing-ui.js, typing-play.js), Oy va Quyosh belgilari — musobaqadan.
 (function (root) {
   "use strict";
 
   const QK = root.QK;
-  const { ui, sound, typing: T, typingUi, common } = QK;
+  const { ui, sound, typing: T, typingUi } = QK;
+  const common = QK.typingPlay;
   const mart = QK.musobaqaArt;
 
   const NAMES = { left: "Oy", right: "Quyosh" };
@@ -65,18 +66,26 @@
       ui.h("tbody", null, ...rows));
   }
 
+  // Bosh ekran: sarlavha, qoidalar, matn turini tanlash
+  function chooseLevel() {
+    const el = common.box(false);
+    el.append(
+      ui.h("a", { class: "back-link", href: "../../index.html", text: "◀︎ Barcha oʻyinlar" }),
+      ui.h("h1", { class: "game-title", text: "Tez yozish poygasi" }),
+      ui.h("div", { class: "turn-head" }, who("left"), who("right")),
+      ui.h("p", { class: "race-note", text: `Matn bir xil, navbat bilan yozasizlar. Aniqligi ${T.PASS}% dan past boʻlgan yuta olmaydi, keyin — kim tezroq.` }),
+      ui.h("a", { class: "learn-link", href: "../23-on-barmoq/index.html", text: "Oʻn barmoq bilan yozishni oʻrganish — «Oʻn barmoq» oʻyini ▶︎" }));
+    ui.bubble("elder", "Doʻsting bilan poyga! Qaysi matnni yozasizlar?");
+    return ui.choice(T.RACE_LEVELS.map((l) => ({ label: l.title, value: l.id })));
+  }
+
   async function race() {
     await common.keyboardCheck({ askKey: false });
     let first = "left";
     let prev = null;
     let level = null;
     for (;;) {
-      if (!level) {
-        const el = common.box(false);
-        el.append(ui.h("div", { class: "turn-head" }, who("left"), who("right")));
-        ui.bubble("elder", "Doʻsting bilan poyga! Matn bir xil, navbat bilan yozasizlar. Qaysi matn?");
-        level = await ui.choice(T.RACE_LEVELS.map((l) => ({ label: l.title, value: l.id })));
-      }
+      if (!level) level = await chooseLevel();
       const text = T.raceText(level, prev);
       prev = text;
       const results = {};
@@ -96,7 +105,7 @@
       const next = await ui.choice([
         { label: "Yana poyga", value: "again" },
         { label: "Boshqa matn", value: "level", secondary: true },
-        { label: "Bosh ekran", value: "home", secondary: true },
+        { label: "Barcha oʻyinlar", value: "home", secondary: true },
       ]);
       if (next === "home") return;
       if (next === "level") level = null;
@@ -104,6 +113,5 @@
     }
   }
 
-  QK.scenes = QK.scenes || {};
-  Object.assign(QK.scenes, { race });
+  QK.poyga = { race };
 })(window);

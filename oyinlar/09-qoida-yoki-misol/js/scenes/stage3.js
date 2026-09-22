@@ -9,7 +9,7 @@
     { art: "calculator", lines: ["Kalkulyator — qoida yozilgan dastur.", "U hech narsa oʻrganmaydi, lekin adashmaydi ham."] },
     { art: "cats", lines: ["Mushukni tanish uchun qoida yozib boʻlmaydi.", "Shuning uchun unga minglab misol koʻrsatiladi."] },
     { art: "circles", caption: true, lines: ["Sunʼiy intellekt — katta doira: mashina aql talab qiladigan ishni bajaradi.", "Uning ichidagi qism — misollardan oʻrganish, yaʼni mashinali oʻrganish."] },
-    { art: "robot", lines: ["Sen 6-, 7- va 8-oʻyinlarda aynan mashinali oʻrganishni qilgansan!", "Robotni misol, soʻz va mukofot bilan oʻrgatding."] },
+    { art: "robot", lines: ["Sen 10-, 11- va 12-oʻyinlarda aynan mashinali oʻrganishni qilgansan!", "Robotni misol, soʻz va mukofot bilan oʻrgatding."] },
   ];
 
   // 6.1: ikki ustunli qiyoslash
@@ -54,7 +54,7 @@
       holder.append(ui.h("div", { class: "legend" },
         ui.h("div", { class: "leg ai" }, ui.h("span", { class: "dot-ai" }), ui.h("span", { text: "Sunʼiy intellekt" })),
         ui.h("div", { class: "leg ml" }, ui.h("span", { class: "dot-ml" }), ui.h("span", { text: "Mashinali oʻrganish" })),
-        ui.h("div", { class: "leg dl" }, ui.h("span", { class: "dot-dl" }), ui.h("span", { text: "Chuqur oʻrganish — 11-oʻyinda" }))));
+        ui.h("div", { class: "leg dl" }, ui.h("span", { class: "dot-dl" }), ui.h("span", { text: "Chuqur oʻrganish — 15-oʻyinda" }))));
     }
     ui.work().append(holder);
     for (const text of scene.lines) await ui.say("elder", text);

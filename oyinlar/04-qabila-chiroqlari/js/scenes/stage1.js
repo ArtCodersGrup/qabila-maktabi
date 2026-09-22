@@ -48,7 +48,7 @@
       box.append(ui.h("div", { class: "formula-row", text: t }));
     });
     await ui.say("elder", "Har bir chiroq 2 xil boʻladi. Chiroqlar soni qancha boʻlsa, 2 ni shuncha marta koʻpaytiramiz.");
-    await ui.say("elder", "1-oʻyindagi harflarni esla — xuddi shunday!");
+    await ui.say("elder", "2-oʻyindagi harflarni esla — xuddi shunday!");
   }
 
   // 5.5: naqshni o'qish yoki yuborish; kod jadvali ko'rinib turadi

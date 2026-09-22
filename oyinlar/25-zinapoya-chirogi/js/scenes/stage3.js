@@ -48,7 +48,7 @@
       heads: ["A", "B", "A + B"],
       intro: "Ikkilikda qoʻshamiz. A va B ni almashtirib, hamma holatni sinab koʻr.",
     });
-    await ui.say("elder", "20-oʻyinni esla: ikkilikda 1 + 1 = 10. Oʻngdagi raqam — yigʻindi, chapdagisi — koʻchirish.");
+    await ui.say("elder", "21-oʻyinni esla: ikkilikda 1 + 1 = 10. Oʻngdagi raqam — yigʻindi, chapdagisi — koʻchirish.");
     await discovery();
     const adder = G.circuit("halfAdder");
     await common.explore({

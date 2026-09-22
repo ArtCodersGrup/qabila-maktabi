@@ -13,7 +13,7 @@
     ui.work().append(ui.h("div", { class: "story-art", html: art.computer() }));
     await ui.say("elder", "Qabilamizga kompyuter keldi!");
     await ui.say("apprentice", "U harflarni qanday eslab qoladi?");
-    await ui.say("elder", "Kichik chiroqlar — bitlar bilan. Xuddi 4-oʻyindagi chiroqlar kabi!");
+    await ui.say("elder", "Kichik chiroqlar — bitlar bilan. Xuddi 5-oʻyindagi chiroqlar kabi!");
   }
 
   const QUESTIONS = [

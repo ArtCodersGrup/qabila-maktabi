@@ -26,7 +26,7 @@ Keyingilari (muhokamada): klaviatura xaritasi (qaysi tugma nima qiladi), tezkor 
 - `ʻ` uchun `'`, `` ` ``, `’`, `ʻ`, `ʼ` — hammasi qabul qilinadi. Ekrandagi matnda doim toʻgʻri belgi `ʻ` turadi.
 - Klaviatura rus tilida boʻlsa (kirill harfi keldi) — "Tilni EN ga oʻtkaz" ogohlantirishi, xato hisoblanmaydi. Caps Lock yoqilgan boʻlsa — ogohlantirish, xato hisoblanmaydi.
 - **Eng yaxshi natija (rekord)** brauzerda saqlanadi va 3-bosqich mashqida hamda hikoyada koʻrsatiladi. Poygada — yoʻq: u ikki kishiniki, qurilmadagi bitta rekord kimniki ekani noma'lum.
-- Oʻyin bosh ekranida 3 ta bosqichdan tashqari **"Poyga"** kartasi bor (umumiy qobiqqa `extras` qoʻshiladi).
+- ~~Oʻyin bosh ekranida "Poyga" kartasi~~ → **2026-09-22, muallif:** poyga **Musobaqalar** boʻlimiga koʻchirildi — alohida sahifa `oyinlar/poyga/` ("Tez yozish poygasi"). Yozish qismi (`js/typing-play.js`) ikkalasida bir xil.
 - Oy va Quyosh belgilari musobaqa rejimidan olinadi — ikki joyda bir xil.
 - "Davom" tugmasini **Enter** bilan ham bosish mumkin (klaviatura oʻyini).
 
@@ -72,7 +72,7 @@ Oqsoqol va Shogird (`umumiy/`). Yoʻlakda kichik xabarchi (shogird) yuguradi. Po
 ## 5. Oʻyin oqimi
 
 ```
-Bosh ekran: 3 ta bosqich + 🏁 Poyga
+Bosh ekran: 3 ta bosqich (poyga — Musobaqalar boʻlimida, oyinlar/poyga/)
    ├─► Kirish (xabarchi, klaviatura tekshiruvi)
    ├─► 1-bosqich: Asosiy qator      [boʻrtiqlar → barmoqlar joyi → 6 ta kichik mashq → taʼrif → 3 ta qator]
    ├─► 2-bosqich: Yuqori qator      [5 ta mashq → oʻ, gʻ → taʼrif (tezlik) → 3 ta qator]
@@ -119,7 +119,7 @@ Bosh ekran: 3 ta bosqich + 🏁 Poyga
 
 **Tabrik:** "Tabriklayman! Endi sen oʻn barmoq bilan yozasan!" — `Asosiy qator: A S D F — J K L ;`, `Avval aniq, keyin tez`, `Katta harf: Shift + harf`.
 
-## 9. Poyga (bitta kompyuterda, navbat bilan)
+## 9. Poyga (bitta kompyuterda, navbat bilan) — sahifasi `oyinlar/poyga/`
 
 1. **Sozlash:** "Doʻsting bilan poyga! Matn bir xil, navbat bilan yozasizlar." Matn turi: `Asosiy qator` (5 ta soʻz), `Soʻzlar` (5 ta soʻz), `Maqol`.
 2. **Navbat:** "Oy navbati. Barmoqlarni asosiy qatorga qoʻy." → "Tayyor" (yoki Enter) → 3, 2, 1 → yozish. Yoʻlakda oʻyinchi rangidagi xabarchi; ikkinchi oʻyinchida birinchisining soyasi.
@@ -137,11 +137,12 @@ Bosh ekran: 3 ta bosqich + 🏁 Poyga
 | `js/typing.js` | Sof mantiq: klaviatura qatorlari, qaysi tugmani qaysi barmoq bosadi, `ʻ` belgilarini tenglash, yozish sessiyasi (bosish → toʻgʻri/xato), aniqlik va tezlik, matnlar (soʻzlar, maqollar, kichik mashqlar), qator yasash, poyga gʻolibi, soya. Node testlari. |
 | `js/game-art.js` | Qoʻllar, xabarchi, bayroq, yozuv mashinkasi, kubok — SVG, matnsiz |
 | `js/typing-ui.js` | Ekran klaviaturasi, qoʻllar, yozuv qatori, yoʻlak, natija kartasi, rekord |
-| `js/scenes/common.js` | Umumiy sahna qismlari: `typeLine` (klaviaturani tinglash), qatorlar mashqi, Enter bilan "Davom" |
-| `js/scenes/stage1.js` … `stage3.js`, `race.js`, `final.js` | Kirish, bosqichlar, poyga, hikoya va tabrik |
-| `js/main.js` | `QK.app.start` (kalit `on-barmoq:v1`, `extras`: poyga) |
+| `js/typing-play.js` | Yozish sahnasi: `typeLine` (klaviaturani tinglash), klaviatura tekshiruvi, ogohlantirishlar, Enter bilan "Davom" — poyga sahifasi ham ishlatadi |
+| `js/scenes/common.js` | Kichik mashqlar va qatorlar mashqi |
+| `js/scenes/stage1.js` … `stage3.js`, `final.js` | Kirish, bosqichlar, hikoya va tabrik |
+| `js/main.js` | `QK.app.start` (kalit `on-barmoq:v1`) |
 
-Umumiy oʻzgarish: `QK.app.start({ extras })` — oʻyin bosh ekranida bosqichlardan keyin qoʻshimcha kartalar. Boshqa oʻyinlar oʻzgarmaydi.
+Poyga — `oyinlar/poyga/js/race.js` (23-oʻyinning `typing.js`, `game-art.js`, `typing-ui.js`, `typing-play.js` va musobaqa rasmlarini ulaydi).
 
 ## 12. Bu oʻyinga kirmaydi
 

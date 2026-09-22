@@ -138,6 +138,9 @@ Information/
 - Bir nechta o'yinga kerak bo'lgan kod `oyinlar/umumiy/` papkasida turadi. U yerga faqat **kamida 2 ta o'yin** ishlatadigan kod chiqariladi; bitta o'yinga xos narsa o'z papkasida qoladi.
 - `umumiy/` dagi kod o'zgarsa, **barcha o'yinlarning** testlari ishga tushiriladi.
 - Yangi o'yin tayyor bo'lgach, **bosh sahifadagi ro'yxatga** qo'shiladi (`bosh/js/bosh.js` dagi `GAMES`); `node --test bosh/tests/*.test.js` buni tekshiradi.
+- **Bosh sahifadagi tartib** — o'rganish yo'li: osondan qiyinga, boshqa o'yinga tayanadigan o'yin undan keyin (`SECTIONS` tartibi). Kartadagi raqam — shu tartibdagi o'rni, papka raqami emas (papka nomlari o'zgarmaydi).
+- O'yin ichida boshqa o'yinga raqam bilan havola ("5-oʻyindagi chiroqlarni esla") — **bosh sahifadagi raqam** bilan yoziladi va `bosh/tests/havolalar.json` ga qo'shiladi; tartib o'zgarsa, test eslatadi.
+- **Musobaqalar** (o'yin emas, bosqichi yo'q): `oyinlar/musobaqa/` (savol-javob) va `oyinlar/poyga/` (tez yozish poygasi) — bosh sahifada `CONTESTS`.
 
 ## 10. Ish tartibi
 

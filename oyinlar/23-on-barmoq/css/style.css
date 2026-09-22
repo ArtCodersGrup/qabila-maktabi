@@ -4,7 +4,6 @@
   display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%;
   container-type: inline-size;
 }
-.card.extra .card-num { background: var(--yana); font-size: 20px; }
 
 /* ---------- Barmoq ranglari: jimjiloq — binafsha, nomsiz — yashil, o'rta — to'q sariq, ko'rsatkich — ko'k ---------- */
 .f-lp, .f-rp { --tint: #E6DAF5; --strong: var(--c3); }
@@ -110,31 +109,10 @@
 .story-art svg { display: block; width: 100%; height: auto; }
 .summary { display: flex; flex-direction: column; align-items: center; gap: 12px; font-size: 20px; font-weight: 800; text-align: center; }
 
-/* ---------- Poyga ---------- */
-.turn-head { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 28px; }
-.who { display: inline-flex; align-items: center; gap: 8px; font-size: 22px; font-weight: 900; }
-.who .emblem { width: 40px; height: 40px; }
-.who.side-left { color: #2F6FDE; }
-.who.side-right { color: #8E5BD0; }
-.race-text {
-  max-width: min(100%, 640px); padding: 10px 16px; border-radius: 12px; background: #fff;
-  box-shadow: 0 2px 0 var(--soya); font-size: 24px; font-weight: 800; text-align: center;
-}
-.countdown { font-size: 72px; font-weight: 900; line-height: 1; color: var(--asosiy); animation: pop 0.3s; }
-.race-table { border-collapse: separate; border-spacing: 0 6px; font-size: 20px; font-weight: 800; }
-.race-table th { padding: 0 10px; font-size: 15px; color: #7A7266; }
-.race-table td { padding: 6px 10px; background: #fff; text-align: center; }
-.race-table td:first-child { border-radius: 12px 0 0 12px; text-align: left; }
-.race-table td:last-child { border-radius: 0 12px 12px 0; }
-.race-table tr.win td { background: #DDF2EA; }
-
 /* ---------- Tor ekran ---------- */
 @media (max-width: 480px) {
   .tline { font-size: 24px; padding: 8px 10px; }
   .formula-row { font-size: 19px; }
-  .race-text { font-size: 20px; }
-  .race-table { font-size: 17px; }
-  .race-table td, .race-table th { padding-left: 6px; padding-right: 6px; }
 }
 /* Yotiq telefon: past ekran */
 @media (orientation: landscape) and (max-height: 520px) {
