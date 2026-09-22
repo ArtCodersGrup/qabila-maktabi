@@ -25,7 +25,7 @@ Keyingilari (muhokamada): klaviatura xaritasi (qaysi tugma nima qiladi), tezkor 
 - **Poyga gʻolibi:** aniqligi 90% va undan yuqori boʻlganlar ichida tezrogʻi. Ikkinchi oʻyinchi yoʻlakda birinchisining **soyasini** koʻradi (u qanday tezlikda yurgan boʻlsa, shunday yuradi).
 - `ʻ` uchun `'`, `` ` ``, `’`, `ʻ`, `ʼ` — hammasi qabul qilinadi. Ekrandagi matnda doim toʻgʻri belgi `ʻ` turadi.
 - Klaviatura rus tilida boʻlsa (kirill harfi keldi) — "Tilni EN ga oʻtkaz" ogohlantirishi, xato hisoblanmaydi. Caps Lock yoqilgan boʻlsa — ogohlantirish, xato hisoblanmaydi.
-- **Eng yaxshi natija (rekord)** brauzerda saqlanadi va 3-bosqich, hikoya va poygada koʻrsatiladi.
+- **Eng yaxshi natija (rekord)** brauzerda saqlanadi va 3-bosqich mashqida hamda hikoyada koʻrsatiladi. Poygada — yoʻq: u ikki kishiniki, qurilmadagi bitta rekord kimniki ekani noma'lum.
 - Oʻyin bosh ekranida 3 ta bosqichdan tashqari **"Poyga"** kartasi bor (umumiy qobiqqa `extras` qoʻshiladi).
 - Oy va Quyosh belgilari musobaqa rejimidan olinadi — ikki joyda bir xil.
 - "Davom" tugmasini **Enter** bilan ham bosish mumkin (klaviatura oʻyini).

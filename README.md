@@ -42,6 +42,7 @@ Eslatma: progress brauzer xotirasida saqlanadi va `file://` bilan `http://localh
 | 20 | Ikkilik hisobchi | Ikkilikda qoʻshish, ayirish (qarz), koʻpaytirish (surish) (10–12) |
 | 21 | Oʻn oltilik ranglar | A–F, 2 ↔ 16, rang kodlari, 16-likda amallar (10–12) |
 | 22 | Sayyoralar sanogʻi | n-lik tizimda amallar, "qaysi tizimda 3 + 4 = 10?", Bobil va Mayya (10–12) |
+| 23 | Oʻn barmoq | Klaviaturaga qaramay yozish: asosiy, yuqori va pastki qator, katta harf, aniqlik va tezlik, doʻst bilan poyga (💻 faqat kompyuterda) |
 
 **Musobaqa** (`oyinlar/musobaqa/`): ikki bola bitta ekranda navbat bilan savolga javob beradi. Har kimning oʻz soati (shaxmat soatidek), 3 ta yuragi va bitta oʻtkazishi bor; savollar tanlangan mavzu va qiyinlikdan tasodifiy yasaladi.
 

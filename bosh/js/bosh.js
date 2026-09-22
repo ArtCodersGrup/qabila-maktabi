@@ -1,5 +1,6 @@
 // Bosh sahifa: o'yinlar ro'yxati mavzular bo'yicha, har birida tugagan bosqichlar.
 // YANGI O'YIN QO'SHILGANDA shu fayldagi GAMES ro'yxatiga qo'shiladi (bosh/tests/bosh.test.js tekshiradi).
+// pc: true — o'yinga haqiqiy klaviatura kerak (kartada 💻 belgisi).
 (function (root) {
   "use strict";
 
@@ -12,6 +13,7 @@
     { id: "sanoq", title: "Sanoq tizimlari", note: "Sonlarni yozishning har xil usullari" },
     { id: "ai", title: "Sunʼiy intellekt: qanday oʻrganadi", note: "Misol, soʻz va mukofot bilan" },
     { id: "ai2", title: "Koʻrish, tarmoqlar va xarita", note: "Rasm, neyronlar va AI turlari" },
+    { id: "klaviatura", title: "Klaviatura", note: "Tez va toʻgʻri yozishni oʻrganamiz" },
   ];
 
   const GAMES = [
@@ -37,6 +39,7 @@
     { n: 20, topic: "sanoq", dir: "20-ikkilik-hisobchi", title: "Ikkilik hisobchi", desc: "Ikkilikda qoʻshish, ayirish va koʻpaytirish", key: "ikkilik-hisobchi:v1", stages: 3, icon: "hisob2", age: "10–12" },
     { n: 21, topic: "sanoq", dir: "21-on-oltilik-ranglar", title: "Oʻn oltilik ranglar", desc: "A–F, 2 ↔ 16, rang kodlari va amallar", key: "on-oltilik-ranglar:v1", stages: 3, icon: "rang16", age: "10–12" },
     { n: 22, topic: "sanoq", dir: "22-sayyoralar-sanogi", title: "Sayyoralar sanogʻi", desc: "n-lik tizimda amallar va jumboqlar", key: "sayyoralar-sanogi:v1", stages: 3, icon: "sayyora", age: "10–12" },
+    { n: 23, topic: "klaviatura", dir: "23-on-barmoq", title: "Oʻn barmoq", desc: "Klaviaturaga qaramay tez yozish; doʻst bilan poyga", key: "on-barmoq:v1", stages: 3, icon: "klaviatura", pc: true },
   ];
 
   // Musobaqa rejimi — o'yin emas (bosqichi yo'q), ro'yxat tepasida alohida karta
@@ -67,7 +70,8 @@
       h("span", { class: "bosh-text" },
         h("span", { class: "bosh-name", text: `${game.n}. ${game.title}` }),
         h("span", { class: "bosh-desc", text: game.desc })),
-      h("span", { class: "bosh-state" }, dots, h("span", { class: "bosh-age", text: game.age || AGE })));
+      h("span", { class: "bosh-state" }, dots, h("span", { class: "bosh-age", text: game.age || AGE }),
+        game.pc ? h("span", { class: "bosh-pc", title: "Klaviatura kerak", "aria-label": "Klaviatura kerak", text: "💻" }) : null));
   }
 
   function render() {

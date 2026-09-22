@@ -54,6 +54,10 @@ test("har bo'limda kamida bitta o'yin bor", () => {
 test("yosh belgisi: umumiy yoki o'yinning o'zi (sanoq tizimlari bloki — 10–12)", () => {
   for (const game of GAMES) {
     if (game.age != null) assert.match(game.age, /^\d+–\d+$/, game.dir);
-    if (game.n >= 17) assert.equal(game.age, "10–12", game.dir);
+    if (game.topic === "sanoq" && game.n >= 17) assert.equal(game.age, "10–12", game.dir);
   }
+});
+
+test("💻 belgisi: klaviatura bloki o'yinlariga haqiqiy klaviatura kerak", () => {
+  for (const game of GAMES) assert.equal(!!game.pc, game.topic === "klaviatura", game.dir);
 });

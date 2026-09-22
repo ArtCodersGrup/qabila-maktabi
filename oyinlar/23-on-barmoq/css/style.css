@@ -1,0 +1,145 @@
+/* Oʻn barmoq — faqat shu o'yinga xos uslublar. Umumiylari: ../../umumiy/css/asos.css */
+
+.tbox {
+  display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%;
+  container-type: inline-size;
+}
+.card.extra .card-num { background: var(--yana); font-size: 20px; }
+
+/* ---------- Barmoq ranglari: jimjiloq — binafsha, nomsiz — yashil, o'rta — to'q sariq, ko'rsatkich — ko'k ---------- */
+.f-lp, .f-rp { --tint: #E6DAF5; --strong: var(--c3); }
+.f-lr, .f-rr { --tint: #CFEDE3; --strong: var(--c2); }
+.f-lm, .f-rm { --tint: #FCE1C6; --strong: var(--c1); }
+.f-li, .f-ri { --tint: #D5E3FA; --strong: var(--c0); }
+.f-th { --tint: #E3E6EA; --strong: #6B7480; }
+
+/* ---------- Ekran klaviaturasi ---------- */
+.kb {
+  --k: clamp(18px, calc((100vw - 56px) / 13.6), 46px); /* eski brauzerlar uchun */
+  --g: calc(var(--k) / 9);
+  display: flex; flex-direction: column; align-items: center; gap: var(--g);
+  padding: var(--g); border-radius: 14px; background: #fff; box-shadow: 0 3px 0 var(--soya);
+  max-width: 100%;
+}
+@supports (width: 1cqw) {
+  .kb { --k: clamp(18px, calc((100cqw - 20px) / 13.6), 46px); }
+}
+.kb-row { display: flex; gap: var(--g); }
+.kkey {
+  position: relative; width: var(--k); height: var(--k); border-radius: calc(var(--k) / 5);
+  display: grid; place-items: center; background: var(--tint); color: var(--matn);
+  font-size: calc(var(--k) * 0.42); font-weight: 900; line-height: 1;
+  box-shadow: 0 2px 0 var(--soya); transition: background 0.15s, opacity 0.2s;
+}
+.kkey.wide { width: calc(var(--k) * 1.5); font-size: calc(var(--k) * 0.3); }
+.kkey.space { width: calc(var(--k) * 6.4); }
+.kkey.dim { opacity: 0.35; }
+/* F va J dagi bo'rtiq */
+.kkey.bump::after {
+  content: ""; position: absolute; bottom: 16%; left: 35%; width: 30%; height: 3px;
+  border-radius: 2px; background: currentColor; opacity: 0.55;
+}
+.kkey.next { background: var(--strong); color: #fff; opacity: 1; animation: glow 1s ease-in-out infinite; }
+.kkey.hit-ok { animation: press-ok 0.25s; }
+.kkey.hit-bad { animation: press-bad 0.35s; }
+@keyframes glow { 50% { box-shadow: 0 0 0 4px rgba(47, 111, 222, 0.25), 0 2px 0 var(--soya); } }
+@keyframes press-ok { 50% { transform: translateY(2px) scale(0.92); background: var(--togri); color: #fff; } }
+@keyframes press-bad { 50% { transform: translateY(2px) scale(0.92); background: var(--yana); color: #fff; } }
+
+/* ---------- Qo'llar ---------- */
+.hands { width: min(100%, 340px); }
+.hands svg { display: block; width: 100%; height: auto; }
+.hands .finger { transition: transform 0.2s, opacity 0.2s; transform-box: fill-box; transform-origin: center; }
+.hands.active .finger { opacity: 0.3; }
+.hands.active .finger.on { opacity: 1; transform: translateY(-5px); stroke-width: 3.5; }
+@media (max-height: 620px) { .compact .hands { display: none; } }
+
+/* ---------- Yozuv qatori ---------- */
+.tline {
+  display: flex; flex-wrap: wrap; justify-content: center; row-gap: 4px;
+  max-width: min(100%, 720px); padding: 10px 14px; border-radius: 14px;
+  background: #fff; box-shadow: 0 3px 0 var(--soya);
+  font-size: 30px; font-weight: 800; line-height: 1.25;
+}
+.tword { display: inline-flex; white-space: nowrap; }
+.ch { display: inline-block; min-width: 0.5em; padding: 0 1px; text-align: center; color: #A59C8F; border-radius: 5px; }
+.ch.sp { color: #CFC7B8; }
+.ch.done { color: var(--togri); }
+.ch.cur { color: var(--matn); background: #E3ECFB; box-shadow: inset 0 -4px 0 var(--asosiy); }
+.ch.sp.cur { color: var(--asosiy); }
+.ch.bad { animation: shake 0.3s; background: #FDE3C8; box-shadow: inset 0 -4px 0 var(--yana); }
+
+/* ---------- Yo'lak ---------- */
+.track { position: relative; width: min(100%, 640px); height: 46px; }
+.track-line {
+  position: absolute; left: 0; right: 26px; bottom: 5px; height: 4px; border-radius: 2px;
+  background: repeating-linear-gradient(90deg, var(--chiziq) 0 12px, transparent 12px 20px);
+}
+.track-flag { position: absolute; right: 0; bottom: 2px; width: 30px; }
+.track-flag svg, .runner svg { display: block; width: 100%; height: auto; }
+.runner {
+  position: absolute; bottom: 6px; width: 38px; color: #C8553D;
+  left: calc(var(--p, 0) * (100% - 64px)); transition: left 0.2s;
+}
+.runner.side-left { color: #2F6FDE; }
+.runner.side-right { color: #8E5BD0; }
+.runner.ghost { opacity: 0.35; transition: left 0.1s linear; }
+.runner.moving .leg-a { animation: step-a 0.3s infinite; transform-box: fill-box; transform-origin: top; }
+.runner.moving .leg-b { animation: step-b 0.3s infinite; transform-box: fill-box; transform-origin: top; }
+@keyframes step-a { 50% { transform: rotate(35deg); } }
+@keyframes step-b { 50% { transform: rotate(-35deg); } }
+
+/* ---------- Natija ---------- */
+.result { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; animation: pop 0.3s; }
+.res-row {
+  display: flex; flex-direction: column; align-items: center; min-width: 110px; padding: 6px 14px;
+  border-radius: 12px; background: #fff; box-shadow: 0 2px 0 var(--soya);
+}
+.res-row span { font-size: 16px; font-weight: 700; color: #7A7266; }
+.res-row b { font-size: 22px; font-weight: 900; }
+.res-row.ok b { color: var(--togri); }
+.res-row.low b { color: var(--yana); }
+.best { font-size: 24px; font-weight: 900; color: var(--asosiy); }
+
+/* ---------- Ta'rif, hikoya, tabrik ---------- */
+.formula-box { display: flex; flex-direction: column; align-items: center; gap: 8px; max-width: 100%; text-align: center; }
+.formula-row { font-size: 22px; font-weight: 900; animation: pop 0.3s; }
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(240px, 66vw); }
+.story-art.small { width: min(160px, 40vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 12px; font-size: 20px; font-weight: 800; text-align: center; }
+
+/* ---------- Poyga ---------- */
+.turn-head { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 28px; }
+.who { display: inline-flex; align-items: center; gap: 8px; font-size: 22px; font-weight: 900; }
+.who .emblem { width: 40px; height: 40px; }
+.who.side-left { color: #2F6FDE; }
+.who.side-right { color: #8E5BD0; }
+.race-text {
+  max-width: min(100%, 640px); padding: 10px 16px; border-radius: 12px; background: #fff;
+  box-shadow: 0 2px 0 var(--soya); font-size: 24px; font-weight: 800; text-align: center;
+}
+.countdown { font-size: 72px; font-weight: 900; line-height: 1; color: var(--asosiy); animation: pop 0.3s; }
+.race-table { border-collapse: separate; border-spacing: 0 6px; font-size: 20px; font-weight: 800; }
+.race-table th { padding: 0 10px; font-size: 15px; color: #7A7266; }
+.race-table td { padding: 6px 10px; background: #fff; text-align: center; }
+.race-table td:first-child { border-radius: 12px 0 0 12px; text-align: left; }
+.race-table td:last-child { border-radius: 0 12px 12px 0; }
+.race-table tr.win td { background: #DDF2EA; }
+
+/* ---------- Tor ekran ---------- */
+@media (max-width: 480px) {
+  .tline { font-size: 24px; padding: 8px 10px; }
+  .formula-row { font-size: 19px; }
+  .race-text { font-size: 20px; }
+  .race-table { font-size: 17px; }
+  .race-table td, .race-table th { padding-left: 6px; padding-right: 6px; }
+}
+/* Yotiq telefon: past ekran */
+@media (orientation: landscape) and (max-height: 520px) {
+  .tline { font-size: 24px; padding: 6px 10px; }
+  .track { height: 38px; }
+  .runner { width: 30px; }
+  .story-art { width: min(190px, 36vh); }
+}

@@ -29,6 +29,8 @@ O'yin **telefon/planshetda ham, kompyuterda ham** ishlaydi. Avval barmoq uchun l
 - Eng tor ekran: **360 px**. Gorizontal aylantirish (scroll) bo'lmaydi.
 - Telefon **tik va yotiq** holatda ham ishlaydi, burilganda o'yin holati yo'qolmaydi.
 
+**Istisno — klaviatura bloki** (23-o'yindan): bu o'yinlar haqiqiy klaviaturani o'rgatadi, shuning uchun **kompyuter** (yoki klaviatura ulangan planshet) uchun. Bosh sahifada kartasida 💻 belgisi (`GAMES` da `pc: true`), telefonda ochilsa — ogohlantirish. Ekran baribir 360 px ga sig'adi.
+
 ## 4. O'qitish tamoyillari
 
 ### 4.1. Avval qildir, keyin nomla
