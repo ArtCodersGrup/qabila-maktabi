@@ -26,7 +26,7 @@
 10. Tog' **qiyinlashib boradi** (2.2).
 11. Xato — 10 soniya, ketma-ket ikkinchi xato — 20 soniya; pauzada **to'g'ri javob ko'rsatiladi** (2.3).
 12. Xonani **o'qituvchi ochadi va o'zi o'ynamaydi**; hisob-kitob uning qurilmasida (2.4).
-13. Qahramonlar — **12 ta hayvon**, ism so'ralmaydi, bitta qahramon bitta kishiga (2.7).
+13. Qahramonlar — **12 ta rang** (bir xil odamcha), ism so'ralmaydi, bitta rang bitta kishiga (2.7).
 14. Har kimga **boshqa sonli** savol (2.6). Teng holatda o'sha pog'onaga birinchi chiqqani oldinda (2.8). Uzilish qoidalari (2.9).
 15. **Chiqib ketgan bola — oddiy tomoshabin** (2.5). Muxlislik, sharpa va bayroqcha g'oyalaridan voz kechildi.
 16. **Tog'larning nomi bor, nomiga qarab balandligi o'zgaradi** (2.10): Chimyon 15, Hazrati Sulton 20, Pomir 25, Himolay 30 pog'ona (2.11).
@@ -61,10 +61,13 @@ Shuning uchun bitta o'yin qisqa (4–5 daqiqa) bo'lishi muhim: chiqib ketgan bol
 ### 2.6. Ko'chirib bo'lmaydi
 Sinfda hamma yonma-yon o'tiradi. Har kimga **boshqa sonli** savol beriladi: musobaqadagi `savollar.js` har kim uchun alohida yasaydi, hamma savollar esa bir xil mavzu va qiyinlikdan.
 
-### 2.7. Qahramonlar — 12 ta hayvon
-**Tulki, Burgut, Tog' echkisi, Ayiq, Irbis, Bo'ri, Quyon, Boyqush, Kiyik, Olmaxon, Tipratikan, Lochin** — har biri o'z rangida.
-- Bitta qahramonni ikki kishi tanlay olmaydi: band bo'lgani xira ko'rinadi.
-- **Ism so'ralmaydi.** Bola qahramon nomi bilan ko'rinadi ("Irbis 11-pog'onada").
+### 2.7. Qahramonlar — 12 ta rang (2026-09-23 da o'zgardi)
+Hamma bir xil odamcha: qalpoq, kurtka, ryukzak, tayoq. Faqat **rangi** bilan ajraladi —
+**Qizil, To'q sariq, Sariq, Yashil, To'q yashil, Moviy, Ko'k, Binafsha, Pushti, Jigarrang, Kulrang, Qora**.
+- Avval 12 ta hayvon boshi edi; kichik o'lchamda quloq-shox shakli baribir tanilmasdi va figura "tog'ga chiqayotgan"ga o'xshamasdi.
+- Ranglar bir-biridan aniq farq qiladi (test tekshiradi: eng yaqin ikki rang orasidagi masofa > 70).
+- Bitta rangni ikki kishi tanlay olmaydi: band bo'lgani xira ko'rinadi.
+- **Ism so'ralmaydi.** Bola rangi bilan ko'rinadi ("Ko'k 11-pog'onada").
 
 ### 2.8. G'olib aniqlanmasa va teng bo'lsa
 - 10 daqiqa tugaganda bir xil balandlikda turganlar orasida o'sha pog'onaga **birinchi chiqqani** oldinda turadi.
@@ -179,7 +182,7 @@ Ism va login, chat, reyting jadvali (kunlik yoki umumiy), 12 dan ko'p o'yinchi, 
 
 **Bajarildi (2026-09-22):**
 - Hisob-kitob `js/tog.js` (tog'lar, qahramonlar, pog'ona, pauza, qolib ketish, g'olib, reyting, chiqarib yuborish), testlari `tests/tog.test.js`, robot o'yinchilar `tests/robot.js`.
-- Rasmlar `js/game-art.js`: 12 hayvon boshi (quloq/shox shakli har xil), har tog'ning manzarasi (osmon, qoya, archa/qoya/muz/qor), cho'qqi bayrog'i. Testi `tests/game-art.test.js`.
+- Rasmlar `js/game-art.js`: qahramon odamcha (`odam`) va ro'yxat nishoni (`nishon`) — ikkalasi ham faqat rang bilan ajraladi; tog' manzarasi (osmon, bag'ir, so'qmoq, qatlamlar, cho'qqi), bulut/quyosh/bezaklar. Testi `tests/game-art.test.js`.
 - Ekran qismlari `js/tog-ui.js`: manzara va pog'onalar (balandlikka qarab 4–8 pog'ona ko'rinadi, bitta pog'onada 6 tagacha qahramon, qolgani "+N"), yon reyting, savol kartasi, pauza oynasi, natija ro'yxati.
 - **Robotlar bilan mashq** `js/mashq.js` + `index.html` + `css/style.css`: qahramon tanlash → tog' tanlash → o'yin. Raqiblar — 11 ta robot (6–20 s javob, 5–40 % xato, tepada sekinroq). Savollar musobaqaning `savollar.js` faylidan, qiyinligi balandlikka qarab. Internet kerak emas.
 - Savol bloklari va javob tugmalari musobaqadan `umumiy/js/savol-ui.js` + `umumiy/css/savol.css` ga ajratildi — ikkala o'yin bitta koddan foydalanadi.

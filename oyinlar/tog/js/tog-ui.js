@@ -141,7 +141,7 @@
           if (!node) {
             const q = qahramonById(p.qahramon);
             node = h("span", { class: "chiquvchi", title: q.nom },
-              h("span", { class: "chiquvchi-rasm", html: art.qahramon(q.id, q.rang) }),
+              h("span", { class: "chiquvchi-rasm", html: art.odam(q.rang) }),
               h("span", { class: "chiquvchi-nom", text: p.id === meId ? "Sen" : q.nom }));
             kimlar.set(p.id, node);
             qatlam.append(node);
@@ -197,14 +197,14 @@
         tartib.forEach((p, k) => {
           let q = qatorlar.get(p.id);
           if (!q) {
-            const hayvon = qahramonById(p.qahramon);
+            const qahr = qahramonById(p.qahramon);
             const orin = h("span", { class: "reyting-orin" });
             const son = h("b");
             q = {
               el: h("div", { class: "reyting-qator" },
                 orin,
-                h("span", { class: "reyting-rasm", html: art.hayvon(hayvon.id, hayvon.rang) }),
-                h("span", { class: "reyting-nom", text: p.id === meId ? "Sen" : hayvon.nom }),
+                h("span", { class: "reyting-rasm", html: art.nishon(qahr.rang) }),
+                h("span", { class: "reyting-nom", text: p.id === meId ? "Sen" : qahr.nom }),
                 son),
               orin,
               son,
@@ -271,7 +271,7 @@
     const golib = state.golib ? qahramonById(state.oyinchilar[state.golib].qahramon) : null;
     const el = h("div", { class: "natija" },
       h("div", { class: "natija-golib" },
-        golib ? h("span", { class: "natija-rasm", html: art.hayvon(golib.id, golib.rang) }) : null,
+        golib ? h("span", { class: "natija-rasm", html: art.odam(golib.rang) }) : null,
         h("h1", { text: state.golib === meId ? "Sen yutding!" : golib ? `${golib.nom} yutdi!` : "Oʻyin tugadi" })),
       h("p", { class: "natija-sabab", text: sabab }));
     const list = h("div", { class: "natija-royxat" });
@@ -279,7 +279,7 @@
       const q = qahramonById(p.qahramon);
       list.append(h("div", { class: "natija-qator" + (p.id === meId ? " men" : "") },
         h("span", { class: "reyting-orin", text: String(k + 1) }),
-        h("span", { class: "reyting-rasm", html: art.hayvon(q.id, q.rang) }),
+        h("span", { class: "reyting-rasm", html: art.nishon(q.rang) }),
         h("span", { class: "reyting-nom", text: p.id === meId ? "Sen" : q.nom }),
         h("span", { class: "natija-hisob", text: `${p.pogona}-pogʻona · ✓ ${p.togri} · ↻ ${p.xato}` })));
     });

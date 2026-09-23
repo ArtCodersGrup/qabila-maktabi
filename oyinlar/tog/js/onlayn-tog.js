@@ -65,7 +65,7 @@
       odamlar.forEach((o) => {
         const q = togUiQahramon(o.qahramon);
         royxat.append(h("div", { class: "lobbi-bola" },
-          h("span", { class: "lobbi-rasm", html: art.hayvon(q.id, q.rang) }),
+          h("span", { class: "lobbi-rasm", html: art.nishon(q.rang) }),
           h("span", { class: "lobbi-nom", text: q.nom })));
       });
       holati.textContent = odamlar.length
@@ -123,7 +123,7 @@
           chiqarish.append(h("button", {
             class: "host-chip", type: "button", "aria-label": q.nom,
             onClick: () => { T.chiqar(state, p.id, Date.now()); chiqarish.innerHTML = ""; sound.play("retry"); yubor(); },
-          }, h("span", { class: "host-chip-rasm", html: art.hayvon(q.id, q.rang) }), h("span", { text: q.nom })));
+          }, h("span", { class: "host-chip-rasm", html: art.nishon(q.rang) }), h("span", { text: q.nom })));
         });
         E.buttons([{ label: "Bekor qilish", onClick: () => { chiqarish.innerHTML = ""; tugmalar(); }, secondary: true }]);
       }
@@ -263,13 +263,13 @@
       const q = qahramonim ? togUiQahramon(qahramonim) : null;
       el2.append(
         h("h1", { class: "game-title", text: `Xona: ${code}` }),
-        q ? h("span", { class: "lobbi-rasm katta", html: art.hayvon(q.id, q.rang) }) : null,
+        q ? h("span", { class: "lobbi-rasm katta", html: art.odam(q.rang) }) : null,
         h("p", { class: "tog-note", text: matn }));
       if (boshqalar.length) {
         const lst = h("div", { class: "lobbi-royxat" });
         boshqalar.forEach((id) => {
           const qq = togUiQahramon(id);
-          lst.append(h("div", { class: "lobbi-bola" }, h("span", { class: "lobbi-rasm", html: art.hayvon(qq.id, qq.rang) })));
+          lst.append(h("div", { class: "lobbi-bola" }, h("span", { class: "lobbi-rasm", html: art.nishon(qq.rang) })));
         });
         el2.append(h("p", { class: "tog-note", text: `Yana ${boshqalar.length} ta bola tayyor:` }), lst);
       }

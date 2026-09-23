@@ -114,10 +114,10 @@ test("yaxshiPaket: buzuq yoki o'zgartirilgan paket rad etiladi", () => {
 });
 
 test("lobbi va bo'sh qahramonlar: bitta qahramon bitta bolaga", () => {
-  const l = P.lobbi([{ id: "a", qahramon: "tulki" }, { id: "b", qahramon: "ayiq" }]);
-  assert.deepEqual(l, { ids: ["a", "b"], qah: ["tulki", "ayiq"] });
+  const l = P.lobbi([{ id: "a", qahramon: "qizil" }, { id: "b", qahramon: "kok" }]);
+  assert.deepEqual(l, { ids: ["a", "b"], qah: ["qizil", "kok"] });
   assert.ok(O.validMessage({ type: "lobbi", data: l, t: now, from: "host" }, P.TYPES));
   const bosh = P.bosh(l.qah);
   assert.equal(bosh.length, T.QAHRAMONLAR.length - 2);
-  assert.ok(!bosh.some((q) => q.id === "tulki"));
+  assert.ok(!bosh.some((q) => q.id === "qizil"));
 });

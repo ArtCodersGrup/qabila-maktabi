@@ -12,20 +12,21 @@
   ];
   const DEFAULT_TOG = "hazrati";
 
-  // 12 ta qahramon: bitta qahramon bitta bolaga (DIZAYN 2.7)
+  // 12 ta qahramon — hammasi bir xil odamcha, faqat rangi bilan ajraladi (DIZAYN 2.7).
+  // Ranglar bir-biridan aniq farq qilishi shart: bola tog'da faqat rangga qarab o'zini topadi.
   const QAHRAMONLAR = [
-    { id: "tulki", nom: "Tulki", rang: "#F08A24" },
-    { id: "burgut", nom: "Burgut", rang: "#8A6A3B" },
-    { id: "echki", nom: "Togʻ echkisi", rang: "#C98B5E" },
-    { id: "ayiq", nom: "Ayiq", rang: "#7A4E2E" },
-    { id: "irbis", nom: "Irbis", rang: "#9FB6D8" },
-    { id: "bori", nom: "Boʻri", rang: "#6B7480" },
-    { id: "quyon", nom: "Quyon", rang: "#D9D2C3" },
-    { id: "boyqush", nom: "Boyqush", rang: "#8E5BD0" },
-    { id: "kiyik", nom: "Kiyik", rang: "#E0B04A" },
-    { id: "olmaxon", nom: "Olmaxon", rang: "#C8553D" },
-    { id: "tipratikan", nom: "Tipratikan", rang: "#5C6570" },
-    { id: "lochin", nom: "Lochin", rang: "#2F6FDE" },
+    { id: "qizil", nom: "Qizil", rang: "#D8342C" },
+    { id: "toqsariq", nom: "Toʻq sariq", rang: "#F59110" },
+    { id: "sariq", nom: "Sariq", rang: "#F7D52B" },
+    { id: "yashil", nom: "Yashil", rang: "#63B247" },
+    { id: "toqyashil", nom: "Toʻq yashil", rang: "#1E7A4D" },
+    { id: "moviy", nom: "Moviy", rang: "#10BFC4" },
+    { id: "kok", nom: "Koʻk", rang: "#2F6FDE" },
+    { id: "binafsha", nom: "Binafsha", rang: "#8E5BD0" },
+    { id: "pushti", nom: "Pushti", rang: "#EE7BA8" },
+    { id: "jigarrang", nom: "Jigarrang", rang: "#8A5A2B" },
+    { id: "kulrang", nom: "Kulrang", rang: "#9AA1AC" },
+    { id: "qora", nom: "Qora", rang: "#35353D" },
   ];
 
   const MIN_PLAYERS = 2;

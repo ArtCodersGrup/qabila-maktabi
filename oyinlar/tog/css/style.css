@@ -154,7 +154,7 @@
   #play.tog-full .zone-stage { display: none; }
 }
 
-/* Tor yoki past ekranda reyting faqat rasm va pog'ona: ism o'rniga hayvonning o'zi tanitadi */
+/* Tor yoki past ekranda reyting faqat rasm va pogʻona: ism oʻrniga rangning oʻzi tanitadi */
 @media (max-width: 560px), (orientation: landscape) and (max-height: 520px) {
   .reyting { width: 62px; }
   .reyting-qator { gap: 3px; padding: 2px 4px; font-size: 14px; }

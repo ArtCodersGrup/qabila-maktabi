@@ -1,4 +1,4 @@
-// Tog'ga chiqish rasmlari: 12 hayvon boshi, tog' manzarasi (yon tomondan qiya bag'ir),
+// Tog'ga chiqish rasmlari: qahramon (bir xil odamcha, rangi bilan ajraladi), tog' manzarasi,
 // bulut, quyosh, yo'l bezaklari va cho'qqi bayrog'i. QK.art ga qo'shiladi.
 // DOM bilan ishlamaydi — Node'da test qilinadi. Rasm ichida matn yo'q.
 (function (root) {
@@ -6,78 +6,64 @@
 
   const INK = "#2B2B3A";
 
-  // ---------- Hayvon boshlari (qahramonlar) ----------
-  // Har biri 40 × 40: quloq/shox shakli har xil, rangi tog.js dagi qahramon rangi
-  const EARS = {
-    tulki: '<path d="M8 14 L10 3 L18 10 Z"/><path d="M32 14 L30 3 L22 10 Z"/>',
-    burgut: '<path d="M20 4 Q28 6 30 14 L10 14 Q12 6 20 4 Z"/>',
-    echki: '<path d="M10 12 Q2 4 6 2 Q12 4 14 10 Z"/><path d="M30 12 Q38 4 34 2 Q28 4 26 10 Z"/>',
-    ayiq: '<circle cx="10" cy="10" r="6"/><circle cx="30" cy="10" r="6"/>',
-    irbis: '<path d="M9 13 L11 5 L18 10 Z"/><path d="M31 13 L29 5 L22 10 Z"/>',
-    bori: '<path d="M8 13 L9 2 L19 10 Z"/><path d="M32 13 L31 2 L21 10 Z"/>',
-    quyon: '<ellipse cx="13" cy="7" rx="4" ry="9"/><ellipse cx="27" cy="7" rx="4" ry="9"/>',
-    boyqush: '<path d="M8 12 L12 4 L18 11 Z"/><path d="M32 12 L28 4 L22 11 Z"/>',
-    kiyik: '<path d="M12 12 L8 2 M8 6 L3 4 M28 12 L32 2 M32 6 L37 4" stroke-width="2.5" fill="none" stroke="currentColor"/>',
-    olmaxon: '<ellipse cx="11" cy="8" rx="5" ry="6"/><ellipse cx="29" cy="8" rx="5" ry="6"/>',
-    tipratikan: '<path d="M6 16 L4 6 L11 11 L12 2 L18 10 L21 2 L26 10 L30 4 L33 13 L38 12"/>',
-    lochin: '<path d="M20 3 Q30 7 31 15 L9 15 Q10 7 20 3 Z"/>',
-  };
-
-  function hayvon(id, rang) {
-    const ears = EARS[id] || EARS.ayiq;
-    const color = rang || "#C98B5E";
-    return `<svg class="hayvon" viewBox="0 0 40 40" aria-hidden="true">
-  <g fill="${color}" stroke="${INK}" stroke-width="2" stroke-linejoin="round" color="${color}">${ears}</g>
-  <circle cx="20" cy="24" r="13" fill="${color}" stroke="${INK}" stroke-width="2"/>
-  <circle cx="15" cy="22" r="2.2" fill="${INK}"/><circle cx="25" cy="22" r="2.2" fill="${INK}"/>
-  <ellipse cx="20" cy="29" rx="3.4" ry="2.6" fill="${INK}"/>
-</svg>`;
-  }
-
-
-  // ---------- Toʻliq qahramon: togʻga chiquvchi ----------
-  // Bosh — hayvon boshi (quloq/shox shakli oʻsha), ostida kurtka, ryukzak, oyoq-etik va tayoq.
-  // Kurtka rangi — qahramonning oʻz rangining toʻqrogʻi: kichik oʻlchamda ham kim kimligi bilinadi.
+  // ---------- Qahramon: togʻga chiquvchi bola ----------
+  // Hammasi bir xil odamcha, faqat kiyimining rangi bilan ajraladi (DIZAYN 2.7).
+  // Rang katta yuza egallaydi: qalpoq, kurtka, shim — kichik oʻlchamda ham darrov bilinadi.
   // Holatlar CSS bilan: .yuradi (qadam tashlaydi), .pauzada (choʻkkalab dam oladi).
+  const TERI = "#E8B98F";
+
   function toq(hex, ulush) {
-    const n = parseInt((hex || "#C98B5E").slice(1), 16);
+    const n = parseInt((hex || "#2F6FDE").slice(1), 16);
     const r = Math.round(((n >> 16) & 255) * ulush);
     const g = Math.round(((n >> 8) & 255) * ulush);
     const b = Math.round((n & 255) * ulush);
     return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
   }
 
-  function qahramon(id, rang) {
-    const ears = EARS[id] || EARS.ayiq;
-    const color = rang || "#C98B5E";
-    const kurtka = toq(color, 0.7);
-    const shim = toq(color, 0.45);
+  function odam(rang) {
+    const kiyim = rang || "#2F6FDE";
+    const shim = toq(kiyim, 0.62);
+    const ryukzak = toq(kiyim, 0.45);
     return `<svg class="chiqar" viewBox="0 0 44 64" aria-hidden="true">
   <g class="oyoqlar">
     <g class="oyoq oyoq-orqa">
-      <line x1="19" y1="46" x2="15" y2="57" stroke="${shim}" stroke-width="5" stroke-linecap="round"/>
-      <path d="M15 57 L10 58" stroke="${INK}" stroke-width="4.4" stroke-linecap="round"/>
+      <line x1="19" y1="45" x2="15" y2="56" stroke="${shim}" stroke-width="5.4" stroke-linecap="round"/>
+      <path d="M15 56 L10 57.5" stroke="${INK}" stroke-width="4.6" stroke-linecap="round"/>
     </g>
     <g class="oyoq oyoq-old">
-      <line x1="25" y1="46" x2="29" y2="57" stroke="${shim}" stroke-width="5" stroke-linecap="round"/>
-      <path d="M29 57 L34 58" stroke="${INK}" stroke-width="4.4" stroke-linecap="round"/>
+      <line x1="25" y1="45" x2="29" y2="56" stroke="${shim}" stroke-width="5.4" stroke-linecap="round"/>
+      <path d="M29 56 L34 57.5" stroke="${INK}" stroke-width="4.6" stroke-linecap="round"/>
     </g>
   </g>
   <g class="gavda">
-    <path d="M12 29 Q8 36 9 45 L33 45 Q35 36 31 29 Z" fill="${kurtka}" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/>
-    <path d="M10 41 L32 41" stroke="${INK}" stroke-width="1.8" stroke-linecap="round" opacity="0.2"/>
-    <path d="M9 30 Q1 34 3 43 Q5 48 10 46 Z" fill="#C86B3C" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/>
-    <path d="M31 33 Q38 36 37 42" fill="none" stroke="${kurtka}" stroke-width="4.8" stroke-linecap="round"/>
-    <path d="M31 33 Q38 36 37 42" fill="none" stroke="${INK}" stroke-width="1.3" stroke-linecap="round" opacity="0.3"/>
-    <line class="tayoq" x1="39" y1="28" x2="34" y2="60" stroke="#8A5A2B" stroke-width="2.8" stroke-linecap="round"/>
-    <circle cx="37" cy="42" r="2.6" fill="${color}" stroke="${INK}" stroke-width="1.6"/>
+    <path d="M10 29 Q3 33 5 42 Q7 47 12 45 Z" fill="${ryukzak}" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M13 27 Q9 35 10 45 L34 45 Q36 35 31 27 Z" fill="${kiyim}" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M11 39 L33 39" stroke="${INK}" stroke-width="1.8" stroke-linecap="round" opacity="0.18"/>
+    <path d="M31 31 Q38 34 37 41" fill="none" stroke="${kiyim}" stroke-width="5" stroke-linecap="round"/>
+    <path d="M31 31 Q38 34 37 41" fill="none" stroke="${INK}" stroke-width="1.3" stroke-linecap="round" opacity="0.3"/>
+    <line class="tayoq" x1="40" y1="26" x2="35" y2="59" stroke="#8A5A2B" stroke-width="2.8" stroke-linecap="round"/>
+    <circle cx="37" cy="41" r="2.6" fill="${TERI}" stroke="${INK}" stroke-width="1.6"/>
   </g>
   <g class="bosh">
-    <g fill="${color}" stroke="${INK}" stroke-width="2.4" stroke-linejoin="round" color="${color}" transform="translate(4.4 1) scale(0.78)">${ears}</g>
-    <circle cx="22" cy="20" r="9.6" fill="${color}" stroke="${INK}" stroke-width="2"/>
-    <circle cx="19" cy="19" r="1.7" fill="${INK}"/><circle cx="25.5" cy="19" r="1.7" fill="${INK}"/>
-    <ellipse cx="22.5" cy="23.5" rx="2.5" ry="1.9" fill="${INK}"/>
+    <circle cx="22" cy="19" r="9.4" fill="${TERI}" stroke="${INK}" stroke-width="2"/>
+    <path d="M12.8 17 Q13 7 22 7 Q31 7 31.2 17 Z" fill="${kiyim}" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M12 17 L32 17" stroke="${INK}" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="22" cy="6" r="2.2" fill="${toq(kiyim, 0.7)}" stroke="${INK}" stroke-width="1.6"/>
+    <circle cx="19" cy="21" r="1.7" fill="${INK}"/><circle cx="25.5" cy="21" r="1.7" fill="${INK}"/>
+    <path d="M20 25.5 Q22.3 27.4 25 25.5" fill="none" stroke="${INK}" stroke-width="1.6" stroke-linecap="round"/>
   </g>
+</svg>`;
+  }
+
+  // Roʻyxat va tanlov uchun kichik nishon: oʻsha odamcha, faqat boshi va yelkasi
+  function nishon(rang) {
+    const kiyim = rang || "#2F6FDE";
+    return `<svg class="nishon-svg" viewBox="0 0 40 40" aria-hidden="true">
+  <circle cx="20" cy="20" r="18" fill="${kiyim}" stroke="${INK}" stroke-width="2"/>
+  <path d="M8 36 Q10 25 20 25 Q30 25 32 36 Z" fill="${toq(kiyim, 0.7)}" stroke="${INK}" stroke-width="1.8" stroke-linejoin="round"/>
+  <circle cx="20" cy="18" r="8" fill="${TERI}" stroke="${INK}" stroke-width="1.8"/>
+  <path d="M12.2 16.5 Q12.5 8 20 8 Q27.5 8 27.8 16.5 Z" fill="${toq(kiyim, 0.75)}" stroke="${INK}" stroke-width="1.8" stroke-linejoin="round"/>
+  <circle cx="17.6" cy="19.5" r="1.5" fill="${INK}"/><circle cx="22.8" cy="19.5" r="1.5" fill="${INK}"/>
 </svg>`;
   }
 
@@ -218,6 +204,6 @@
 
   root.QK = root.QK || {};
   root.QK.art = Object.assign(root.QK.art || {}, {
-    hayvon, qahramon, toq, manzara, geometriya, bezak, bezakTuri, bulut, quyosh, chogqi, MANZARA, OT, QOYA, QOR,
+    odam, nishon, toq, manzara, geometriya, bezak, bezakTuri, bulut, quyosh, chogqi, MANZARA, OT, QOYA, QOR,
   });
 })(window);

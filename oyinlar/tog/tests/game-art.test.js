@@ -9,16 +9,44 @@ loadScript(path.join(__dirname, "../../umumiy/js/art.js"), win);
 loadScript(path.join(__dirname, "../js/game-art.js"), win);
 const art = win.QK.art;
 
-test("har qahramon uchun rasm bor, matnsiz", () => {
+test("har qahramon: bir xil odamcha, faqat rangi boshqa", () => {
+  const shakllar = new Set();
+  const ranglar = new Set();
   for (const q of T.QAHRAMONLAR) {
-    const svg = art.hayvon(q.id, q.rang);
+    const svg = art.odam(q.rang);
     assert.match(svg, /^<svg[\s\S]*<\/svg>$/, q.id);
     assert.ok(!svg.includes("<text"), q.id);
-    assert.ok(svg.includes(q.rang), `${q.id}: rangi`);
+    assert.ok(svg.includes(q.rang), `${q.id}: oʻz rangi`);
+    // Ranglarni olib tashlagach hammasi bir xil chizma boʻlishi kerak
+    shakllar.add(svg.replace(/#[0-9a-f]{3,6}/gi, "RANG"));
+    ranglar.add(q.rang.toLowerCase());
   }
-  // Har hayvonning quloq/shox shakli boshqacha
-  const shapes = T.QAHRAMONLAR.map((q) => art.hayvon(q.id, "#000").split('<circle cx="20" cy="24"')[0]);
-  assert.equal(new Set(shapes).size, T.QAHRAMONLAR.length, "hayvonlar bir-biridan farq qiladi");
+  assert.equal(shakllar.size, 1, "odamchalar bir xil chizilgan");
+  assert.equal(ranglar.size, T.QAHRAMONLAR.length, "ranglar takrorlanmaydi");
+});
+
+test("ranglar bir-biridan yetarlicha farq qiladi", () => {
+  // Faqat rang bilan ajratamiz — yaqin ranglar boʻlmasligi kerak
+  const rgb = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+  const list = T.QAHRAMONLAR.map((q) => ({ id: q.id, c: rgb(q.rang) }));
+  let eng = 1e9;
+  let juft = "";
+  for (let i = 0; i < list.length; i++) {
+    for (let k = i + 1; k < list.length; k++) {
+      const d = Math.sqrt(list[i].c.reduce((s, v, j) => s + (v - list[k].c[j]) ** 2, 0));
+      if (d < eng) { eng = d; juft = `${list[i].id}–${list[k].id}`; }
+    }
+  }
+  assert.ok(eng > 70, `juda yaqin ranglar: ${juft} (${eng.toFixed(0)})`);
+});
+
+test("nishon: roʻyxat uchun kichik rasm, oʻsha rangda", () => {
+  for (const q of T.QAHRAMONLAR) {
+    const svg = art.nishon(q.rang);
+    assert.match(svg, /^<svg[\s\S]*<\/svg>$/, q.id);
+    assert.ok(svg.includes(q.rang), q.id);
+    assert.ok(!svg.includes("<text"), q.id);
+  }
 });
 
 test("har tog'ning manzarasi bor: pastda va tepada boshqacha", () => {

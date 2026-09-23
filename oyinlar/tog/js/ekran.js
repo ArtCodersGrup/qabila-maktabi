@@ -59,7 +59,7 @@
       const btn = h("button", {
         class: "qahramon" + (olingan ? " band" : ""), type: "button", "aria-label": q.nom,
         onClick: () => { if (!olingan) { sound.play("tap"); onPick(q.id); } },
-      }, h("span", { class: "qahramon-rasm", html: art.hayvon(q.id, olingan ? "#C9C4BA" : q.rang) }),
+      }, h("span", { class: "qahramon-rasm", html: art.odam(olingan ? "#C9C4BA" : q.rang) }),
       h("span", { class: "qahramon-nom", text: q.nom }));
       btn.disabled = olingan;
       grid.append(btn);
