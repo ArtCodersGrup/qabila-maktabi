@@ -29,6 +29,7 @@
     const r = T.reyting(s);
     return {
       tog: s.tog,
+      mav: s.mavzular || [],
       ids: r.map((p) => p.id),
       qah: r.map((p) => p.qahramon),
       pog: r.map((p) => p.pogona),
@@ -53,6 +54,7 @@
     if (!["pog", "chiq", "pauza", "tgr", "xat"].every((k) => p[k].every((v) => typeof v === "number" && v >= 0 && v < 100000))) return false;
     if (typeof p.qoldi !== "number" || p.qoldi < 0) return false;
     if (p.sabab && !SABABLAR.includes(p.sabab)) return false;
+    if (p.mav && (!Array.isArray(p.mav) || p.mav.length > 16 || !p.mav.every((v) => typeof v === "string"))) return false;
     return !!T.TOGLAR.find((t) => t.id === p.tog);
   }
 
@@ -64,6 +66,7 @@
     const t = T.togById(p.tog);
     const s = {
       tog: t.id,
+      mavzular: Array.isArray(p.mav) && p.mav.length ? p.mav.slice() : null,
       pogona: t.pogona,
       chegara: t.chegara,
       boshlanish: 0.5,

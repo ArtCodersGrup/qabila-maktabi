@@ -121,3 +121,25 @@ test("lobbi va bo'sh qahramonlar: bitta qahramon bitta bolaga", () => {
   assert.equal(bosh.length, T.QAHRAMONLAR.length - 2);
   assert.ok(!bosh.some((q) => q.id === "qizil"));
 });
+
+test("mavzular ham uzatiladi: bola oʻqituvchi tanlagan mavzudan savol oladi", () => {
+  const s = T.create({
+    tog: "chimyon",
+    players: [{ id: "a", qahramon: "qizil" }, { id: "b", qahramon: "kok" }],
+    now,
+    mavzular: ["mantiq", "sanoq"],
+  });
+  const p = P.paket(s, now + 1000);
+  assert.deepEqual(p.mav, ["mantiq", "sanoq"]);
+  assert.ok(O.validMessage({ type: "holat", data: p, t: now, from: "host" }, P.TYPES), "aloqa qatlamidan oʻtadi");
+  assert.ok(P.yaxshiPaket(p));
+  assert.deepEqual(P.holat(p, now + 1000).mavzular, ["mantiq", "sanoq"]);
+  // Mavzu tanlanmasa — hammasi
+  const hammasi = T.create({ tog: "chimyon", players: [{ id: "a", qahramon: "qizil" }], now });
+  assert.equal(hammasi.mavzular, null);
+  assert.deepEqual(P.paket(hammasi, now).mav, []);
+  assert.equal(P.holat(P.paket(hammasi, now), now).mavzular, null);
+  // Buzuq mavzu roʻyxati rad etiladi
+  assert.equal(P.yaxshiPaket(Object.assign({}, p, { mav: new Array(17).fill("x") })), false);
+  assert.equal(P.yaxshiPaket(Object.assign({}, p, { mav: [1, 2] })), false);
+});

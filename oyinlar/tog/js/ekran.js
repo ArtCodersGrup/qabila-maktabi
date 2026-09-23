@@ -34,15 +34,62 @@
   }
 
   // Savol qiyinligi balandlikka qarab (DIZAYN 2.2). Ketma-ket bir xil savol bermaymiz.
-  function nextQ(level, prev) {
+  // mavzular — tanlangan mavzular roʻyxati (boʻsh boʻlsa — hammasi).
+  function nextQ(level, prev, mavzular) {
+    const royxat = (mavzular && mavzular.length ? savollar.TOPICS.filter((t) => mavzular.includes(t.id)) : savollar.TOPICS);
     for (let k = 0; k < 60; k++) {
-      const topic = pick(savollar.TOPICS).id;
+      const topic = pick(royxat).id;
       const kinds = savollar.kindsOf(topic, level);
       if (!kinds.length) continue;
       const q = savollar.make(pick(kinds), level, Math.random, () => true);
       if (q && (!prev || q.key !== prev.key)) return q;
     }
+    // Tanlangan mavzuda shu darajada savol topilmadi — boshqa darajadan beramiz
+    for (const daraja of [1, 2, 3]) {
+      for (const t of royxat) {
+        const kinds = savollar.kindsOf(t.id, daraja);
+        if (kinds.length) {
+          const q = savollar.make(pick(kinds), daraja, Math.random, () => true);
+          if (q) return q;
+        }
+      }
+    }
     return savollar.make("sozlar", 1, Math.random, () => true);
+  }
+
+  // ---------- Mavzu tanlash ----------
+  function mavzular({ sarlavha, izoh, tanlangan, onDavom, orqaga }) {
+    const el = box(false);
+    el.append(
+      h("h1", { class: "game-title", text: sarlavha || "Qaysi mavzudan savol beramiz?" }),
+      izoh ? h("p", { class: "tog-note", text: izoh }) : null);
+    let tanlov = (tanlangan && tanlangan.length ? tanlangan : savollar.TOPICS.map((t) => t.id)).slice();
+    const box2 = h("div", { class: "chips" });
+    const tugmalar = savollar.TOPICS.map((t) => {
+      const b = h("button", { class: "chip", type: "button", text: t.title, "aria-pressed": String(tanlov.includes(t.id)) });
+      b.addEventListener("click", () => {
+        sound.play("tap");
+        if (!tanlov.includes(t.id)) tanlov = tanlov.concat(t.id);
+        else if (tanlov.length > 1) tanlov = tanlov.filter((v) => v !== t.id);
+        else return ui.toast("Kamida bitta mavzu kerak");
+        tugmalar.forEach((x, k) => x.setAttribute("aria-pressed", String(tanlov.includes(savollar.TOPICS[k].id))));
+      });
+      box2.append(b);
+      return b;
+    });
+    el.append(box2);
+    const hammasi = h("button", { class: "chip hammasi", type: "button", text: "Hammasi" });
+    hammasi.addEventListener("click", () => {
+      sound.play("tap");
+      tanlov = savollar.TOPICS.map((t) => t.id);
+      tugmalar.forEach((x) => x.setAttribute("aria-pressed", "true"));
+    });
+    box2.append(hammasi);
+    buttons([
+      { label: "Davom etish", onClick: () => onDavom(tanlov.slice()) },
+      orqaga ? { label: "Orqaga", onClick: orqaga, secondary: true } : null,
+    ]);
+    return el;
   }
 
   // ---------- Qahramon tanlash ----------
@@ -89,7 +136,7 @@
   // ---------- O'yin maydoni ----------
   // holat() — hozirgi holat (mashqda o'zimiznikidan, onlaynda boshlovchi paketidan).
   // javob(ok) — javobni qayerga berish. meId yo'q bo'lsa — kuzatuvchi ekrani (o'qituvchi doskasi).
-  function oyin(el, { togId, meId, holat, javob, kuzatuvchi }) {
+  function oyin(el, { togId, meId, holat, javob, kuzatuvchi, mavzular: tanlangan }) {
     const t = T.togById(togId);
     const soat = h("div", { class: "tog-soat" });
     const maydon = h("div", { class: "tog-maydon" });
@@ -111,7 +158,7 @@
       rejim = "savol";
       pastki.innerHTML = "";
       pauzaOyna = null;
-      joriy = nextQ(T.daraja(t, me.pogona), joriy);
+      joriy = nextQ(T.daraja(t, me.pogona), joriy, tanlangan);
       QK.probe = Object.assign(QK.probe || {}, { savol: joriy });
       togUi.savol(pastki, joriy);
       savolUi.answerPad(joriy, (value) => {
@@ -179,5 +226,5 @@
     return el;
   }
 
-  QK.togEkran = { SITE_HOME, box, buttons, nextQ, qahramonlar, toglar, oyin, natija };
+  QK.togEkran = { SITE_HOME, box, buttons, nextQ, qahramonlar, toglar, mavzular, oyin, natija };
 })(window);

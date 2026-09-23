@@ -26,6 +26,23 @@
     }
   }
 
+  const MAVZU_XOTIRA = "tog:mavzu:v1";
+  function mavzulariniOl() {
+    try {
+      const bor = JSON.parse(root.localStorage.getItem(MAVZU_XOTIRA) || "null");
+      return Array.isArray(bor) && bor.length ? bor : null;
+    } catch (e) {
+      return null;
+    }
+  }
+  function mavzulariniSaqla(list) {
+    try {
+      root.localStorage.setItem(MAVZU_XOTIRA, JSON.stringify(list));
+    } catch (e) {
+      // saqlab boʻlmadi
+    }
+  }
+
   function xato(matn, qayt) {
     const el = E.box(false);
     el.append(h("h1", { class: "game-title", text: "Onlayn xona" }), h("p", { class: "tog-note", text: matn }));
@@ -35,12 +52,25 @@
 
   // ================= BOSHLOVCHI (o'qituvchi) =================
   function host(qayt) {
-    E.toglar({ sarlavha: "Qaysi togʻga chiqamiz?", onPick: (togId) => lobbi(togId, qayt) });
-    ui.bubble("elder", "Togʻni tanlang — keyin bolalar kodni kiritadi.");
+    E.toglar({ sarlavha: "Qaysi togʻga chiqamiz?", onPick: (togId) => mavzuTanlash(togId, qayt) });
+    ui.bubble("elder", "Togʻni tanlang — keyin mavzularni belgilaymiz.");
     E.buttons([{ label: "Orqaga", onClick: qayt, secondary: true }]);
   }
 
-  function lobbi(togId, qayt) {
+  function mavzuTanlash(togId, qayt) {
+    E.mavzular({
+      izoh: "Bolalarga shu mavzulardan savol keladi. Qiyinligi balandlikka qarab oshadi.",
+      tanlangan: mavzulariniOl(),
+      orqaga: () => host(qayt),
+      onDavom: (mavzular) => {
+        mavzulariniSaqla(mavzular);
+        lobbi(togId, qayt, mavzular);
+      },
+    });
+    ui.bubble("elder", "Bugun qaysi mavzulardan soʻraymiz?");
+  }
+
+  function lobbi(togId, qayt, mavzular) {
     const code = onlayn.makeCode();
     let odamlar = []; // [{ id, qahramon }]
     let state = null; // o'yin boshlangach — hisob shu yerda
@@ -91,7 +121,7 @@
     }
 
     function oyin() {
-      state = T.create({ tog: togId, players: odamlar, now: Date.now() });
+      state = T.create({ tog: togId, players: odamlar, now: Date.now(), mavzular });
       QK.probe.state = state;
       sound.play("win");
       const box = E.box(true, "tog-oyin");
@@ -300,6 +330,7 @@
       ekran = E.oyin(box, {
         togId: paket.tog,
         meId: me,
+        mavzular: holatim ? holatim.mavzular : null,
         holat: () => holatim,
         javob: (ok) => room.send("javob", { ok: ok ? 1 : 0 }),
       });

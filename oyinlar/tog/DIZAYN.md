@@ -69,6 +69,14 @@ Hamma bir xil odamcha: qalpoq, kurtka, ryukzak, tayoq. Faqat **rangi** bilan ajr
 - Bitta rangni ikki kishi tanlay olmaydi: band bo'lgani xira ko'rinadi.
 - **Ism so'ralmaydi.** Bola rangi bilan ko'rinadi ("Ko'k 11-pog'onada").
 
+### 2.7b. Mavzu tanlash (2026-09-23)
+O'yindan oldin mavzular tanlanadi — musobaqadagi 7 mavzu: Kodlash va shifrlash, Ikkilik kod,
+Axborot o'lchovi, Sanoq tizimlari, Sun'iy intellekt, Klaviatura, Mantiq.
+- **Mashqda** bolaning o'zi, **onlayn xonada** o'qituvchi tanlaydi (tog'dan keyin).
+- Tanlov qurilmada eslab qolinadi; xonada esa holat paketida bolalarga uzatiladi —
+  har qurilma savolni o'zi yasagani uchun hammaga bir xil mavzudan keladi.
+- **Qiyinlik tanlanmaydi**: balandlikka qarab o'zi oshadi (2.2) — ikki kishilik musobaqadan farqi shu.
+
 ### 2.8. G'olib aniqlanmasa va teng bo'lsa
 - 10 daqiqa tugaganda bir xil balandlikda turganlar orasida o'sha pog'onaga **birinchi chiqqani** oldinda turadi.
 - Shoxsupada 1-, 2-, 3-o'rin.

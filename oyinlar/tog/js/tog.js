@@ -48,11 +48,12 @@
   // qoida: "chegara" — yetakchidan chegara pog'ona orqada qolgan chiqadi (muallif qoidasi);
   //        "oxirgi" — yetakchi har bekatdan o'tganda eng pastdagi bitta o'yinchi chiqadi.
   // boshlanish: qoida yetakchi tog'ning qaysi qismini bosgandan keyin ishlashi (0.5 — yarim yo'l).
-  function create({ tog, players, now, daqiqa, qoida, boshlanish, bekat }) {
+  function create({ tog, players, now, daqiqa, qoida, boshlanish, bekat, mavzular }) {
     const t = togById(tog);
     const minutes = daqiqa || t.daqiqa;
     const state = {
       tog: t.id,
+      mavzular: Array.isArray(mavzular) && mavzular.length ? mavzular.slice() : null, // null — hamma mavzu
       boshlandi: now,
       tugaydi: now + minutes * 60000,
       pogona: t.pogona,

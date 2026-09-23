@@ -98,13 +98,6 @@
 .setup { width: 100%; max-width: 560px; display: flex; flex-direction: column; gap: 10px; }
 .setup h1 { margin: 0; font-size: 28px; font-weight: 900; text-align: center; }
 .setup h2 { margin: 6px 0 0; font-size: 19px; font-weight: 900; }
-.chips { display: flex; flex-wrap: wrap; gap: 8px; }
-.chip {
-  min-height: 48px; padding: 8px 14px; border: 3px solid var(--chiziq); border-radius: 14px;
-  background: #fff; font-size: 18px; font-weight: 800;
-}
-.chip[aria-pressed="true"] { border-color: var(--asosiy); background: var(--asosiy); color: #fff; }
-.chip[aria-pressed="true"]::before { content: "✓ "; }
 .setup-note { margin: 0; font-size: 17px; font-weight: 700; opacity: 0.8; }
 .setup .back-link { align-self: flex-start; }
 
