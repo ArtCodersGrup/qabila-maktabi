@@ -11,12 +11,20 @@
   const YUBORISH = 700; // boshlovchi holatni shuncha vaqtda bir tarqatadi
   const SANOQ = 3; // boshlashdan oldingi 3-2-1
 
-  const store = () => QK.togStore;
-  const kimlikim = () => {
-    const s = store().load();
-    if (!s.me) { s.me = P.kimlik(); store().save(s); }
-    return s.me;
-  };
+  // Bolaning yashirin raqami alohida kalitda saqlanadi: uzilib qolsa, qayta kirganda o'sha odam bo'ladi.
+  // (umumiy storage.js faqat "done" va "muted" ni saqlaydi — boshqa maydonlarni tashlab yuboradi.)
+  const XOTIRA = "tog:men:v1";
+  function kimlikim() {
+    try {
+      const bor = root.localStorage.getItem(XOTIRA);
+      if (bor && /^[a-z2-9]{6}$/.test(bor)) return bor;
+      const yangi = P.kimlik();
+      root.localStorage.setItem(XOTIRA, yangi);
+      return yangi;
+    } catch (e) {
+      return P.kimlik(); // maxfiy rejim: xona ishlaydi, faqat qayta kirish eslanmaydi
+    }
+  }
 
   function xato(matn, qayt) {
     const el = E.box(false);
@@ -233,7 +241,7 @@
     let room = null;
     let timer = null;
     let band = [];
-    let qahramonim = (store().load() || {}).qah || "";
+    let qahramonim = ""; // qaysi qahramon ekanimizni boshlovchi paketi aytadi
 
     const el = E.box(false);
     const holati = h("div", { class: "net-status", text: "⏳ Xonaga kirilmoqda…" });
@@ -277,9 +285,6 @@
         band,
         onPick: (id) => {
           qahramonim = id;
-          const s = store().load();
-          s.qah = id;
-          store().save(s);
           room.send("kirdi", { qah: id });
           kutishEkran("Oʻqituvchi boshlashini kutamiz…");
         },
@@ -305,6 +310,7 @@
     function natijaEkran(uzilish) {
       rejim = "natija";
       ekran = null;
+      if (uzilish && holatim && !holatim.tugadi) holatim.sabab = "uzildi";
       sound.play(holatim && holatim.golib === me ? "win" : "dum");
       E.natija(holatim, me, [
         { label: "Keyingi oʻyinni kutish", onClick: () => kutishEkran("Oʻqituvchi yangi oʻyin boshlashini kutamiz…") },
@@ -329,12 +335,14 @@
             band = Array.isArray(msg.data.qah) ? msg.data.qah : [];
             const ids = Array.isArray(msg.data.ids) ? msg.data.ids : [];
             const menBor = ids.includes(me);
+            if (menBor) qahramonim = band[ids.indexOf(me)] || qahramonim;
             QK.probe.lobbi = { band, menBor };
             if (msg.data.sanoq) {
               if (menBor) kutishEkran(`Boshlanmoqda… ${msg.data.sanoq}`);
               return;
             }
-            if (rejim === "oyin" || rejim === "natija" || rejim === "kech") { qahramonim = ""; lobbiImzo = ""; }
+            // O'yindan yangi lobbiga qaytdik: ekranni qaytadan chizamiz (qahramon o'sha bo'lib qoladi)
+            if (rejim === "oyin" || rejim === "natija" || rejim === "kech") lobbiImzo = "";
             if (menBor) kutishEkran("Oʻqituvchi boshlashini kutamiz…");
             else if (rejim !== "tanlash") tanlash();
             return;
@@ -342,6 +350,8 @@
           if (msg.type !== "holat" || !P.yaxshiPaket(msg.data)) return;
           paket = msg.data;
           holatim = P.holat(paket, Date.now());
+          const menIdx = paket.ids.indexOf(me);
+          if (menIdx >= 0) qahramonim = paket.qah[menIdx] || qahramonim;
           QK.probe.holat = { pog: paket.pog, ids: paket.ids, tugadi: paket.tugadi };
           if (!paket.ids.includes(me)) {
             // O'yin boshlangan, biz kech qoldik — keyingisini kutamiz (DIZAYN 2.9)
