@@ -18,28 +18,40 @@
   let prevService = null;
   let prevCompany = null;
 
-  // G'ildirakni aylantiradi: tasodifiy so'zlarni tez-tez ko'rsatib, sekinlashib boradi, oxirida `finalValue`da to'xtaydi.
+  // G'ildirakni aylantiradi: har qadamda so'z tepadan kirib markazda to'xtaydi, eskisi
+  // pastga tushib yo'qoladi (karasul uslubi), sekinlashib boradi, oxirida `finalValue`da to'xtaydi.
   function spinReel(reelEl, wordEl, list, durationMs, finalValue, onDone) {
     const startTime = performance.now();
-    const baseStep = 70; // ms — boshlang'ich tezlik
+    const baseHold = 70; // ms — so'z tinch turadigan boshlang'ich vaqt
+    const transitionMs = 160; // css transition bilan bir xil (style.css)
 
     reelEl.classList.add("spinning");
 
-    function tick() {
+    function step() {
       const elapsed = performance.now() - startTime;
-      if (elapsed >= durationMs) {
-        wordEl.textContent = finalValue;
-        reelEl.classList.remove("spinning");
-        onDone();
-        return;
-      }
-      wordEl.textContent = list[Math.floor(Math.random() * list.length)];
-      const progress = elapsed / durationMs;
-      const delay = baseStep + progress * 150; // sekinlashish
-      setTimeout(tick, delay);
+      const isFinal = elapsed >= durationMs;
+      const text = isFinal ? finalValue : list[Math.floor(Math.random() * list.length)];
+
+      wordEl.classList.add("is-leaving");
+      setTimeout(() => {
+        wordEl.textContent = text;
+        wordEl.classList.remove("is-leaving");
+        wordEl.classList.add("is-entering");
+        void wordEl.offsetWidth; // reflow majburlash — transition qaytadan ishga tushishi uchun
+        wordEl.classList.remove("is-entering");
+
+        if (isFinal) {
+          reelEl.classList.remove("spinning");
+          onDone();
+          return;
+        }
+        const progress = elapsed / durationMs;
+        const holdMs = baseHold + progress * 180; // sekinlashish
+        setTimeout(step, holdMs);
+      }, transitionMs);
     }
 
-    tick();
+    step();
   }
 
   function onSpin() {
