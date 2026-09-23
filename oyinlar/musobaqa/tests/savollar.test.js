@@ -112,6 +112,41 @@ const ANSWER = {
     let k = 0; while (d.states ** k < d.n) k++; return k;
   },
   ikkilikdan: (q) => parseInt(q.data.s, 2),
+  alifboRaqam: (q) => (q.input.type === "num" ? q.data.i : caesar.ALPHABET[q.data.i - 1]),
+  nechtaBir: (q) => [...q.data.s].filter((d) => d === "1").length,
+  bitQiymat: (q) => 2 ** (q.data.k - 1),
+  ikkilikQoshish: (q) => (q.data.a + q.data.b).toString(2),
+  keyingiIkkilik: (q) => (q.data.n + 1).toString(2),
+  kattaroq: (q) => {
+    const katta = Math.max(q.data.a, q.data.b);
+    assert.equal(q.input.options.length, 2, q.key);
+    return sanoq.fmt(katta.toString(2), 2);
+  },
+  tugmaVazifa: (q) => {
+    const t = S.TUGMALAR.find((x) => x.tugma === q.data.tugma);
+    assert.ok(t, q.key);
+    return q.text.includes("nima qiladi") ? t.ish : t.tugma;
+  },
+  amallar: (q) => {
+    const d = q.data;
+    const f = (nom, a, b) => S.AMALLAR.find((x) => x.nom === nom).f(a, b);
+    if (d.op) return f(d.op, d.emas ? 1 - d.a : d.a, d.b);
+    const v = { A: d.a, B: d.b, C: d.c };
+    if (d.emasKim) v[d.emasKim] = 1 - v[d.emasKim];
+    return f(d.op2, f(d.op1, v.A, v.B), v.C);
+  },
+  klaviaturaBilim: (q) => {
+    const x = S.KLAV_SAVOL.find((k) => k.s === q.data.s);
+    assert.ok(x, q.key);
+    assert.equal(q.input.options.length, 4, q.key);
+    return x.j;
+  },
+  teskari: (q) => {
+    const x = S.INKOR.find((i) => i.gap === q.data.gap);
+    assert.ok(x, q.key);
+    assert.equal(q.input.options.length, 4, q.key);
+    return x.javob;
+  },
   ikkilikka: (q) => q.data.n.toString(2),
   bayt: (q) => {
     const d = q.data;

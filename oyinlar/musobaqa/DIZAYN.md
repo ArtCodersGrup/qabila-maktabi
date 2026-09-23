@@ -90,6 +90,7 @@ Javob turlari: **son** (raqam klaviaturasi), **belgilar** (maxsus tugmalar: 0/1,
 | **Soʻzlar soni** (son) | aⁱ: 2–3 harf, 2–4 harfli (≤ 27) | aⁱ (≤ 100) yoki "i harfgacha" a + … + aⁱ | "p kishiga i harfli ism — eng kamida nechta harf?" |
 | **Morze** (variant) | 3 harfli soʻzni oʻqish | 4 harfli | 5 harfli |
 | **Sezar** (variant/son) | harfni kalit 1–3 ga oldinga surish (aylanmasdan) | harfni orqaga surish (ochish), kalit 1–5, aylanib | soʻzni ochish yoki "A → D: kalit nechchi?" |
+| **Alifbo tartibi** (son/variant) — 2026-09-23 | "K harfi nechanchi?" yoki "7-harf qaysi?" (1–15) | 10–29 | — |
 
 Morze savolida **qoʻllanma** koʻrsatiladi: variantlardagi barcha harflar va ularning kodlari (2-oʻyindagidek).
 Sezar savolida **alifbo qatori** (29 harf) koʻrsatiladi.
@@ -100,6 +101,11 @@ Sezar savolida **alifbo qatori** (29 harf) koʻrsatiladi.
 | **Naqshlar soni** (son) | 2–4 oddiy chiroq → 2ⁿ | 5–7 oddiy yoki 2–4 rangli (oʻchiq, sariq, koʻk) → 3ⁿ | "N ta narsa uchun eng kamida nechta chiroq?" |
 | **Ikkilikdan oʻnlikka** (son) | 1–15, xona qiymatlari (8-4-2-1) koʻrsatiladi | 8–31 | 16–63 |
 | **Oʻnlikdan ikkilikka** (0/1) | 2–15, 8-4-2-1 koʻrsatiladi | 8–31 | 16–63 |
+| **Nechta chiroq yoniq** (son) — 2026-09-23 | 1–31 dagi 1 lar soni | 16–127 | — |
+| **Xona qiymati** (son) — 2026-09-23 | oʻngdan 1–4-oʻrin (xona qiymatlari koʻrsatiladi) | oʻngdan 4–7-oʻrin | — |
+| **Ikkilikda qoʻshish** (0/1) — 2026-09-23 | — | ikkita son ≤ 7 | ikkita son ≤ 15 |
+| **Qaysi kattaroq** (variant) — 2026-09-23 | — | 3–31 | 8–127 |
+| **Keyingi son** (0/1) — 2026-09-23 | 1–14 | 8–62 | — |
 
 ### 4.3. Axborot oʻlchovi (13–16-oʻyinlar)
 | Tur | Oson | Oʻrta | Qiyin |
@@ -145,6 +151,14 @@ Neyron qoidasi 11-oʻyindagidek: yigʻindi ≥ chegara — yonadi.
 
 Barmoq, Shift va poyga qoidasi 23-oʻyin mantiqidan (`23-on-barmoq/js/typing.js`). Tezkor tugmalar hali oʻyinda oʻrgatilmagan (tezkor tugmalar oʻyini muhokamada) — roʻyxat `savollar.js` dagi `SHORTCUTS`; oʻyin yozilganda uning mantiqiga koʻchiriladi. Tekislash (E, L, R) — Word dasturidagi tugmalar.
 
+### 4.6b. Klaviatura — 2026-09-23 da qoʻshilgan turlar
+| Tur | Oson | Oʻrta | Qiyin |
+|---|---|---|---|
+| **Tugma vazifasi** (variant) | "Enter nima qiladi?" (12 ta tugma) | "Qaysi tugma buni qiladi?" | — |
+| **Klaviatura bilimi** (variant) | oʻn barmoq usuli, F/J doʻngchalari, qayerga qarash | tezlik oʻlchovi, asosiy qator harflari | — |
+
+Tezkor tugmalar roʻyxati 15 tadan **21 taga** (Ctrl+N/O/W, Alt+Tab, Ctrl+Home/End), vaziyatlar 8 tadan **14 taga** kengaytirildi.
+
 ### 4.7. Mantiq (24–25-oʻyinlar) — 2026-09-22 da qoʻshildi
 | Tur | Oson | Oʻrta | Qiyin |
 |---|---|---|---|
@@ -159,6 +173,14 @@ Barmoq, Shift va poyga qoidasi 23-oʻyin mantiqidan (`23-on-barmoq/js/typing.js`
 | **Qoʻshish** (variant) | — | — | yarim qoʻshuvchi (00…11) yoki ikki xonali: 01 + 11 |
 
 Qiymatlar 24-oʻyin (`logic.js`) va 25-oʻyin (`gates.js`) mantiqidan olinadi; testlar ularni mustaqil (bit amallari bilan) qayta hisoblaydi.
+
+### 4.7b. Mantiq — 2026-09-23 da qoʻshilgan turlar
+| Tur | Oson | Oʻrta | Qiyin |
+|---|---|---|---|
+| **Koʻp amalli ifoda** (variant) | — | "EMAS A VA B" koʻrinishi (VA/YOKI/XOR) | "(A VA B) YOKI C", kirishlardan biriga EMAS |
+| **Inkor** (variant) | — | "«Hamma bolalar keldi» gapining teskarisi qaysi?" (8 ta gap) | oʻsha |
+
+Hayotiy qoidalar (24-oʻyindagi `LIFE`) 5 tadan **11 taga** koʻpaydi; rost/yolgʻon faktlar 6+6 dan **14+14 taga**.
 
 ## 5. Koʻrinish
 

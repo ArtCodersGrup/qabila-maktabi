@@ -57,7 +57,12 @@ test("ifodalar: qiymat va qadamlar mustaqil hisobga mos", () => {
 });
 
 test("hayotiy qoidalar: ifoda va hisob mos, matnlar to'liq", () => {
-  const expected = { rain: (a, b) => a & (1 - b), walk: (a, b) => a & (1 - b), gate: (a, b) => a | b, robot: (a, b) => a | (1 - b), tea: (a, b) => a & b };
+  const expected = {
+    rain: (a, b) => a & (1 - b), walk: (a, b) => a & (1 - b), gate: (a, b) => a | b,
+    robot: (a, b) => a | (1 - b), tea: (a, b) => a & b, bike: (a, b) => a & b,
+    film: (a, b) => a & b, lift: (a, b) => (1 - a) | (1 - b), alarm: (a, b) => a & (1 - b),
+    garden: (a, b) => a | b, game: (a, b) => a & (1 - b),
+  };
   assert.deepEqual(L.LIFE.map((l) => l.id).sort(), Object.keys(expected).sort());
   for (const l of L.LIFE) {
     for (const [a, b] of PAIRS) assert.equal(L.evalLife(l, a, b), expected[l.id](a, b), `${l.id} ${a}${b}`);

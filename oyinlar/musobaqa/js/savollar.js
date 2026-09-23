@@ -83,7 +83,7 @@
         };
       }
       const upTo = level === 2 && rng() < 0.5;
-      const [a, i] = level === 1 ? pick(rng, [[2, 2], [2, 3], [3, 2], [3, 3], [2, 4]]) : pick(rng, upTo ? UPTO_2 : EXACT_2);
+      const [a, i] = level === 1 ? pick(rng, [[2, 2], [2, 3], [3, 2], [3, 3], [2, 4], [4, 2], [5, 2]]) : pick(rng, upTo ? UPTO_2 : EXACT_2);
       if (upTo) {
         const terms = Array.from({ length: i }, (_, k) => a ** (k + 1));
         const total = terms.reduce((s, x) => s + x, 0);
@@ -219,6 +219,38 @@
     },
   };
 
+
+  // Alifbo tartibi: harfning raqami va aksincha (1-o'yindagi harf-raqam jadvali)
+  const alifboRaqam = {
+    topic: "kod",
+    levels: [1, 2],
+    make(level, rng) {
+      const A = QK().caesar.ALPHABET;
+      const i = level === 1 ? ri(rng, 1, 15) : ri(rng, 10, A.length);
+      const harf = A[i - 1];
+      if (rng() < 0.5) {
+        return {
+          id: `h${i}`,
+          data: { i },
+          text: `Alifboda ${harf} harfi nechanchi?`,
+          blocks: [big(harf), { type: "strip", letters: A.slice(0, 15), mark: i <= 15 ? harf : null }],
+          input: num(2),
+          answer: String(i),
+          explain: `A = 1, B = 2 … ${harf} = ${i}.`,
+        };
+      }
+      return {
+        id: `r${i}`,
+        data: { i },
+        text: `Alifboda ${i}-harf qaysi?`,
+        blocks: [big(String(i))],
+        input: choice(withOptions(rng, harf, shuffle(rng, A.filter((x) => x !== harf)))),
+        answer: harf,
+        explain: `A = 1, B = 2 … ${i} = ${harf}.`,
+      };
+    },
+  };
+
   // ======================================================================
   // 2. Ikkilik kod (4-o'yin)
   // ======================================================================
@@ -311,6 +343,117 @@
         clean: true,
         answer,
         explain: `${n} = ${binaryParts(n)} → ${fmt(answer, 2)}`,
+      };
+    },
+  };
+
+
+  // Nechta chiroq yoniq: ikkilik sondagi 1 lar soni
+  const nechtaBir = {
+    topic: "ikkilik",
+    levels: [1, 2],
+    make(level, rng) {
+      const { toBase, fmt } = QK().sanoq;
+      const n = level === 1 ? ri(rng, 1, 31) : ri(rng, 16, 127);
+      const s = toBase(n, 2);
+      const bir = [...s].filter((d) => d === "1").length;
+      return {
+        id: `b${n}`,
+        data: { s },
+        text: "Har raqam — bitta chiroq. Nechta chiroq yoniq (nechta 1 bor)?",
+        blocks: [big(fmt(s, 2))],
+        input: num(1),
+        answer: String(bir),
+        explain: `${fmt(s, 2)} — ${bir} ta yoniq, ${s.length - bir} ta oʻchiq.`,
+      };
+    },
+  };
+
+  // Xona qiymati: o'ngdan k-o'rin nechaga teng (1, 2, 4, 8, 16, 32 …)
+  const JOYLAR = [32, 16, 8, 4, 2, 1];
+  const bitQiymat = {
+    topic: "ikkilik",
+    levels: [1, 2],
+    make(level, rng) {
+      const k = level === 1 ? ri(rng, 1, 4) : ri(rng, 4, 7);
+      const qiymat = 2 ** (k - 1);
+      return {
+        id: `j${k}`,
+        data: { k },
+        text: `Ikkilik sonda oʻngdan ${k}-oʻrindagi 1 ning qiymati nechchi?`,
+        blocks: level === 1 ? [{ type: "places", items: JOYLAR.slice(6 - Math.max(k, 3)) }] : [],
+        input: num(3),
+        answer: String(qiymat),
+        explain: `Oʻngdan: 1, 2, 4, 8, 16, 32 … ${k}-oʻrin — ${qiymat}.`,
+      };
+    },
+  };
+
+  // Ikkilikda qo'shish: javob ham ikkilikda
+  const ikkilikQoshish = {
+    topic: "ikkilik",
+    levels: [2, 3],
+    make(level, rng) {
+      const { toBase, fmt } = QK().sanoq;
+      const max = level === 2 ? 7 : 15;
+      const a = ri(rng, 1, max);
+      const b = ri(rng, 1, max);
+      const javob = toBase(a + b, 2);
+      return {
+        id: `${a}+${b}`,
+        data: { a, b },
+        text: "Ikkita ikkilik sonni qoʻsh. Javobni ikkilikda yoz.",
+        blocks: [big(`${fmt(toBase(a, 2), 2)} + ${fmt(toBase(b, 2), 2)}`)],
+        input: keys(["0", "1"], 7),
+        clean: true,
+        answer: javob,
+        explain: `${a} + ${b} = ${a + b} → ${fmt(javob, 2)}`,
+      };
+    },
+  };
+
+  // Qaysi ikkilik son kattaroq
+  const kattaroq = {
+    topic: "ikkilik",
+    levels: [2, 3],
+    make(level, rng) {
+      const { toBase, fmt } = QK().sanoq;
+      const [lo, hi] = level === 2 ? [3, 31] : [8, 127];
+      const a = ri(rng, lo, hi);
+      let b = ri(rng, lo, hi);
+      while (b === a) b = ri(rng, lo, hi);
+      const A = fmt(toBase(a, 2), 2);
+      const B = fmt(toBase(b, 2), 2);
+      return {
+        id: `${Math.min(a, b)}:${Math.max(a, b)}`,
+        data: { a, b },
+        text: "Qaysi ikkilik son kattaroq?",
+        input: choice(shuffle(rng, [A, B])),
+        answer: a > b ? A : B,
+        explain: `${A} = ${a}, ${B} = ${b}.`,
+      };
+    },
+  };
+
+
+  // Sanashda keyingi ikkilik son: 1011 dan keyin nima keladi
+  const keyingiIkkilik = {
+    topic: "ikkilik",
+    levels: [1, 2],
+    make(level, rng) {
+      const { toBase, fmt } = QK().sanoq;
+      const n = level === 1 ? ri(rng, 1, 14) : ri(rng, 8, 62);
+      const bor = toBase(n, 2);
+      const javob = toBase(n + 1, 2);
+      return {
+        id: `k${n}`,
+        data: { n },
+        text: "Ikkilikda sanayapmiz. Shu sondan keyin qaysi son keladi?",
+        blocks: [big(`${fmt(bor, 2)} → ?`)],
+        input: keys(["0", "1"], 7),
+        clean: true,
+        answer: javob,
+        explain: `${fmt(bor, 2)} = ${n}, keyingisi ${n + 1} = ${fmt(javob, 2)}.`,
       };
     },
   };
@@ -1170,6 +1313,12 @@
     { keys: "Ctrl + E", act: "Markazga tekislash", level: 3 },
     { keys: "Ctrl + L", act: "Chapga tekislash", level: 3 },
     { keys: "Ctrl + R", act: "Oʻngga tekislash", level: 3 },
+    { keys: "Ctrl + N", act: "Yangi hujjat ochish", level: 2 },
+    { keys: "Ctrl + O", act: "Saqlangan faylni ochish", level: 2 },
+    { keys: "Alt + Tab", act: "Boshqa dasturga oʻtish", level: 2 },
+    { keys: "Ctrl + W", act: "Oynani yopish", level: 3 },
+    { keys: "Ctrl + Home", act: "Matn boshiga sakrash", level: 3 },
+    { keys: "Ctrl + End", act: "Matn oxiriga sakrash", level: 3 },
   ];
   // Chalg'ituvchi variantlar: avval shu qiyinlikdagilar, keyin qolganlari
   const others = (rng, s, level) => shuffle(rng, SHORTCUTS.filter((x) => x !== s && x.level === level))
@@ -1222,6 +1371,12 @@
     { level: 3, text: "Gapdan nusxa olib, pastda yana bir marta yozmoqchisan.", answer: "Ctrl + C, keyin Ctrl + V", wrong: ["Ctrl + X, keyin Ctrl + Z", "Ctrl + V, keyin Ctrl + C", "Ctrl + C, keyin Ctrl + S"] },
     { level: 3, text: "Butun matnni qalin qilmoqchisan.", answer: "Ctrl + A, keyin Ctrl + B", wrong: ["Ctrl + B, keyin Ctrl + A", "Ctrl + A, keyin Ctrl + I", "Ctrl + S, keyin Ctrl + B"] },
     { level: 3, text: "Wordʼda sarlavhani belgilab, oʻrtaga qoʻymoqchisan.", answer: "Ctrl + E", wrong: ["Ctrl + L", "Ctrl + R", "Ctrl + C"] },
+    { level: 2, text: "Yangi, boʻsh hujjat ochmoqchisan.", answer: "Ctrl + N", wrong: ["Ctrl + O", "Ctrl + S", "Ctrl + P"] },
+    { level: 2, text: "Kecha saqlagan faylingni ochmoqchisan.", answer: "Ctrl + O", wrong: ["Ctrl + N", "Ctrl + W", "Ctrl + A"] },
+    { level: 2, text: "Brauzerdan Wordʼga tez oʻtmoqchisan.", answer: "Alt + Tab", wrong: ["Ctrl + Tab", "Shift + Tab", "Ctrl + W"] },
+    { level: 3, text: "Uzun matnning eng boshiga bir zumda qaytmoqchisan.", answer: "Ctrl + Home", wrong: ["Ctrl + End", "Ctrl + F", "Ctrl + A"] },
+    { level: 3, text: "Ishing tugadi, oynani yopmoqchisan (fayl saqlangan).", answer: "Ctrl + W", wrong: ["Ctrl + S", "Ctrl + Z", "Ctrl + N"] },
+    { level: 3, text: "Soʻzni qiya (kursiv) qilmoqchisan.", answer: "Ctrl + I", wrong: ["Ctrl + B", "Ctrl + U", "Ctrl + E"] },
   ];
 
   const vaziyat = {
@@ -1238,6 +1393,85 @@
         input: choice(withOptions(rng, s.answer, s.wrong)),
         answer: s.answer,
         explain: `${s.answer}.`,
+      };
+    },
+  };
+
+
+  // Oddiy tugmalar: nima qiladi va aksincha
+  const TUGMALAR = [
+    { tugma: "Enter", ish: "Yangi qatordan boshlaydi" },
+    { tugma: "Backspace", ish: "Chapdagi harfni oʻchiradi" },
+    { tugma: "Delete", ish: "Oʻngdagi harfni oʻchiradi" },
+    { tugma: "Boʻsh joy (Space)", ish: "Soʻzlar orasiga boʻshliq qoʻyadi" },
+    { tugma: "Shift", ish: "Bosib turilsa, bosh harf yoziladi" },
+    { tugma: "Caps Lock", ish: "Doimiy bosh harf rejimini yoqadi" },
+    { tugma: "Tab", ish: "Kursorni bir necha joy oʻngga suradi" },
+    { tugma: "Esc", ish: "Boshlangan ishni bekor qiladi" },
+    { tugma: "Oʻq (←)", ish: "Kursorni bir belgi chapga suradi" },
+    { tugma: "Home", ish: "Kursorni qator boshiga olib boradi" },
+    { tugma: "End", ish: "Kursorni qator oxiriga olib boradi" },
+    { tugma: "Ctrl", ish: "Yolgʻiz oʻzi hech nima qilmaydi — boshqa tugma bilan ishlaydi" },
+  ];
+
+  const tugmaVazifa = {
+    topic: "klaviatura",
+    levels: [1, 2],
+    make(level, rng, fresh) {
+      const pool = TUGMALAR.filter((t) => fresh(t.tugma));
+      if (!pool.length) return null;
+      const t = pick(rng, pool);
+      const boshqa = shuffle(rng, TUGMALAR.filter((x) => x !== t));
+      if (level === 1) {
+        return {
+          id: `v${t.tugma}`,
+          data: { tugma: t.tugma },
+          text: `${t.tugma} tugmasi nima qiladi?`,
+          blocks: [big(t.tugma)],
+          input: choice(withOptions(rng, t.ish, boshqa.map((x) => x.ish))),
+          answer: t.ish,
+          explain: `${t.tugma} — ${t.ish.toLowerCase()}.`,
+        };
+      }
+      return {
+        id: `q${t.tugma}`,
+        data: { tugma: t.tugma },
+        text: `Qaysi tugma buni qiladi: «${t.ish.toLowerCase()}»?`,
+        input: choice(withOptions(rng, t.tugma, boshqa.map((x) => x.tugma))),
+        answer: t.tugma,
+        explain: `${t.ish} — bu ${t.tugma}.`,
+      };
+    },
+  };
+
+
+  // Klaviatura haqida tushuncha savollari (23-o'yin: o'n barmoq usuli)
+  const KLAV_SAVOL = [
+    { level: 1, s: "Oʻn barmoq usulida qoʻllar qaysi qatorda turadi?", j: "Oʻrta (asosiy) qatorda", y: ["Yuqori qatorda", "Pastki qatorda", "Raqamlar qatorida"] },
+    { level: 1, s: "Boʻsh joy (Space) tugmasini qaysi barmoq bosadi?", j: "Bosh barmoq", y: ["Koʻrsatkich barmoq", "Jimjiloq", "Nomsiz barmoq"] },
+    { level: 1, s: "Klaviaturada F va J tugmalaridagi kichkina doʻngchalar nima uchun?", j: "Qoʻlni koʻrmasdan joyiga qoʻyish uchun", y: ["Bezak uchun", "Ular tez buziladi", "Ular eng koʻp bosiladi"] },
+    { level: 1, s: "Yozayotganda qayerga qarash kerak?", j: "Ekranga", y: ["Klaviaturaga", "Qoʻlga", "Derazaga"] },
+    { level: 2, s: "Oʻn barmoq usulining asosiy foydasi nima?", j: "Klaviaturaga qaramasdan tez yozish", y: ["Kam xato qilish shart emas", "Kompyuter tez ishlaydi", "Klaviatura uzoq xizmat qiladi"] },
+    { level: 2, s: "Yozish tezligi qanday oʻlchanadi?", j: "Bir daqiqada nechta belgi", y: ["Bir soatda nechta sahifa", "Bir kunda nechta soʻz", "Nechta tugma bor"] },
+    { level: 2, s: "Chap qoʻlning jimjilogʻi asosiy qatorda qaysi harfda turadi?", j: "A", y: ["S", "F", "Q"] },
+    { level: 2, s: "Oʻng qoʻlning koʻrsatkich barmogʻi asosiy qatorda qaysi harfda turadi?", j: "J", y: ["K", "H", "L"] },
+    { level: 2, s: "Tez yozishda eng muhimi nima?", j: "Avval aniqlik, keyin tezlik", y: ["Faqat tezlik", "Faqat chiroyli yozuv", "Klaviatura rangi"] },
+  ];
+
+  const klaviaturaBilim = {
+    topic: "klaviatura",
+    levels: [1, 2],
+    make(level, rng, fresh) {
+      const pool = KLAV_SAVOL.filter((x) => x.level === level && fresh(x.s));
+      if (!pool.length) return null;
+      const x = pick(rng, pool);
+      return {
+        id: x.s,
+        data: { s: x.s },
+        text: x.s,
+        input: choice(withOptions(rng, x.j, shuffle(rng, x.y))),
+        answer: x.j,
+        explain: x.j,
       };
     },
   };
@@ -1277,8 +1511,12 @@
   };
 
   // Rostmi? Ikki oddiy gap VA / YOKI bilan (24-o'yin: rost — 1, yolg'on — 0)
-  const TRUE_FACTS = ["Qor oq", "Bir haftada 7 kun bor", "Mushuk — hayvon", "2 + 2 = 4", "Yilda 12 oy bor", "Olma — meva"];
-  const FALSE_FACTS = ["Tuya ucha oladi", "3 + 3 = 7", "Baliq daraxtda yashaydi", "Bir kunda 30 soat bor", "Qor qora", "Tosh suvda suzadi"];
+  const TRUE_FACTS = ["Qor oq", "Bir haftada 7 kun bor", "Mushuk — hayvon", "2 + 2 = 4", "Yilda 12 oy bor", "Olma — meva",
+    "Quyosh sharqdan chiqadi", "Bir soatda 60 daqiqa bor", "Baliq suvda yashaydi", "Uchburchakning 3 ta tomoni bor",
+    "Toshkent — Oʻzbekiston poytaxti", "Muz suvdan hosil boʻladi", "Klaviaturada Enter tugmasi bor", "10 × 10 = 100"];
+  const FALSE_FACTS = ["Tuya ucha oladi", "3 + 3 = 7", "Baliq daraxtda yashaydi", "Bir kunda 30 soat bor", "Qor qora", "Tosh suvda suzadi",
+    "Quyosh gʻarbdan chiqadi", "Bir daqiqada 100 soniya bor", "Sichqon fildan katta", "Kvadratning 5 ta tomoni bor",
+    "Oy — yulduz", "Kompyuter nafas oladi", "Bir yilda 5 ta fasl bor", "7 × 7 = 47"];
 
   const rostmi = {
     topic: "mantiq",
@@ -1481,18 +1719,100 @@
     },
   };
 
+
+  // Bir nechta amal: (A VA B) YOKI C kabi ifodani hisoblash
+  const AMALLAR = [
+    { nom: "VA", f: (a, b) => (a && b ? 1 : 0), izoh: "ikkalasi ham 1 boʻlsa — 1" },
+    { nom: "YOKI", f: (a, b) => (a || b ? 1 : 0), izoh: "bittasi 1 boʻlsa yetadi" },
+    { nom: "XOR", f: (a, b) => (a !== b ? 1 : 0), izoh: "faqat bittasi 1 boʻlsa — 1" },
+  ];
+
+  const amallar = {
+    topic: "mantiq",
+    levels: [2, 3],
+    make(level, rng) {
+      const a = ri(rng, 0, 1);
+      const b = ri(rng, 0, 1);
+      const op1 = pick(rng, AMALLAR);
+      if (level === 2) {
+        const emas = rng() < 0.4;
+        const chap = emas ? 1 - a : a;
+        const javob = op1.f(chap, b);
+        const ifoda = `${emas ? "EMAS A" : "A"} ${op1.nom} B`;
+        return {
+          id: `${a}${b}${op1.nom}${emas ? "e" : ""}`,
+          data: { a, b, op: op1.nom, emas },
+          text: `${ifoda} nechchi?`,
+          blocks: [big(`A = ${a}, B = ${b}`), { type: "lines", items: [`${op1.nom}: ${op1.izoh}`] }],
+          input: choice(["1", "0"]),
+          answer: String(javob),
+          explain: emas
+            ? `EMAS A = ${chap}; ${chap} ${op1.nom} ${b} = ${javob}.`
+            : `${a} ${op1.nom} ${b} = ${javob}.`,
+        };
+      }
+      const c = ri(rng, 0, 1);
+      const op2 = pick(rng, AMALLAR);
+      const emasKim = pick(rng, ["", "A", "B", "C"]); // biriga EMAS qo'yiladi
+      const qiy = { A: a, B: b, C: c };
+      if (emasKim) qiy[emasKim] = 1 - qiy[emasKim];
+      const nomi = (x) => (emasKim === x ? `(EMAS ${x})` : x);
+      const ora = op1.f(qiy.A, qiy.B);
+      const javob = op2.f(ora, qiy.C);
+      return {
+        id: `${a}${b}${c}${op1.nom}${op2.nom}${emasKim}`,
+        data: { a, b, c, op1: op1.nom, op2: op2.nom, emasKim },
+        text: `(${nomi("A")} ${op1.nom} ${nomi("B")}) ${op2.nom} ${nomi("C")} nechchi?`,
+        blocks: [big(`A = ${a}, B = ${b}, C = ${c}`)],
+        input: choice(["1", "0"]),
+        answer: String(javob),
+        explain: `${qiy.A} ${op1.nom} ${qiy.B} = ${ora}; ${ora} ${op2.nom} ${qiy.C} = ${javob}.`,
+      };
+    },
+  };
+
+  // Inkor: gapning teskarisi
+  const INKOR = [
+    { gap: "Hamma bolalar keldi", javob: "Hech boʻlmaganda bitta bola kelmadi", yolgon: ["Hech kim kelmadi", "Hamma kelmadi", "Faqat bitta bola keldi"] },
+    { gap: "Hech kim kelmadi", javob: "Hech boʻlmaganda bitta odam keldi", yolgon: ["Hamma keldi", "Hech kim kelmadi", "Koʻpchilik keldi"] },
+    { gap: "Barcha chiroqlar yoniq", javob: "Hech boʻlmaganda bitta chiroq oʻchiq", yolgon: ["Hamma chiroq oʻchiq", "Bitta chiroq yoniq", "Chiroqlar yarmi yoniq"] },
+    { gap: "Men hech qachon kechikmayman", javob: "Men baʼzan kechikaman", yolgon: ["Men doim kechikaman", "Men kechikmadim", "Men hech qachon kelmayman"] },
+    { gap: "Bu son 5 dan katta", javob: "Bu son 5 dan katta emas", yolgon: ["Bu son 5 dan kichik", "Bu son 5 ga teng", "Bu son 6 dan katta"] },
+    { gap: "Hamma savollar qiyin", javob: "Hech boʻlmaganda bitta savol oson", yolgon: ["Hamma savollar oson", "Hech bir savol qiyin emas", "Bitta savol qiyin"] },
+    { gap: "Kitob stolda yoki javonda", javob: "Kitob na stolda, na javonda", yolgon: ["Kitob stolda emas", "Kitob javonda emas", "Kitob stolda ham, javonda ham"] },
+    { gap: "Ali ham, Vali ham keldi", javob: "Hech boʻlmaganda bittasi kelmadi", yolgon: ["Ikkalasi ham kelmadi", "Ali kelmadi", "Vali keldi"] },
+  ];
+
+  const teskari = {
+    topic: "mantiq",
+    levels: [2, 3],
+    make(level, rng, fresh) {
+      const pool = INKOR.filter((x) => fresh(x.gap));
+      if (!pool.length) return null;
+      const x = pick(rng, pool);
+      return {
+        id: x.gap,
+        data: { gap: x.gap },
+        text: `«${x.gap}» gapining inkori (teskarisi) qaysi?`,
+        input: choice(withOptions(rng, x.javob, shuffle(rng, x.yolgon))),
+        answer: x.javob,
+        explain: `Inkor — gap yolgʻon boʻladigan holat: ${x.javob.toLowerCase()}.`,
+      };
+    },
+  };
+
   // ======================================================================
   // Turlar, tekshirish va juft savollar
   // ======================================================================
 
   const KINDS = {
-    sozlar, morze, sezar,
-    naqsh, ikkilikdan, ikkilikka,
+    sozlar, morze, sezar, alifboRaqam,
+    naqsh, ikkilikdan, ikkilikka, nechtaBir, bitQiymat, ikkilikQoshish, kattaroq, keyingiIkkilik,
     bayt, piksel, kadr, birlik,
     rimOqish, rimYozish, onlikka, onlikdan, tizim,
     togri, aimi, neyron, xarita, keyingi,
-    barmoq, qator, ikkiTugma, shiftQaysi, aniqlik, tezlik, poyga, tezkorNima, tezkorQaysi, vaziyat,
-    rostmi, amal, kerakB, hayot, qaysiAmal, zinapoya, ifoda, sxema, qoshish,
+    barmoq, qator, ikkiTugma, shiftQaysi, aniqlik, tezlik, poyga, tezkorNima, tezkorQaysi, vaziyat, tugmaVazifa, klaviaturaBilim,
+    rostmi, amal, kerakB, hayot, qaysiAmal, zinapoya, ifoda, sxema, qoshish, amallar, teskari,
   };
 
   const kindsOf = (topic, level) => Object.keys(KINDS).filter((k) => KINDS[k].topic === topic && KINDS[k].levels.includes(level));
@@ -1574,7 +1894,7 @@
   const topicTitle = (id) => (TOPICS.find((t) => t.id === id) || {}).title;
   const levelTitle = (id) => (LEVELS.find((l) => l.id === id) || {}).title;
 
-  const api = { TOPICS, LEVELS, KINDS, FACTS, MORSE_WORDS, TRUE_FACTS, FALSE_FACTS, SHORTCUTS, TWO_KEYS, SITUATIONS, FINGER_NAMES, kindsOf, make, check, deck, topicTitle, levelTitle };
+  const api = { TOPICS, LEVELS, KINDS, FACTS, MORSE_WORDS, TRUE_FACTS, FALSE_FACTS, SHORTCUTS, TWO_KEYS, SITUATIONS, FINGER_NAMES, TUGMALAR, INKOR, AMALLAR, KLAV_SAVOL, kindsOf, make, check, deck, topicTitle, levelTitle };
 
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else {
