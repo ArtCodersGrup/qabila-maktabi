@@ -22,15 +22,21 @@
   const validCode = (s) => /^[1-9][0-9]{3}$/.test(String(s));
   const channelName = (kind, code) => `xona:${kind}:${code}`;
 
+  // Oddiy qiymat: son, mantiq yoki qisqa kalit so'z. Erkin matn (gap, ism, chat) hech qachon o'tmaydi.
+  const oddiy = (v) => typeof v === "number" || typeof v === "boolean" || (typeof v === "string" && /^[a-z0-9:_-]{0,32}$/i.test(v));
+  // Ro'yxat ham bo'ladi: 12 o'yinchining pog'onasi kabi (har qiymati baribir oddiy)
+  const qiymat = (v) => oddiy(v) || (Array.isArray(v) && v.length <= 32 && v.every(oddiy));
+  const kimlik = (v) => typeof v === "string" && /^[a-z0-9:_-]{1,32}$/i.test(v);
+
   // O'yin xabari: { type, data, t, from }. types — shu o'yinda ruxsat etilgan turlar; boshqasi tashlab yuboriladi
   function validMessage(msg, types) {
     if (!msg || typeof msg !== "object") return false;
     if (!types.includes(msg.type)) return false;
-    if (!SIDES.includes(msg.from) || typeof msg.t !== "number") return false;
-    // Ma'lumot — kichik obyekt, ichida erkin matn yo'q (faqat son, mantiq va qisqa kalit so'zlar)
+    if (!kimlik(msg.from) || typeof msg.t !== "number") return false;
+    // Ma'lumot — kichik obyekt: sonlar, mantiq, qisqa kalit so'zlar va ularning ro'yxatlari
     const data = msg.data == null ? {} : msg.data;
     if (typeof data !== "object" || Array.isArray(data)) return false;
-    return Object.values(data).every((v) => typeof v === "number" || typeof v === "boolean" || (typeof v === "string" && /^[a-z0-9:_-]{0,32}$/i.test(v)));
+    return Object.values(data).every(qiymat);
   }
 
   // Xona egasi (chap tomon) presence'da ko'rinishini kutamiz. Qat'iy pauza yaramaydi:
@@ -110,7 +116,8 @@
     }
 
     ch.on("broadcast", { event: "msg" }, ({ payload }) => {
-      if (!closed && validMessage(payload, types) && payload.from !== side && on.message) on.message(payload);
+      // Ikki kishilik xona: faqat qarshi tomondan kelgan xabar
+      if (!closed && validMessage(payload, types) && SIDES.includes(payload.from) && payload.from !== side && on.message) on.message(payload);
     });
     ch.on("presence", { event: "sync" }, () => {
       if (closed) return;
@@ -162,7 +169,79 @@
     };
   }
 
-  const api = { CONFIG, CODE_TTL, HOST_WAIT, SIDES, KINDS, makeCode, validCode, channelName, validMessage, roomInfo, available, ping, join };
+  // ---------- Ko'p kishilik xona (tog' o'yini) ----------
+  // Bitta boshlovchi ("host" — o'qituvchi qurilmasi) va 12 tagacha o'yinchi.
+  // Boshlovchi o'yin holatini o'zi hisoblaydi va tarqatadi; o'yinchilar faqat javobini yuboradi.
+  const HOST = "host";
+  const MAX_ODAM = 13; // 12 o'yinchi + boshlovchi
+
+  async function waitForKeys(ch, ms) {
+    const dead = Date.now() + ms;
+    for (;;) {
+      const keys = Object.keys(ch.presenceState());
+      if (keys.includes(HOST) || Date.now() >= dead) return keys;
+      await new Promise((r) => setTimeout(r, 150));
+    }
+  }
+
+  // me — o'yinchining yashirin raqami (ism emas!), role — "host" yoki "player".
+  // on: { status(s), peers(ids, hostBor), message(msg) }
+  // status: "connecting" | "ready" | "missing" | "full" | "error"
+  function xona({ kind, code, me, role, types, on }) {
+    const key = role === "host" ? HOST : me;
+    const ch = getClient().channel(channelName(kind, code), {
+      config: { broadcast: { self: false }, presence: { key } },
+    });
+    let tracked = false;
+    let closed = false;
+    const emit = (s) => { if (!closed && on.status) on.status(s); };
+    const close = () => {
+      if (closed) return;
+      closed = true;
+      getClient().removeChannel(ch);
+    };
+
+    ch.on("broadcast", { event: "msg" }, ({ payload }) => {
+      if (!closed && validMessage(payload, types) && payload.from !== key && on.message) on.message(payload);
+    });
+    ch.on("presence", { event: "sync" }, () => {
+      if (closed || !tracked || !on.peers) return;
+      const keys = Object.keys(ch.presenceState());
+      on.peers(keys.filter((k) => k !== HOST), keys.includes(HOST));
+    });
+
+    emit("connecting");
+    ch.subscribe(async (status) => {
+      if (closed) return;
+      if (status === "SUBSCRIBED") {
+        if (role !== "host") {
+          const keys = await waitForKeys(ch, HOST_WAIT);
+          if (closed) return;
+          if (!keys.includes(HOST)) { emit("missing"); close(); return; }
+          const odam = keys.filter((k) => k !== HOST);
+          if (odam.length >= MAX_ODAM - 1 && !odam.includes(me)) { emit("full"); close(); return; }
+        }
+        tracked = true;
+        await ch.track({ role: role === "host" ? "host" : "player", at: Date.now() });
+        emit("ready");
+        if (role === "host") logRoom(kind, code);
+      } else if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
+        emit("error");
+      }
+    });
+
+    return {
+      code,
+      me: key,
+      send(type, data) {
+        if (closed || !types.includes(type)) return;
+        ch.send({ type: "broadcast", event: "msg", payload: { type, data: data || {}, t: Date.now(), from: key } });
+      },
+      leave: close,
+    };
+  }
+
+  const api = { CONFIG, CODE_TTL, HOST_WAIT, HOST, MAX_ODAM, SIDES, KINDS, xona, makeCode, validCode, channelName, validMessage, roomInfo, available, ping, join };
 
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else {

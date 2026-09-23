@@ -2,12 +2,6 @@
 
 .obox { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
 .o-note { max-width: 420px; margin: 0; font-size: 18px; font-weight: 700; text-align: center; }
-.net-status { padding: 10px 16px; border-radius: 14px; background: #fff; box-shadow: 0 3px 0 var(--soya); font-size: 19px; font-weight: 800; text-align: center; max-width: 440px; }
-.net-status.ok { color: var(--togri); }
-.net-status.bad { color: var(--yana); }
-.code-lead { font-size: 19px; font-weight: 800; }
-.code-big { font-size: 64px; font-weight: 900; letter-spacing: 12px; color: var(--asosiy); line-height: 1; animation: pop 0.3s; }
-.code-small { font-size: 17px; font-weight: 800; color: #7A7266; }
 .peers { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
 .peer {
   display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 120px; padding: 10px 14px;
