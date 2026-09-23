@@ -72,13 +72,23 @@
 .pogona-chiziq { flex: 1; height: 3px; border-radius: 2px; background: rgba(43, 43, 58, 0.25); }
 .pogona.chogqi .pogona-chiziq { background: var(--togri); }
 .pogona-kimlar { position: absolute; left: 30px; right: 2px; bottom: calc(50% - 1px); display: flex; flex-wrap: nowrap; align-items: flex-end; gap: 2px; }
-.chiquvchi { display: flex; flex-direction: column; align-items: center; animation: pop 0.3s; }
+/* Qahramonlar alohida qatlamda: bir marta yaratiladi, keyin pogʻonadan pogʻonaga suriladi */
+.chiquvchilar { position: absolute; inset: 6px 8px; pointer-events: none; }
+.chiquvchi {
+  position: absolute; transform: translateX(-50%); animation: pop 0.3s;
+  display: flex; flex-direction: column; align-items: center;
+  transition: bottom 0.45s cubic-bezier(0.34, 1.2, 0.5, 1), left 0.3s ease;
+}
 .chiquvchi-rasm { width: min(30px, 11cqh); }
 .chiquvchi-nom { display: none; font-size: min(11px, 4cqh); font-weight: 800; }
 .chiquvchi.men .chiquvchi-nom { display: block; }
 .chiquvchi.men .chiquvchi-rasm { width: min(38px, 14cqh); }
 /* Bir pog'onada ko'p bo'lsa: qolganlari "+N" bo'lib turadi (tor ekranda kesilmasin) */
-.pogona-yana { padding: 0 5px; border-radius: 8px; background: rgba(255, 255, 255, 0.8); font-size: min(12px, 4.4cqh); font-weight: 900; color: #5C6570; }
+.pogona-yana {
+  position: absolute; transform: translateX(-50%); padding: 0 5px; border-radius: 8px;
+  background: rgba(255, 255, 255, 0.8); font-size: min(12px, 4.4cqh); font-weight: 900; color: #5C6570;
+  transition: bottom 0.45s ease, left 0.3s ease;
+}
 .chiquvchi.men { padding: 0 3px; border-radius: 10px; background: rgba(47, 111, 222, 0.18); }
 .chiquvchi.chiqdi { opacity: 0.35; }
 .chiquvchi.pauzada .chiquvchi-rasm { animation: flash 0.8s infinite; }

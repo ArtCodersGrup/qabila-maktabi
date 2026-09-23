@@ -13,13 +13,37 @@
   const qahramonById = (id) => T.QAHRAMONLAR.find((q) => q.id === id) || T.QAHRAMONLAR[0];
 
   // ---------- Tog' ----------
+  // Muhim: har chizishda hamma narsa qaytadan yaratilmaydi. Pog'ona chiziqlari faqat oyna
+  // o'zgarganda, qahramonlar esa bir marta yaratilib, keyin o'z joyiga suriladi (CSS transition).
+  // Aks holda ekran sekundiga 4 marta qayta tug'ilib, pirpirab turadi.
   function scene(host, togId) {
     const t = T.togById(togId);
     const fon = h("div", { class: "manzara" });
     const rows = h("div", { class: "pogonalar" });
-    const el = h("div", { class: "tog-scene" }, fon, rows);
+    const qatlam = h("div", { class: "chiquvchilar" });
+    const el = h("div", { class: "tog-scene" }, fon, rows, qatlam);
     host.append(el);
     let oxirgiQism = -1;
+    let oxirgiOyna = "";
+    const kimlar = new Map(); // o'yinchi id → element
+    const yanalar = new Map(); // pog'ona → "+N" belgisi
+
+    // Pog'ona chiziqlari, raqamlari va qimirlamaydigan qahramonlar (oqsoqol, bayroq, shogird)
+    function zina(past, yuqori) {
+      rows.innerHTML = "";
+      for (let step = yuqori; step >= past; step--) {
+        const row = h("div", { class: "pogona" + (step === t.pogona ? " chogqi" : "") + (step === 0 ? " tub" : "") },
+          h("span", { class: "pogona-raqam", text: String(step) }),
+          h("span", { class: "pogona-chiziq" }));
+        if (step === t.pogona || step === 0) {
+          const ustida = h("span", { class: "pogona-kimlar" });
+          if (step === t.pogona) ustida.append(h("span", { class: "chogqi-bayroq", html: art.chogqi() }), h("span", { class: "kichik-shogird", html: art.apprentice() }));
+          else ustida.append(h("span", { class: "kichik-oqsoqol", html: art.elder() }));
+          row.append(ustida);
+        }
+        rows.append(row);
+      }
+    }
 
     function render(state, meId) {
       const me = state.oyinchilar[meId];
@@ -52,51 +76,102 @@
         fon.innerHTML = art.manzara(t.id, qism);
         oxirgiQism = qism;
       }
-      rows.innerHTML = "";
-      for (let step = yuqori; step >= past; step--) {
-        const bari = Object.values(state.oyinchilar).filter((p) => p.pogona === step);
-        // "Men" har doim ko'rinadi, qolganlari sig'gani qadar
-        const kimlar = bari.slice().sort((a, b) => (b.id === meId) - (a.id === meId)).slice(0, KOR);
-        const row = h("div", { class: "pogona" + (step === t.pogona ? " chogqi" : "") + (step === 0 ? " tub" : "") },
-          h("span", { class: "pogona-raqam", text: String(step) }),
-          h("span", { class: "pogona-chiziq" }));
-        const ustida = h("span", { class: "pogona-kimlar" });
-        if (step === t.pogona) ustida.append(h("span", { class: "chogqi-bayroq", html: art.chogqi() }), h("span", { class: "kichik-shogird", html: art.apprentice() }));
-        if (step === 0) ustida.append(h("span", { class: "kichik-oqsoqol", html: art.elder() }));
-        kimlar.forEach((p) => {
-          const q = qahramonById(p.qahramon);
-          ustida.append(h("span", {
-            class: "chiquvchi" + (p.id === meId ? " men" : "") + (p.chiqdi ? " chiqdi" : "") + (p.pauzaGacha > Date.now() ? " pauzada" : ""),
-            title: q.nom,
-          }, h("span", { class: "chiquvchi-rasm", html: art.hayvon(q.id, q.rang) }), h("span", { class: "chiquvchi-nom", text: p.id === meId ? "Sen" : q.nom })));
-        });
-        if (bari.length > kimlar.length) ustida.append(h("span", { class: "pogona-yana", text: `+${bari.length - kimlar.length}` }));
-        row.append(ustida);
-        rows.append(row);
+      const imzo = past + ":" + yuqori;
+      if (imzo !== oxirgiOyna) {
+        zina(past, yuqori);
+        oxirgiOyna = imzo;
       }
+
+      const qatorlar = yuqori - past + 1;
+      const kenglik = el.clientWidth || 260;
+      const joy = Math.max(16, Math.min(38, (kenglik - 44) / KOR)); // yonma-yon turganlar orasi
+      const now = Date.now();
+      const korindi = new Set();
+      const yanaKerak = new Set();
+
+      for (let step = past; step <= yuqori; step++) {
+        const bari = Object.values(state.oyinchilar).filter((p) => p.pogona === step);
+        if (!bari.length) continue;
+        // "Men" har doim ko'rinadi, qolganlari sig'gani qadar
+        const korsat = bari.slice().sort((a, b) => (b.id === meId) - (a.id === meId)).slice(0, KOR);
+        korsat.forEach((p, i) => {
+          let node = kimlar.get(p.id);
+          if (!node) {
+            const q = qahramonById(p.qahramon);
+            node = h("span", { class: "chiquvchi", title: q.nom },
+              h("span", { class: "chiquvchi-rasm", html: art.hayvon(q.id, q.rang) }),
+              h("span", { class: "chiquvchi-nom", text: p.id === meId ? "Sen" : q.nom }));
+            kimlar.set(p.id, node);
+            qatlam.append(node);
+          }
+          const sinf = "chiquvchi" + (p.id === meId ? " men" : "") + (p.chiqdi ? " chiqdi" : "") + (p.pauzaGacha > now ? " pauzada" : "");
+          if (node.className !== sinf) node.className = sinf;
+          node.style.display = "";
+          node.style.bottom = (((step - past + 0.5) / qatorlar) * 100).toFixed(2) + "%";
+          node.style.left = (34 + joy * (i + 0.5)).toFixed(0) + "px";
+          korindi.add(p.id);
+        });
+        if (bari.length > korsat.length) {
+          let yana = yanalar.get(step);
+          if (!yana) {
+            yana = h("span", { class: "pogona-yana" });
+            yanalar.set(step, yana);
+            qatlam.append(yana);
+          }
+          const matn = "+" + (bari.length - korsat.length);
+          if (yana.textContent !== matn) yana.textContent = matn;
+          yana.style.display = "";
+          yana.style.bottom = (((step - past + 0.5) / qatorlar) * 100).toFixed(2) + "%";
+          yana.style.left = (34 + joy * (korsat.length + 0.4)).toFixed(0) + "px";
+          yanaKerak.add(step);
+        }
+      }
+      // Oynadan chiqib ketganlar ko'rinmaydi (lekin elementi saqlanadi — qaytsa sakramaydi)
+      kimlar.forEach((node, id) => { if (!korindi.has(id)) node.style.display = "none"; });
+      yanalar.forEach((node, step) => { if (!yanaKerak.has(step)) node.style.display = "none"; });
     }
     return { el, render };
   }
 
   // ---------- Reyting (yon ro'yxat) ----------
+  // Qatorlar qayta yaratilmaydi: mavjud element o'rnini almashtiradi va soni yangilanadi.
   function reyting(host) {
     const el = h("div", { class: "reyting" });
     host.append(el);
+    const qatorlar = new Map(); // id → { el, orin, son }
     return {
       el,
       render(state, meId) {
-        el.innerHTML = "";
-        T.reyting(state).forEach((p, k) => {
-          const q = qahramonById(p.qahramon);
-          el.append(h("div", { class: "reyting-qator" + (p.id === meId ? " men" : "") + (p.chiqdi ? " chiqdi" : "") },
-            h("span", { class: "reyting-orin", text: String(k + 1) }),
-            h("span", { class: "reyting-rasm", html: art.hayvon(q.id, q.rang) }),
-            h("span", { class: "reyting-nom", text: p.id === meId ? "Sen" : q.nom }),
-            h("b", { text: p.chiqdi ? "✗" : String(p.pogona) })));
+        const tartib = T.reyting(state);
+        tartib.forEach((p, k) => {
+          let q = qatorlar.get(p.id);
+          if (!q) {
+            const hayvon = qahramonById(p.qahramon);
+            const orin = h("span", { class: "reyting-orin" });
+            const son = h("b");
+            q = {
+              el: h("div", { class: "reyting-qator" },
+                orin,
+                h("span", { class: "reyting-rasm", html: art.hayvon(hayvon.id, hayvon.rang) }),
+                h("span", { class: "reyting-nom", text: p.id === meId ? "Sen" : hayvon.nom }),
+                son),
+              orin,
+              son,
+            };
+            qatorlar.set(p.id, q);
+          }
+          const sinf = "reyting-qator" + (p.id === meId ? " men" : "") + (p.chiqdi ? " chiqdi" : "");
+          if (q.el.className !== sinf) q.el.className = sinf;
+          const orin = String(k + 1);
+          if (q.orin.textContent !== orin) q.orin.textContent = orin;
+          const son = p.chiqdi ? "✗" : String(p.pogona);
+          if (q.son.textContent !== son) q.son.textContent = son;
+          // O'rni o'zgargan bo'lsa — elementning o'zi ko'chadi (qayta tug'ilmaydi)
+          if (el.children[k] !== q.el) el.insertBefore(q.el, el.children[k] || null);
         });
         // Ro'yxat uzun bo'lsa, o'zimning qatorim ko'rinib tursin
-        const men = el.querySelector(".reyting-qator.men");
-        if (men && el.scrollHeight > el.clientHeight + 1) men.scrollIntoView({ block: "nearest" });
+        const men = qatorlar.get(meId);
+        if (men && el.scrollHeight > el.clientHeight + 1) men.el.scrollIntoView({ block: "nearest" });
       },
     };
   }
