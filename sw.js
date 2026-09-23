@@ -1,6 +1,6 @@
 // Offline rejim: sayt fayllari keshlanadi. Bola saytni bir marta ochsa, keyin internetsiz ham oʻynay oladi.
 // Yangi fayl qoʻshilsa, FILES roʻyxatiga ham qoʻshiladi — buni bosh/tests/offline.test.js tekshiradi.
-const VERSION = "v37";
+const VERSION = "v39";
 const CACHE = "qabila-maktabi-" + VERSION;
 
 const FILES = [
@@ -14,6 +14,7 @@ const FILES = [
   "bosh/js/bosh-art.js",
   "bosh/js/bosh.js",
   "oyinlar/umumiy/css/asos.css",
+  "oyinlar/umumiy/css/dastur.css",
   "oyinlar/umumiy/css/mantiq.css",
   "oyinlar/umumiy/css/onlayn.css",
   "oyinlar/umumiy/css/sanoq.css",
@@ -21,6 +22,8 @@ const FILES = [
   "oyinlar/umumiy/fonts/Nunito.woff2",
   "oyinlar/umumiy/js/app.js",
   "oyinlar/umumiy/js/art.js",
+  "oyinlar/umumiy/js/dastur-ui.js",
+  "oyinlar/umumiy/js/dastur.js",
   "oyinlar/umumiy/js/mantiq-ui.js",
   "oyinlar/umumiy/js/offline.js",
   "oyinlar/umumiy/js/onlayn.js",
@@ -329,6 +332,17 @@ const FILES = [
   "oyinlar/25-zinapoya-chirogi/js/scenes/stage1.js",
   "oyinlar/25-zinapoya-chirogi/js/scenes/stage2.js",
   "oyinlar/25-zinapoya-chirogi/js/scenes/stage3.js",
+  "oyinlar/26-robot-yoli/",
+  "oyinlar/26-robot-yoli/index.html",
+  "oyinlar/26-robot-yoli/css/style.css",
+  "oyinlar/26-robot-yoli/js/game-art.js",
+  "oyinlar/26-robot-yoli/js/logic.js",
+  "oyinlar/26-robot-yoli/js/main.js",
+  "oyinlar/26-robot-yoli/js/scenes/common.js",
+  "oyinlar/26-robot-yoli/js/scenes/final.js",
+  "oyinlar/26-robot-yoli/js/scenes/stage1.js",
+  "oyinlar/26-robot-yoli/js/scenes/stage2.js",
+  "oyinlar/26-robot-yoli/js/scenes/stage3.js",
   "oyinlar/musobaqa/",
   "oyinlar/musobaqa/index.html",
   "oyinlar/musobaqa/css/style.css",

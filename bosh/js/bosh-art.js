@@ -269,7 +269,19 @@
   ${[0, 45, 90, 135, 180, 225, 270, 315].map((a) => `<rect x="41.5" y="18" width="3" height="5" rx="1.5" fill="#FFC83D" transform="rotate(${a} 43 32)"/>`).join("")}
   <circle cx="43" cy="32" r="6.5" fill="#FFC83D"/>`);
 
-  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, poyga, onlayn, tog };
+  // 26-o'yin: katakli maydon, robot yo'li va gulxan
+  const yol = svg(`
+  <rect x="5" y="5" width="54" height="54" rx="10" fill="#FFFFFF" stroke="${INK}" stroke-width="3"/>
+  <path d="M23 5 V59 M41 5 V59 M5 23 H59 M5 41 H59" stroke="#E4DCCB" stroke-width="2.5"/>
+  <path d="M14 50 V32 H44" stroke="#2F6FDE" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M40 26 L48 32 L40 38 Z" fill="#2F6FDE"/>
+  <rect x="8" y="45" width="12" height="11" rx="3.5" fill="#2F6FDE" stroke="${INK}" stroke-width="2.5"/>
+  <circle cx="11.5" cy="50.5" r="1.6" fill="#FFFFFF"/>
+  <circle cx="16.5" cy="50.5" r="1.6" fill="#FFFFFF"/>
+  <path d="M44 20 L56 15 M44 15 L56 20" stroke="#8A5A2B" stroke-width="3" stroke-linecap="round"/>
+  <path d="M50 3 Q57 9 54 14 Q52 17 50 17 Q48 17 46 14 Q43 9 50 3 Z" fill="#F08A24"/>`);
+
+  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, poyga, onlayn, tog };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";
