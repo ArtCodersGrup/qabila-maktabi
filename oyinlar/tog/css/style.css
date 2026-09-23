@@ -59,42 +59,56 @@
 .tog-soat { font-size: 18px; font-weight: 900; }
 .tog-maydon { display: flex; align-items: stretch; justify-content: center; gap: 10px; width: 100%; flex: 1 1 auto; min-height: 0; }
 .tog-scene {
-  position: relative; flex: 1 1 auto; max-width: 520px; min-height: 90px;
+  position: relative; flex: 1 1 auto; max-width: 720px; min-height: 90px;
   border-radius: 16px; overflow: hidden; box-shadow: 0 3px 0 var(--soya);
-  container-type: size; /* ichidagi o'lchamlar manzara balandligiga qarab kichrayadi */
+  container-type: size; /* ichidagi oʻlchamlar manzara balandligiga qarab kichrayadi */
 }
-.manzara { position: absolute; inset: 0; }
+/* Barcha qatlamlar bitta koordinatada: manzara SVG'si ham, belgilar ham sahnaning oʻzi boʻylab */
+.manzara, .osmon, .bezaklar, .pogonalar, .chiquvchilar { position: absolute; inset: 0; pointer-events: none; }
 .manzara .manzara-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-.manzara .bezak-svg { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 45%; }
-.pogonalar { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 6px 8px; }
-.pogona { position: relative; display: flex; align-items: center; gap: 6px; min-height: 0; flex: 1; }
-.pogona-raqam { width: 22px; font-size: min(13px, 4.6cqh); font-weight: 900; color: #5C6570; text-align: right; }
-.pogona-chiziq { flex: 1; height: 3px; border-radius: 2px; background: rgba(43, 43, 58, 0.25); }
-.pogona.chogqi .pogona-chiziq { background: var(--togri); }
-.pogona-kimlar { position: absolute; left: 30px; right: 2px; bottom: calc(50% - 1px); display: flex; flex-wrap: nowrap; align-items: flex-end; gap: 2px; }
-/* Qahramonlar alohida qatlamda: bir marta yaratiladi, keyin pogʻonadan pogʻonaga suriladi */
-.chiquvchilar { position: absolute; inset: 6px 8px; pointer-events: none; }
+.bezak svg, .quyosh svg, .bulut svg, .chogqi-bayroq svg,
+.kichik-shogird svg, .kichik-oqsoqol svg { display: block; width: 100%; height: auto; }
+
+/* Osmon: quyosh va sekin suzuvchi bulutlar */
+.quyosh { position: absolute; left: 4%; top: 6%; width: min(32px, 12cqh); }
+.bulut { position: absolute; width: min(54px, 20cqh); opacity: 0.9; }
+.bulut-1 { left: 1%; top: 26%; animation: suzish 28s ease-in-out infinite; }
+.bulut-2 { left: 7%; top: 62%; width: min(38px, 15cqh); animation: suzish 38s ease-in-out infinite reverse; }
+@keyframes suzish { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(12px); } }
+
+/* Pogʻona belgisi: bagʻirdagi nuqta, raqami chap tomonda (osmonda) */
+.pogona-belgi { position: absolute; transform: translate(-50%, 50%); }
+.pogona-nuqta { display: block; width: min(8px, 3cqh); height: min(8px, 3cqh); border-radius: 50%; background: rgba(43, 43, 58, 0.3); }
+.pogona-raqam { position: absolute; right: calc(100% + 5px); top: 50%; transform: translateY(-50%); font-size: min(12px, 4.2cqh); font-weight: 800; color: #5C6570; }
+.pogona-belgi.chogqi .pogona-nuqta { width: min(11px, 4cqh); height: min(11px, 4cqh); background: var(--togri); }
+.pogona-belgi.tub .pogona-nuqta { background: rgba(43, 43, 58, 0.45); }
+
+/* Bagʻirdagi bezaklar — chiziqdan oʻngda, qahramonni toʻsmaydi */
+.bezak { position: absolute; transform: translate(-50%, 0); width: min(28px, 10cqh); opacity: 0.95; }
+.bezak-archa { width: min(26px, 9cqh); }
+
+/* Choʻqqi va tub: bayroq, shogird, oqsoqol */
+.chogqi-bayroq, .kichik-shogird, .kichik-oqsoqol { position: absolute; transform: translateX(-50%); width: min(26px, 10cqh); }
+
+/* Qahramonlar alohida qatlamda: bir marta yaratiladi, keyin bagʻir boʻylab suriladi */
 .chiquvchi {
   position: absolute; transform: translateX(-50%); animation: pop 0.3s;
   display: flex; flex-direction: column; align-items: center;
-  transition: bottom 0.45s cubic-bezier(0.34, 1.2, 0.5, 1), left 0.3s ease;
+  transition: bottom 0.45s cubic-bezier(0.34, 1.2, 0.5, 1), left 0.45s cubic-bezier(0.34, 1.2, 0.5, 1);
 }
 .chiquvchi-rasm { width: min(30px, 11cqh); }
 .chiquvchi-nom { display: none; font-size: min(11px, 4cqh); font-weight: 800; }
 .chiquvchi.men .chiquvchi-nom { display: block; }
 .chiquvchi.men .chiquvchi-rasm { width: min(38px, 14cqh); }
-/* Bir pog'onada ko'p bo'lsa: qolganlari "+N" bo'lib turadi (tor ekranda kesilmasin) */
-.pogona-yana {
-  position: absolute; transform: translateX(-50%); padding: 0 5px; border-radius: 8px;
-  background: rgba(255, 255, 255, 0.8); font-size: min(12px, 4.4cqh); font-weight: 900; color: #5C6570;
-  transition: bottom 0.45s ease, left 0.3s ease;
-}
 .chiquvchi.men { padding: 0 3px; border-radius: 10px; background: rgba(47, 111, 222, 0.18); }
 .chiquvchi.chiqdi { opacity: 0.35; }
 .chiquvchi.pauzada .chiquvchi-rasm { animation: flash 0.8s infinite; }
-.chogqi-bayroq { width: min(26px, 10cqh); }
-.kichik-shogird, .kichik-oqsoqol { width: min(26px, 10cqh); }
-.kichik-shogird svg, .kichik-oqsoqol svg, .chogqi-bayroq svg { display: block; width: 100%; height: auto; }
+/* Bir pogʻonada koʻp boʻlsa: qolganlari "+N" boʻlib turadi */
+.pogona-yana {
+  position: absolute; transform: translateX(-50%); padding: 0 5px; border-radius: 8px;
+  background: rgba(255, 255, 255, 0.85); font-size: min(12px, 4.4cqh); font-weight: 900; color: #5C6570;
+  transition: bottom 0.45s ease, left 0.45s ease;
+}
 
 /* ---------- Reyting ---------- */
 .reyting { width: 150px; display: flex; flex-direction: column; gap: 3px; overflow: auto; }

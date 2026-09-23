@@ -8,47 +8,89 @@
   const h = ui.h;
 
   const OYNA = 8; // bir vaqtda ko'rinadigan pog'onalar soni
-  const KOR = 6; // bitta pog'onada ko'rinadigan qahramon (qolgani "+N")
+  const KOR = 5; // bitta pog'onada ko'rinadigan qahramon (qolgani "+N")
   const DOSKA = 16; // o'qituvchi doskasida bir vaqtda ko'rinadigan eng ko'p pog'ona
   const qahramonById = (id) => T.QAHRAMONLAR.find((q) => q.id === id) || T.QAHRAMONLAR[0];
 
   // ---------- Tog' ----------
-  // Muhim: har chizishda hamma narsa qaytadan yaratilmaydi. Pog'ona chiziqlari faqat oyna
-  // o'zgarganda, qahramonlar esa bir marta yaratilib, keyin o'z joyiga suriladi (CSS transition).
-  // Aks holda ekran sekundiga 4 marta qayta tug'ilib, pirpirab turadi.
+  // Tog'ni yon tomondan ko'ramiz: chapda osmon, o'ngda tog' tanasi, orasida qiya bag'ir.
+  // Qahramonlar shu bag'ir bo'ylab ko'tariladi. Har chizishda hamma narsa qaytadan yaratilmaydi:
+  // manzara va pog'ona belgilari faqat oyna o'zgarganda, qahramonlar esa bir marta yaratilib suriladi.
   function scene(host, togId) {
     const t = T.togById(togId);
     const fon = h("div", { class: "manzara" });
-    const rows = h("div", { class: "pogonalar" });
+    const osmon = h("div", { class: "osmon" },
+      h("span", { class: "quyosh", html: art.quyosh() }),
+      h("span", { class: "bulut bulut-1", html: art.bulut() }),
+      h("span", { class: "bulut bulut-2", html: art.bulut() }));
+    const belgilar = h("div", { class: "pogonalar" });
+    const bezaklar = h("div", { class: "bezaklar" });
     const qatlam = h("div", { class: "chiquvchilar" });
-    const el = h("div", { class: "tog-scene" }, fon, rows, qatlam);
+    const el = h("div", { class: "tog-scene" }, fon, osmon, bezaklar, belgilar, qatlam);
     host.append(el);
-    let oxirgiQism = -1;
     let oxirgiOyna = "";
+    let geo = null;
     const kimlar = new Map(); // o'yinchi id → element
     const yanalar = new Map(); // pog'ona → "+N" belgisi
 
-    // Pog'ona chiziqlari, raqamlari va qimirlamaydigan qahramonlar (oqsoqol, bayroq, shogird)
-    function zina(past, yuqori) {
-      rows.innerHTML = "";
-      for (let step = yuqori; step >= past; step--) {
-        const row = h("div", { class: "pogona" + (step === t.pogona ? " chogqi" : "") + (step === 0 ? " tub" : "") },
-          h("span", { class: "pogona-raqam", text: String(step) }),
-          h("span", { class: "pogona-chiziq" }));
-        if (step === t.pogona || step === 0) {
-          const ustida = h("span", { class: "pogona-kimlar" });
-          if (step === t.pogona) ustida.append(h("span", { class: "chogqi-bayroq", html: art.chogqi() }), h("span", { class: "kichik-shogird", html: art.apprentice() }));
-          else ustida.append(h("span", { class: "kichik-oqsoqol", html: art.elder() }));
-          row.append(ustida);
-        }
-        rows.append(row);
+    const chap = (x) => x.toFixed(2) + "%";
+    const bal = (y) => (100 - y).toFixed(2) + "%"; // y (tepadan) → bottom
+
+    // Manzara, pog'ona belgilari va bag'ir bezaklari — faqat oyna o'zgarganda
+    function oynaniChiz(past, yuqori) {
+      // Bag'ir burchagi: taxminan 60°. Tor qutida kengaytira olmaymiz, shuning uchun chegara bor.
+      const w = el.clientWidth || 260;
+      const hh = el.clientHeight || 240;
+      const n = yuqori - past + 1;
+      const kerak = ((hh * (n - 1)) / n) * 0.58 / w * 100;
+      const ken = Math.max(28, Math.min(62, kerak));
+      const oyna = { past, yuqori, pogona: t.pogona, X0: Math.max(7, 46 - ken / 2), X1: Math.max(7, 46 - ken / 2) + ken };
+      geo = art.geometriya(oyna);
+      fon.innerHTML = art.manzara(t.id, oyna);
+
+      belgilar.innerHTML = "";
+      for (let step = past; step <= yuqori; step++) {
+        const belgi = h("span", { class: "pogona-belgi" + (step === t.pogona ? " chogqi" : "") + (step === 0 ? " tub" : "") },
+          h("i", { class: "pogona-nuqta" }),
+          h("b", { class: "pogona-raqam", text: String(step) }));
+        belgi.style.left = chap(geo.xOf(step));
+        belgi.style.bottom = bal(geo.yOf(step));
+        belgilar.append(belgi);
       }
+      // Cho'qqida bayroq va shogird, eng pastda oqsoqol
+      if (geo.chogqi) {
+        const bayroq = h("span", { class: "chogqi-bayroq", html: art.chogqi() });
+        bayroq.style.left = chap(geo.peakX + 3);
+        bayroq.style.bottom = bal(geo.peakY);
+        const shogird = h("span", { class: "kichik-shogird", html: art.apprentice() });
+        shogird.style.left = chap(geo.peakX - 4);
+        shogird.style.bottom = bal(geo.peakY);
+        belgilar.append(bayroq, shogird);
+      }
+      if (past === 0) {
+        const oqsoqol = h("span", { class: "kichik-oqsoqol", html: art.elder() });
+        oqsoqol.style.left = chap(Math.max(5, geo.xOf(0) - 11));
+        oqsoqol.style.bottom = bal(geo.yOf(0));
+        belgilar.append(oqsoqol);
+      }
+
+      // Bag'irdagi bezaklar: chiziqdan o'ngda, qahramonlarni to'smaydi
+      bezaklar.innerHTML = "";
+      [[0.22, 15], [0.55, 26], [0.84, 19]].forEach(([ulush, masofa]) => {
+        const step = past + (yuqori - past) * ulush;
+        const y = geo.yOf(step);
+        const tur = art.bezakTuri(t.id, step / t.pogona);
+        const b = h("span", { class: "bezak bezak-" + tur, html: art.bezak(tur) });
+        b.style.left = chap(geo.xAtY(y) + masofa);
+        b.style.bottom = bal(y);
+        bezaklar.append(b);
+      });
     }
 
     function render(state, meId) {
       const me = state.oyinchilar[meId];
       // Past ekranda kamroq pog'ona ko'rsatamiz — qahramonlar juda kichrayib ketmasin
-      const oyna = Math.max(4, Math.floor(((el.clientHeight || 240) - 12) / 30));
+      const oyna = Math.max(4, Math.floor(((el.clientHeight || 240) - 12) / 34));
       let yuqori;
       let past;
       if (me) {
@@ -61,7 +103,6 @@
         const tirik = Object.values(state.oyinchilar).filter((p) => !p.chiqdi).map((p) => p.pogona);
         const eng = tirik.length ? Math.min.apply(null, tirik) : 0;
         const top = tirik.length ? Math.max.apply(null, tirik) : 0;
-        // Telefonda ham qahramon ko'rinsin: doskada eng ko'pi 16 qator
         const doska = Math.min(oyna, DOSKA);
         if (t.pogona + 1 <= doska) { past = 0; yuqori = t.pogona; }
         else {
@@ -70,21 +111,18 @@
           yuqori = Math.min(t.pogona, past + doska - 1);
         }
       }
-      // Manzara qaysi balandlikni ko'rsatishi: bolada — o'zi, doskada — yetakchi. Sakrab turmasligi uchun choraklab
-      const qism = Math.round(((me ? me.pogona : T.leader(state)) / t.pogona) * 4) / 4;
-      if (qism !== oxirgiQism) {
-        fon.innerHTML = art.manzara(t.id, qism);
-        oxirgiQism = qism;
-      }
       const imzo = past + ":" + yuqori;
       if (imzo !== oxirgiOyna) {
-        zina(past, yuqori);
+        oynaniChiz(past, yuqori);
         oxirgiOyna = imzo;
       }
 
-      const qatorlar = yuqori - past + 1;
+      // Bir pog'onada bir nechta bo'lsa — bag'ir bo'ylab pastga navbat turadi (tog' tanasi ustida,
+      // chap chetdagi osmonga emas: u yerda joy yo'q va raqamlarni to'sib qo'yardi)
       const kenglik = el.clientWidth || 260;
-      const joy = Math.max(16, Math.min(38, (kenglik - 44) / KOR)); // yonma-yon turganlar orasi
+      const qadamX = Math.max(6, Math.min(26, kenglik / 11)) / kenglik * 100;
+      const navbatX = (x, i) => Math.min(92, x + qadamX * i);
+      const navbatY = (y, i) => Math.min(95, y + qadamX * 0.5 * i);
       const now = Date.now();
       const korindi = new Set();
       const yanaKerak = new Set();
@@ -92,8 +130,10 @@
       for (let step = past; step <= yuqori; step++) {
         const bari = Object.values(state.oyinchilar).filter((p) => p.pogona === step);
         if (!bari.length) continue;
-        // "Men" har doim ko'rinadi, qolganlari sig'gani qadar
+        // "Men" har doim ko'rinadi, qolganlari sig'gani qadar; ortiqchasi "+N" bo'ladi
         const korsat = bari.slice().sort((a, b) => (b.id === meId) - (a.id === meId)).slice(0, KOR);
+        const x = geo.xOf(step);
+        const y = geo.yOf(step);
         korsat.forEach((p, i) => {
           let node = kimlar.get(p.id);
           if (!node) {
@@ -107,8 +147,9 @@
           const sinf = "chiquvchi" + (p.id === meId ? " men" : "") + (p.chiqdi ? " chiqdi" : "") + (p.pauzaGacha > now ? " pauzada" : "");
           if (node.className !== sinf) node.className = sinf;
           node.style.display = "";
-          node.style.bottom = (((step - past + 0.5) / qatorlar) * 100).toFixed(2) + "%";
-          node.style.left = (34 + joy * (i + 0.5)).toFixed(0) + "px";
+          // Bir pog'onada bir nechta bo'lsa — bag'ir bo'ylab pastga navbat
+          node.style.left = chap(navbatX(x, i));
+          node.style.bottom = bal(navbatY(y, i));
           korindi.add(p.id);
         });
         if (bari.length > korsat.length) {
@@ -121,12 +162,12 @@
           const matn = "+" + (bari.length - korsat.length);
           if (yana.textContent !== matn) yana.textContent = matn;
           yana.style.display = "";
-          yana.style.bottom = (((step - past + 0.5) / qatorlar) * 100).toFixed(2) + "%";
-          yana.style.left = (34 + joy * (korsat.length + 0.4)).toFixed(0) + "px";
+          yana.style.left = chap(navbatX(x, korsat.length));
+          yana.style.bottom = bal(navbatY(y, korsat.length));
           yanaKerak.add(step);
         }
       }
-      // Oynadan chiqib ketganlar ko'rinmaydi (lekin elementi saqlanadi — qaytsa sakramaydi)
+      // Oynadan chiqib ketganlar ko'rinmaydi (elementi saqlanadi — qaytsa sakramaydi)
       kimlar.forEach((node, id) => { if (!korindi.has(id)) node.style.display = "none"; });
       yanalar.forEach((node, step) => { if (!yanaKerak.has(step)) node.style.display = "none"; });
     }
