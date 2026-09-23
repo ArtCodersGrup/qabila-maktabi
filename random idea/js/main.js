@@ -18,37 +18,40 @@
   let prevService = null;
   let prevCompany = null;
 
-  // G'ildirakni aylantiradi: har qadamda so'z tepadan kirib markazda to'xtaydi, eskisi
-  // pastga tushib yo'qoladi (karasul uslubi), sekinlashib boradi, oxirida `finalValue`da to'xtaydi.
+  // Bitta so'zni CSS animatsiyasi bilan ko'rsatadi (uzluksiz harakat — style.css'dagi
+  // word-sweep/word-settle), tugagach `onEnd` chaqiriladi.
+  function playWord(wordEl, text, animName, durationMs, onEnd) {
+    wordEl.textContent = text;
+    wordEl.style.animation = "none";
+    void wordEl.offsetWidth; // reflow majburlash — animatsiya qaytadan boshlanishi uchun
+    wordEl.style.animation = `${animName} ${durationMs}ms ease-in-out 1`;
+    wordEl.style.animationFillMode = animName === "word-settle" ? "forwards" : "none";
+    wordEl.addEventListener("animationend", function handler() {
+      wordEl.removeEventListener("animationend", handler);
+      onEnd();
+    }, { once: true });
+  }
+
+  // G'ildirakni aylantiradi: har so'z tepadan kirib, markazdan pastga uzluksiz o'tib ketadi
+  // (karasul uslubi), sekinlashib boradi, oxirida `finalValue`da markazda to'xtaydi.
   function spinReel(reelEl, wordEl, list, durationMs, finalValue, onDone) {
     const startTime = performance.now();
-    const baseHold = 70; // ms — so'z tinch turadigan boshlang'ich vaqt
-    const transitionMs = 160; // css transition bilan bir xil (style.css)
 
     reelEl.classList.add("spinning");
 
     function step() {
       const elapsed = performance.now() - startTime;
-      const isFinal = elapsed >= durationMs;
-      const text = isFinal ? finalValue : list[Math.floor(Math.random() * list.length)];
-
-      wordEl.classList.add("is-leaving");
-      setTimeout(() => {
-        wordEl.textContent = text;
-        wordEl.classList.remove("is-leaving");
-        wordEl.classList.add("is-entering");
-        void wordEl.offsetWidth; // reflow majburlash — transition qaytadan ishga tushishi uchun
-        wordEl.classList.remove("is-entering");
-
-        if (isFinal) {
+      if (elapsed >= durationMs) {
+        playWord(wordEl, finalValue, "word-settle", 260, () => {
           reelEl.classList.remove("spinning");
           onDone();
-          return;
-        }
-        const progress = elapsed / durationMs;
-        const holdMs = baseHold + progress * 180; // sekinlashish
-        setTimeout(step, holdMs);
-      }, transitionMs);
+        });
+        return;
+      }
+      const progress = elapsed / durationMs;
+      const cycleMs = 220 + progress * 260; // sekinlashish: 220ms dan 480ms gacha
+      const word = list[Math.floor(Math.random() * list.length)];
+      playWord(wordEl, word, "word-sweep", cycleMs, step);
     }
 
     step();

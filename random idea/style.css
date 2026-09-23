@@ -90,14 +90,23 @@ body {
   color: var(--accent);
   line-height: 1.3;
   text-align: center;
-  transition: transform 0.16s ease, opacity 0.16s ease;
+  will-change: transform, opacity;
 }
 
-/* Karasuldagidek: yangi so'z tepadan kirib markazda to'xtaydi, eskisi pastga tushib yo'qoladi */
-.reel-word.is-leaving { transform: translateY(70%) scale(0.85); opacity: 0; }
-.reel-word.is-entering { transform: translateY(-70%) scale(0.85); opacity: 0; }
-
 #reel-company .reel-word { color: var(--accent2); }
+
+/* Karasul: bitta uzluksiz harakat — so'z tepadan kirib, markazda to'xtab, pastga chiqib ketadi. */
+@keyframes word-sweep {
+  0%, 10% { transform: translateY(-90%) scale(0.7); opacity: 0; }
+  40%, 60% { transform: translateY(0) scale(1); opacity: 1; }
+  90%, 100% { transform: translateY(90%) scale(0.7); opacity: 0; }
+}
+
+/* Oxirgi (tanlangan) so'z — kirib keladi va markazda qotib qoladi. */
+@keyframes word-settle {
+  0% { transform: translateY(-90%) scale(0.7); opacity: 0; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
 
 .reel.spinning {
   border-color: var(--accent);
