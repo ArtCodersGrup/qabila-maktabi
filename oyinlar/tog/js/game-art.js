@@ -34,6 +34,53 @@
 </svg>`;
   }
 
+
+  // ---------- Toʻliq qahramon: togʻga chiquvchi ----------
+  // Bosh — hayvon boshi (quloq/shox shakli oʻsha), ostida kurtka, ryukzak, oyoq-etik va tayoq.
+  // Kurtka rangi — qahramonning oʻz rangining toʻqrogʻi: kichik oʻlchamda ham kim kimligi bilinadi.
+  // Holatlar CSS bilan: .yuradi (qadam tashlaydi), .pauzada (choʻkkalab dam oladi).
+  function toq(hex, ulush) {
+    const n = parseInt((hex || "#C98B5E").slice(1), 16);
+    const r = Math.round(((n >> 16) & 255) * ulush);
+    const g = Math.round(((n >> 8) & 255) * ulush);
+    const b = Math.round((n & 255) * ulush);
+    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+  }
+
+  function qahramon(id, rang) {
+    const ears = EARS[id] || EARS.ayiq;
+    const color = rang || "#C98B5E";
+    const kurtka = toq(color, 0.7);
+    const shim = toq(color, 0.45);
+    return `<svg class="chiqar" viewBox="0 0 44 64" aria-hidden="true">
+  <g class="oyoqlar">
+    <g class="oyoq oyoq-orqa">
+      <line x1="19" y1="46" x2="15" y2="57" stroke="${shim}" stroke-width="5" stroke-linecap="round"/>
+      <path d="M15 57 L10 58" stroke="${INK}" stroke-width="4.4" stroke-linecap="round"/>
+    </g>
+    <g class="oyoq oyoq-old">
+      <line x1="25" y1="46" x2="29" y2="57" stroke="${shim}" stroke-width="5" stroke-linecap="round"/>
+      <path d="M29 57 L34 58" stroke="${INK}" stroke-width="4.4" stroke-linecap="round"/>
+    </g>
+  </g>
+  <g class="gavda">
+    <path d="M12 29 Q8 36 9 45 L33 45 Q35 36 31 29 Z" fill="${kurtka}" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M10 41 L32 41" stroke="${INK}" stroke-width="1.8" stroke-linecap="round" opacity="0.2"/>
+    <path d="M9 30 Q1 34 3 43 Q5 48 10 46 Z" fill="#C86B3C" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M31 33 Q38 36 37 42" fill="none" stroke="${kurtka}" stroke-width="4.8" stroke-linecap="round"/>
+    <path d="M31 33 Q38 36 37 42" fill="none" stroke="${INK}" stroke-width="1.3" stroke-linecap="round" opacity="0.3"/>
+    <line class="tayoq" x1="39" y1="28" x2="34" y2="60" stroke="#8A5A2B" stroke-width="2.8" stroke-linecap="round"/>
+    <circle cx="37" cy="42" r="2.6" fill="${color}" stroke="${INK}" stroke-width="1.6"/>
+  </g>
+  <g class="bosh">
+    <g fill="${color}" stroke="${INK}" stroke-width="2.4" stroke-linejoin="round" color="${color}" transform="translate(4.4 1) scale(0.78)">${ears}</g>
+    <circle cx="22" cy="20" r="9.6" fill="${color}" stroke="${INK}" stroke-width="2"/>
+    <circle cx="19" cy="19" r="1.7" fill="${INK}"/><circle cx="25.5" cy="19" r="1.7" fill="${INK}"/>
+    <ellipse cx="22.5" cy="23.5" rx="2.5" ry="1.9" fill="${INK}"/>
+  </g>
+</svg>`;
+  }
+
   // ---------- Tog' manzarasi ----------
   // Tog'ni yon tomondan ko'ramiz: chapda osmon, o'ngda tog' tanasi, orasida qiya bag'ir —
   // qahramonlar shu bag'ir bo'ylab yuqoriga chiqadi. Balandlikka qarab rang o'zgaradi:
@@ -106,6 +153,17 @@
     if (yQor > -14) qatlam.push(`<path d="${tolqin(yQor, 3.2)} L 118 -14 L -12 -14 Z" fill="#FFFFFF"/>`);
     if (yOt < 114) qatlam.push(`<path d="${tolqin(yOt, 2.6)} L 118 114 L -12 114 Z" fill="${m.ot}"/>`);
 
+    // Soʻqmoq: bagʻir qirrasidan sal oʻngda, tuproq rangli yoʻlka va har pogʻonada zina
+    const yTop = g.chogqi ? g.peakY : -12;
+    const xTop = g.chogqi ? g.peakX : g.xAtY(-12);
+    const yol = `M ${g.xAtY(112).toFixed(1)} 112 L ${xTop.toFixed(1)} ${yTop.toFixed(1)} L ${(xTop + 5).toFixed(1)} ${yTop.toFixed(1)} L ${(g.xAtY(112) + 5).toFixed(1)} 112 Z`;
+    const zinalar = [];
+    for (let st = oyna.past; st <= oyna.yuqori; st++) {
+      const zy = g.yOf(st);
+      const zx = g.xOf(st);
+      zinalar.push(`<path d="M ${zx.toFixed(1)} ${(zy + 0.9).toFixed(1)} L ${(zx + 5.4).toFixed(1)} ${(zy + 0.9).toFixed(1)}" stroke="#7E6A4C" stroke-opacity="0.5" stroke-width="1.1"/>`);
+    }
+
     return `<svg class="manzara-svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
   <defs>
     <linearGradient id="tog-osmon" x1="0" y1="0" x2="0" y2="1">
@@ -115,7 +173,8 @@
   </defs>
   <rect x="-2" y="-2" width="104" height="104" fill="url(#tog-osmon)"/>
   <path d="${tana}" fill="${m.tuproq}"/>
-  <g clip-path="url(#tog-tana)">${qatlam.join("")}${yonSoya}</g>
+  <g clip-path="url(#tog-tana)">${qatlam.join("")}${yonSoya}
+    <path d="${yol}" fill="#CDB68F" fill-opacity="0.75"/>${zinalar.join("")}</g>
   <path d="M ${past} L ${(g.chogqi ? g.peakX : g.xAtY(-12)).toFixed(1)} ${(g.chogqi ? g.peakY : -12).toFixed(1)}"
     fill="none" stroke="${INK}" stroke-opacity="0.25" stroke-width="0.8"/>
 </svg>`;
@@ -159,6 +218,6 @@
 
   root.QK = root.QK || {};
   root.QK.art = Object.assign(root.QK.art || {}, {
-    hayvon, manzara, geometriya, bezak, bezakTuri, bulut, quyosh, chogqi, MANZARA, OT, QOYA, QOR,
+    hayvon, qahramon, toq, manzara, geometriya, bezak, bezakTuri, bulut, quyosh, chogqi, MANZARA, OT, QOYA, QOR,
   });
 })(window);

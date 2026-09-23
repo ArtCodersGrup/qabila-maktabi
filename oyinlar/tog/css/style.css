@@ -77,11 +77,10 @@
 @keyframes suzish { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(12px); } }
 
 /* Pogʻona belgisi: bagʻirdagi nuqta, raqami chap tomonda (osmonda) */
-.pogona-belgi { position: absolute; transform: translate(-50%, 50%); }
-.pogona-nuqta { display: block; width: min(8px, 3cqh); height: min(8px, 3cqh); border-radius: 50%; background: rgba(43, 43, 58, 0.3); }
-.pogona-raqam { position: absolute; right: calc(100% + 5px); top: 50%; transform: translateY(-50%); font-size: min(12px, 4.2cqh); font-weight: 800; color: #5C6570; }
-.pogona-belgi.chogqi .pogona-nuqta { width: min(11px, 4cqh); height: min(11px, 4cqh); background: var(--togri); }
-.pogona-belgi.tub .pogona-nuqta { background: rgba(43, 43, 58, 0.45); }
+/* Pogʻona raqami: soʻqmoqdan chapda, osmon ustida (zinalar manzarada chizilgan) */
+.pogona-belgi { position: absolute; transform: translate(-100%, 50%); padding-right: 6px; }
+.pogona-raqam { font-size: min(12px, 4.2cqh); font-weight: 800; color: #5C6570; }
+.pogona-belgi.chogqi .pogona-raqam { color: var(--togri); }
 
 /* Bagʻirdagi bezaklar — chiziqdan oʻngda, qahramonni toʻsmaydi */
 .bezak { position: absolute; transform: translate(-50%, 0); width: min(28px, 10cqh); opacity: 0.95; }
@@ -97,12 +96,20 @@
   transition: bottom 0.45s cubic-bezier(0.34, 1.2, 0.5, 1), left 0.45s cubic-bezier(0.34, 1.2, 0.5, 1);
 }
 .chiquvchi-rasm { width: min(30px, 11cqh); }
+/* Yurish: oyoqlari navbat bilan qadam tashlaydi. Pauzada choʻkkalab dam oladi */
+.chiquvchi .oyoq { transform-box: view-box; transform-origin: 22px 46px; }
+.chiquvchi.yuradi .oyoq-old { animation: qadam 0.42s ease-in-out infinite alternate; }
+.chiquvchi.yuradi .oyoq-orqa { animation: qadam 0.42s ease-in-out infinite alternate-reverse; }
+@keyframes qadam { from { transform: rotate(-16deg); } to { transform: rotate(16deg); } }
+.chiquvchi .gavda, .chiquvchi .bosh { transform-box: view-box; transition: transform 0.3s ease; }
+.chiquvchi.pauzada .gavda, .chiquvchi.pauzada .bosh { transform: translateY(6px); }
+.chiquvchi.pauzada .oyoq-old { transform: rotate(46deg); }
+.chiquvchi.pauzada .oyoq-orqa { transform: rotate(-24deg); }
 .chiquvchi-nom { display: none; font-size: min(11px, 4cqh); font-weight: 800; }
 .chiquvchi.men .chiquvchi-nom { display: block; }
-.chiquvchi.men .chiquvchi-rasm { width: min(38px, 14cqh); }
+.chiquvchi.men .chiquvchi-rasm { width: min(37px, 13.5cqh); }
 .chiquvchi.men { padding: 0 3px; border-radius: 10px; background: rgba(47, 111, 222, 0.18); }
 .chiquvchi.chiqdi { opacity: 0.35; }
-.chiquvchi.pauzada .chiquvchi-rasm { animation: flash 0.8s infinite; }
 /* Bir pogʻonada koʻp boʻlsa: qolganlari "+N" boʻlib turadi */
 .pogona-yana {
   position: absolute; transform: translateX(-50%); padding: 0 5px; border-radius: 8px;

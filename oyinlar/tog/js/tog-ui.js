@@ -8,7 +8,8 @@
   const h = ui.h;
 
   const OYNA = 8; // bir vaqtda ko'rinadigan pog'onalar soni
-  const KOR = 5; // bitta pog'onada ko'rinadigan qahramon (qolgani "+N")
+  const KOR = 4; // bitta pog'onada ko'rinadigan qahramon (qolgani "+N")
+  const YOL = 2.6; // soʻqmoq kengligining yarmi: qahramon yoʻlka ustida turadi (%)
   const DOSKA = 16; // o'qituvchi doskasida bir vaqtda ko'rinadigan eng ko'p pog'ona
   const qahramonById = (id) => T.QAHRAMONLAR.find((q) => q.id === id) || T.QAHRAMONLAR[0];
 
@@ -50,8 +51,10 @@
 
       belgilar.innerHTML = "";
       for (let step = past; step <= yuqori; step++) {
+        // Raqamlar siyrak: har 5-pogʻona, tub va choʻqqi — aks holda qahramonni toʻsib ketadi
+        const raqamli = step % 5 === 0 || step === t.pogona || step === 0;
+        if (!raqamli) continue; // zinaning oʻzi manzarada chizilgan, belgi faqat raqam uchun
         const belgi = h("span", { class: "pogona-belgi" + (step === t.pogona ? " chogqi" : "") + (step === 0 ? " tub" : "") },
-          h("i", { class: "pogona-nuqta" }),
           h("b", { class: "pogona-raqam", text: String(step) }));
         belgi.style.left = chap(geo.xOf(step));
         belgi.style.bottom = bal(geo.yOf(step));
@@ -117,12 +120,11 @@
         oxirgiOyna = imzo;
       }
 
-      // Bir pog'onada bir nechta bo'lsa — bag'ir bo'ylab pastga navbat turadi (tog' tanasi ustida,
-      // chap chetdagi osmonga emas: u yerda joy yo'q va raqamlarni to'sib qo'yardi)
-      const kenglik = el.clientWidth || 260;
-      const qadamX = Math.max(6, Math.min(26, kenglik / 11)) / kenglik * 100;
-      const navbatX = (x, i) => Math.min(92, x + qadamX * i);
-      const navbatY = (y, i) => Math.min(95, y + qadamX * 0.5 * i);
+      // Bir pog'onada bir nechta bo'lsa — soʻqmoq boʻylab pastga navbat turadi (yoʻlkadan chiqmaydi)
+      const dx = (geo.xOf(past + 1) - geo.xOf(past)) * 0.32;
+      const dy = (geo.yOf(past) - geo.yOf(past + 1)) * 0.32;
+      const navbatX = (x, i) => Math.max(2, x + YOL - dx * i);
+      const navbatY = (y, i) => Math.min(96, y + dy * i);
       const now = Date.now();
       const korindi = new Set();
       const yanaKerak = new Set();
@@ -139,13 +141,21 @@
           if (!node) {
             const q = qahramonById(p.qahramon);
             node = h("span", { class: "chiquvchi", title: q.nom },
-              h("span", { class: "chiquvchi-rasm", html: art.hayvon(q.id, q.rang) }),
+              h("span", { class: "chiquvchi-rasm", html: art.qahramon(q.id, q.rang) }),
               h("span", { class: "chiquvchi-nom", text: p.id === meId ? "Sen" : q.nom }));
             kimlar.set(p.id, node);
             qatlam.append(node);
           }
-          const sinf = "chiquvchi" + (p.id === meId ? " men" : "") + (p.chiqdi ? " chiqdi" : "") + (p.pauzaGacha > now ? " pauzada" : "");
-          if (node.className !== sinf) node.className = sinf;
+          node.classList.toggle("men", p.id === meId);
+          node.classList.toggle("chiqdi", !!p.chiqdi);
+          node.classList.toggle("pauzada", p.pauzaGacha > now);
+          // Pog'ona o'zgarsa — qadam tashlab ko'tariladi (oyoqlari harakatlanadi)
+          if (node.dataset.pogona !== String(step)) {
+            node.dataset.pogona = String(step);
+            node.classList.add("yuradi");
+            clearTimeout(node.yurishTimer);
+            node.yurishTimer = setTimeout(() => node.classList.remove("yuradi"), 700);
+          }
           node.style.display = "";
           // Bir pog'onada bir nechta bo'lsa — bag'ir bo'ylab pastga navbat
           node.style.left = chap(navbatX(x, i));
