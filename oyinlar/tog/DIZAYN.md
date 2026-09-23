@@ -185,8 +185,15 @@ Ism va login, chat, reyting jadvali (kunlik yoki umumiy), 12 dan ko'p o'yinchi, 
 - Savol bloklari va javob tugmalari musobaqadan `umumiy/js/savol-ui.js` + `umumiy/css/savol.css` ga ajratildi — ikkala o'yin bitta koddan foydalanadi.
 - Brauzerda sinaldi (1280×800, 360×740, 740×360): cho'qqiga chiqish, xato → pauza, qolib ketish → tomoshabin, natija ekrani. Past ekranda savol tog'ning yonida turadi, chol-shogird zonasi yashiriladi.
 
+**Onlayn xona (2026-09-23, saytda):**
+- `js/protokol.js` + testlari: tarmoqqa faqat sonlar, 0/1 va qisqa kalit so'zlar ketadi. Savol matni hech qachon yuborilmaydi — har qurilma savolni o'zi hosil qiladi, tarmoqqa faqat "to'g'ri/xato". Bola 1,2 soniyadan tez javob yuborsa, hisobga olinmaydi.
+- `js/onlayn-tog.js`: o'qituvchi xona ochadi (4 xonali kod), bolalar kiradi va qahramon tanlaydi (bittasi bitta bolaga), "Boshlash" + 3-2-1 sanoq. O'yin hisobi faqat o'qituvchi qurilmasida yuriladi va har 0,7 soniyada tarqatiladi.
+- O'qituvchi o'ynamaydi: ekrani doska (bir vaqtda 16 pog'ona, hamma qahramon va reyting), "Chiqarib yuborish" va "To'xtatish" tugmalari, o'yindan keyin "Yangi o'yin" (kod o'sha, bolalar xonada qoladi).
+- Uzilishlar: bola qayta kirsa o'sha joyidan davom etadi (yashirin raqam `tog:men:v1` kalitida); o'qituvchidan 20 soniya xabar kelmasa, bolalarda o'yin natija bilan tugaydi; o'yin boshlangach kirgan bola keyingisini kutadi.
+- Sinaldi (mahalliy va jonli saytda): 1 o'qituvchi + 3 bola + kech qolgani; o'qituvchi telefonda ham.
+
 **Keyingi qadamlar:**
 
-1. **Supabase** (0-bosqich): loyiha yaratilishi kerak — "kelajagim" to'xtatilgach. Usiz onlayn xonani sinab bo'lmaydi.
-2. Onlayn xona: o'qituvchi qurilmasi xonani ochadi, holat Supabase Realtime orqali tarqaladi. Ekranlar tayyor — faqat robotlar o'rniga bolalar keladi.
+1. Sinfda sinash — 10–15 bola bilan bir vaqtda.
+2. Sinovdan keyin sozlanadigan: savol qiyinligi, 1,2 soniyalik chegara, holat tarqatish tezligi (0,7 s).
 3. Sinfdagi sinovdan keyin sozlanadigan sonlar: pog'ona, chegara, pauza, vaqt.
