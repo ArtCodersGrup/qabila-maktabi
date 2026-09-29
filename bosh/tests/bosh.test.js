@@ -67,11 +67,13 @@ test("yosh belgisi: umumiy yoki o'yinning o'zi (sanoq tizimlari bloki — 10–1
   for (const game of GAMES) {
     if (game.age != null) assert.match(game.age, /^\d+–\d+$/, game.dir);
     if (game.topic === "sanoq" && game.n >= 17) assert.equal(game.age, "10–12", game.dir);
+    if (game.topic === "python") assert.equal(game.age, "12–16", game.dir);
   }
 });
 
-test("💻 belgisi: klaviatura bloki o'yinlariga haqiqiy klaviatura kerak", () => {
-  for (const game of GAMES) assert.equal(!!game.pc, game.topic === "klaviatura", game.dir);
+test("💻 belgisi: klaviatura va Python bloklariga haqiqiy klaviatura kerak", () => {
+  const needsKeyboard = ["klaviatura", "python"];
+  for (const game of GAMES) assert.equal(!!game.pc, needsKeyboard.includes(game.topic), game.dir);
 });
 
 // O'yinlar ichidagi "5-oʻyindagi chiroqlarni esla" kabi havolalar bosh sahifadagi raqamga mos bo'lishi kerak.

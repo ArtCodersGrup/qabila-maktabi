@@ -1,6 +1,6 @@
 // Offline rejim: sayt fayllari keshlanadi. Bola saytni bir marta ochsa, keyin internetsiz ham oʻynay oladi.
 // Yangi fayl qoʻshilsa, FILES roʻyxatiga ham qoʻshiladi — buni bosh/tests/offline.test.js tekshiradi.
-const VERSION = "v41";
+const VERSION = "v42";
 const CACHE = "qabila-maktabi-" + VERSION;
 
 const FILES = [
@@ -15,6 +15,7 @@ const FILES = [
   "bosh/js/bosh.js",
   "oyinlar/umumiy/css/asos.css",
   "oyinlar/umumiy/css/dastur.css",
+  "oyinlar/umumiy/css/kod.css",
   "oyinlar/umumiy/css/mantiq.css",
   "oyinlar/umumiy/css/onlayn.css",
   "oyinlar/umumiy/css/sanoq.css",
@@ -24,10 +25,19 @@ const FILES = [
   "oyinlar/umumiy/js/art.js",
   "oyinlar/umumiy/js/dastur-ui.js",
   "oyinlar/umumiy/js/dastur.js",
+  "oyinlar/umumiy/js/kod-ui.js",
+  "oyinlar/umumiy/js/kod.js",
   "oyinlar/umumiy/js/mantiq-ui.js",
   "oyinlar/umumiy/js/offline.js",
   "oyinlar/umumiy/js/onlayn.js",
   "oyinlar/umumiy/js/practice.js",
+  "oyinlar/umumiy/js/python/builtins.js",
+  "oyinlar/umumiy/js/python/errors.js",
+  "oyinlar/umumiy/js/python/interpreter.js",
+  "oyinlar/umumiy/js/python/parser.js",
+  "oyinlar/umumiy/js/python/python.js",
+  "oyinlar/umumiy/js/python/tokenizer.js",
+  "oyinlar/umumiy/js/python/values.js",
   "oyinlar/umumiy/js/sanoq-ui.js",
   "oyinlar/umumiy/js/sanoq.js",
   "oyinlar/umumiy/js/savol-ui.js",
@@ -343,6 +353,17 @@ const FILES = [
   "oyinlar/26-robot-yoli/js/scenes/stage1.js",
   "oyinlar/26-robot-yoli/js/scenes/stage2.js",
   "oyinlar/26-robot-yoli/js/scenes/stage3.js",
+  "oyinlar/27-birinchi-buyruq/",
+  "oyinlar/27-birinchi-buyruq/index.html",
+  "oyinlar/27-birinchi-buyruq/css/style.css",
+  "oyinlar/27-birinchi-buyruq/js/game-art.js",
+  "oyinlar/27-birinchi-buyruq/js/logic.js",
+  "oyinlar/27-birinchi-buyruq/js/main.js",
+  "oyinlar/27-birinchi-buyruq/js/scenes/common.js",
+  "oyinlar/27-birinchi-buyruq/js/scenes/final.js",
+  "oyinlar/27-birinchi-buyruq/js/scenes/stage1.js",
+  "oyinlar/27-birinchi-buyruq/js/scenes/stage2.js",
+  "oyinlar/27-birinchi-buyruq/js/scenes/stage3.js",
   "oyinlar/musobaqa/",
   "oyinlar/musobaqa/index.html",
   "oyinlar/musobaqa/css/style.css",

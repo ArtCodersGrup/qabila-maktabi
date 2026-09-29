@@ -18,7 +18,13 @@ function siteFiles() {
   for (const f of fs.readdirSync(path.join(ROOT, "bosh/js"))) out.push("bosh/js/" + f);
   for (const f of fs.readdirSync(path.join(ROOT, "oyinlar/umumiy/css"))) out.push("oyinlar/umumiy/css/" + f);
   out.push("oyinlar/umumiy/fonts/Nunito.woff2");
-  for (const f of fs.readdirSync(path.join(ROOT, "oyinlar/umumiy/js"))) out.push("oyinlar/umumiy/js/" + f);
+  for (const f of fs.readdirSync(path.join(ROOT, "oyinlar/umumiy/js"), { withFileTypes: true })) {
+    if (f.isDirectory()) {
+      for (const g of fs.readdirSync(path.join(ROOT, "oyinlar/umumiy/js", f.name))) out.push(`oyinlar/umumiy/js/${f.name}/${g}`);
+    } else {
+      out.push("oyinlar/umumiy/js/" + f.name);
+    }
+  }
   for (const dir of pageDirs()) {
     out.push(`oyinlar/${dir}/index.html`, `oyinlar/${dir}/css/style.css`);
     const js = path.join(ROOT, "oyinlar", dir, "js");

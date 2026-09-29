@@ -293,7 +293,18 @@
   <rect x="46" y="45" width="8" height="5" rx="2" fill="#8E5BD0"/>
   <rect x="18" y="53" width="28" height="4" rx="2" fill="#DCE8FA"/>`);
 
-  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, poyga, yozuv, onlayn, tog };
+  // 27-o'yin: ekranda kod satri va kursor
+  const buyruq = svg(`
+  <rect x="4" y="10" width="56" height="38" rx="7" fill="#2B2B3A"/>
+  <rect x="9" y="15" width="46" height="28" rx="4" fill="#FFFDF7"/>
+  <rect x="14" y="21" width="14" height="5" rx="2.5" fill="#8E5BD0"/>
+  <rect x="31" y="21" width="19" height="5" rx="2.5" fill="#1A9E77"/>
+  <rect x="14" y="31" width="10" height="5" rx="2.5" fill="#2F6FDE"/>
+  <rect x="27" y="31" width="6" height="5" rx="1.5" fill="#F08A24"/>
+  <rect x="24" y="52" width="16" height="4" fill="#2B2B3A"/>
+  <rect x="16" y="56" width="32" height="5" rx="2.5" fill="#2B2B3A"/>`);
+
+  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, poyga, yozuv, onlayn, tog };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";

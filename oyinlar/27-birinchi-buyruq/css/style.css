@@ -1,0 +1,47 @@
+/* Birinchi buyruq — faqat shu o'yinga xos uslublar.
+   Umumiylari: ../../umumiy/css/asos.css va ../../umumiy/css/kod.css */
+
+.pbox { display: flex; flex-direction: column; align-items: stretch; gap: 10px; width: 100%; max-width: 640px; margin: 0 auto; }
+.note { font-size: 19px; font-weight: 800; color: var(--asosiy); text-align: center; }
+.answer { font-size: 20px; font-weight: 900; color: var(--togri); text-align: center; }
+
+/* Bola chiqishni yozadigan maydon */
+.kod-javob {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 2px solid var(--chiziq);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--matn);
+  font-family: var(--kod-shrift);
+  font-size: 18px;
+  line-height: 1.5;
+  resize: vertical;
+}
+.kod-javob:focus { outline: none; border-color: var(--asosiy); box-shadow: 0 0 0 3px rgba(47, 111, 222, 0.18); }
+
+/* "Shunday chiqishi kerak" kartasi */
+.kutilgan { border: 2px dashed var(--togri); border-radius: 12px; background: #fff; overflow: hidden; }
+.kutilgan .kod-sarlavha { background: #E7F5EF; color: #14785A; }
+.kutilgan .kod-natija { font-family: var(--kod-shrift); font-size: 18px; margin: 0; padding: 10px 12px; }
+
+/* ---------- Ta'rif, hikoya, tabrik ---------- */
+.formula-box { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+.formula-row { font-size: 20px; font-weight: 900; animation: pop 0.3s; }
+.formula-row.kod { font-family: var(--kod-shrift); font-size: 21px; color: var(--asosiy); }
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(240px, 66vw); align-self: center; }
+.story-art.small { width: min(190px, 50vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 19px; font-weight: 800; text-align: center; }
+
+@media (max-width: 480px) {
+  .pbox { gap: 8px; }
+  .note { font-size: 18px; }
+  .formula-row { font-size: 18px; }
+  .summary { font-size: 17px; gap: 8px; }
+}
+@media (orientation: landscape) and (max-height: 520px) {
+  .story-art { width: min(180px, 34vh); }
+}
