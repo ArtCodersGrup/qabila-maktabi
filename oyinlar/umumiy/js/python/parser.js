@@ -56,7 +56,13 @@
     function parseAtom() {
       const tok = here();
       if (tok.type === "num") { next(); return { t: "Num", value: tok.value, ...where(tok) }; }
-      if (tok.type === "str") { next(); return { t: "Str", value: tok.value, ...where(tok) }; }
+      if (tok.type === "str") {
+        next();
+        // Pythonda yonma-yon yozilgan satrlar qo'shilib ketadi: "a" "b" → "ab"
+        let text = tok.value;
+        while (at("str")) text += next().value;
+        return { t: "Str", value: text, ...where(tok) };
+      }
       if (tok.type === "name") { next(); return { t: "Name", id: tok.value, ...where(tok) }; }
       if (tok.type === "kw" && (tok.value === "True" || tok.value === "False" || tok.value === "None")) {
         next();
