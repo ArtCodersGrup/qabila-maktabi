@@ -12,7 +12,7 @@ Har bir o'yin bitta mavzuni o'rgatadi. O'yinlar bittadan, alohida qilinadi. Ular
 
 ## 2. Kim uchun
 
-- **Yosh:** 8–12.
+- **Yosh:** 8–12 (asosiy). Ayrim bloklar kattaroq yosh uchun: sanoq tizimlari va mantiq — 10–12, **Python: dasturlash — 12–16**. Bunday bloklarda yosh o'yin kartasida yozib qo'yiladi (`GAMES` da `age`).
 - **Til:** o'zbek tili, lotin yozuvi.
   - Ekrandagi matnda to'g'ri belgilar ishlatiladi: `oʻ`, `gʻ` (ʻ — U+02BB), tutuq belgisi `ʼ` (U+02BC).
   - Bolaga **"sen"** deb murojaat qilinadi.
@@ -30,6 +30,8 @@ O'yin **telefon/planshetda ham, kompyuterda ham** ishlaydi. Avval barmoq uchun l
 - Telefon **tik va yotiq** holatda ham ishlaydi, burilganda o'yin holati yo'qolmaydi.
 
 **Istisno — klaviatura bloki** (23-o'yindan): bu o'yinlar haqiqiy klaviaturani o'rgatadi, shuning uchun **kompyuter** (yoki klaviatura ulangan planshet) uchun. Bosh sahifada kartasida 💻 belgisi (`GAMES` da `pc: true`), telefonda ochilsa — ogohlantirish. Ekran baribir 360 px ga sig'adi.
+
+**Istisno — Python bloki** (27-o'yindan): bola klaviaturada haqiqiy kod yozadi, shuning uchun bu blok ham **kompyuter** uchun (💻, `pc: true`). Telefonda ochilsa — ogohlantirish. "Natijani top" kabi o'qish masalalari telefonda ham ishlaydi va 360 px ga sig'adi.
 
 ## 4. O'qitish tamoyillari
 
@@ -50,11 +52,15 @@ Har bir bosqich uch qismdan iborat va shu tartibda keladi:
 - Bir xil misol **ketma-ket ikki marta** chiqmaydi.
 - Savolda javobni ikki xil tushunish mumkin bo'lmasligi kerak ("eng kamida", "aynan", "…gacha" kabi so'zlar aniq yoziladi).
 
+**Istisno — masala banki** (Python bloki): olimpiada uslubidagi masalani generator yasay olmaydi, shuning uchun bunday masalalar **qo'lda** yoziladi va har biriga test holatlari (kirish → chiqish) beriladi. Test shuni tekshiradi: bankdagi har masalaning namunali yechimi barcha test holatlaridan o'tadi. Tasodifiylik oddiy mashq generatorlarida qoladi.
+
 ### 4.4. Xato javob
 Bolaga faqat "Xato" deyilmaydi. Qizil rang va qo'rqituvchi ovoz ishlatilmaydi.
 
 1. **1-xato:** maslahat — bosqichdagi rasm yoki formula qayta ko'rsatiladi. Bola yana urinadi.
 2. **2-xato:** to'g'ri javob tushuntirish bilan ko'rsatiladi, keyin **shunga o'xshash yangi misol** beriladi. Xato qilingan misol to'g'ri javoblar soniga qo'shilmaydi.
+
+**Kod yozadigan o'yinlarda** (Python bloki): sintaksis xatosi — qavs yopilmagani, otstup, harf xatosi — **urinish sanalmaydi**. Bu javob xatosi emas, terishdagi xato: talqinchi satr raqamini va izohni ko'rsatadi, bola tuzatib yana ishga tushiradi.
 
 ### 4.5. Bosqichdan o'tish
 - Mashqda **3 ta to'g'ri javob** — bosqich tugadi.
@@ -99,6 +105,8 @@ Harflar/belgilar uchun ranglar, tartib bo'yicha (rang ko'rish buzilishida ham fa
 **Nunito** — dumaloq, bolalarga mos. Fayli o'yin papkasida saqlanadi, internet talab qilinmaydi.
 Agar `ʻ` belgisi to'g'ri chiqmasa, tizim shrifti ishlatiladi.
 
+**Kod uchun** (Python bloki) — tizimning monospace shrifti: `ui-monospace, Menlo, Consolas, monospace`. Yangi fayl yuklanmaydi. Otstup va qavslar tekis ko'rinishi uchun harflar bir xil kenglikda bo'lishi shart.
+
 ## 7. Ovoz
 
 - Tovush effektlari (bosish, to'g'ri, "yana urin", tabrik, baraban) **kod bilan yasaladi** (Web Audio). Tayyor fayl kerak emas.
@@ -114,6 +122,7 @@ Agar `ʻ` belgisi to'g'ri chiqmasa, tizim shrifti ishlatiladi.
 - Skriptlar oddiy `<script>` bilan ulanadi (modul emas). Shunda `index.html` ni ikki marta bosib ochish mumkin.
 - O'yin ishlashi uchun **internet kerak emas**. Faqat **onlayn musobaqalar** (`oyinlar/onlayn/` va keyingilari) internet bilan ishlaydi: Supabase Realtime, ism va chat yo'q, faqat 4 xonali xona kodi; saytga faqat ommaviy kalit yoziladi.
 - Brauzer xotirasi (`localStorage`) faqat qulaylik uchun: tugagan bosqichlar va ovoz tanlovi. U ishlamasa ham o'yin to'liq ishlaydi.
+- Bolaning yozgan kodi **hech qachon** `eval` yoki `new Function` bilan bajarilmaydi. Python kodi `umumiy/js/python/` dagi o'z talqinchimizda bajariladi — u ham kutubxona emas, o'zimiz yozgan kod.
 - Hisob-kitob (mantiq) kodi ekran kodidan **alohida faylda** bo'ladi va avtomatik testlar bilan tekshiriladi.
 
 ## 9. Papkalar va nomlar
@@ -141,6 +150,7 @@ Information/
 - Yangi o'yin tayyor bo'lgach, **bosh sahifadagi ro'yxatga** qo'shiladi (`bosh/js/bosh.js` dagi `GAMES`); `node --test bosh/tests/*.test.js` buni tekshiradi.
 - **Bosh sahifadagi tartib** — o'rganish yo'li: osondan qiyinga, boshqa o'yinga tayanadigan o'yin undan keyin (`SECTIONS` tartibi). Kartadagi raqam — shu tartibdagi o'rni, papka raqami emas (papka nomlari o'zgarmaydi).
 - O'yin ichida boshqa o'yinga raqam bilan havola ("5-oʻyindagi chiroqlarni esla") — **bosh sahifadagi raqam** bilan yoziladi va `bosh/tests/havolalar.json` ga qo'shiladi; tartib o'zgarsa, test eslatadi.
+- Yangi **blok** qo'shilsa, `SECTIONS` ga o'rganish yo'li bo'yicha o'z o'rniga qo'yiladi. Undan keyingi bloklarning raqamlari suriladi: o'yin matnidagi raqamli havolalarni `node bosh/tools/renumber.js` yangilaydi, `havolalar.json` testi tekshiradi.
 - **Musobaqalar** (o'yin emas, bosqichi yo'q) — bosh sahifada `CONTESTS`, ikki guruh: **bitta ekranda** (`oyinlar/musobaqa/` savol-javob, `oyinlar/poyga/` tez yozish poygasi) va **onlayn** (`oyinlar/onlayn/` aloqa sinovi; onlayn o'yinlar keyin qo'shiladi).
 
 ## 10. Ish tartibi
