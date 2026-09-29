@@ -10,7 +10,7 @@
 
   const TYPES = ["lobbi", "holat", "kirdi", "qadam"];
   const HOST_JIM = 20000; // boshlovchidan shuncha vaqt xabar kelmasa — u uzilgan
-  const JAMI_MAX = 500; // matn belgilarining oqilona chegarasi
+  const JAMI_MAX = 900; // matn belgilarining oqilona chegarasi (50 ta so'z ≈ 300–400 belgi)
 
   // O'yinchining yashirin raqami: ism emas, faqat shu qurilmani tanish uchun (uzilsa — o'sha joyidan)
   function kimlik(rng) {
@@ -31,7 +31,7 @@
   }
 
   const urugYasa = (rng) => 1 + Math.floor((rng || Math.random)() * 9999998);
-  const matnYasa = (tur, urug) => TY.raceText(P.turById(tur).id, null, seedRng(urug));
+  const matnYasa = (tur, urug) => TY.raceText(P.turById(tur).id, null, seedRng(urug), P.SOZLAR);
 
   // ---------- Boshlovchi → hamma ----------
   const lobbi = (s) => {

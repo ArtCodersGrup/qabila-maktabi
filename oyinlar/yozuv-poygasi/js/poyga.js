@@ -11,6 +11,9 @@
 
   const MIN_ODAM = 2;
   const MAX_ODAM = T.MAX_PLAYERS;
+  // Bitta poygada yoziladigan so'zlar soni (muallif talabi, 2026-09-29): 50 ta.
+  // Maqol turida — kamida shuncha so'z yig'ilguncha maqollar zanjiri.
+  const SOZLAR = 50;
 
   // Matn turi → tog' (faqat ko'rinish): uzunroq matn — balandroq tog'
   const TOG_TURI = { home: "chimyon", words: "hazrati", proverb: "pomir" };
@@ -126,7 +129,7 @@
   }));
 
   const api = {
-    TURLAR, MIN_ODAM, MAX_ODAM, turById, holatYarat, qoshil, chiqar, boshRanglar,
+    TURLAR, MIN_ODAM, MAX_ODAM, SOZLAR, turById, holatYarat, qoshil, chiqar, boshRanglar,
     boshla, qayta, qadam, pogonaOf, tartib, hammasiTugadi, tugat, natija,
   };
 

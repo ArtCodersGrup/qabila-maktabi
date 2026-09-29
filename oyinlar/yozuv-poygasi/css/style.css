@@ -19,6 +19,14 @@
 .men-orin { font-size: 24px; font-weight: 900; color: var(--togri); }
 .men-son { font-size: 16px; font-weight: 700; color: #7A7266; }
 
+/* Uzun matn (50 ta soʻz) bir necha qatorga sigʻadi: uch qator koʻrinadi,
+   yozilgan sari ichida suriladi (ekran.js dagi scrollIntoView). */
+.poyga-oyin .tline {
+  font-size: 22px; line-height: 30px; row-gap: 0; padding-bottom: 0;
+  max-height: 100px; /* 10 px ichki chet + aniq 3 qator (3 × 30) — yarim qator koʻrinmaydi */
+  overflow: hidden;
+}
+
 /* ---------- Tartib roʻyxati ---------- */
 .reyting-holat { font-size: 14px; font-weight: 800; color: #7A7266; }
 .reyting-qator.keldi .reyting-holat { color: var(--togri); }

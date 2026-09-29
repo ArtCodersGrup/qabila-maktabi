@@ -94,17 +94,28 @@
 
   // ---------- Matnlar ----------
   // Faqat asosiy qator harflari: a s d f g h j k l va ʻ
+  // Asosiy qator: faqat a s d f g h j k l ʻ — yagona unli "a". Shunday harflardan yasaladigan
+  // haqiqiy o'zbekcha so'zlar ko'p emas, shuning uchun ro'yxat qisqa (uzun poygada takrorlanadi).
   const HOME_WORDS = [
     "dala", "salla", "gala", "jadal", "shakl", "saf", "jahl", "dalda", "falak", "kalla",
     "hal", "aks", "sadaf", "gʻalla", "jagʻ", "shagʻal", "dagʻal", "hafsala", "lak", "sal",
+    "asal", "kasal", "kafas", "fasl", "asl", "jala", "adash", "kashf",
   ];
   // Asosiy va yuqori qator harflari (pastki qator — z x c v b n m — yo'q)
+  // Yuqori + asosiy qator (b, v, n, m, z, x va ch yo'q)
   const TOP_WORDS = [
     "ota", "qor", "daryo", "yoʻl", "qush", "tuya", "gul", "oʻrik", "shaftoli", "uy",
     "tosh", "quyosh", "osh", "patir", "qishloq", "hayot", "doʻst", "sayohat", "shoir", "daftar",
     "ertak", "qoʻshiq", "sariq", "yashil", "togʻ", "qoʻl", "oyoq", "oila", "oʻqish", "hikoya",
     "tulki", "quloq", "hosil", "sut", "piyola", "qatiq", "gilos", "ari", "qirgʻoq", "joʻja",
     "sher", "eshik", "stol",
+    "shahar", "yurak", "kartoshka", "pista", "kaptar", "laylak", "asalari", "kapalak", "qurt", "ayiq",
+    "eshak", "sigir", "fil", "kiyik", "koʻl", "soy", "loy", "tuproq", "tish", "koʻylak",
+    "shapka", "doʻppi", "paypoq", "sirgʻa", "parta", "doska", "dars", "harf", "surat", "kuy",
+    "yurt", "koʻprik", "oʻt", "tol", "terak", "taroq", "ilgak", "ip", "qopqoq", "safar",
+    "qayiq", "hafta", "soat", "yil", "tush", "qish", "issiq", "katta", "past", "tepa",
+    "ogʻir", "qattiq", "oq", "qora", "toʻq", "ikki", "toʻrt", "olti", "yetti", "kulgi",
+    "yorugʻ", "qulf", "yogʻ", "qoshiq", "sholi", "sopol", "oy",
   ];
   // O'zbek maqollari: hamma harf, katta harf, vergul va nuqta
   const PROVERBS = [
@@ -123,6 +134,24 @@
     "Kattaga hurmatda, kichikka izzatda boʻl.",
     "Mehnatning tagi rohat.",
     "Bilagi zoʻr birni yiqar, bilimi zoʻr mingni yiqar.",
+    "Vaqting ketdi, baxting ketdi.",
+    "Mehnat qilgan, murodga yetgan.",
+    "Til bilgan el biladi.",
+    "Kitob bilimlar bulogʻi.",
+    "Birlashgan oʻzar, birlashmagan toʻzar.",
+    "Odobli bola elga manzur.",
+    "Koʻp oʻqigan koʻp biladi.",
+    "Mehnatsiz rohat yoʻq.",
+    "Sabrli inson murodga yetar.",
+    "Aytilgan soʻz otilgan oʻq.",
+    "Dangasaga har kun bayram.",
+    "Tomchi tomchi koʻl boʻlar.",
+    "Doʻstlik bir umrlik boylik.",
+    "Ishning boshi qiyin.",
+    "Kuch birlikda.",
+    "Mehmon otangdan ulugʻ.",
+    "Har ishning oʻz vaqti bor.",
+    "Oʻrganmoqdan uyalma, bilmaslikdan uyal.",
   ];
 
   // Kichik mashqlar (ko'rsatish): har biridan oldin oqsoqol bitta gap aytadi (DIZAYN 6–8)
@@ -159,11 +188,33 @@
     return list[Math.floor(rng() * list.length)];
   }
 
-  // n ta har xil so'z, tasodifiy tartibda
+  // n ta so'z, tasodifiy tartibda. Ro'yxat tugasa — qaytadan aralashtiriladi
+  // (uzun poygada so'z takrorlanadi, lekin hech qachon ketma-ket ikki marta).
   function words(list, n, rng) {
-    const pool = list.slice();
     const out = [];
-    while (out.length < n) out.push(pool.splice(Math.floor(rng() * pool.length), 1)[0]);
+    let pool = [];
+    while (out.length < n) {
+      if (!pool.length) pool = list.slice();
+      const w = pool.splice(Math.floor(rng() * pool.length), 1)[0];
+      if (pool.length && out.length && w === out[out.length - 1]) {
+        pool.push(w); // ketma-ket bir xil so'z chiqmasin — keyinroq ishlatamiz
+        continue;
+      }
+      out.push(w);
+    }
+    return out.join(" ");
+  }
+
+  // Maqollar zanjiri: kamida n ta so'z yig'ilguncha maqol qo'shiladi (uzun poyga uchun)
+  function proverbs(n, rng) {
+    const out = [];
+    let soni = 0;
+    while (soni < n) {
+      const p = pick(PROVERBS, rng);
+      if (PROVERBS.length > 1 && p === out[out.length - 1]) continue;
+      out.push(p);
+      soni += p.split(" ").length;
+    }
     return out.join(" ");
   }
 
@@ -187,10 +238,11 @@
     { id: "proverb", title: "Maqol" },
   ];
 
-  function raceText(level, prev, rng) {
+  // soni — poygadagi so'zlar soni (berilmasa: 5 ta so'z yoki bitta maqol)
+  function raceText(level, prev, rng, soni) {
     rng = rng || Math.random;
-    if (level === "proverb") return fresh(() => pick(PROVERBS, rng), prev);
-    return fresh(() => words(level === "home" ? HOME_WORDS : TOP_WORDS, 5, rng), prev);
+    if (level === "proverb") return fresh(() => (soni ? proverbs(soni, rng) : pick(PROVERBS, rng)), prev);
+    return fresh(() => words(level === "home" ? HOME_WORDS : TOP_WORDS, soni || 5, rng), prev);
   }
 
   // ---------- Yozish sessiyasi ----------
@@ -244,7 +296,7 @@
   const api = {
     PASS, OKINA, ROWS, FINGERS, HOME_WORDS, TOP_WORDS, PROVERBS, DRILLS, RACE_LEVELS,
     isApostrophe, isUpper, keyOf, fingerOf, shiftFor, same, keyFrom, isCyrillic, warning,
-    allowed, fits, makeLine, raceText, session, stats, passed, raceResult, ghostAt,
+    allowed, fits, makeLine, words, proverbs, raceText, session, stats, passed, raceResult, ghostAt,
   };
 
   if (typeof module !== "undefined" && module.exports) module.exports = api;

@@ -94,13 +94,24 @@
     }
     host.append(el);
 
+    let oxirgi = -1;
     return {
       el,
+      chars,
+      // Faqat o'zgargan belgilar yangilanadi: uzun matnda (50 ta so'z) har bosishda
+      // yuzlab elementni qayta bo'yash sekinlik qilardi. Joriy belgi qaytariladi —
+      // uni ko'rinadigan joyga surish uchun.
       at(pos) {
-        chars.forEach((c, k) => {
-          c.classList.toggle("done", k < pos);
-          c.classList.toggle("cur", k === pos);
-        });
+        if (pos === oxirgi) return chars[pos] || null;
+        if (oxirgi >= 0 && chars[oxirgi]) chars[oxirgi].classList.remove("cur");
+        if (pos < oxirgi) {
+          for (let k = pos; k <= oxirgi && k < chars.length; k++) chars[k].classList.remove("done");
+        } else {
+          for (let k = Math.max(0, oxirgi); k < pos; k++) chars[k].classList.add("done");
+        }
+        if (chars[pos]) chars[pos].classList.add("cur");
+        oxirgi = pos;
+        return chars[pos] || null;
       },
       wrong() {
         const c = el.querySelector(".ch.cur");

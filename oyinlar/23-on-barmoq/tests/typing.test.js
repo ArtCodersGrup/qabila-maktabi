@@ -231,3 +231,39 @@ test("ghostAt: soya berilgan vaqtgacha nechta belgi yozgan", () => {
   assert.equal(T.ghostAt(times, 899), 2);
   assert.equal(T.ghostAt(times, 5000), 4);
 });
+
+test("uzun poyga matni: 50 ta so'z, ketma-ket takror yo'q", () => {
+  const rng = seq(0.1, 0.7, 0.3, 0.9, 0.45, 0.05, 0.62, 0.81, 0.27, 0.53);
+  for (const level of ["home", "words"]) {
+    const text = T.raceText(level, null, rng, 50);
+    const list = text.split(" ");
+    assert.equal(list.length, 50, level);
+    for (let k = 1; k < list.length; k++) assert.notEqual(list[k], list[k - 1], `${level}: ${list[k]}`);
+    const pool = level === "home" ? T.HOME_WORDS : T.TOP_WORDS;
+    for (const w of list) assert.ok(pool.includes(w), `${level}: ${w}`);
+    assert.ok(T.fits(text, level === "home" ? 1 : 2), level);
+  }
+});
+
+test("uzun matn maqollardan: kamida 50 ta so'z, hammasi ro'yxatdan", () => {
+  const text = T.raceText("proverb", null, seq(0.2, 0.6, 0.4, 0.8, 0.1), 50);
+  assert.ok(text.split(" ").length >= 50, text.split(" ").length + " ta so'z");
+  assert.ok(T.fits(text, 3));
+  // Matn maqollar zanjiri: har bir gap ro'yxatda bor
+  const gaplar = text.split(". ").map((p, k, all) => (k < all.length - 1 ? p + "." : p));
+  for (const g of gaplar) assert.ok(T.PROVERBS.includes(g), g);
+  for (let k = 1; k < gaplar.length; k++) assert.notEqual(gaplar[k], gaplar[k - 1], "ketma-ket bir xil maqol");
+});
+
+test("qisqa poyga (so'z soni berilmasa) avvalgidek qoladi", () => {
+  assert.equal(T.raceText("home", null, seq(0.1, 0.2, 0.3, 0.4, 0.5)).split(" ").length, 5);
+  assert.equal(T.raceText("words", null, seq(0.1, 0.2, 0.3, 0.4, 0.5)).split(" ").length, 5);
+  assert.ok(T.PROVERBS.includes(T.raceText("proverb", null, seq(0.5))));
+});
+
+test("so'z ro'yxatlari poygaga yetarli", () => {
+  assert.ok(T.TOP_WORDS.length >= 60, "umumiy so'zlar: " + T.TOP_WORDS.length);
+  assert.ok(T.PROVERBS.length >= 30, "maqollar: " + T.PROVERBS.length);
+  // Asosiy qatorda faqat "a" unlisi bor — 50 ta haqiqiy so'z yig'ilmaydi, bori shuncha
+  assert.ok(T.HOME_WORDS.length >= 25, "asosiy qator so'zlari: " + T.HOME_WORDS.length);
+});

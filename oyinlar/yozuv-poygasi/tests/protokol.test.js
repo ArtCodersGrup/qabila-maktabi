@@ -116,3 +116,16 @@ test("lobbi: kim kirgani va qaysi rangni tanlagani", () => {
   assert.deepEqual(l.ids, ["b0", "b1", "b2"]);
   assert.deepEqual(l.qah, ["qizil", "kok", "yashil"]);
 });
+
+test("poyga matni uzun: har turda 50 ta so'z", () => {
+  const P2 = require("../js/poyga.js");
+  assert.equal(P2.SOZLAR, 50);
+  for (const tur of ["home", "words"]) {
+    const matn = PR.matnYasa(tur, 12345);
+    assert.equal(matn.split(" ").length, 50, tur);
+    assert.ok([...matn].length <= PR.JAMI_MAX, `${tur}: ${matn.length} belgi`);
+  }
+  const maqol = PR.matnYasa("proverb", 999);
+  assert.ok(maqol.split(" ").length >= 50);
+  assert.ok([...maqol].length <= PR.JAMI_MAX, maqol.length + " belgi");
+});

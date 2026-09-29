@@ -134,6 +134,8 @@
     QK.current = s; // tekshirish uchun
     ln.at(0);
     kb.show(s.next());
+    // Uzun matn bir necha qatorga sig'adi — yozilayotgan joy doim ko'rinib tursin
+    const korsat = (el2) => { if (el2 && el2.scrollIntoView) el2.scrollIntoView({ block: "nearest" }); };
     if (root.document.activeElement && root.document.activeElement.blur) root.document.activeElement.blur();
 
     function onKey(e) {
@@ -153,7 +155,7 @@
         sound.play("tak");
         return;
       }
-      ln.at(s.pos);
+      korsat(ln.at(s.pos));
       if (r === "done") {
         stop();
         kb.show(null);

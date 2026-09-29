@@ -63,13 +63,17 @@ Bola klaviaturaga qaramay, **aniq va tez** yozishga mashq qiladi. Poyga qiziqish
 
 `typing.RACE_LEVELS` dagi uch tur (eski poygadagidek):
 
+**Har poygada 50 ta soʻz** (muallif talabi, 2026-09-29):
+
 | Tur | Matn | Togʻ | Uzunligi |
 |---|---|---|---|
-| Asosiy qator | 5 ta soʻz (asosiy qator harflari) | Chimyon (15) | ~25 belgi |
-| Soʻzlar | 5 ta koʻp ishlatiladigan soʻz | Hazrati Sulton (20) | ~30 belgi |
-| Maqol | bitta maqol | Pomir (25) | ~45 belgi |
+| Asosiy qator | 50 ta soʻz (faqat asosiy qator harflari) | Chimyon (15) | ~270 belgi |
+| Soʻzlar | 50 ta koʻp ishlatiladigan soʻz | Hazrati Sulton (20) | ~300 belgi |
+| Maqol | maqollar zanjiri (50 soʻz yigʻilguncha) | Pomir (25) | ~330 belgi |
 
-Bitta poyga — 30–90 soniya. 45 daqiqalik darsda koʻp marta oʻynash mumkin.
+Bitta poyga — 2–5 daqiqa (bolaning tezligiga qarab). Matn ekranda uch qator boʻlib koʻrinadi va yozilgan sari suriladi.
+
+**Soʻz roʻyxatlari** (`23-on-barmoq/js/typing.js`): umumiy soʻzlar 110 ta, maqollar 33 ta, asosiy qator 28 ta. Asosiy qatorda harflar `a s d f g h j k l ʻ` bilan cheklangan (yagona unli — **a**), shuning uchun 50 ta har xil soʻz yigʻilmaydi: uzun matnda soʻzlar takrorlanadi, lekin hech qachon ketma-ket ikki marta.
 
 ## 5. Texnik tuzilish
 
