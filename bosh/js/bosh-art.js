@@ -281,7 +281,19 @@
   <path d="M44 20 L56 15 M44 15 L56 20" stroke="#8A5A2B" stroke-width="3" stroke-linecap="round"/>
   <path d="M50 3 Q57 9 54 14 Q52 17 50 17 Q48 17 46 14 Q43 9 50 3 Z" fill="#F08A24"/>`);
 
-  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, poyga, onlayn, tog };
+  // Yozuv poygasi: klaviatura va orqada togʻ — yozgan sari koʻtarilasan
+  const yozuv = svg(`
+  <path d="M2 46 L20 16 L30 28 L42 8 L62 46 Z" fill="#9A8F7E" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M42 8 L36 17 L42 21 L48 17 Z" fill="#FFFFFF"/>
+  <path d="M20 16 L16 22 L20 25 L24 22 Z" fill="#FFFFFF"/>
+  <rect x="4" y="40" width="56" height="20" rx="6" fill="#FFFFFF" stroke="${INK}" stroke-width="3"/>
+  <rect x="10" y="45" width="9" height="5" rx="2" fill="#2F6FDE"/>
+  <rect x="22" y="45" width="9" height="5" rx="2" fill="#F08A24"/>
+  <rect x="34" y="45" width="9" height="5" rx="2" fill="#1A9E77"/>
+  <rect x="46" y="45" width="8" height="5" rx="2" fill="#8E5BD0"/>
+  <rect x="18" y="53" width="28" height="4" rx="2" fill="#DCE8FA"/>`);
+
+  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, poyga, yozuv, onlayn, tog };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";

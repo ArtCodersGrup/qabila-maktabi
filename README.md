@@ -58,9 +58,16 @@ Tartib — bosh sahifadagidek: osondan qiyinga, oldingi oʻyinga tayanadiganlari
 | 25 | Mantiq kalitlari | `24-mantiq-kalitlari` | Rost va yolgʻon, VA (ketma-ket kalitlar), YOKI (parallel), EMAS (teskari kalit), rostlik jadvali, hayotiy qoidalar, Jorj Bul |
 | 26 | Zinapoya chirogʻi | `25-zinapoya-chirogi` | XOR (faqat bittasi), amallar zanjiri (sxema), yarim qoʻshuvchi: kompyuter qanday qoʻshadi (10–12) |
 
-**Musobaqalar** (bosh sahifa tepasida, ikkala oʻyinchi bitta ekranda):
-- **Savol-javob** (`oyinlar/musobaqa/`): navbat bilan savolga javob berishadi, har raundda birinchi javob beradigan almashadi. Har kimning oʻz soati (shaxmat soatidek), 3 ta yuragi va bitta oʻtkazishi bor; savollar tanlangan mavzu va qiyinlikdan tasodifiy yasaladi. Toʻgʻri javoblar — faqat oxirida.
-- **Tez yozish poygasi** (`oyinlar/poyga/`, 💻): navbat bilan bir xil matnni yozishadi; aniqligi 90% dan past boʻlgan yuta olmaydi, keyin — kim tezroq. Yozish qismi «Oʻn barmoq» oʻyinidan.
+**Musobaqalar** (bosh sahifa tepasida, oʻyin emas — bosqichi yoʻq):
+
+*Bitta ekranda* (internetsiz, ikki oʻyinchi yonma-yon):
+- **Savol-javob** (`oyinlar/musobaqa/`): navbat bilan savolga javob berishadi, har raundda birinchi javob beradigan almashadi. Har kimning oʻz soati (shaxmat soatidek), 3 ta yuragi va bitta oʻtkazishi bor; savollar tanlangan mavzu va qiyinlikdan tasodifiy yasaladi.
+- **Tez yozish poygasi** (`oyinlar/poyga/`, 💻): navbat bilan bir xil matnni yozishadi; aniqligi 90% dan past boʻlgan yuta olmaydi, keyin — kim tezroq.
+
+*Onlayn* (har kim oʻz qurilmasida, 4 xonali xona kodi bilan):
+- **Aloqa sinovi** (`oyinlar/onlayn/`): ikki qurilmani ulab koʻrish.
+- **Togʻga chiqish** (`oyinlar/tog/`): oʻqituvchi xona ochadi, 2–12 bola qoʻshiladi. Savolga toʻgʻri javob — bir pogʻona yuqoriga; qolib ketgan chiqib ketadi, choʻqqiga birinchi chiqqan yutadi. Robotlar bilan mashq internetsiz ham ishlaydi.
+- **Yozuv poygasi** (`oyinlar/yozuv-poygasi/`, 💻): oʻqituvchi xona ochadi, hamma bir xil matnni yozadi. Yozgan sari qahramon togʻga koʻtariladi; xato tugma oʻtkazmaydi, jarima yoʻq. Oʻyin hamma choʻqqiga chiqquncha davom etadi, oxirida oʻrin, tezlik va aniqlik koʻrsatiladi.
 
 Tugagan bosqichlar brauzer xotirasida (`localStorage`) saqlanadi — sahifa yangilansa ham yoʻqolmaydi.
 
@@ -73,6 +80,8 @@ oyinlar/umumiy/     umumiy kod: qahramonlar (SVG), ekran qismlari, tovush (Web A
 oyinlar/NN-nomi/    har bir oʻyin: DIZAYN.md, REJA.md, index.html, js/, css/, tests/
 oyinlar/musobaqa/   savol-javob musobaqasi: savollar oʻyinlar mantiqidan yasaladi
 oyinlar/poyga/      tez yozish poygasi (yozish qismi 23-on-barmoq dan)
+oyinlar/tog/        onlayn musobaqa: togʻga chiqish (oʻqituvchi xona ochadi)
+oyinlar/yozuv-poygasi/  onlayn yozuv poygasi (togʻ sahnasi tog/ dan, yozish 23-on-barmoq dan)
 QOIDALAR.md         barcha oʻyinlar uchun umumiy qoidalar (yosh, til, qurilmalar, xato javob, ranglar)
 ```
 

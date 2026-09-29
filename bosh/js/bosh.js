@@ -57,6 +57,7 @@
     { dir: "poyga", mode: "offline", title: "Tez yozish poygasi", desc: "Navbat bilan bir xil matnni yozasizlar: kim aniq va tez?", icon: "poyga", pc: true },
     { dir: "onlayn", mode: "online", title: "Aloqa sinovi", desc: "Ikki qurilmani ulab koʻramiz — onlayn musobaqalar uchun tayyorgarlik", icon: "onlayn" },
     { dir: "tog", mode: "online", title: "Togʻga chiqish", desc: "Savolga javob ber — pogʻona yuqoriga. Qolib ketsang, chiqib ketasan", icon: "tog", badge: "robotlar bilan" },
+    { dir: "yozuv-poygasi", mode: "online", title: "Yozuv poygasi", desc: "Hamma bir xil matnni yozadi — yozgan sari togʻga koʻtarilasan", icon: "yozuv", pc: true },
   ];
   const MODES = [
     { id: "offline", title: "Bitta ekranda", note: "Internet kerak emas" },

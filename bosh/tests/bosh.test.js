@@ -40,14 +40,15 @@ test("har o'yin mavjud bo'limda va ikonkasi bor", () => {
 });
 
 test("musobaqalar: bitta ekranda (savol-javob, poyga) va onlayn (aloqa sinovi), sahifasi va ikonkasi bor", () => {
-  assert.deepEqual(CONTESTS.map((c) => c.dir), ["musobaqa", "poyga", "onlayn", "tog"]);
-  assert.deepEqual(CONTESTS.map((c) => c.mode), ["offline", "offline", "online", "online"], "bitta ekranda — eski musobaqalar, onlayn — alohida");
+  assert.deepEqual(CONTESTS.map((c) => c.dir), ["musobaqa", "poyga", "onlayn", "tog", "yozuv-poygasi"]);
+  assert.deepEqual(CONTESTS.map((c) => c.mode), ["offline", "offline", "online", "online", "online"], "bitta ekranda — eski musobaqalar, onlayn — alohida");
   for (const c of CONTESTS) {
     assert.ok(fs.existsSync(path.join(ROOT, "oyinlar", c.dir, "index.html")), c.dir);
     assert.match(win.QK.boshArt.icon(c.icon), /^<svg[\s\S]*<\/svg>$/, c.icon);
     assert.ok(!win.QK.boshArt.icon(c.icon).includes("<text"), c.icon);
   }
   assert.equal(CONTESTS.find((c) => c.dir === "poyga").pc, true, "poygaga klaviatura kerak");
+  assert.equal(CONTESTS.find((c) => c.dir === "yozuv-poygasi").pc, true, "onlayn poygaga ham klaviatura kerak");
 });
 
 test("bosh sahifadagi raqamlar 1 dan ketma-ket, bo'limlar tartibida", () => {
