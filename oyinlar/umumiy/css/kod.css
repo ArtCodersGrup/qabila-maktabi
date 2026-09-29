@@ -1,0 +1,125 @@
+/* Python bloki (27–35-o'yinlar): kod muharriri, chiqish paneli, qadam-baqadam panel.
+   Kod uchun tizimning monospace shrifti — yangi fayl yuklanmaydi (QOIDALAR §6). */
+
+:root {
+  --kod-shrift: ui-monospace, "SF Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  --kod-fon: #FFFDF7;
+  --kod-kalit: #8E5BD0;
+  --kod-satr-rang: #1A9E77;
+  --kod-son: #C2700F;
+  --kod-ichki: #2F6FDE;
+  --kod-izoh: #8A8577;
+}
+
+.kod-blok,
+.kod-muharrir,
+.kod-natija {
+  font-family: var(--kod-shrift);
+  font-size: 18px;
+  line-height: 1.5;
+  tab-size: 4;
+}
+
+/* ---------- O'qiladigan kod ---------- */
+.kod-blok {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--kod-fon);
+  border: 2px solid var(--chiziq);
+  border-radius: 12px;
+  padding: 10px 6px;
+  overflow-x: auto;
+}
+.kod-satr { display: flex; align-items: baseline; gap: 10px; padding: 1px 6px; border-radius: 6px; }
+.kod-satr .kod-raqam {
+  flex: none; min-width: 1.6em; text-align: right;
+  color: var(--kod-izoh); font-size: 15px; user-select: none;
+}
+.kod-blok.no-num .kod-raqam { display: none; }
+.kod-satr .kod-matn { white-space: pre; }
+.kod-satr.yonmoqda { background: #FFF0D6; box-shadow: inset 3px 0 0 var(--yana); }
+
+.k-kalit { color: var(--kod-kalit); font-style: normal; font-weight: 700; }
+.k-satr { color: var(--kod-satr-rang); font-style: normal; }
+.k-son { color: var(--kod-son); font-style: normal; }
+.k-ichki { color: var(--kod-ichki); font-style: normal; }
+.k-izoh { color: var(--kod-izoh); font-style: italic; }
+
+/* ---------- Muharrir ---------- */
+.kod-muharrir {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--kod-fon);
+  border: 2px solid var(--chiziq);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.kod-muharrir:focus-within { border-color: var(--asosiy); box-shadow: 0 0 0 3px rgba(47, 111, 222, 0.18); }
+.kod-raqamlar {
+  flex: none; display: flex; flex-direction: column;
+  padding: 10px 8px 10px 10px;
+  color: var(--kod-izoh); font-size: 15px; line-height: 27px;
+  text-align: right; user-select: none; overflow: hidden;
+}
+.kod-yozuv {
+  flex: 1 1 auto; min-width: 0;
+  border: 0; outline: none; resize: vertical;
+  padding: 10px 10px 10px 0;
+  background: transparent; color: var(--matn);
+  font: inherit; line-height: 27px;
+  white-space: pre; overflow-wrap: normal; overflow-x: auto;
+}
+.kod-yozuv:disabled { opacity: 0.7; }
+
+/* ---------- Chiqish ---------- */
+.kod-chiqish {
+  width: 100%;
+  box-sizing: border-box;
+  background: #fff;
+  border: 2px solid var(--chiziq);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.kod-sarlavha {
+  padding: 4px 12px;
+  background: #F3EFE3;
+  color: #6B6558;
+  font-size: 15px; font-weight: 800; letter-spacing: 0.02em;
+}
+.kod-natija { margin: 0; padding: 10px 12px; min-height: 2.2em; white-space: pre-wrap; overflow-x: auto; }
+.kod-chiqsatr { display: block; }
+.kod-bosh { color: var(--kod-izoh); font-style: italic; }
+.kod-chiqish.xato { border-color: var(--yana); }
+
+.kod-xato { margin-top: 6px; padding-top: 8px; border-top: 2px dashed var(--chiziq); }
+.kod-xato-matn { color: #A85C10; font-weight: 800; }
+.kod-xato-satr { margin: 6px 0 0; color: var(--matn); white-space: pre; overflow-x: auto; }
+.kod-xato-oq { margin: 0; color: var(--yana); font-weight: 800; white-space: pre; }
+.kod-xato-izoh { margin-top: 6px; font-family: inherit; color: var(--matn); font-weight: 700; }
+.kod-chiqish .kod-xato-izoh { font-family: Nunito, system-ui, sans-serif; }
+
+/* ---------- O'zgaruvchilar (qutilar) ---------- */
+.kod-qutilar { display: flex; flex-wrap: wrap; gap: 8px; }
+.kod-quti {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 10px;
+  background: #fff; border: 2px solid var(--chiziq); border-radius: 10px;
+  box-shadow: 0 3px 0 var(--soya);
+}
+.kod-quti-nom { font-weight: 800; color: var(--asosiy); }
+.kod-quti-qiymat { font-family: var(--kod-shrift); font-size: 17px; }
+.kod-quti.ozgardi { border-color: var(--togri); animation: kod-turtki 0.3s ease; }
+@keyframes kod-turtki { from { transform: translateY(-4px); } to { transform: none; } }
+
+/* ---------- Joylashuv ---------- */
+.kod-stol { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+.kod-qadam { display: flex; gap: 12px; align-items: flex-start; width: 100%; }
+.kod-qadam > .kod-blok { flex: 1 1 60%; min-width: 0; }
+.kod-yon { flex: 1 1 40%; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+
+@media (max-width: 700px) {
+  .kod-qadam { flex-direction: column; }
+  .kod-qadam > .kod-blok, .kod-yon { width: 100%; flex: none; }
+  .kod-blok, .kod-muharrir, .kod-natija { font-size: 17px; }
+}
