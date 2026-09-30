@@ -22,6 +22,12 @@ test("natija: kod chiqishini to'g'ri aytgan bola o'tadi", () => {
   assert.ok(bad.hint.includes("3 ta"));
 });
 
+test("natija: input() ishlatadigan kod kirish satrlari bilan hisoblanadi", () => {
+  const task = { type: "natija", solution: "a = int(input())\nb = int(input())\nprint(a + b)", stdin: ["12", "30"] };
+  assert.equal(K.check(task, "42").ok, true);
+  assert.equal(K.check(task, "1230").ok, false);
+});
+
 test("natija: kutilgan chiqishni to'g'ridan-to'g'ri yozish ham mumkin", () => {
   assert.equal(K.check({ type: "natija", code: "…", expected: ["5"] }, "5").ok, true);
 });

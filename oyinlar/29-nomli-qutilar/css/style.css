@@ -1,0 +1,63 @@
+/* Nomli qutilar — faqat shu o'yinga xos uslublar.
+   Umumiylari: ../../umumiy/css/asos.css va ../../umumiy/css/kod.css */
+
+/* ---------- Kuzatuv jadvali ---------- */
+.kuzatuv {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border: 2px solid var(--chiziq);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.kuzatuv th, .kuzatuv td {
+  border: 1px solid var(--chiziq);
+  padding: 6px 8px;
+  text-align: center;
+}
+.kuzatuv th {
+  background: #F3EFE3;
+  color: #6B6558;
+  font-size: 16px;
+  font-weight: 800;
+}
+.kuzatuv th.quti { font-family: var(--kod-shrift); font-size: 18px; color: var(--asosiy); }
+.kuzatuv td.buyruq {
+  text-align: left;
+  font-family: var(--kod-shrift);
+  font-size: 17px;
+  white-space: pre;
+}
+.kuzatuv .kat {
+  width: 68px; height: 40px;
+  box-sizing: border-box;
+  border: 2px solid var(--chiziq); border-radius: 8px;
+  background: var(--kod-fon); color: var(--matn);
+  font-family: var(--kod-shrift); font-size: 18px; text-align: center;
+}
+.kuzatuv .kat:focus { outline: none; border-color: var(--asosiy); box-shadow: 0 0 0 3px rgba(47, 111, 222, 0.18); }
+.kuzatuv .kat.tayyor { border-color: var(--togri); color: var(--togri); font-weight: 800; opacity: 1; }
+.kuzatuv .tayyor { font-family: var(--kod-shrift); font-size: 18px; font-weight: 800; color: var(--togri); }
+.kuzatuv .yoq { color: var(--kod-izoh); }
+.kuzatuv tr.xato td { background: #FFF0D6; }
+.kuzatuv tr.xato .kat { border-color: var(--yana); }
+
+/* ---------- Ta'rif, hikoya, tabrik ---------- */
+.formula-box { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+.formula-row { font-size: 20px; font-weight: 900; animation: pop 0.3s; }
+.formula-row.kod { font-family: var(--kod-shrift); font-size: 21px; color: var(--asosiy); }
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(240px, 66vw); align-self: center; }
+.story-art.small { width: min(190px, 50vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 19px; font-weight: 800; text-align: center; }
+
+@media (max-width: 480px) {
+  .kuzatuv td.buyruq { font-size: 15px; }
+  .kuzatuv .kat { width: 56px; }
+  .formula-row { font-size: 18px; }
+  .summary { font-size: 17px; gap: 8px; }
+}
+@media (orientation: landscape) and (max-height: 520px) {
+  .story-art { width: min(180px, 34vh); }
+}

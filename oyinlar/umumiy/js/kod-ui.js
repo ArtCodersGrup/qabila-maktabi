@@ -196,6 +196,28 @@
     return api;
   }
 
+  // Yozilayotgan kod brauzerda saqlanadi — sahifa yangilansa yo'qolmaydi (faqat qulaylik uchun)
+  const draft = {
+    key: (name) => "kod-qoralama:" + name,
+    read(name) {
+      try { return root.localStorage.getItem(draft.key(name)); } catch (e) { return null; }
+    },
+    write(name, text) {
+      try { root.localStorage.setItem(draft.key(name), text); } catch (e) { /* maxfiy rejim — muhim emas */ }
+    },
+    clear(name) {
+      try { root.localStorage.removeItem(draft.key(name)); } catch (e) { /* muhim emas */ }
+    },
+  };
+
+  // Kirish paneli: input() shu satrlarni navbat bilan oladi
+  function stdinPanel(lines) {
+    const body = ui.h("pre", { class: "kod-natija" });
+    for (const line of lines) body.append(ui.h("span", { class: "kod-chiqsatr", text: line }));
+    return ui.h("div", { class: "kod-chiqish kod-kirish" },
+      ui.h("div", { class: "kod-sarlavha", text: "Kirish (input oladigan satrlar)" }), body);
+  }
+
   // O'zgaruvchilar jadvali: nom → qiymat (o'zgargani belgilanadi)
   function varsTable(vars, prev) {
     const el = ui.h("div", { class: "kod-qutilar" });
@@ -251,11 +273,23 @@
   // Ishga tushirish tugmasi bilan birga keladigan yig'ma qism: muharrir + chiqish
   function workbench(opts) {
     const o = opts || {};
-    const ed = editor({ code: o.code, rows: o.rows, onRun: () => api.run() });
+    const saved = o.saveKey ? draft.read(o.saveKey) : null;
+    const ed = editor({ code: saved != null ? saved : o.code, rows: o.rows, onRun: () => api.run() });
     const out = output({});
-    const el = ui.h("div", { class: "kod-stol" }, ed.el, out.el);
+    const el = ui.h("div", { class: "kod-stol" });
+    if (o.stdin && o.stdin.length) el.append(stdinPanel(o.stdin));
+    el.append(ed.el, out.el);
+    if (o.saveKey) {
+      let timer = null;
+      ed.area.addEventListener("input", () => {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => draft.write(o.saveKey, ed.get()), 300);
+      });
+      ui.onCleanup(() => { if (timer) clearTimeout(timer); });
+    }
     const api = {
       el, editor: ed, output: out,
+      forget() { if (o.saveKey) draft.clear(o.saveKey); },
       run() {
         const code = ed.get();
         const result = QK.kod.run(code, { stdin: o.stdin });
@@ -285,5 +319,5 @@
     return true;
   }
 
-  QK.kodUI = { codeBlock, editor, output, varsTable, stepper, workbench, keyboardCheck, touchOnly, paint, TAB };
+  QK.kodUI = { codeBlock, editor, output, varsTable, stepper, workbench, stdinPanel, draft, keyboardCheck, touchOnly, paint, TAB };
 })(window);

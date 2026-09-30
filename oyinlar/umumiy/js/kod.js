@@ -76,7 +76,8 @@
   }
 
   function checkNatija(task, answer) {
-    const expected = expectedFor(task);
+    // Kirish satrlari bo'lsa, kutilgan chiqish ham o'shalar bilan hisoblanadi
+    const expected = expectedFor(task, { stdin: task.stdin || [] });
     const got = normalize(answer);
     if (sameOutput(expected, got)) return { ok: true };
     return {

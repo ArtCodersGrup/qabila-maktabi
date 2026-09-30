@@ -304,7 +304,17 @@
   <rect x="24" y="52" width="16" height="4" fill="#2B2B3A"/>
   <rect x="16" y="56" width="32" height="5" rx="2.5" fill="#2B2B3A"/>`);
 
-  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, poyga, yozuv, onlayn, tog };
+  // 29-o'yin: ikkita yorliqli quti — o'zgaruvchilar
+  const qutilar2 = svg(`
+  <rect x="4" y="22" width="26" height="24" rx="5" fill="#F2E6CF" stroke="#2B2B3A" stroke-width="3"/>
+  <rect x="4" y="16" width="26" height="9" rx="4" fill="#D9C7A6" stroke="#2B2B3A" stroke-width="3"/>
+  <circle cx="17" cy="35" r="6" fill="#2F6FDE"/>
+  <rect x="34" y="22" width="26" height="24" rx="5" fill="#F2E6CF" stroke="#2B2B3A" stroke-width="3"/>
+  <rect x="34" y="16" width="26" height="9" rx="4" fill="#D9C7A6" stroke="#2B2B3A" stroke-width="3"/>
+  <circle cx="47" cy="35" r="6" fill="#F08A24"/>
+  <path d="M26 54 h12" stroke="#1A9E77" stroke-width="3" stroke-linecap="round"/>`);
+
+  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, qutilar2, poyga, yozuv, onlayn, tog };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";

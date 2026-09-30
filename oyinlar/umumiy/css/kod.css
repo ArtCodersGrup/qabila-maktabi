@@ -91,6 +91,8 @@
 .kod-chiqsatr { display: block; }
 .kod-bosh { color: var(--kod-izoh); font-style: italic; }
 .kod-chiqish.xato { border-color: var(--yana); }
+.kod-kirish { border-style: dashed; }
+.kod-kirish .kod-sarlavha { background: #EDEFF5; color: #4A5568; }
 
 .kod-xato { margin-top: 6px; padding-top: 8px; border-top: 2px dashed var(--chiziq); }
 .kod-xato-matn { color: #A85C10; font-weight: 800; }
@@ -122,4 +124,30 @@
   .kod-qadam { flex-direction: column; }
   .kod-qadam > .kod-blok, .kod-yon { width: 100%; flex: none; }
   .kod-blok, .kod-muharrir, .kod-natija { font-size: 17px; }
+}
+
+/* ---------- Mashq ekranlari (umumiy/js/kod-mashq.js) ---------- */
+.pbox { display: flex; flex-direction: column; align-items: stretch; gap: 10px; width: 100%; max-width: 640px; margin: 0 auto; }
+.pbox .note { font-size: 19px; font-weight: 800; color: var(--asosiy); text-align: center; }
+.pbox .answer { font-size: 20px; font-weight: 900; color: var(--togri); text-align: center; }
+
+/* Bola chiqishni yozadigan maydon */
+.kod-javob {
+  width: 100%; box-sizing: border-box;
+  padding: 10px 12px;
+  border: 2px solid var(--chiziq); border-radius: 12px;
+  background: #fff; color: var(--matn);
+  font-family: var(--kod-shrift); font-size: 18px; line-height: 1.5;
+  resize: vertical;
+}
+.kod-javob:focus { outline: none; border-color: var(--asosiy); box-shadow: 0 0 0 3px rgba(47, 111, 222, 0.18); }
+
+/* "Shunday chiqishi kerak" kartasi */
+.kutilgan { border: 2px dashed var(--togri); border-radius: 12px; background: #fff; overflow: hidden; }
+.kutilgan .kod-sarlavha { background: #E7F5EF; color: #14785A; }
+.kutilgan .kod-natija { font-family: var(--kod-shrift); font-size: 18px; margin: 0; padding: 10px 12px; }
+
+@media (max-width: 480px) {
+  .pbox { gap: 8px; }
+  .pbox .note { font-size: 18px; }
 }

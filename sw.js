@@ -1,6 +1,6 @@
 // Offline rejim: sayt fayllari keshlanadi. Bola saytni bir marta ochsa, keyin internetsiz ham oʻynay oladi.
 // Yangi fayl qoʻshilsa, FILES roʻyxatiga ham qoʻshiladi — buni bosh/tests/offline.test.js tekshiradi.
-const VERSION = "v42";
+const VERSION = "v43";
 const CACHE = "qabila-maktabi-" + VERSION;
 
 const FILES = [
@@ -25,6 +25,7 @@ const FILES = [
   "oyinlar/umumiy/js/art.js",
   "oyinlar/umumiy/js/dastur-ui.js",
   "oyinlar/umumiy/js/dastur.js",
+  "oyinlar/umumiy/js/kod-mashq.js",
   "oyinlar/umumiy/js/kod-ui.js",
   "oyinlar/umumiy/js/kod.js",
   "oyinlar/umumiy/js/mantiq-ui.js",
@@ -364,6 +365,18 @@ const FILES = [
   "oyinlar/27-birinchi-buyruq/js/scenes/stage1.js",
   "oyinlar/27-birinchi-buyruq/js/scenes/stage2.js",
   "oyinlar/27-birinchi-buyruq/js/scenes/stage3.js",
+  "oyinlar/29-nomli-qutilar/",
+  "oyinlar/29-nomli-qutilar/index.html",
+  "oyinlar/29-nomli-qutilar/css/style.css",
+  "oyinlar/29-nomli-qutilar/js/game-art.js",
+  "oyinlar/29-nomli-qutilar/js/jadval.js",
+  "oyinlar/29-nomli-qutilar/js/logic.js",
+  "oyinlar/29-nomli-qutilar/js/main.js",
+  "oyinlar/29-nomli-qutilar/js/scenes/common.js",
+  "oyinlar/29-nomli-qutilar/js/scenes/final.js",
+  "oyinlar/29-nomli-qutilar/js/scenes/stage1.js",
+  "oyinlar/29-nomli-qutilar/js/scenes/stage2.js",
+  "oyinlar/29-nomli-qutilar/js/scenes/stage3.js",
   "oyinlar/musobaqa/",
   "oyinlar/musobaqa/index.html",
   "oyinlar/musobaqa/css/style.css",
