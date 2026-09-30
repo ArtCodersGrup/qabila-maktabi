@@ -1,6 +1,6 @@
 // Offline rejim: sayt fayllari keshlanadi. Bola saytni bir marta ochsa, keyin internetsiz ham oʻynay oladi.
 // Yangi fayl qoʻshilsa, FILES roʻyxatiga ham qoʻshiladi — buni bosh/tests/offline.test.js tekshiradi.
-const VERSION = "v44";
+const VERSION = "v45";
 const CACHE = "qabila-maktabi-" + VERSION;
 
 const FILES = [
@@ -388,6 +388,17 @@ const FILES = [
   "oyinlar/29-nomli-qutilar/js/scenes/stage1.js",
   "oyinlar/29-nomli-qutilar/js/scenes/stage2.js",
   "oyinlar/29-nomli-qutilar/js/scenes/stage3.js",
+  "oyinlar/30-ikki-yol/",
+  "oyinlar/30-ikki-yol/index.html",
+  "oyinlar/30-ikki-yol/css/style.css",
+  "oyinlar/30-ikki-yol/js/game-art.js",
+  "oyinlar/30-ikki-yol/js/logic.js",
+  "oyinlar/30-ikki-yol/js/main.js",
+  "oyinlar/30-ikki-yol/js/scenes/common.js",
+  "oyinlar/30-ikki-yol/js/scenes/final.js",
+  "oyinlar/30-ikki-yol/js/scenes/stage1.js",
+  "oyinlar/30-ikki-yol/js/scenes/stage2.js",
+  "oyinlar/30-ikki-yol/js/scenes/stage3.js",
   "oyinlar/musobaqa/",
   "oyinlar/musobaqa/index.html",
   "oyinlar/musobaqa/css/style.css",

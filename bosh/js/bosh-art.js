@@ -325,7 +325,16 @@
   <circle cx="26" cy="52" r="6" fill="#F08A24"/>
   <circle cx="42" cy="52" r="6" fill="#F08A24"/>`);
 
-  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, bolish, qutilar2, poyga, yozuv, onlayn, tog };
+  // 30-o'yin: ayrilgan yo'l — shart
+  const ayri = svg(`
+  <path d="M32 58 V38" fill="none" stroke="#8A8577" stroke-width="7" stroke-linecap="round"/>
+  <path d="M32 38 Q32 22 16 16" fill="none" stroke="#2F6FDE" stroke-width="7" stroke-linecap="round"/>
+  <path d="M32 38 Q32 22 48 16" fill="none" stroke="#8E5BD0" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="32" cy="38" r="6" fill="#FFF6E5" stroke="#2B2B3A" stroke-width="3"/>
+  <circle cx="14" cy="14" r="5" fill="#2F6FDE"/>
+  <circle cx="50" cy="14" r="5" fill="#8E5BD0"/>`);
+
+  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, bolish, qutilar2, ayri, poyga, yozuv, onlayn, tog };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";
