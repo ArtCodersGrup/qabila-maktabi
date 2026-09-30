@@ -26,6 +26,26 @@
 9. **Togʻ matn turiga qarab tanlanadi** — bola uchun bepul xilma-xillik: asosiy qator → Chimyon (15 pogʻona), soʻzlar → Hazrati Sulton (20), maqol → Pomir (25). Pogʻona faqat koʻrinish: yozilgan ulush pogʻonaga aylantiriladi.
 10. **Uzilish:** bola yashirin raqami (`poyga:men:v1`) bilan qaytib kirsa, oʻsha joyidan davom etadi. Oʻqituvchidan 20 soniya xabar kelmasa, bolalarda oʻyin natija bilan tugaydi. Poyga boshlangandan keyin kirgan bola keyingisini kutadi.
 
+
+### 1.1. Matn versiyasi (2026-09-30 da qoʻshildi)
+
+**Muallif xabari:** «qaysidir oʻquvchiga kam soʻz, qaysiga koʻp boʻlib qolyapti; kam soʻz yozgan yutib ketyapti».
+
+**Sababi:** matn tarmoqqa chiqmaydi — har qurilma uni **koddan** yasaydi. Qurilmada saytning eski nusxasi
+ochilgan boʻlsa (servis-ishchi keshi), matn boshqacha chiqadi. Oʻlchandi: bir xil urugʻ bilan eski nusxa
+**26 belgi / 5 soʻz**, yangisi **278 belgi / 50 soʻz** beradi. Oʻqituvchining nusxasi eski boʻlsa,
+`jami = 26` — bola 26 belgi yozishi bilan «choʻqqiga chiqdi» boʻladi.
+
+**Yechim:** protokolga **matn versiyasi** qoʻshildi (`PR.MATN_V`). U har paketda yuboriladi:
+
+- `versiyaMos(p)` — versiya bir xilmi;
+- `matnMos(p)` — versiya bir xil **va** shu urugʻdan yasalgan matn uzunligi `jami` ga teng.
+
+Bola mos kelmasa oʻynamaydi: «Saytning eski nusxasi» ekrani chiqadi va u xonadan chiqadi (poyga osilib
+qolmaydi). Oʻqituvchi lobbisida ogohlantirish koʻrinadi: «Bitta bolada saytning eski nusxasi ochilgan».
+
+> **Qoida:** soʻzlar soni (`SOZLAR`) yoki soʻz roʻyxatlari (`typing.js`) oʻzgarsa, `MATN_V` **oshiriladi**.
+
 ## 2. Oʻquv maqsadi
 
 Bola klaviaturaga qaramay, **aniq va tez** yozishga mashq qiladi. Poyga qiziqish uygʻotadi; xato jazolanmagani uchun bola shoshmay, toʻgʻri yozishga harakat qiladi (aniqlik tezlikni oʻzi keltiradi).

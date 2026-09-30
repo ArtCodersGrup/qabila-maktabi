@@ -129,3 +129,44 @@ test("poyga matni uzun: har turda 50 ta so'z", () => {
   assert.ok(maqol.split(" ").length >= 50);
   assert.ok([...maqol].length <= PR.JAMI_MAX, maqol.length + " belgi");
 });
+
+// ---------- Qurilmalarda sayt nusxasi har xil bo'lsa ----------
+// Muallif xabari (2026-09-30): "qaysidir o'quvchiga kam so'z, qaysiga ko'p bo'lib qolyapti,
+// kam so'z yozgan yutib ketyapti". Sababi: matn koddan yasaladi, kod eski bo'lsa matn boshqacha.
+// Protokol buni sezishi va poygani jim buzmasligi kerak.
+
+test("paketda matn qoidasining versiyasi bor", () => {
+  const s = P.holatYarat({ tur: "words", urug: 12345, jami: 300 });
+  P.qoshil(s, "a", "qizil");
+  P.boshla(s, 0);
+  const p = PR.paket(s);
+  assert.equal(p.v, PR.MATN_V, "holat paketida versiya yo'q");
+  assert.equal(PR.lobbi(s).v, PR.MATN_V, "lobbi paketida versiya yo'q");
+});
+
+test("matnMos: bir xil versiya va uzunlikda — mos", () => {
+  const urug = 424242;
+  const matn = PR.matnYasa("words", urug);
+  const p = { v: PR.MATN_V, tur: "words", urug, jami: [...matn].length };
+  assert.equal(PR.matnMos(p), true);
+});
+
+test("matnMos: eski nusxadagi qurilma sezilади (versiya yo'q yoki boshqa)", () => {
+  const urug = 424242;
+  const matn = PR.matnYasa("words", urug);
+  const jami = [...matn].length;
+  assert.equal(PR.matnMos({ tur: "words", urug, jami }), false, "versiyasiz paket o'tib ketdi");
+  assert.equal(PR.matnMos({ v: PR.MATN_V - 1, tur: "words", urug, jami }), false, "eski versiya o'tib ketdi");
+});
+
+test("matnMos: matn uzunligi mos kelmasa — mos emas (eski so'z ro'yxati)", () => {
+  const urug = 424242;
+  // Eski nusxada 5 ta so'z edi: uzunlik ~26 belgi
+  assert.equal(PR.matnMos({ v: PR.MATN_V, tur: "words", urug, jami: 26 }), false);
+  assert.equal(PR.matnMos({ v: PR.MATN_V, tur: "words", urug, jami: 0 }), false);
+});
+
+test("matnMos: notanish tur yoki buzuq paket — mos emas", () => {
+  assert.equal(PR.matnMos(null), false);
+  assert.equal(PR.matnMos({ v: PR.MATN_V }), false);
+});

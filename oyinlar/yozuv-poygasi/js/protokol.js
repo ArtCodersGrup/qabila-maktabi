@@ -9,6 +9,10 @@
   const TY = node ? require("../../23-on-barmoq/js/typing.js") : root.QK.typing;
 
   const TYPES = ["lobbi", "holat", "kirdi", "qadam"];
+  // Matn yasash qoidasining versiyasi. So'zlar soni yoki so'z ro'yxatlari o'zgarsa — OSHIRILADI.
+  // Sababi: matn tarmoqqa chiqmaydi, har qurilma uni koddan yasaydi. Qurilmada sayt nusxasi eski
+  // bo'lsa, matn boshqacha bo'ladi va poyga jimgina buziladi (kim kam so'z yozgan — o'sha yutadi).
+  const MATN_V = 2;
   const HOST_JIM = 20000; // boshlovchidan shuncha vaqt xabar kelmasa — u uzilgan
   const JAMI_MAX = 900; // matn belgilarining oqilona chegarasi (50 ta so'z ≈ 300–400 belgi)
 
@@ -36,13 +40,14 @@
   // ---------- Boshlovchi → hamma ----------
   const lobbi = (s) => {
     const list = P.tartib(s);
-    return { ids: list.map((p) => p.id), qah: list.map((p) => p.qahramon) };
+    return { v: MATN_V, ids: list.map((p) => p.id), qah: list.map((p) => p.qahramon) };
   };
 
   // Holat: reyting tartibida (birinchi — yetakchi). Pog'ona yuborilmaydi — har qurilma o'zi hisoblaydi.
   function paket(s) {
     const r = P.tartib(s);
     return {
+      v: MATN_V,
       tur: s.tur,
       urug: s.urug,
       jami: s.jami,
@@ -72,6 +77,22 @@
     return !!P.TURLAR.find((t) => t.id === p.tur);
   }
 
+  // Qurilmadagi sayt nusxasi boshlovchiniki bilan bir xilmi
+  const versiyaMos = (p) => !!p && p.v === MATN_V;
+
+  // Matn haqiqatan bir xilmi: versiya bir xil va shu urug'dan yasalgan matn uzunligi mos.
+  // Mos kelmasa — qurilmada eski nusxa ochilgan, poygaga kirmaslik kerak.
+  function matnMos(p) {
+    if (!versiyaMos(p)) return false;
+    if (typeof p.urug !== "number" || typeof p.jami !== "number" || !p.jami) return false;
+    if (!P.TURLAR.find((t) => t.id === p.tur)) return false;
+    try {
+      return [...matnYasa(p.tur, p.urug)].length === p.jami;
+    } catch (e) {
+      return false;
+    }
+  }
+
   // ---------- Paketdan ekran uchun holat ----------
   function holat(p, now) {
     const t = P.turById(p.tur);
@@ -99,7 +120,7 @@
     return s;
   }
 
-  const api = { TYPES, HOST_JIM, JAMI_MAX, kimlik, seedRng, urugYasa, matnYasa, lobbi, paket, yaxshiPaket, holat };
+  const api = { TYPES, MATN_V, HOST_JIM, JAMI_MAX, kimlik, seedRng, urugYasa, matnYasa, lobbi, paket, yaxshiPaket, versiyaMos, matnMos, holat };
 
   if (node) module.exports = api;
   else {

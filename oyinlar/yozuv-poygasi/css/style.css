@@ -54,3 +54,15 @@
   .natija-jadval td { padding: 3px 5px; }
   .men-orin { font-size: 20px; }
 }
+
+/* Eski nusxadagi qurilma haqida ogohlantirish (lobbi) */
+.lobbi-eski {
+  margin-top: 8px;
+  padding: 6px 12px;
+  border-radius: 10px;
+  background: #FFF0D6;
+  color: #A85C10;
+  font-size: 17px;
+  font-weight: 800;
+  text-align: center;
+}

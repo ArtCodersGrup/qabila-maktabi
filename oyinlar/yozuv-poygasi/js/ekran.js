@@ -37,6 +37,21 @@
     buttons([{ label: "Orqaga", onClick: qayt, secondary: true }]);
   }
 
+  // Qurilmadagi sayt nusxasi boshqalarnikidan eski: matn boshqacha bo'lib, poyga jimgina buziladi.
+  // Shuning uchun o'ynashga qo'ymaymiz — yangilashni so'raymiz.
+  function eskiNusxa(qayt) {
+    const el = box(false);
+    el.append(
+      h("h1", { class: "game-title", text: "Saytning eski nusxasi" }),
+      h("p", { class: "tog-note", text: "Bu qurilmada saytning eski nusxasi ochilgan — matn boshqalarnikidan farq qiladi." }),
+      h("p", { class: "tog-note", text: "«Yangilash» ni bos, keyin xonaga qaytadan kir." }));
+    sound.play("retry");
+    buttons([
+      { label: "Yangilash", onClick: () => { try { root.location.reload(); } catch (e) { /* baribir */ } } },
+      { label: "Orqaga", onClick: qayt, secondary: true },
+    ]);
+  }
+
   const qahramonById = (id) => togUi.qahramonById(id);
 
   // Matn turi haqida qisqa izoh (tanlash kartasida)
@@ -198,5 +213,5 @@
     return t;
   }
 
-  QK.yozuvEkran = { SITE_HOME, box, buttons, xato, turTanlash, rangTanlash, royxat, sahna, yozuv, natija, qahramonById };
+  QK.yozuvEkran = { SITE_HOME, box, buttons, xato, eskiNusxa, turTanlash, rangTanlash, royxat, sahna, yozuv, natija, qahramonById };
 })(window);

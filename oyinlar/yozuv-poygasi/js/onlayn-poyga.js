@@ -37,6 +37,7 @@
     const turi = P.turById(tur);
     let odamlar = []; // [{ id, qahramon }]
     let hozir = new Set(); // ayni paytda xonada turganlar (presence)
+    let eskilar = new Set(); // saytning eski nusxasi ochilgan qurilmalar — poygaga kiritilmaydi
     let state = null; // poyga ketayotganda — hisob shu yerda
     let sanoq = 0;
     let room = null;
@@ -70,6 +71,11 @@
       holati.textContent = odamlar.length
         ? `${odamlar.length} ta bola tayyor (${P.MAX_ODAM} tagacha)`
         : "Bolalar kodni kiritishini kutamiz…";
+      if (eskilar.size) {
+        royxat.append(h("div", { class: "lobbi-eski", text: eskilar.size === 1
+          ? "Bitta bolada saytning eski nusxasi ochilgan — u sahifani yangilasin."
+          : `${eskilar.size} ta bolada saytning eski nusxasi ochilgan — ular sahifani yangilashsin.` }));
+      }
       E.buttons([
         { label: sanoq ? `Boshlanmoqda… ${sanoq}` : `Boshlash (${odamlar.length})`, onClick: boshla, disabled: sanoq > 0 || odamlar.length < P.MIN_ODAM },
         { label: "Xonani yopish", onClick: chiqish, secondary: true },
@@ -241,6 +247,16 @@
             return;
           }
           if (msg.type !== "kirdi" || state) return; // poyga ketayotganda yangi bola keyingisini kutadi
+          // Eski nusxadagi qurilma: matni boshqacha bo'ladi, shuning uchun poygaga kiritilmaydi
+          if (!PR.versiyaMos(msg.data)) {
+            if (!eskilar.has(msg.from)) {
+              eskilar.add(msg.from);
+              QK.probe.eskilar = [...eskilar];
+              lobbiKorsat();
+            }
+            return;
+          }
+          eskilar.delete(msg.from);
           const qah = String((msg.data && msg.data.qah) || "");
           if (!T.QAHRAMONLAR.some((q) => q.id === qah)) return;
           if (odamlar.some((o) => o.qahramon === qah && o.id !== msg.from)) return; // rang band
@@ -340,7 +356,7 @@
         onPick: (id) => {
           qahramonim = id;
           yubordim = Date.now();
-          room.send("kirdi", { qah: id });
+          room.send("kirdi", { qah: id, v: PR.MATN_V });
           kutishEkran("Oʻqituvchi boshlashini kutamiz…");
         },
         orqaga: chiqish,
@@ -434,6 +450,19 @@
         },
         message(msg) {
           oxirgiXabar = Date.now();
+          // Boshlovchidagi matn qoidasi boshqacha bo'lsa, bu qurilmada eski nusxa ochilgan:
+          // matn har xil bo'lib, poyga jimgina buziladi (kam so'z yozgan yutib ketadi).
+          if ((msg.type === "lobbi" || msg.type === "holat") && !PR.versiyaMos(msg.data)) {
+            if (rejim !== "eski") {
+              rejim = "eski";
+              clearInterval(takror);
+              clearInterval(timer);
+              if (room) room.leave();
+              E.eskiNusxa(qayt);
+            }
+            return;
+          }
+          if (rejim === "eski") return;
           if (msg.type === "lobbi") {
             band = Array.isArray(msg.data.qah) ? msg.data.qah.slice() : [];
             const ids = Array.isArray(msg.data.ids) ? msg.data.ids : [];
@@ -477,6 +506,15 @@
             return;
           }
           if (s.boshlandi && !s.tugadi && (rejim !== "poyga" || urugim !== s.urug)) {
+            // Versiya bir xil, lekin matn baribir boshqacha bo'lsa (so'z ro'yxati o'zgargan) — o'ynamaymiz
+            if (!PR.matnMos(msg.data)) {
+              rejim = "eski";
+              clearInterval(takror);
+              clearInterval(timer);
+              if (room) room.leave();
+              E.eskiNusxa(qayt);
+              return;
+            }
             poygaBoshla(s);
           }
           if (rejim === "poyga") poygaYangila(s);
