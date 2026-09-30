@@ -314,7 +314,18 @@
   <circle cx="47" cy="35" r="6" fill="#F08A24"/>
   <path d="M26 54 h12" stroke="#1A9E77" stroke-width="3" stroke-linecap="round"/>`);
 
-  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, qutilar2, poyga, yozuv, onlayn, tog };
+  // 28-o'yin: teng bo'lingan toshlar va ortgani
+  const bolish = svg(`
+  <rect x="4" y="16" width="24" height="24" rx="6" fill="#FFFDF7" stroke="#D9C7A6" stroke-width="3"/>
+  <circle cx="12" cy="24" r="4" fill="#2F6FDE"/><circle cx="21" cy="24" r="4" fill="#2F6FDE"/>
+  <circle cx="12" cy="33" r="4" fill="#2F6FDE"/><circle cx="21" cy="33" r="4" fill="#2F6FDE"/>
+  <rect x="32" y="16" width="24" height="24" rx="6" fill="#FFFDF7" stroke="#D9C7A6" stroke-width="3"/>
+  <circle cx="40" cy="24" r="4" fill="#2F6FDE"/><circle cx="49" cy="24" r="4" fill="#2F6FDE"/>
+  <circle cx="40" cy="33" r="4" fill="#2F6FDE"/><circle cx="49" cy="33" r="4" fill="#2F6FDE"/>
+  <circle cx="26" cy="52" r="6" fill="#F08A24"/>
+  <circle cx="42" cy="52" r="6" fill="#F08A24"/>`);
+
+  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, bolish, qutilar2, poyga, yozuv, onlayn, tog };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";
