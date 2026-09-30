@@ -1,6 +1,6 @@
 // Offline rejim: sayt fayllari keshlanadi. Bola saytni bir marta ochsa, keyin internetsiz ham oʻynay oladi.
 // Yangi fayl qoʻshilsa, FILES roʻyxatiga ham qoʻshiladi — buni bosh/tests/offline.test.js tekshiradi.
-const VERSION = "v52";
+const VERSION = "v53";
 const CACHE = "qabila-maktabi-" + VERSION;
 
 const FILES = [
@@ -443,16 +443,15 @@ const FILES = [
   "oyinlar/34-funksiya-ustaxonasi/js/scenes/stage1.js",
   "oyinlar/34-funksiya-ustaxonasi/js/scenes/stage2.js",
   "oyinlar/34-funksiya-ustaxonasi/js/scenes/stage3.js",
-  "oyinlar/35-masalalar-maydoni/",
-  "oyinlar/35-masalalar-maydoni/index.html",
-  "oyinlar/35-masalalar-maydoni/css/style.css",
-  "oyinlar/35-masalalar-maydoni/js/bank.js",
-  "oyinlar/35-masalalar-maydoni/js/game-art.js",
-  "oyinlar/35-masalalar-maydoni/js/logic.js",
-  "oyinlar/35-masalalar-maydoni/js/main.js",
-  "oyinlar/35-masalalar-maydoni/js/scenes/common.js",
-  "oyinlar/35-masalalar-maydoni/js/scenes/final.js",
-  "oyinlar/35-masalalar-maydoni/js/scenes/stage.js",
+  "oyinlar/masalalar/",
+  "oyinlar/masalalar/index.html",
+  "oyinlar/masalalar/css/style.css",
+  "oyinlar/masalalar/js/baho.js",
+  "oyinlar/masalalar/js/bank.js",
+  "oyinlar/masalalar/js/ekran.js",
+  "oyinlar/masalalar/js/holat.js",
+  "oyinlar/masalalar/js/main.js",
+  "oyinlar/masalalar/js/royxat.js",
   "oyinlar/musobaqa/",
   "oyinlar/musobaqa/index.html",
   "oyinlar/musobaqa/css/style.css",

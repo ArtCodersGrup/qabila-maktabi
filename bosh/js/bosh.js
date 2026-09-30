@@ -57,7 +57,12 @@
     { n: 32, topic: "python", dir: "32-sanoqli-takror", title: "Sanoqli takror", desc: "for va range, chegaralar, ichma-ich sikl", key: "sanoqli-takror:v1", stages: 3, icon: "zina", age: "12–16", pc: true },
     { n: 33, topic: "python", dir: "33-royxat-va-satr", title: "Roʻyxat va satr", desc: "Indeks, len, append, kesish va split", key: "royxat-va-satr:v1", stages: 3, icon: "qator", age: "12–16", pc: true },
     { n: 34, topic: "python", dir: "34-funksiya-ustaxonasi", title: "Funksiya ustaxonasi", desc: "def, parametr, return va masalani boʻlaklash", key: "funksiya-ustaxonasi:v1", stages: 3, icon: "dastgoh", age: "12–16", pc: true },
-    { n: 35, topic: "python", dir: "35-masalalar-maydoni", title: "Masalalar maydoni", desc: "Olimpiada uslubidagi masalalar: uch daraja, 24 ta masala", key: "masalalar-maydoni:v1", stages: 4, icon: "minora", age: "12–16", pc: true },
+  ];
+
+  // Mashqlar — o'yin emas: masalalar ro'yxati (qidiruv, filtr, sahifalash). Bosqichi yo'q,
+  // har masala alohida yechiladi va foiz bilan baholanadi.
+  const MASHQLAR = [
+    { dir: "masalalar", title: "Masalalar", desc: "Olimpiada masalalari: qidiruv, filtr va testlar bilan tekshirish", icon: "minora", age: "12–16", pc: true },
   ];
 
   // Musobaqalar — o'yin emas (bosqichi yo'q), ro'yxat tepasida alohida bo'lim: savol-javob va tez yozish poygasi
@@ -130,6 +135,23 @@
       section.append(h("h3", { class: "bosh-h3", text: `${mode.title} · ${mode.note}` }), cards);
     }
     list.append(section);
+
+    const mashq = h("section", { class: "bosh-section" },
+      h("h2", { class: "bosh-h2", text: "Mashqlar" }),
+      h("p", { class: "bosh-note", text: "Masalalar roʻyxati — oʻzing tanlab yechasan" }));
+    const mashqCards = h("div", { class: "bosh-cards" });
+    MASHQLAR.forEach((m) => mashqCards.append(
+      h("a", { class: "bosh-card bosh-contest", href: `oyinlar/${m.dir}/index.html` },
+        h("span", { class: "bosh-icon", html: root.QK.boshArt.icon(m.icon) }),
+        h("span", { class: "bosh-text" },
+          h("span", { class: "bosh-name", text: m.title }),
+          h("span", { class: "bosh-desc", text: m.desc })),
+        h("span", { class: "bosh-state" },
+          m.age ? h("span", { class: "bosh-age", text: m.age }) : null,
+          m.pc ? h("span", { class: "bosh-pc", title: "Klaviatura kerak", "aria-label": "Klaviatura kerak", text: "💻" }) : null))));
+    mashq.append(mashqCards);
+    list.append(mashq);
+
     for (const section of SECTIONS) {
       const games = GAMES.filter((g) => g.topic === section.id);
       if (!games.length) continue;
@@ -143,6 +165,6 @@
   }
 
   root.QK = root.QK || {};
-  root.QK.bosh = { AGE, SECTIONS, GAMES, CONTESTS, MODES, number, render };
+  root.QK.bosh = { AGE, SECTIONS, GAMES, CONTESTS, MASHQLAR, MODES, number, render };
   if (root.document) render();
 })(window);

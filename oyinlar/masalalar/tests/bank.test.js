@@ -1,9 +1,9 @@
-// 35-o'yin: masalalar banki. Har masalaning namunali yechimi barcha testlardan o'tishi shart
+// Masalalar banki. Har masalaning namunali yechimi barcha testlardan o'tishi shart
 // (QOIDALAR §4.3 dagi masala banki istisnosi shuni talab qiladi).
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const B = require("../js/bank.js");
-const L = require("../js/logic.js");
+const R = require("../js/royxat.js");
 const K = require("../../umumiy/js/kod.js");
 const py = require("../../umumiy/js/python/python.js");
 
@@ -26,16 +26,6 @@ test("har masalada qiyinlik (rating) va teglar bor, teglar lug'atdan", () => {
   }
 });
 
-test("masalalar daraja ichida qiyinchilik bo'yicha tartiblangan", () => {
-  for (const level of B.LEVELS) {
-    const list = L.ordered(level);
-    for (let k = 1; k < list.length; k++) {
-      assert.ok(list[k].rating >= list[k - 1].rating, level.id + ": tartib buzilgan");
-    }
-    // Birinchi berilgan masala — eng osoni
-    assert.equal(L.pickProblem(B.LEVELS.indexOf(level) + 1, []).id, list[0].id, level.id);
-  }
-});
 
 test("Codeforces masalalari: manba havolasi va haqiqiy reyting", () => {
   assert.ok(B.CF.length >= 10);
@@ -97,7 +87,7 @@ test("namunali yechim namunadagi javobni aynan beradi", () => {
 
 test("namunali yechim barcha yashirin testlarda ham xatosiz ishlaydi", () => {
   for (const [level, p] of allProblems) {
-    const task = L.toTask(p);
+    const task = R.vazifa(p);
     assert.deepEqual(K.validate(task), [], level.id + "/" + p.id);
     assert.equal(K.check(task, p.solution).ok, true, level.id + "/" + p.id);
   }
@@ -105,7 +95,7 @@ test("namunali yechim barcha yashirin testlarda ham xatosiz ishlaydi", () => {
 
 test("bo'sh yoki soxta yechim o'tmaydi", () => {
   for (const [level, p] of allProblems) {
-    const task = L.toTask(p);
+    const task = R.vazifa(p);
     assert.equal(K.check(task, "   ").ok, false, level.id + "/" + p.id);
     // Faqat namunadagi javobni yozib qo'ygan yechim yashirin testda yiqiladi
     const cheat = p.namuna.out.map((line) => "print(" + JSON.stringify(line) + ")").join("\n");
@@ -122,74 +112,6 @@ test("yechimlar faqat o'rgatilgan qismdan foydalanadi", () => {
   }
 });
 
-test("masala tanlash: yechilgani qayta chiqmaydi", () => {
-  const used = [];
-  const level = B.LEVELS[0];
-  for (let k = 0; k < level.problems.length; k++) {
-    const task = L.pickProblem(1, used);
-    assert.ok(!used.includes(task.id), "takrorlandi: " + task.id);
-    used.push(task.id);
-  }
-  // Bank tugagach, boshidan beriladi
-  const again = L.pickProblem(1, used);
-  assert.ok(level.problems.some((p) => p.id === again.id));
-});
 
-test("yechilgan masalalar eslab qolinadi: qayta o'ynaganda keyingisi beriladi", () => {
-  // Soxta brauzer xotirasi
-  const store = {};
-  const oldLS = globalThis.localStorage;
-  globalThis.localStorage = {
-    getItem: (k) => (k in store ? store[k] : null),
-    setItem: (k, v) => { store[k] = String(v); },
-    removeItem: (k) => { delete store[k]; },
-  };
-  try {
-    L.forgetSolved();
-    const level = B.LEVELS[0];
-    const tartib = L.ordered(level).map((p) => p.id);
-    // Birinchi o'yin: uchta eng oson masala
-    const birinchi = [];
-    for (let k = 0; k < 3; k++) {
-      const task = L.pickProblem(1, L.solvedIn("oson").concat(birinchi));
-      birinchi.push(task.id);
-      L.markSolved("oson", task.id);
-    }
-    assert.deepEqual(birinchi, tartib.slice(0, 3), "birinchi o'yin — eng osonlari");
-    // Ikkinchi o'yin: keyingi uchtasi
-    const ikkinchi = [];
-    for (let k = 0; k < 3; k++) {
-      const task = L.pickProblem(1, L.solvedIn("oson").concat(ikkinchi));
-      ikkinchi.push(task.id);
-      L.markSolved("oson", task.id);
-    }
-    assert.deepEqual(ikkinchi, tartib.slice(3, 6), "ikkinchi o'yin — keyingilari");
-    // Daraja tugagach, ro'yxat tozalanadi va bank boshidan beriladi
-    for (const id of tartib.slice(6)) L.markSolved("oson", id);
-    assert.deepEqual(L.solvedIn("oson"), [], "daraja tugadi — boshidan");
-    assert.equal(L.pickProblem(1, []).id, tartib[0]);
-  } finally {
-    if (oldLS === undefined) delete globalThis.localStorage;
-    else globalThis.localStorage = oldLS;
-  }
-});
 
-test("brauzer xotirasi ishlamasa ham o'yin ishlaydi", () => {
-  const oldLS = globalThis.localStorage;
-  globalThis.localStorage = { getItem() { throw new Error("yopiq"); }, setItem() { throw new Error("yopiq"); } };
-  try {
-    assert.deepEqual(L.solvedIn("oson"), []);
-    assert.doesNotThrow(() => L.markSolved("oson", "kvadrat"));
-    assert.ok(L.pickProblem(1, []).id);
-  } finally {
-    if (oldLS === undefined) delete globalThis.localStorage;
-    else globalThis.localStorage = oldLS;
-  }
-});
 
-test("daraja bosqich raqamiga mos keladi", () => {
-  assert.equal(L.levelByIndex(1).id, "oson");
-  assert.equal(L.levelByIndex(2).id, "orta");
-  assert.equal(L.levelByIndex(3).id, "qiyin");
-  assert.equal(L.levelByIndex(4).id, "cf");
-});

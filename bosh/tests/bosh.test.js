@@ -51,6 +51,17 @@ test("musobaqalar: bitta ekranda (savol-javob, poyga) va onlayn (aloqa sinovi), 
   assert.equal(CONTESTS.find((c) => c.dir === "yozuv-poygasi").pc, true, "onlayn poygaga ham klaviatura kerak");
 });
 
+test("mashqlar: masalalar ro'yxati alohida bo'limda (o'yin emas — bosqichi yo'q)", () => {
+  const { MASHQLAR } = win.QK.bosh;
+  assert.deepEqual(MASHQLAR.map((m) => m.dir), ["masalalar"]);
+  for (const m of MASHQLAR) {
+    assert.ok(fs.existsSync(path.join(ROOT, "oyinlar", m.dir, "index.html")), m.dir);
+    assert.match(win.QK.boshArt.icon(m.icon), /^<svg[\s\S]*<\/svg>$/, m.icon);
+    assert.ok(!GAMES.some((g) => g.dir === m.dir), m.dir + ": o'yinlar ro'yxatida turmasin");
+    assert.equal(m.pc, true, "kod yozish uchun klaviatura kerak");
+  }
+});
+
 test("bosh sahifadagi raqamlar 1 dan ketma-ket, bo'limlar tartibida", () => {
   const shown = SECTIONS.flatMap((sec) => GAMES.filter((g) => g.topic === sec.id)).map(number);
   assert.deepEqual(shown, GAMES.map((g, k) => k + 1));

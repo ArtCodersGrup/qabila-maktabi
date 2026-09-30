@@ -1,0 +1,138 @@
+/* Masalalar maydoni — ro'yxat va bitta masala ekrani.
+   Umumiylari: ../../umumiy/css/asos.css va ../../umumiy/css/kod.css */
+
+.masalalar-play {
+  display: block;
+  padding: 10px 12px 96px;
+  overflow-y: auto;
+  height: 100%;
+  box-sizing: border-box;
+}
+.masalalar-play .zone-control {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  padding: 8px 12px 12px;
+  background: linear-gradient(to top, var(--fon) 70%, rgba(255, 246, 229, 0));
+}
+.masalalar-play .zone-control:empty { display: none; }
+.top-title { font-size: 20px; font-weight: 900; color: var(--matn); }
+
+.mbox { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 760px; margin: 0 auto; }
+
+/* ---------- Qidiruv va filtrlar ---------- */
+.m-tepa { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.m-qidiruv {
+  flex: 1 1 260px; min-width: 0;
+  padding: 10px 14px;
+  border: 2px solid var(--chiziq); border-radius: 999px;
+  background: #fff; color: var(--matn);
+  font-family: inherit; font-size: 18px;
+}
+.m-qidiruv:focus { outline: none; border-color: var(--asosiy); box-shadow: 0 0 0 3px rgba(47, 111, 222, 0.18); }
+.m-soni { font-size: 16px; font-weight: 800; color: #6B6558; }
+
+.m-filtrlar { display: flex; flex-wrap: wrap; gap: 8px; }
+.m-filtr {
+  padding: 7px 12px;
+  border: 2px solid var(--chiziq); border-radius: 10px;
+  background: #fff; color: var(--matn);
+  font-family: inherit; font-size: 16px; font-weight: 700;
+}
+.m-filtr:focus { outline: none; border-color: var(--asosiy); }
+.m-tozala {
+  padding: 7px 14px;
+  border: 2px solid var(--yana); border-radius: 10px;
+  background: #FFF0D6; color: #A85C10;
+  font-family: inherit; font-size: 16px; font-weight: 800;
+  cursor: pointer;
+}
+
+/* ---------- Ro'yxat ---------- */
+.m-royxat { display: flex; flex-direction: column; gap: 6px; }
+.m-qator {
+  display: flex; align-items: center; gap: 10px;
+  width: 100%; box-sizing: border-box;
+  padding: 10px 12px;
+  border: 2px solid var(--chiziq); border-radius: 12px;
+  background: #fff; color: var(--matn);
+  font-family: inherit; text-align: left;
+  cursor: pointer;
+}
+.m-qator:hover { border-color: var(--asosiy); }
+.m-qator.yechilgan { background: #F2FAF6; border-color: #BFE3D3; }
+.m-raqam { flex: none; width: 2em; color: #8A8577; font-size: 15px; font-weight: 800; text-align: right; }
+.m-nom { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.m-nom-matn { font-size: 18px; font-weight: 800; }
+.m-teglar { display: flex; flex-wrap: wrap; gap: 4px; }
+.m-qiyinlik { flex: none; }
+.m-holat { flex: none; width: 3.4em; text-align: right; font-size: 16px; font-weight: 900; color: #8A8577; }
+.m-holat.ok { color: var(--togri); font-size: 20px; }
+.m-bosh { padding: 18px; text-align: center; color: #6B6558; font-size: 18px; font-weight: 700; }
+
+.chip { padding: 2px 10px; border-radius: 999px; background: #EEF3FD; color: #2F6FDE; font-size: 14px; font-weight: 800; }
+.chip.reyting { background: #FFF0D6; color: #A85C10; }
+.chip.daraja { background: #F3EFE3; color: #6B6558; }
+.chip.ok { background: #E7F5EF; color: #14785A; }
+.chip.qisman { background: #FFF0D6; color: #A85C10; }
+
+/* ---------- Sahifalash ---------- */
+.m-sahifalar { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; padding: 4px 0 8px; }
+.m-sahifa {
+  min-width: 42px; padding: 8px 12px;
+  border: 2px solid var(--chiziq); border-radius: 10px;
+  background: #fff; color: var(--matn);
+  font-family: inherit; font-size: 17px; font-weight: 800;
+  cursor: pointer;
+}
+.m-sahifa.hozir { background: var(--asosiy); border-color: var(--asosiy); color: #fff; }
+.m-sahifa:disabled { opacity: 0.45; cursor: default; }
+.m-sahifa.hozir:disabled { opacity: 1; }
+
+/* ---------- Bitta masala ---------- */
+.m-orqaga {
+  align-self: flex-start;
+  padding: 6px 14px;
+  border: 0; border-radius: 10px;
+  background: transparent; color: var(--asosiy);
+  font-family: inherit; font-size: 17px; font-weight: 800;
+  cursor: pointer;
+}
+.masala { border: 2px solid var(--chiziq); border-radius: 12px; background: #fff; padding: 12px 14px; }
+.masala-nom { font-size: 22px; font-weight: 900; color: var(--asosiy); margin-bottom: 6px; }
+.masala-belgi { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.masala-shart { font-size: 19px; font-weight: 700; line-height: 1.45; }
+.masala-format { margin-top: 8px; font-size: 17px; color: #5C5648; line-height: 1.5; }
+.namuna { display: flex; gap: 10px; margin-top: 10px; }
+.namuna > * { flex: 1 1 50%; min-width: 0; }
+.namuna .kod-natija { font-family: var(--kod-shrift); font-size: 17px; margin: 0; padding: 8px 10px; }
+.namuna .kutilgan { border: 2px dashed var(--togri); border-radius: 12px; overflow: hidden; }
+.namuna .kutilgan .kod-sarlavha { background: #E7F5EF; color: #14785A; }
+.masala-manba { margin-top: 8px; font-size: 15px; color: #6B6558; }
+.masala-manba a { color: var(--asosiy); }
+
+/* ---------- Testlar natijasi ---------- */
+.m-natija { display: flex; flex-direction: column; gap: 8px; }
+.m-xulosa { font-size: 19px; font-weight: 900; color: var(--yana); }
+.m-xulosa.ok { color: var(--togri); }
+.m-bar { height: 10px; border-radius: 999px; background: #EDE7D8; overflow: hidden; }
+.m-bar-ich { height: 100%; background: var(--yana); border-radius: 999px; transition: width 0.3s; }
+.m-bar-ich.toliq { background: var(--togri); }
+.m-testlar { display: flex; flex-wrap: wrap; gap: 6px; }
+.m-test { padding: 4px 10px; border-radius: 10px; font-size: 15px; font-weight: 800; }
+.m-test.ok { background: #E7F5EF; color: #14785A; }
+.m-test.xato { background: #FFF0D6; color: #A85C10; }
+.m-yordam { border: 2px solid var(--chiziq); border-radius: 12px; background: #fff; padding: 10px 12px; }
+.m-yordam.ok { border-color: var(--togri); color: var(--togri); font-weight: 800; }
+.m-yordam-bosh { font-size: 17px; font-weight: 900; color: #A85C10; margin-bottom: 6px; }
+.m-solishtir { display: flex; flex-direction: column; gap: 4px; font-size: 17px; }
+.m-solishtir code { font-family: var(--kod-shrift); font-size: 17px; }
+.m-xato-matn { font-family: var(--kod-shrift); font-size: 16px; color: #A85C10; font-weight: 700; }
+.m-xato-izoh { margin-top: 4px; font-size: 16px; font-weight: 700; }
+.m-maslahat { margin-top: 8px; padding-top: 8px; border-top: 2px dashed var(--chiziq); font-size: 17px; font-weight: 700; color: var(--asosiy); }
+
+@media (max-width: 560px) {
+  .namuna { flex-direction: column; }
+  .m-nom-matn { font-size: 17px; }
+  .masala-nom { font-size: 19px; }
+  .m-holat { width: 2.8em; }
+}

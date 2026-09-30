@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Masalalar maydoni</title>
+  <title>Masalalar</title>
   <link rel="icon" href="../../bosh/icon.svg">
   <meta name="theme-color" content="#FFF6E5">
   <link rel="stylesheet" href="../umumiy/css/asos.css">
@@ -13,17 +13,12 @@
 <body>
   <div id="app">
     <header class="topbar">
-      <button class="icon-btn" id="btn-home" type="button" aria-label="Bosh ekran"></button>
-      <div class="progress" id="progress" aria-label="Toʻgʻri javoblar"></div>
+      <a class="icon-btn" id="btn-home" href="../../index.html" aria-label="Barcha oʻyinlar"></a>
+      <div class="top-title">Masalalar</div>
       <button class="icon-btn" id="btn-sound" type="button" aria-label="Ovoz"></button>
     </header>
-    <main class="play" id="play">
-      <section class="zone-stage" id="zone-stage">
-        <div class="bubble" id="bubble" hidden></div>
-        <div class="actor" id="actor-elder"></div>
-        <div class="actor" id="actor-apprentice"></div>
-      </section>
-      <section class="zone-work" id="zone-work"></section>
+    <main class="masalalar-play" id="play">
+      <section class="zone-work" id="zone-work" aria-live="polite"></section>
       <section class="zone-control" id="zone-control"></section>
     </main>
   </div>
@@ -36,19 +31,14 @@
   <script src="../umumiy/js/python/python.js"></script>
   <script src="../umumiy/js/kod.js"></script>
   <script src="js/bank.js"></script>
-  <script src="js/logic.js"></script>
-  <script src="../umumiy/js/storage.js"></script>
+  <script src="js/royxat.js"></script>
+  <script src="js/baho.js"></script>
+  <script src="js/holat.js"></script>
   <script src="../umumiy/js/sound.js"></script>
   <script src="../umumiy/js/art.js"></script>
-  <script src="js/game-art.js"></script>
   <script src="../umumiy/js/ui.js"></script>
-  <script src="../umumiy/js/app.js"></script>
-  <script src="../umumiy/js/practice.js"></script>
   <script src="../umumiy/js/kod-ui.js"></script>
-  <script src="../umumiy/js/kod-mashq.js"></script>
-  <script src="js/scenes/common.js"></script>
-  <script src="js/scenes/stage.js"></script>
-  <script src="js/scenes/final.js"></script>
+  <script src="js/ekran.js"></script>
   <script src="../umumiy/js/offline.js"></script>
   <script src="js/main.js"></script>
 </body>
