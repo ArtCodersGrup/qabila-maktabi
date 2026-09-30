@@ -6,6 +6,10 @@ algoritm nima, qanday koʻrinadi (blok-sxema), qaysi biri tezroq va nega.
 **Yosh:** 12–16 · **Qurilma:** kompyuter (💻) · **Holati:** reja kelishildi (2026-10-01), kod yozilmagan.
 **Shart:** Python bloki bolalarda sinalgach boshlanadi ([`PYTHON-SINOV.md`](PYTHON-SINOV.md)).
 
+> **Holat (2026-10-01):** 36-oʻyinning dizayni va mantiqi yozildi (testlari yashil), ish **toʻxtatildi**.
+> Tugallanmagani uchun papka raqamsiz: `oyinlar/algoritm-xossalari/`. Qayerdan davom etish —
+> shu papkadagi [`REJA.md`](../algoritm-xossalari/REJA.md) da.
+
 **Muallif topshirigʻi (2026-10-01):** «algoritmlar, ularning turlari va xossalari, misollar, nega ular bizga kerak.
 O bolshoy ham boʻlar edi. Blok-sxema koʻrinishini tasvirlash ham yaxshi (oʻyinga oʻxshatib, blok qoʻyadigan qilib).
 Kombinatorika ham yaxshi variant.»
