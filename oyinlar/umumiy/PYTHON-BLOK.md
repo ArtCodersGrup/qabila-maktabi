@@ -6,7 +6,7 @@ Dvigatel (kodni ishga tushiruvchi) alohida hujjatda: [`PYTHON-DVIGATEL.md`](PYTH
 
 Umumiy qoidalar: [`../../QOIDALAR.md`](../../QOIDALAR.md).
 
-**Holati:** dizayn yozildi — muallif tasdiqlashini kutmoqda (2026-09-29).
+**Holati:** toʻqqizala oʻyin yozildi va testlari yashil (2026-09-30) — muallif koʻrib chiqishini kutmoqda.
 
 ---
 
@@ -180,13 +180,19 @@ Blok tasdiqlansa, **avval** `QOIDALAR.md` oʻzgaradi (§ ning oʻz talabi), keyi
 
 ---
 
-## 7. Ish tartibi
+## 7. Ish tartibi (bajarildi)
 
-1. `QOIDALAR.md` oʻzgarishlari (§5 dagi roʻyxat) + bosh sahifa boʻlimi.
-2. **Kichik Python dvigateli** + testlari — blokning eng katta va eng xatarli qismi, birinchi boʻlib tugatiladi.
-3. `kod-ui.js`, `kod-masala.js`, `kod-rang.js`, `kod.css`.
-4. **27-oʻyin** toʻliq (`DIZAYN.md` → `REJA.md` → kod → testlar) — bu yerda muallif oʻzi koʻrib chiqadi (QOIDALAR §10.5).
-5. Keyin 28 → 35, bittadan.
+1. ✅ `QOIDALAR.md` oʻzgarishlari + bosh sahifada `python` boʻlimi.
+2. ✅ **Kichik Python dvigateli** + testlari (`python3` bilan solishtirish va fuzz).
+3. ✅ `kod.js` (masala turlari), `kod-ui.js` (muharrir, chiqish, qadam panel), `kod-mashq.js` (mashq ekranlari), `kod.css`.
+4. ✅ **27–35-oʻyinlar** — har biri `DIZAYN.md` → kod → testlar → bosh sahifa → git.
+
+Amalda yozilgan fayl nomlari dizayndagidan biroz farq qiladi: `kod-masala.js` va `kod-rang.js` oʻrniga
+`kod.js` (mantiq) + `kod-ui.js` (ekran, boʻyash ham shu yerda) + `kod-mashq.js` (mashq ekranlari) boʻldi —
+loyihadagi `dastur.js` / `dastur-ui.js` naqshiga mos.
+
+Qoʻshimcha: `umumiy/js/kod.js` da **sinov satri** (`tail`) — funksiya yozish masalalarida bola faqat
+funksiyani yozadi, chaqirishni sayt bajaradi (34-oʻyin).
 
 ## 8. Keyinga qoldirildi
 

@@ -372,7 +372,15 @@
   <path d="M54 26 L61 32 L54 38 Z" fill="#1A9E77"/>
   <rect x="18" y="50" width="28" height="5" rx="2.5" fill="#8A8577"/>`);
 
-  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, bolish, qutilar2, ayri, charx, zina, qator, dastgoh, poyga, yozuv, onlayn, tog };
+  // 35-o'yin: uch pog'onali minora — uch daraja
+  const minora = svg(`
+  <rect x="8" y="44" width="48" height="13" rx="3" fill="#1A9E77" stroke="#2B2B3A" stroke-width="2.5"/>
+  <rect x="14" y="30" width="36" height="13" rx="3" fill="#1A9E77" stroke="#2B2B3A" stroke-width="2.5"/>
+  <rect x="20" y="16" width="24" height="13" rx="3" fill="#D9C7A6" stroke="#2B2B3A" stroke-width="2.5"/>
+  <path d="M32 15 V6" stroke="#8A8577" stroke-width="3" stroke-linecap="round"/>
+  <path d="M32 6 L46 10 L32 14 Z" fill="#F08A24"/>`);
+
+  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, bolish, qutilar2, ayri, charx, zina, qator, dastgoh, minora, poyga, yozuv, onlayn, tog };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";
