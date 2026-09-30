@@ -38,7 +38,7 @@
       }, "big"));
     });
     await ui.say("elder", `Sen ${painted} ta katakni boʻyading. Robot buni 1 va 0 lar qatori deb koʻradi.`);
-    await ui.say("elder", "Har katak — bitta piksel. 10-oʻyindagi chiroqlarni esla: yoniq — 1, oʻchiq — 0.");
+    await ui.say("elder", "Har katak — bitta piksel. 11-oʻyindagi chiroqlarni esla: yoniq — 1, oʻchiq — 0.");
   }
 
   // 4.3: mashq — sonlarga qarab rasmni topish

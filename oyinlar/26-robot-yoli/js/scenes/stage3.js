@@ -39,7 +39,7 @@
   async function story() {
     let el = common.box(false);
     el.append(ui.h("div", { class: "story-art", html: art.bookPen() }));
-    await ui.say("elder", "«Algoritm» soʻzi Muhammad al-Xorazmiy nomidan kelib chiqqan (22-oʻyin).");
+    await ui.say("elder", "«Algoritm» soʻzi Muhammad al-Xorazmiy nomidan kelib chiqqan (23-oʻyin).");
     await ui.say("elder", "Uning kitobidan butun dunyo hisob qoidalarini oʻrgangan.");
     el = common.box(false);
     el.append(ui.h("div", { class: "story-art", html: art.phone() }));

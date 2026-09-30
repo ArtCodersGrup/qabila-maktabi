@@ -334,7 +334,18 @@
   <circle cx="14" cy="14" r="5" fill="#2F6FDE"/>
   <circle cx="50" cy="14" r="5" fill="#8E5BD0"/>`);
 
-  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, bolish, qutilar2, ayri, poyga, yozuv, onlayn, tog };
+  // 31-o'yin: suv charxi — takror
+  const charx = svg(`
+  <circle cx="32" cy="32" r="21" fill="none" stroke="#8A8577" stroke-width="4"/>
+  <rect x="26" y="4" width="12" height="9" rx="2" fill="#2F6FDE"/>
+  <rect x="51" y="26" width="9" height="12" rx="2" fill="#2F6FDE"/>
+  <rect x="26" y="51" width="12" height="9" rx="2" fill="#D9C7A6"/>
+  <rect x="4" y="26" width="9" height="12" rx="2" fill="#2F6FDE"/>
+  <rect x="43" y="11" width="10" height="9" rx="2" fill="#2F6FDE" transform="rotate(45 48 15)"/>
+  <rect x="11" y="43" width="10" height="9" rx="2" fill="#D9C7A6" transform="rotate(45 16 47)"/>
+  <circle cx="32" cy="32" r="6" fill="#FFF6E5" stroke="#2B2B3A" stroke-width="3"/>`);
+
+  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, bolish, qutilar2, ayri, charx, poyga, yozuv, onlayn, tog };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";

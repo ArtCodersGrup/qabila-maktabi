@@ -7,6 +7,7 @@
   const { ui, sound } = QK;
 
   const TAB = "    "; // otstup — 4 bo'shliq (QOIDALAR: Tab emas)
+  const SHOW_LINES = 40; // chiqish panelida ko'rsatiladigan eng ko'p satr
 
   const KEYWORDS = new Set(["if", "elif", "else", "while", "for", "in", "break", "continue",
     "pass", "def", "return", "and", "or", "not", "True", "False", "None"]);
@@ -174,7 +175,11 @@
         api.clear();
         const rows = QK.kod.normalize(list);
         if (!rows.length) body.append(ui.h("span", { class: "kod-bosh", text: "(hech narsa chiqmadi)" }));
-        for (const line of rows) body.append(ui.h("span", { class: "kod-chiqsatr", text: line }));
+        // Cheksiz sikl minglab satr chiqarishi mumkin — ekranni toldirib yubormaydi
+        for (const line of rows.slice(0, SHOW_LINES)) body.append(ui.h("span", { class: "kod-chiqsatr", text: line }));
+        if (rows.length > SHOW_LINES) {
+          body.append(ui.h("span", { class: "kod-bosh", text: "… yana " + (rows.length - SHOW_LINES) + " satr" }));
+        }
       },
       error(err, code) {
         el.classList.add("xato");

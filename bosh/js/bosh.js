@@ -53,6 +53,7 @@
     { n: 28, topic: "python", dir: "28-sonlar-ustaxonasi", title: "Sonlar ustaxonasi", desc: "// va %, amallar tartibi, daraja", key: "sonlar-ustaxonasi:v1", stages: 3, icon: "bolish", age: "12–16", pc: true },
     { n: 29, topic: "python", dir: "29-nomli-qutilar", title: "Nomli qutilar", desc: "Oʻzgaruvchi, kuzatuv jadvali, input() va turlar", key: "nomli-qutilar:v1", stages: 3, icon: "qutilar2", age: "12–16", pc: true },
     { n: 30, topic: "python", dir: "30-ikki-yol", title: "Ikki yoʻl", desc: "Shart: if, elif, else, otstup va mantiq", key: "ikki-yol:v1", stages: 3, icon: "ayri", age: "12–16", pc: true },
+    { n: 31, topic: "python", dir: "31-takror-charxi", title: "Takror charxi", desc: "while sikli, yigʻindi va raqamlarni ajratish", key: "takror-charxi:v1", stages: 3, icon: "charx", age: "12–16", pc: true },
   ];
 
   // Musobaqalar — o'yin emas (bosqichi yo'q), ro'yxat tepasida alohida bo'lim: savol-javob va tez yozish poygasi
