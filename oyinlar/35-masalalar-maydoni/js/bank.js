@@ -7,6 +7,8 @@
   const OSON = [
     {
       id: "yigindi",
+      rating: 100,
+      tags: ["oʻzgaruvchi", "matematika"],
       title: "Ikki son yigʻindisi",
       what: "Ikkita butun son berilgan. Ularning yigʻindisini chiqar.",
       kirish: "Ikki satrda ikkita butun son.",
@@ -18,6 +20,8 @@
     },
     {
       id: "kvadrat",
+      rating: 100,
+      tags: ["oʻzgaruvchi", "matematika"],
       title: "Kvadrat",
       what: "Bitta son berilgan. Uning kvadratini chiqar.",
       kirish: "Bitta butun son.",
@@ -29,6 +33,8 @@
     },
     {
       id: "juft-toq",
+      rating: 150,
+      tags: ["shart", "raqamlar"],
       title: "Juft yoki toq",
       what: 'Bitta son berilgan. Agar u juft boʻlsa "juft", aks holda "toq" deb yoz.',
       kirish: "Bitta butun son.",
@@ -40,6 +46,8 @@
     },
     {
       id: "eng-katta-3",
+      rating: 200,
+      tags: ["shart"],
       title: "Uchtadan kattasi",
       what: "Uchta son berilgan. Eng kattasini chiqar.",
       kirish: "Uch satrda uchta butun son.",
@@ -51,6 +59,8 @@
     },
     {
       id: "yigindi-n",
+      rating: 200,
+      tags: ["for", "matematika"],
       title: "Birdan n gacha",
       what: "Bitta musbat son berilgan. 1 dan shu songacha (uning oʻzi ham kiradi) sonlar yigʻindisini chiqar.",
       kirish: "Bitta musbat butun son.",
@@ -62,6 +72,8 @@
     },
     {
       id: "oraliq-yigindi",
+      rating: 250,
+      tags: ["for", "matematika"],
       title: "a dan b gacha",
       what: "Ikkita son berilgan: a va b (a ≤ b). a dan b gacha (ikkalasi ham kiradi) sonlar yigʻindisini chiqar.",
       kirish: "Ikki satrda a va b.",
@@ -73,6 +85,8 @@
     },
     {
       id: "musbat-manfiy",
+      rating: 150,
+      tags: ["shart"],
       title: "Musbat, manfiy yoki nol",
       what: 'Bitta son berilgan. "musbat", "manfiy" yoki "nol" deb yoz.',
       kirish: "Bitta butun son.",
@@ -84,6 +98,8 @@
     },
     {
       id: "yulduzcha",
+      rating: 250,
+      tags: ["for", "satr"],
       title: "Yulduzchalar",
       what: "Bitta musbat son berilgan. Shuncha satr chiqar: birinchi satrda 1 ta yulduzcha, ikkinchisida 2 ta va hokazo.",
       kirish: "Bitta musbat butun son.",
@@ -98,6 +114,8 @@
   const ORTA = [
     {
       id: "raqamlar-yigindisi",
+      rating: 300,
+      tags: ["while", "raqamlar"],
       title: "Raqamlar yigʻindisi",
       what: "Bitta musbat son berilgan. Uning raqamlari yigʻindisini chiqar.",
       kirish: "Bitta musbat butun son.",
@@ -109,6 +127,8 @@
     },
     {
       id: "teskari-son",
+      rating: 350,
+      tags: ["while", "raqamlar"],
       title: "Teskari son",
       what: "Bitta musbat son berilgan. Uni teskari oʻgirib chiqar.",
       kirish: "Bitta musbat butun son.",
@@ -120,6 +140,8 @@
     },
     {
       id: "farq",
+      rating: 350,
+      tags: ["roʻyxat", "shart"],
       title: "Eng katta va eng kichik farqi",
       what: "Bitta satrda bir nechta son berilgan. Eng katta va eng kichik sonning farqini chiqar.",
       kirish: "Bitta satrda boʻsh joy bilan ajratilgan sonlar.",
@@ -131,6 +153,8 @@
     },
     {
       id: "juftlar-soni",
+      rating: 300,
+      tags: ["roʻyxat", "shart"],
       title: "Nechta juft",
       what: "Bitta satrda bir nechta son berilgan. Nechtasi juft ekanini chiqar.",
       kirish: "Bitta satrda boʻsh joy bilan ajratilgan sonlar.",
@@ -142,6 +166,8 @@
     },
     {
       id: "unlilar",
+      rating: 300,
+      tags: ["satr", "shart"],
       title: "Unli harflar",
       what: "Bitta soʻz berilgan. Undagi unli harflar (a, e, i, o, u) sonini chiqar.",
       kirish: "Bitta soʻz (kichik harflar bilan).",
@@ -153,6 +179,8 @@
     },
     {
       id: "boluvchilar-soni",
+      rating: 350,
+      tags: ["for", "matematika"],
       title: "Boʻluvchilar soni",
       what: "Bitta musbat son berilgan. Uning nechta boʻluvchisi borligini chiqar.",
       kirish: "Bitta musbat butun son.",
@@ -164,6 +192,8 @@
     },
     {
       id: "fibonachchi",
+      rating: 450,
+      tags: ["for", "oʻzgaruvchi"],
       title: "Fibonachchi",
       what: "Bitta son n berilgan. Fibonachchi ketma-ketligining n-hadini chiqar. Ketma-ketlik: 0, 1, 1, 2, 3, 5, … (1-had — 0).",
       kirish: "Bitta musbat butun son n.",
@@ -175,6 +205,8 @@
     },
     {
       id: "palindrom",
+      rating: 400,
+      tags: ["satr", "shart"],
       title: "Palindrom",
       what: 'Bitta soʻz berilgan. Agar u teskari oʻqilganda ham bir xil boʻlsa "ha", aks holda "yoʻq" deb yoz.',
       kirish: "Bitta soʻz.",
@@ -189,6 +221,8 @@
   const QIYIN = [
     {
       id: "tubmi",
+      rating: 550,
+      tags: ["while", "matematika"],
       title: "Tub sonmi",
       what: 'Bitta son berilgan. Agar u tub son boʻlsa "ha", aks holda "yoʻq" deb yoz. (Tub son — 1 va oʻzidan boshqa boʻluvchisi yoʻq, 1 dan katta son.)',
       kirish: "Bitta butun son.",
@@ -200,6 +234,8 @@
     },
     {
       id: "tublar-soni",
+      rating: 650,
+      tags: ["for", "while", "matematika"],
       title: "Nechta tub son",
       what: "Bitta musbat son n berilgan. 2 dan n gacha (n ham kiradi) nechta tub son borligini chiqar.",
       kirish: "Bitta musbat butun son.",
@@ -211,6 +247,8 @@
     },
     {
       id: "ekub",
+      rating: 600,
+      tags: ["while", "matematika"],
       title: "Eng katta umumiy boʻluvchi",
       what: "Ikkita musbat son berilgan. Ularning eng katta umumiy boʻluvchisini chiqar.",
       kirish: "Ikki satrda ikkita musbat son.",
@@ -222,6 +260,8 @@
     },
     {
       id: "ikkinchi-katta",
+      rating: 500,
+      tags: ["roʻyxat", "saralash"],
       title: "Ikkinchi eng katta",
       what: "Bitta satrda bir nechta har xil son berilgan. Ikkinchi eng kattasini chiqar.",
       kirish: "Bitta satrda kamida ikkita har xil son.",
@@ -233,6 +273,8 @@
     },
     {
       id: "ikkilik",
+      rating: 600,
+      tags: ["while", "satr", "raqamlar"],
       title: "Ikkilik yozuv",
       what: "Bitta musbat son berilgan. Uni ikkilik sanoq tizimida chiqar.",
       kirish: "Bitta musbat butun son.",
@@ -244,6 +286,8 @@
     },
     {
       id: "faktorial",
+      rating: 450,
+      tags: ["for", "matematika"],
       title: "Faktorial",
       what: "Bitta musbat son n berilgan. n! ni chiqar (1 dan n gacha sonlar koʻpaytmasi).",
       kirish: "Bitta musbat butun son.",
@@ -255,6 +299,8 @@
     },
     {
       id: "har-xil",
+      rating: 650,
+      tags: ["roʻyxat", "saralash"],
       title: "Nechta har xil son",
       what: "Bitta satrda bir nechta son berilgan. Ular orasida nechta har xil son borligini chiqar.",
       kirish: "Bitta satrda boʻsh joy bilan ajratilgan sonlar.",
@@ -266,6 +312,8 @@
     },
     {
       id: "boluvchilar",
+      rating: 400,
+      tags: ["for", "matematika"],
       title: "Boʻluvchilarni chiqar",
       what: "Bitta musbat son berilgan. Uning barcha boʻluvchilarini oʻsish tartibida, har satrda bittadan chiqar.",
       kirish: "Bitta musbat butun son.",
@@ -277,13 +325,184 @@
     },
   ];
 
+
+  // Teglar — bizning mavzularimiz: masala qaysi darslarga tayanadi
+  const TAGS = ["oʻzgaruvchi", "matematika", "shart", "while", "for", "roʻyxat", "satr", "raqamlar", "saralash", "funksiya"];
+
+  // Codeforces'dan olingan masalalar. SHARTLAR OʻZIMIZNIKI — asl matn koʻchirilmagan,
+  // faqat masalaning gʻoyasi olingan va manbaga havola qoʻyilgan (mualliflik huquqi).
+  // rating va cfTags — Codeforces API dan olingan haqiqiy qiymatlar (2026-09-30).
+  const CF = [
+    {
+      id: "cf-tarvuz",
+      tartib: 1,
+      title: "Tarvuzni boʻlish",
+      what: "Tarvuzning ogʻirligi w kilogramm. Uni ikkita boʻlakka boʻlmoqchimiz, har bir boʻlakning ogʻirligi juft son va noldan katta boʻlsin. Shunday boʻlish mumkinmi?",
+      kirish: "Bitta butun son w (1 ≤ w ≤ 100).",
+      chiqish: 'Mumkin boʻlsa "ha", aks holda "yoʻq".',
+      namuna: { stdin: ["8"], out: ["ha"] },
+      tests: [["2"], ["1"], ["100"], ["3"], ["4"]],
+      solution: 'w = int(input())\nif w % 2 == 0 and w > 2:\n    print("ha")\nelse:\n    print("yoʻq")',
+      hint: "Juft sonni ikki juft boʻlakka boʻlish mumkin — lekin 2 ni boʻlib boʻlmaydi (0 boʻlak chiqadi).",
+      rating: 800,
+      tags: ["shart", "matematika"],
+      manba: { kod: "4A", nom: "Watermelon", cfTags: ["brute force", "math"], url: "https://codeforces.com/problemset/problem/4/A" },
+      animatsiya: null,
+    },
+    {
+      id: "cf-domino",
+      tartib: 2,
+      title: "Nechta domino sigʻadi",
+      what: "Oʻlchami m × n boʻlgan toʻrtburchak taxta bor. Unga oʻlchami 1 × 2 boʻlgan dominolarni bir-birining ustiga chiqmasdan, taxtadan tashqariga chiqmasdan joylaymiz. Eng koʻpi bilan nechta domino sigʻadi?",
+      kirish: "Bitta satrda ikkita son: m va n (1 ≤ m, n ≤ 16).",
+      chiqish: "Bitta son — dominolar soni.",
+      namuna: { stdin: ["2 4"], out: ["4"] },
+      tests: [["1 1"], ["3 3"], ["16 16"], ["1 5"], ["5 1"]],
+      solution: "s = input().split()\nm = int(s[0])\nn = int(s[1])\nprint(m * n // 2)",
+      hint: "Har domino 2 katakni egallaydi. Kataklar soni toq boʻlsa, bittasi boʻsh qoladi.",
+      rating: 800,
+      tags: ["matematika"],
+      manba: { kod: "50A", nom: "Domino piling", cfTags: ["greedy", "math"], url: "https://codeforces.com/problemset/problem/50/A" },
+      animatsiya: null,
+    },
+    {
+      id: "cf-fil",
+      tartib: 3,
+      title: "Filning qadamlari",
+      what: "Fil sonlar oʻqining 0 nuqtasida turibdi. Uning doʻsti x nuqtada. Fil bir qadamda 1, 2, 3, 4 yoki 5 pogʻona oʻngga yura oladi. Doʻstiga yetib borish uchun unga eng kamida nechta qadam kerak?",
+      kirish: "Bitta butun son x (1 ≤ x ≤ 1 000 000).",
+      chiqish: "Bitta son — qadamlar soni.",
+      namuna: { stdin: ["12"], out: ["3"] },
+      tests: [["5"], ["1"], ["6"], ["1000000"], ["10"]],
+      solution: "x = int(input())\nprint((x + 4) // 5)",
+      hint: "Eng tez yoʻl — 5 pogʻonadan yurish. Oxirida qolgan masofa uchun yana bitta qadam kerak boʻlishi mumkin.",
+      rating: 800,
+      tags: ["matematika"],
+      manba: { kod: "617A", nom: "Elephant", cfTags: ["math"], url: "https://codeforces.com/problemset/problem/617/A" },
+      animatsiya: null,
+    },
+    {
+      id: "cf-ukalar",
+      tartib: 4,
+      title: "Ukam qachon oʻzib ketadi",
+      what: "Kichik ukaning vazni a, kattasiniki b (a ≤ b). Har yili kichigining vazni 3 baravar, kattasiniki 2 baravar oshadi. Kichigining vazni kattasinikidan qatʼiy koʻp boʻlishi uchun necha yil kerak?",
+      kirish: "Bitta satrda ikkita son: a va b (1 ≤ a ≤ b ≤ 10).",
+      chiqish: "Bitta son — yillar soni.",
+      namuna: { stdin: ["4 7"], out: ["2"] },
+      tests: [["1 1"], ["10 10"], ["1 10"], ["4 9"], ["2 3"]],
+      solution: "s = input().split()\na = int(s[0])\nb = int(s[1])\nyil = 0\nwhile a <= b:\n    a = a * 3\n    b = b * 2\n    yil += 1\nprint(yil)",
+      hint: "Sikl a > b boʻlguncha davom etadi. Har aylanishda ikkala vaznni ham yangila.",
+      rating: 800,
+      tags: ["while", "oʻzgaruvchi"],
+      manba: { kod: "791A", nom: "Bear and Big Brother", cfTags: ["implementation"], url: "https://codeforces.com/problemset/problem/791/A" },
+      animatsiya: null,
+    },
+    {
+      id: "cf-notogri-ayirish",
+      tartib: 5,
+      title: "Notoʻgʻri ayirish",
+      what: "Tanya sonni bittaga kamaytirishni bilmaydi. U shunday qiladi: agar sonning oxirgi raqami 0 boʻlsa, oxirgi raqamni oʻchiradi; aks holda sondan 1 ayiradi. Tanya shu amalni k marta bajarsa, qanday son qoladi?",
+      kirish: "Bitta satrda ikkita son: n va k (2 ≤ n ≤ 10⁹, 1 ≤ k ≤ 50). Natija doim musbat boʻladi.",
+      chiqish: "Bitta son.",
+      namuna: { stdin: ["512 4"], out: ["50"] },
+      tests: [["1000000000 9"], ["100 1"], ["2 1"], ["10 1"], ["999 3"]],
+      solution: "s = input().split()\nn = int(s[0])\nk = int(s[1])\nfor i in range(k):\n    if n % 10 == 0:\n        n = n // 10\n    else:\n        n = n - 1\nprint(n)",
+      hint: "Oxirgi raqamni n % 10 beradi, oʻchirishni n // 10 qiladi.",
+      rating: 800,
+      tags: ["for", "raqamlar", "shart"],
+      manba: { kod: "977A", nom: "Wrong Subtraction", cfTags: ["implementation"], url: "https://codeforces.com/problemset/problem/977/A" },
+      animatsiya: null,
+    },
+    {
+      id: "cf-jamoa",
+      tartib: 8,
+      title: "Jamoa qaroriga koʻra",
+      what: "Uch doʻst olimpiadada qatnashmoqda. Har masala uchun har biri oʻzining ishonchini bildiradi: 1 — yechimni bilaman, 0 — bilmayman. Agar kamida ikkitasi ishonsa, jamoa shu masalani yozishga kirishadi. Nechta masalani yozishadi?",
+      kirish: "Birinchi satrda n (1 ≤ n ≤ 1000) — masalalar soni. Keyingi n satrda uchtadan 0 yoki 1.",
+      chiqish: "Bitta son — yoziladigan masalalar soni.",
+      namuna: { stdin: ["3", "1 1 0", "1 1 1", "1 0 0"], out: ["2"] },
+      tests: [["1", "0 0 0"], ["1", "1 1 1"], ["2", "1 0 1", "0 1 1"], ["4", "0 0 0", "1 1 0", "0 1 1", "1 0 0"]],
+      solution: "n = int(input())\nsoni = 0\nfor i in range(n):\n    s = input().split()\n    yigindi = int(s[0]) + int(s[1]) + int(s[2])\n    if yigindi >= 2:\n        soni += 1\nprint(soni)",
+      hint: "Har satrni alohida input() bilan oʻqi. Uch sonning yigʻindisi 2 dan kam boʻlmasa — sanaysan.",
+      rating: 800,
+      tags: ["for", "shart", "roʻyxat"],
+      manba: { kod: "231A", nom: "Team", cfTags: ["brute force", "greedy"], url: "https://codeforces.com/problemset/problem/231/A" },
+      animatsiya: null,
+    },
+    {
+      id: "cf-toshlar",
+      tartib: 6,
+      title: "Stol ustidagi toshlar",
+      what: "Stolda bir qator tosh turibdi, har biri qizil (R), yashil (G) yoki koʻk (B). Yonma-yon turgan ikki tosh bir xil rangda boʻlmasligi kerak. Shu shart bajarilishi uchun eng kamida nechta toshni olib tashlash kerak?",
+      kirish: "Birinchi satrda n (1 ≤ n ≤ 50). Ikkinchi satrda n ta harfdan iborat satr: faqat R, G va B.",
+      chiqish: "Bitta son — olib tashlanadigan toshlar soni.",
+      namuna: { stdin: ["3", "RRG"], out: ["1"] },
+      tests: [["1", "R"], ["5", "RGBGR"], ["4", "RRRR"], ["6", "BBGGRR"], ["2", "RG"]],
+      solution: "n = int(input())\ns = input()\nsoni = 0\nfor i in range(1, len(s)):\n    if s[i] == s[i - 1]:\n        soni += 1\nprint(soni)",
+      hint: "Har harfni oʻzidan oldingisi bilan solishtir. Birinchi harfning oldingisi yoʻq — shuning uchun sikl 1 dan boshlanadi.",
+      rating: 800,
+      tags: ["satr", "for", "shart"],
+      manba: { kod: "266A", nom: "Stones on the Table", cfTags: ["implementation"], url: "https://codeforces.com/problemset/problem/266/A" },
+      animatsiya: null,
+    },
+    {
+      id: "cf-hisoblagich",
+      tartib: 7,
+      title: "Gʻalati hisoblagich",
+      what: "Boshida x = 0. Sizga n ta buyruq beriladi, har biri x ni bittaga oshiradi yoki bittaga kamaytiradi. Buyruq uch belgidan iborat: ichida ++ boʻlsa — oshirish, -- boʻlsa — kamaytirish (masalan ++x, x++, --x, x--). Oxirida x qanday boʻladi?",
+      kirish: "Birinchi satrda n (1 ≤ n ≤ 150). Keyingi n satrda bittadan buyruq.",
+      chiqish: "Bitta son — oxirgi x.",
+      namuna: { stdin: ["2", "++x", "--x"], out: ["0"] },
+      tests: [["1", "x++"], ["1", "x--"], ["3", "++x", "++x", "x++"], ["4", "--x", "x--", "++x", "x++"]],
+      solution: 'n = int(input())\nx = 0\nfor i in range(n):\n    buyruq = input()\n    if "+" in buyruq:\n        x += 1\n    else:\n        x -= 1\nprint(x)',
+      hint: 'Butun buyruqni tekshirish shart emas: "+" in buyruq — ichida plus bormi degani.',
+      rating: 800,
+      tags: ["for", "satr", "shart"],
+      manba: { kod: "282A", nom: "Bit++", cfTags: ["implementation"], url: "https://codeforces.com/problemset/problem/282/A" },
+      animatsiya: null,
+    },
+    {
+      id: "cf-satr-solishtirish",
+      tartib: 9,
+      title: "Ikki soʻzni solishtirish",
+      what: "Ikkita bir xil uzunlikdagi soʻz berilgan. Ularni katta-kichik harf farqiga eʼtibor bermay solishtiring: birinchisi alifboda oldin kelsa −1, keyin kelsa 1, teng boʻlsa 0 chiqaring.",
+      kirish: "Ikki satrda ikkita soʻz (uzunligi 100 dan oshmaydi, faqat lotin harflari).",
+      chiqish: "−1, 0 yoki 1.",
+      namuna: { stdin: ["aaaa", "aaaA"], out: ["0"] },
+      tests: [["abs", "Abz"], ["abcdefg", "AbCdEfF"], ["a", "b"], ["zz", "ZZ"], ["Ba", "ab"]],
+      solution: "a = input().lower()\nb = input().lower()\nif a < b:\n    print(-1)\nelif a > b:\n    print(1)\nelse:\n    print(0)",
+      hint: "Avval ikkala soʻzni kichik harfga oʻgir (lower), keyin oddiy solishtirish belgilari bilan solishtir.",
+      rating: 800,
+      tags: ["satr", "shart"],
+      manba: { kod: "112A", nom: "Petya and Strings", cfTags: ["implementation", "strings"], url: "https://codeforces.com/problemset/problem/112/A" },
+      animatsiya: null,
+    },
+    {
+      id: "cf-har-xil-harf",
+      tartib: 10,
+      title: "Ismdagi har xil harflar",
+      what: 'Bitta soʻz berilgan. Undagi har xil harflar sonini toping: agar bu son juft boʻlsa "juft", aks holda "toq" deb yozing.',
+      kirish: "Bitta soʻz (uzunligi 100 dan oshmaydi, kichik lotin harflari).",
+      chiqish: "juft yoki toq.",
+      namuna: { stdin: ["bananas"], out: ["juft"] },
+      tests: [["a"], ["ab"], ["aabbcc"], ["qabila"], ["xxxxx"]],
+      solution: 'soz = input()\nb = sorted(soz)\nsoni = 0\nfor i in range(len(b)):\n    if i == 0:\n        soni += 1\n    elif b[i] != b[i - 1]:\n        soni += 1\nif soni % 2 == 0:\n    print("juft")\nelse:\n    print("toq")',
+      hint: "Harflarni saralasang, bir xillari yonma-yon turadi — shunda har xillarini sanash oson.",
+      rating: 800,
+      tags: ["satr", "saralash", "for"],
+      manba: { kod: "236A", nom: "Boy or Girl", cfTags: ["brute force", "implementation", "strings"], url: "https://codeforces.com/problemset/problem/236/A" },
+      animatsiya: null,
+    },
+  ];
+
   const LEVELS = [
     { id: "oson", title: "Oson", note: "Shart va sikl", problems: OSON },
     { id: "orta", title: "Oʻrta", note: "Raqamlar, roʻyxat va satr", problems: ORTA },
     { id: "qiyin", title: "Qiyin", note: "Bir nechta qadam", problems: QIYIN },
+    { id: "cf", title: "Codeforces", note: "Haqiqiy olimpiada masalalari (reyting 800)", problems: CF },
   ];
 
-  const api = { LEVELS, OSON, ORTA, QIYIN };
+  const api = { LEVELS, TAGS, OSON, ORTA, QIYIN, CF };
 
   root.QK = root.QK || {};
   root.QK.bank = api;

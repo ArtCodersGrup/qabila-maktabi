@@ -2,5 +2,5 @@
 window.QK.app.start({
   title: "Masalalar maydoni",
   storageKey: "masalalar-maydoni:v1",
-  stageTitles: ["Oson", "Oʻrta", "Qiyin"],
+  stageTitles: ["Oson", "Oʻrta", "Qiyin", "Codeforces"],
 });

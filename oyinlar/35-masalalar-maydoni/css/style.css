@@ -36,3 +36,17 @@
   .masala-nom { font-size: 19px; }
   .masala-shart { font-size: 18px; }
 }
+
+/* ---------- Masala belgilari: qiyinlik va teglar ---------- */
+.masala-belgi { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 8px; }
+.chip {
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: #EEF3FD;
+  color: #2F6FDE;
+  font-size: 15px;
+  font-weight: 800;
+}
+.chip.reyting { background: #FFF0D6; color: #A85C10; }
+.masala-manba { margin-top: 8px; font-size: 15px; color: #6B6558; }
+.masala-manba a { color: var(--asosiy); }

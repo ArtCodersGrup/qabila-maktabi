@@ -35,7 +35,7 @@ Tartib — bosh sahifadagidek: osondan qiyinga, oldingi oʻyinga tayanadiganlari
 | 8 | Sanoqli takror | `32-sanoqli-takror` | `for` va `range`, chegaralar (oxiri kirmaydi), manfiy qadam, ichma-ich sikl va naqsh (💻 12–16) |
 | 9 | Roʻyxat va satr | `33-royxat-va-satr` | Roʻyxat: indeks 0 dan, `len`, `append`, kesish; satr boʻylab yurish, `input().split()` (💻 12–16) |
 | 10 | Funksiya ustaxonasi | `34-funksiya-ustaxonasi` | `def`, parametr, `return` va `print` farqi, lokal oʻzgaruvchi, masalani boʻlaklash (💻 12–16) |
-| 11 | Masalalar maydoni | `35-masalalar-maydoni` | Olimpiada uslubidagi masalalar: uch daraja, 24 ta masala, yashirin testlar bilan (💻 12–16) |
+| 11 | Masalalar maydoni | `35-masalalar-maydoni` | Olimpiada masalalari: 4 daraja, 34 ta masala — qiyinlik va teglar bilan; oxirgi daraja Codeforces (800) gʻoyalari asosida (💻 12–16) |
 | | **Kodlash va shifrlash** | | |
 | 12 | Qabila kodlari | `01-qabila-kodlari` | Nechta belgidan nechta soʻz yasaladi (aⁱ, yigʻindi, teskari masala) |
 | 13 | Qabila Morzesi | `02-qabila-morzesi` | Morze alifbosi: nuqta va chiziq bilan oʻqish va yozish |
@@ -109,6 +109,8 @@ node --test bosh/tests/*.test.js                        # bosh sahifa roʻyxati
 node --test oyinlar/umumiy/tests/*.test.js              # umumiy kod va kichik Python
 cd oyinlar/05-rim-toshi && node --test tests/*.test.js   # bitta oʻyin
 ```
+
+**Masalalar maydoni** (`oyinlar/35-masalalar-maydoni/`): toʻrt daraja, 34 ta masala. Har masalada qiyinlik (reyting), teglar (qaysi mavzudan), koʻrinadigan namuna va 4–5 ta yashirin test bor. Oxirgi daraja — **Codeforces** reyting 800 masalalarining gʻoyasi asosida: shart matni oʻzimizniki (asl matn koʻchirilmagan), kartada asl masalaga havola koʻrsatiladi.
 
 Kichik Pythonning testlari orasida `python3` bilan solishtirish ham bor: korpusdagi dasturlar va tasodifiy yasalgan dasturlar ikkalasida bajarilib, chiqishi belgi-belgi tekshiriladi. `python3` topilmasa, shu ikki test oʻtkazib yuboriladi.
 

@@ -8,8 +8,13 @@
 
   // Masala kartasi: sarlavha, shart, kirish/chiqish formati va namuna
   function card(task) {
+    const belgilar = ui.h("div", { class: "masala-belgi" });
+    if (task.rating) belgilar.append(ui.h("span", { class: "chip reyting", text: "qiyinlik " + task.rating }));
+    for (const tag of task.tags || []) belgilar.append(ui.h("span", { class: "chip", text: tag }));
+
     const el = ui.h("div", { class: "masala" },
       ui.h("div", { class: "masala-nom", text: task.title }),
+      belgilar,
       ui.h("div", { class: "masala-shart", text: task.what }),
       ui.h("div", { class: "masala-format" },
         ui.h("div", {}, ui.h("b", { text: "Kirish: " }), ui.h("span", { text: task.kirish })),
@@ -23,6 +28,13 @@
     el.append(ui.h("div", { class: "namuna" },
       box("Namunaviy kirish", task.namuna.stdin, "kod-kirish"),
       box("Namunaviy chiqish", task.namuna.out, "kutilgan")));
+
+    // Manba: shart o'zimizniki, g'oya Codeforces'dan — havola o'qituvchi uchun
+    if (task.manba) {
+      el.append(ui.h("div", { class: "masala-manba" },
+        ui.h("span", { text: "Gʻoya manbasi: " }),
+        ui.h("a", { href: task.manba.url, target: "_blank", rel: "noopener", text: "Codeforces " + task.manba.kod + " — " + task.manba.nom })));
+    }
     return el;
   }
 

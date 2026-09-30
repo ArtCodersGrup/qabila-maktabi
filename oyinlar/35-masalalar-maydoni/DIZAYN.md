@@ -20,13 +20,28 @@ Bu — Python blokining **oxirgi** qismi: 27–34-oʻyinlarda oʻrganilgan hamma
 
 ## 2. Bank tuzilishi (`js/bank.js`)
 
-Uch daraja, har birida 8 ta masala:
+Toʻrt daraja. Har masalada **qiyinlik** (`rating`) va **teglar** bor; daraja ichida masalalar
+qiyinlik boʻyicha tartiblangan — bola eng osonidan boshlaydi.
+
+**Teglar** — bizning mavzularimiz (`TAGS`): `oʻzgaruvchi`, `matematika`, `shart`, `while`, `for`,
+`roʻyxat`, `satr`, `raqamlar`, `saralash`, `funksiya`. Test notanish tegni oʻtkazmaydi.
+
+**Codeforces darajasi** (10 ta masala, reyting 800): masala **gʻoyasi** Codeforces'dan olingan,
+**shart matni oʻzimizniki** — asl matn koʻchirilmagan va tarjima qilinmagan (mualliflik huquqi).
+Kartada asl masalaga havola koʻrsatiladi: `manba: { kod, nom, cfTags, url }`. Reyting va `cfTags`
+Codeforces API dan olingan haqiqiy qiymatlar (2026-09-30).
+
+Har masalada `animatsiya` maydoni bor — hozircha `null`. Qiyin masalalarga keyin bittadan
+animatsiya yoziladi (har biri alohida kelishiladi).
+
+Uchta boshlangʻich daraja, har birida 8 ta masala:
 
 | Daraja | Mavzu | Masalalar |
 |---|---|---|
 | **Oson** | shart va sikl | ikki son yigʻindisi · kvadrat · juft/toq · uchtadan kattasi · 1 dan n gacha · a dan b gacha · musbat/manfiy/nol · yulduzchalar |
 | **Oʻrta** | raqamlar, roʻyxat, satr | raqamlar yigʻindisi · teskari son · eng katta va kichik farqi · nechta juft · unli harflar · boʻluvchilar soni · Fibonachchi · palindrom |
 | **Qiyin** | bir nechta qadam | tub sonmi · nechta tub son · EKUB · ikkinchi eng katta · ikkilik yozuv · faktorial · nechta har xil son · boʻluvchilarni chiqarish |
+| **Codeforces** | haqiqiy olimpiada (800) | tarvuzni boʻlish (4A) · domino (50A) · fil qadamlari (617A) · ukalar vazni (791A) · notoʻgʻri ayirish (977A) · toshlar (266A) · gʻalati hisoblagich (282A) · jamoa (231A) · soʻzlarni solishtirish (112A) · har xil harflar (236A) |
 
 Har masala: `title`, `what` (shart), `kirish`/`chiqish` (format), `namuna` (koʻrinadigan test), `tests` (4–5 yashirin), `solution` (namunali yechim), `hint` (maslahat).
 

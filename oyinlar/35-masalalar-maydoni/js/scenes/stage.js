@@ -35,5 +35,7 @@
   }
 
   QK.scenes = QK.scenes || {};
-  Object.assign(QK.scenes, { intro, stage1: stage(1), stage2: stage(2), stage3: stage(3) });
+  QK.scenes.intro = intro;
+  // Har daraja uchun bitta sahna — darajalar soni bankdan olinadi
+  L.LEVELS.forEach((level, k) => { QK.scenes["stage" + (k + 1)] = stage(k + 1); });
 })(window);
