@@ -85,6 +85,21 @@ test("kod-yoz: bo'sh javob", () => {
   assert.equal(K.check({ type: "kod-yoz", solution: "print(1)" }, "   ").kind, "bosh");
 });
 
+test("kod-yoz: funksiya yozish masalasi sinov satri bilan tekshiriladi", () => {
+  const task = {
+    type: "kod-yoz",
+    solution: "def juftmi(n):\n    return n % 2 == 0",
+    tail: "print(juftmi(int(input())))",
+    tests: [{ stdin: ["4"] }, { stdin: ["7"] }, { stdin: ["0"] }],
+  };
+  assert.deepEqual(K.validate(task), []);
+  assert.equal(K.check(task, task.solution).ok, true);
+  assert.equal(K.check(task, "def juftmi(n):\n    return n % 2 == 1").ok, false, "teskari yozilgani o'tmaydi");
+  assert.equal(K.check(task, "def boshqa(n):\n    return True").kind, "xato", "nomi boshqa bo'lsa NameError");
+  // Funksiya ichida print yozib, return qilmagan yechim o'tmaydi
+  assert.equal(K.check(task, "def juftmi(n):\n    print(n % 2 == 0)").ok, false);
+});
+
 test("validate: masala banki xatolarini topadi", () => {
   assert.deepEqual(K.validate({ type: "kod-yoz", solution: "print(1)", tests: [{ stdin: [], out: ["1"] }] }), []);
   assert.ok(K.validate({ type: "kod-yoz", solution: "print(2)", tests: [{ stdin: [], out: ["1"] }] })[0].includes("testdan o'tmadi"));

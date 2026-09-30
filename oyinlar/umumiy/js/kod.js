@@ -45,12 +45,16 @@
 
   const run = (code, testCase) => py.run(code, Object.assign({}, LIMITS, { stdin: (testCase && testCase.stdin) || [] }));
 
+  // Funksiya yozish masalalarida bolaning kodidan keyin sinov satri qo'shiladi:
+  //   task.tail = "print(juftmi(int(input())))"
+  const withTail = (code, task) => (task && task.tail ? String(code).replace(/\s*$/, "") + "\n" + task.tail : code);
+
   // Masalaning to'g'ri javobi: yozilgan bo'lsa o'sha, bo'lmasa namunali yechimdan hisoblanadi
   function expectedFor(task, testCase) {
     if (testCase && testCase.out) return normalize(testCase.out);
     if (task.expected) return normalize(task.expected);
     if (!task.solution) throw new Error("masalada na expected, na solution bor: " + (task.name || task.type));
-    const r = run(task.solution, testCase);
+    const r = run(withTail(task.solution, task), testCase);
     if (r.error) throw new Error("namunali yechim xato berdi: " + r.error.text);
     return normalize(r.output);
   }
@@ -91,7 +95,7 @@
   // Kodni bajarib, chiqishini kutilgan bilan solishtiradigan turlar uchun umumiy tekshiruv
   function checkByRunning(task, code, cases) {
     for (const testCase of cases) {
-      const r = run(code, testCase);
+      const r = run(withTail(code, task), testCase);
       if (r.error) {
         return { ok: false, kind: "xato", error: r.error, testCase, hint: r.error.hint };
       }
@@ -151,7 +155,7 @@
     }
     if (task.solution) {
       for (const testCase of casesOf(task)) {
-        const r = run(task.solution, testCase);
+        const r = run(withTail(task.solution, task), testCase);
         if (r.error) problems.push("namunali yechim xato berdi: " + r.error.text);
         else if (testCase.out && !sameOutput(testCase.out, r.output)) {
           problems.push("namunali yechim testdan o'tmadi: " + JSON.stringify(testCase));
@@ -161,7 +165,7 @@
     return problems;
   }
 
-  const api = { TYPES, BLANK, LIMITS, check, validate, normalize, sameOutput, firstDiff, fill, blanksIn, expectedFor, run };
+  const api = { TYPES, BLANK, LIMITS, check, validate, withTail, normalize, sameOutput, firstDiff, fill, blanksIn, expectedFor, run };
 
   root.QK = root.QK || {};
   root.QK.kod = api;

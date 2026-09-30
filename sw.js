@@ -1,6 +1,6 @@
 // Offline rejim: sayt fayllari keshlanadi. Bola saytni bir marta ochsa, keyin internetsiz ham oʻynay oladi.
 // Yangi fayl qoʻshilsa, FILES roʻyxatiga ham qoʻshiladi — buni bosh/tests/offline.test.js tekshiradi.
-const VERSION = "v46";
+const VERSION = "v48";
 const CACHE = "qabila-maktabi-" + VERSION;
 
 const FILES = [
@@ -410,6 +410,39 @@ const FILES = [
   "oyinlar/31-takror-charxi/js/scenes/stage1.js",
   "oyinlar/31-takror-charxi/js/scenes/stage2.js",
   "oyinlar/31-takror-charxi/js/scenes/stage3.js",
+  "oyinlar/32-sanoqli-takror/",
+  "oyinlar/32-sanoqli-takror/index.html",
+  "oyinlar/32-sanoqli-takror/css/style.css",
+  "oyinlar/32-sanoqli-takror/js/game-art.js",
+  "oyinlar/32-sanoqli-takror/js/logic.js",
+  "oyinlar/32-sanoqli-takror/js/main.js",
+  "oyinlar/32-sanoqli-takror/js/scenes/common.js",
+  "oyinlar/32-sanoqli-takror/js/scenes/final.js",
+  "oyinlar/32-sanoqli-takror/js/scenes/stage1.js",
+  "oyinlar/32-sanoqli-takror/js/scenes/stage2.js",
+  "oyinlar/32-sanoqli-takror/js/scenes/stage3.js",
+  "oyinlar/33-royxat-va-satr/",
+  "oyinlar/33-royxat-va-satr/index.html",
+  "oyinlar/33-royxat-va-satr/css/style.css",
+  "oyinlar/33-royxat-va-satr/js/game-art.js",
+  "oyinlar/33-royxat-va-satr/js/logic.js",
+  "oyinlar/33-royxat-va-satr/js/main.js",
+  "oyinlar/33-royxat-va-satr/js/scenes/common.js",
+  "oyinlar/33-royxat-va-satr/js/scenes/final.js",
+  "oyinlar/33-royxat-va-satr/js/scenes/stage1.js",
+  "oyinlar/33-royxat-va-satr/js/scenes/stage2.js",
+  "oyinlar/33-royxat-va-satr/js/scenes/stage3.js",
+  "oyinlar/34-funksiya-ustaxonasi/",
+  "oyinlar/34-funksiya-ustaxonasi/index.html",
+  "oyinlar/34-funksiya-ustaxonasi/css/style.css",
+  "oyinlar/34-funksiya-ustaxonasi/js/game-art.js",
+  "oyinlar/34-funksiya-ustaxonasi/js/logic.js",
+  "oyinlar/34-funksiya-ustaxonasi/js/main.js",
+  "oyinlar/34-funksiya-ustaxonasi/js/scenes/common.js",
+  "oyinlar/34-funksiya-ustaxonasi/js/scenes/final.js",
+  "oyinlar/34-funksiya-ustaxonasi/js/scenes/stage1.js",
+  "oyinlar/34-funksiya-ustaxonasi/js/scenes/stage2.js",
+  "oyinlar/34-funksiya-ustaxonasi/js/scenes/stage3.js",
   "oyinlar/musobaqa/",
   "oyinlar/musobaqa/index.html",
   "oyinlar/musobaqa/css/style.css",
