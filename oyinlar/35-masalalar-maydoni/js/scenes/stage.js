@@ -18,7 +18,8 @@
   function stage(number) {
     return async function () {
       const level = L.levelByIndex(number);
-      const used = [];
+      // Oldingi o'yinlarda yechilganlari qayta berilmaydi — zinapoya davom etadi
+      const used = L.solvedIn(level.id);
       const el = common.box(false);
       el.append(ui.h("div", { class: "story-art small", html: QK.gameArt.tower(number - 1) }));
       await ui.say("elder", level.title + " daraja: " + level.note + ". Uchta masala yechsang, bosqich tugaydi.");
@@ -28,7 +29,11 @@
           used.push(task.id);
           return task;
         },
-        run: (task) => common.problemExercise(task),
+        run: async (task) => {
+          const ok = await common.problemExercise(task);
+          if (ok) L.markSolved(level.id, task.id);
+          return ok;
+        },
         praise: (task) => "«" + task.title + "» yechildi.",
       });
     };

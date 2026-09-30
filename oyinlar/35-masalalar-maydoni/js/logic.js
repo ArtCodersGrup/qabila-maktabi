@@ -47,7 +47,48 @@
     return toTask((left.length ? left : list)[0]);
   }
 
-  const api = { LEVELS, toTask, levelByIndex, ordered, pickProblem };
+  // ---------- Yechilgan masalalar (brauzer xotirasida) ----------
+  // Bolaning zinapoyasi: qayta o'ynaganda keyingi masalalar beriladi, o'sha uchtasi emas.
+  // Xotira ishlamasa ham o'yin to'liq ishlaydi (QOIDALAR §8).
+  const KEY = "masalalar-yechilgan:v1";
+
+  function loadSolved() {
+    try {
+      const raw = root.localStorage && root.localStorage.getItem(KEY);
+      const data = raw ? JSON.parse(raw) : {};
+      return data && typeof data === "object" ? data : {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function saveSolved(data) {
+    try {
+      if (root.localStorage) root.localStorage.setItem(KEY, JSON.stringify(data));
+    } catch (e) {
+      // Saqlanmadi — o'yin baribir ishlaydi
+    }
+  }
+
+  const solvedIn = (levelId) => {
+    const list = loadSolved()[levelId];
+    return Array.isArray(list) ? list.slice() : [];
+  };
+
+  // Masala yechildi. Daraja to'liq yechilgan bo'lsa, ro'yxat tozalanadi — bank boshidan beriladi.
+  function markSolved(levelId, id) {
+    const data = loadSolved();
+    const list = Array.isArray(data[levelId]) ? data[levelId] : [];
+    if (!list.includes(id)) list.push(id);
+    const level = LEVELS.find((l) => l.id === levelId);
+    data[levelId] = level && list.length >= level.problems.length ? [] : list;
+    saveSolved(data);
+    return data[levelId];
+  }
+
+  const forgetSolved = () => saveSolved({});
+
+  const api = { LEVELS, toTask, levelByIndex, ordered, pickProblem, solvedIn, markSolved, forgetSolved, KEY };
 
   root.QK = root.QK || {};
   root.QK.logic = api;

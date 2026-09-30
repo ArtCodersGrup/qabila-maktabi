@@ -49,7 +49,11 @@ Har masala: `title`, `what` (shart), `kirish`/`chiqish` (format), `namuna` (koʻ
 
 ## 3. Oʻyin oqimi
 
-Har bosqich — bitta daraja. Bankdan tasodifiy masala beriladi, **3 tasi yechilsa** bosqich tugaydi. Yechilgan masala shu bosqichda qayta chiqmaydi. Bank tugasa, boshidan beriladi — bola yana oʻynasa, yangi masalalar chiqadi.
+Har bosqich — bitta daraja. Masala **eng osonidan** beriladi, **3 tasi yechilsa** bosqich tugaydi.
+
+**Yechilgan masalalar brauzer xotirasida saqlanadi** (`masalalar-yechilgan:v1`): bola qayta oʻynasa,
+oʻsha uchtasi emas, **keyingi uchtasi** beriladi. Daraja toʻliq yechilgach roʻyxat tozalanadi va bank
+boshidan beriladi. Xotira ishlamasa ham oʻyin toʻliq ishlaydi (QOIDALAR §8).
 
 **Xato javob** (QOIDALAR §4.4): 1-xato — yiqilgan test koʻrsatiladi (kirish, kutilgan, sendan) va **maslahat** beriladi; 2-xato — yechimning bir yoʻli koʻrsatiladi va yangi masala beriladi.
 
