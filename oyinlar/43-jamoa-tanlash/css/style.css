@@ -1,0 +1,93 @@
+/* Jamoa tanlash — faqat shu o'yinga xos uslublar.
+   Umumiylari: ../../umumiy/css/asos.css va ../../umumiy/css/kod.css */
+
+.formula-box { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+.formula-row { font-size: 18px; font-weight: 800; animation: pop 0.3s; }
+.formula-row.kod { font-family: var(--kod-shrift); font-size: 20px; color: var(--asosiy); }
+.formula-nom { font-family: var(--kod-shrift); font-weight: 900; color: var(--asosiy); }
+.jt-xossa-izoh { font-weight: 600; font-size: 16px; color: #4A4636; }
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(240px, 66vw); align-self: center; }
+.story-art.wide { width: min(330px, 88vw); }
+.story-art.small { width: min(200px, 54vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 19px; font-weight: 800; text-align: center; }
+
+/* ---------- Ismlar va ro'yxatlar ---------- */
+.jt-ismlar { display: flex; flex-wrap: wrap; gap: 5px; }
+.jt-ism {
+  font-size: 14px; font-weight: 700; padding: 4px 9px;
+  background: #F3EFE3; border: 2px solid var(--chiziq); border-radius: 8px; white-space: nowrap;
+}
+.jt-ism.kichik { font-size: 13px; padding: 3px 7px; }
+.jt-royxat {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 4px 14px;
+  width: min(640px, 96%); margin: 0 auto;
+}
+.jt-qator { display: flex; align-items: center; gap: 4px; padding: 2px 4px; border-radius: 8px; }
+.jt-qator.belgi { background: #FFF0D6; box-shadow: inset 3px 0 0 var(--yana); }
+.jt-raqam { color: #A09A8A; font-family: var(--kod-shrift); font-size: 13px; min-width: 24px; }
+
+.jt-jamoalar {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px 14px;
+  width: min(640px, 96%); margin: 0 auto;
+}
+.jt-jamoa {
+  display: flex; align-items: center; gap: 6px; padding: 6px 8px;
+  background: #fff; border: 2px solid var(--togri); border-radius: 10px; animation: pop 0.25s;
+}
+
+/* ---------- A ÷ k! = C ---------- */
+.jt-bolish { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; }
+.jt-katak {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  min-width: 86px; padding: 8px 12px; border: 2px solid var(--chiziq); border-radius: 12px; background: #fff;
+}
+.jt-katak b { font-family: var(--kod-shrift); font-size: 22px; }
+.jt-katak span { font-size: 12px; color: #6B6558; }
+.jt-katak.a { border-color: var(--asosiy); } .jt-katak.a b { color: var(--asosiy); }
+.jt-katak.f { border-color: #8E5BD0; } .jt-katak.f b { color: #8E5BD0; }
+.jt-katak.c { border-color: var(--togri); } .jt-katak.c b { color: var(--togri); }
+.jt-amal { font-family: var(--kod-shrift); font-size: 22px; font-weight: 900; color: #6B6558; }
+.jt-hisob {
+  text-align: center; font-family: var(--kod-shrift); font-size: 22px; font-weight: 900;
+  color: var(--asosiy); padding-top: 10px;
+}
+
+/* ---------- Ikki karta ---------- */
+.jt-ikki { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; }
+.jt-karta {
+  display: flex; flex-direction: column; gap: 6px; align-items: center; text-align: center;
+  width: min(270px, 88vw); padding: 14px; background: #fff;
+  border: 3px solid var(--chiziq); border-radius: 16px; font-size: 16px;
+}
+.jt-karta.c { border-color: var(--togri); }
+.jt-karta.a { border-color: var(--asosiy); }
+.jt-karta-nom { font-size: 17px; font-weight: 900; }
+.jt-karta.c .jt-karta-nom { color: var(--togri); }
+.jt-karta.a .jt-karta-nom { color: var(--asosiy); }
+.jt-karta-izoh { font-size: 14px; color: #6B6558; }
+.jt-karta-hisob { font-family: var(--kod-shrift); font-size: 20px; font-weight: 900; }
+
+/* ---------- Katta misollar ---------- */
+.jt-misollar { display: flex; flex-direction: column; gap: 8px; align-items: center; }
+.jt-misol { display: flex; align-items: baseline; gap: 10px; }
+.jt-misol b { font-family: var(--kod-shrift); font-size: 21px; color: #8E5BD0; min-width: 130px; text-align: right; }
+.jt-misol span { font-size: 15px; color: #4A4636; }
+
+.jt-savol { font-size: 19px; font-weight: 800; text-align: center; line-height: 1.4; max-width: 540px; margin: 0 auto; }
+
+@media (max-width: 520px) {
+  .summary { font-size: 17px; gap: 8px; }
+  .jt-royxat, .jt-jamoalar { grid-template-columns: 1fr; }
+  .jt-ism { font-size: 13px; padding: 3px 7px; }
+  .jt-katak { min-width: 74px; padding: 6px 9px; }
+  .jt-katak b { font-size: 19px; }
+  .jt-misol b { font-size: 18px; min-width: 100px; }
+  .jt-hisob { font-size: 19px; }
+  .jt-savol { font-size: 17px; }
+}
+@media (orientation: landscape) and (max-height: 520px) {
+  .story-art { width: min(180px, 34vh); }
+  .story-art.wide { width: min(280px, 56vh); }
+}

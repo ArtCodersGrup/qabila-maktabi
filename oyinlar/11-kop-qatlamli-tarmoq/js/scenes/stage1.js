@@ -11,9 +11,9 @@
     ui.clearControl();
     ui.paper("");
     ui.work().append(ui.h("div", { class: "story-art", html: art.robot() }));
-    await ui.say("elder", "30-oʻyinda belgini biz tanlagan edik: boʻyalgan kataklar soni.");
+    await ui.say("elder", "31-oʻyinda belgini biz tanlagan edik: boʻyalgan kataklar soni.");
     await ui.say("apprentice", "Robot belgini oʻzi topa oladimi?");
-    await ui.say("elder", "Ha — neyronlar yordamida. Neyron 21-oʻyindagi chiroqqa oʻxshaydi.");
+    await ui.say("elder", "Ha — neyronlar yordamida. Neyron 22-oʻyindagi chiroqqa oʻxshaydi.");
   }
 
   // 4.1: chiroqlarni yoqib, neyron qachon yonishini ko'rish

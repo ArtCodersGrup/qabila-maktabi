@@ -1,7 +1,7 @@
 # Kombinatorika bloki — reja
 
 **Holat (2026-10-01):** muallif qarori olindi — **12–16 💻 (kod bilan), 5 ta oʻyin, masalalar bankiga ham qoʻshiladi**.
-Yozildi: **41 «Tanlov daraxti»**, **42 «Qatorga terish»** va umumiy modul `js/sanash.js`. Qolgani: 43, 44, 45 va bank masalalari.
+Yozildi: **41**, **42**, **43** va umumiy modul `js/sanash.js`. Qolgani: 44, 45 va bank masalalari.
 
 Oldingi bloklar: [`ALGORITM-BLOK.md`](ALGORITM-BLOK.md) (36–40, yopildi), Python (27–34).
 Umumiy qoidalar: [`../../QOIDALAR.md`](../../QOIDALAR.md).
@@ -38,7 +38,7 @@ takrorli birikmalar, binomial yoyilma (`(a+b)ⁿ`) — maktab dasturining yuqori
 |---|---|---|---|
 | 41 | **Tanlov daraxti** ✅ | 1, 2 | Bola daraxtni oʻzi yigʻadi (bosib), barglarni sanaydi, keyin koʻpaytirish chiqadi. «VA» va «YOKI» farqi — bitta ekranda |
 | 42 | **Qatorga terish** ✅ | 3, 4 | 3–4 ta narsani barcha tartibda terish (roʻyxat qoʻlda toʻladi) → `n!`; keyin «faqat 3 oʻrin» → `A(n,k)` |
-| 43 | **Jamoa tanlash** | 5 | Bir xil jamoa necha marta takrorlandi? Takrorni sanab, `k!` ga boʻlish — `C(n,k)` shundan chiqadi |
+| 43 | **Jamoa tanlash** ✅ | 5 | Bir xil jamoa necha marta takrorlandi? Takrorni sanab, `k!` ga boʻlish — `C(n,k)` shundan chiqadi |
 | 44 | **Paskal uchburchagi** | 6 | Uchburchakni bosib toʻldiradi; qatorlar yigʻindisi `2ⁿ` (01- va 04-oʻyinlarga ulanadi) |
 | 45 | **Kaptarxona** | 7, 8 | Dirixle: kaptarlarni uyalarga joylash — har qanday joylashda ham biri ikkita boʻladi; soʻng `n!` ni oʻlchab koʻrish |
 

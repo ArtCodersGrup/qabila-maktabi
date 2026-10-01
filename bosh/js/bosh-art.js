@@ -457,7 +457,17 @@
   <path d="M30 8 l5 4 l-5 4" fill="none" stroke="#8E5BD0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
   <path d="M18 16 l-5 -4 l5 -4" fill="none" stroke="#8E5BD0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`);
 
-  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, bolish, qutilar2, ayri, charx, zina, qator, dastgoh, minora, ikkiyol, sxema, lupa, saralash, osish, daraxt, qator3, poyga, yozuv, onlayn, tog };
+  // 43-o'yin: jamoa tanlash — beshtadan uchtasi doira ichida
+  const jamoa = svg(`
+  <rect x="4" y="18" width="37" height="38" rx="11" fill="none" stroke="#1A9E77" stroke-width="3" stroke-dasharray="6 5"/>
+  <circle cx="13" cy="30" r="6" fill="#1A9E77" stroke="#2B2B3A" stroke-width="2.5"/>
+  <path d="M6 52 v-10 a7 7 0 0 1 14 0 v10 z" fill="#BDE6D4" stroke="#2B2B3A" stroke-width="2.5" stroke-linejoin="round"/>
+  <circle cx="30" cy="30" r="6" fill="#1A9E77" stroke="#2B2B3A" stroke-width="2.5"/>
+  <path d="M23 52 v-10 a7 7 0 0 1 14 0 v10 z" fill="#BDE6D4" stroke="#2B2B3A" stroke-width="2.5" stroke-linejoin="round"/>
+  <circle cx="47" cy="30" r="6" fill="#E8DEC8" stroke="#2B2B3A" stroke-width="2.5"/>
+  <path d="M40 52 v-10 a7 7 0 0 1 14 0 v10 z" fill="#F2E6CF" stroke="#2B2B3A" stroke-width="2.5" stroke-linejoin="round"/>`);
+
+  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, bolish, qutilar2, ayri, charx, zina, qator, dastgoh, minora, ikkiyol, sxema, lupa, saralash, osish, daraxt, qator3, jamoa, poyga, yozuv, onlayn, tog };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";
