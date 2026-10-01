@@ -1,0 +1,77 @@
+/* Tanlov daraxti — faqat shu o'yinga xos uslublar.
+   Umumiylari: ../../umumiy/css/asos.css va ../../umumiy/css/kod.css */
+
+.formula-box { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+.formula-row { font-size: 18px; font-weight: 800; animation: pop 0.3s; }
+.formula-nom { font-family: var(--kod-shrift); font-weight: 900; }
+.formula-nom.va { color: var(--asosiy); }
+.formula-nom.yoki { color: #8E5BD0; }
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(240px, 66vw); align-self: center; }
+.story-art.wide { width: min(320px, 86vw); }
+.story-art.small { width: min(190px, 52vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 19px; font-weight: 800; text-align: center; }
+
+/* ---------- Daraxt ---------- */
+.dx-sarlavha { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding-bottom: 8px; }
+.dx-qadam {
+  font-size: 15px; font-weight: 800; color: #6B6558;
+  background: #F3EFE3; border-radius: 999px; padding: 4px 12px;
+}
+.dx-daraxt { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; margin: 0 auto; }
+.dx-shox { display: flex; align-items: center; gap: 8px; animation: pop 0.3s; }
+.dx-bosh {
+  font-size: 16px; font-weight: 800; padding: 8px 14px; min-width: 76px; text-align: center;
+  background: #D8E6FB; border: 2px solid var(--asosiy); border-radius: 10px; color: #1B4A94;
+}
+.dx-chiziq { width: 22px; height: 3px; background: #8A8577; border-radius: 2px; }
+.dx-barglar { display: flex; flex-wrap: wrap; gap: 6px; }
+.dx-barg {
+  font-size: 15px; font-weight: 700; padding: 7px 12px;
+  background: #D7F0E6; border: 2px solid var(--togri); border-radius: 10px; color: #116B50;
+}
+.dx-sanoq { text-align: center; font-size: 17px; font-weight: 800; color: var(--asosiy); padding-top: 10px; }
+
+/* ---------- Variantlar ro'yxati ---------- */
+.dx-royxat {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 4px 14px;
+  width: min(560px, 96%); margin: 0 auto;
+}
+.dx-qator { display: flex; gap: 6px; font-size: 16px; }
+.dx-raqam { color: #A09A8A; font-family: var(--kod-shrift); }
+.dx-hisob {
+  text-align: center; font-family: var(--kod-shrift); font-size: 22px; font-weight: 900;
+  color: var(--asosiy); padding-top: 10px;
+}
+
+/* ---------- VA / YOKI kartalari ---------- */
+.dx-ikki { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; }
+.dx-karta {
+  display: flex; flex-direction: column; gap: 6px; align-items: center; text-align: center;
+  width: min(260px, 86vw); padding: 14px; background: #fff;
+  border: 3px solid var(--chiziq); border-radius: 16px; font-size: 16px;
+}
+.dx-karta.va { border-color: var(--asosiy); }
+.dx-karta.yoki { border-color: #8E5BD0; }
+.dx-karta-nom { font-family: var(--kod-shrift); font-size: 20px; font-weight: 900; }
+.dx-karta.va .dx-karta-nom { color: var(--asosiy); }
+.dx-karta.yoki .dx-karta-nom { color: #8E5BD0; }
+.dx-karta-izoh { font-size: 14px; color: #6B6558; }
+.dx-karta-hisob { font-family: var(--kod-shrift); font-size: 20px; font-weight: 900; }
+
+.dx-savol { font-size: 19px; font-weight: 800; text-align: center; line-height: 1.4; max-width: 540px; margin: 0 auto; }
+
+@media (max-width: 520px) {
+  .summary { font-size: 17px; gap: 8px; }
+  .dx-bosh { font-size: 15px; min-width: 64px; padding: 7px 10px; }
+  .dx-barg { font-size: 14px; padding: 6px 9px; }
+  .dx-royxat { grid-template-columns: 1fr 1fr; font-size: 15px; }
+  .dx-qator { font-size: 14px; }
+  .dx-hisob { font-size: 19px; }
+  .dx-savol { font-size: 17px; }
+}
+@media (orientation: landscape) and (max-height: 520px) {
+  .story-art { width: min(180px, 34vh); }
+  .story-art.wide { width: min(280px, 56vh); }
+}

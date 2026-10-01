@@ -1,6 +1,6 @@
 // Offline rejim: sayt fayllari keshlanadi. Bola saytni bir marta ochsa, keyin internetsiz ham oʻynay oladi.
 // Yangi fayl qoʻshilsa, FILES roʻyxatiga ham qoʻshiladi — buni bosh/tests/offline.test.js tekshiradi.
-const VERSION = "v58";
+const VERSION = "v59";
 const CACHE = "qabila-maktabi-" + VERSION;
 
 const FILES = [
@@ -41,6 +41,7 @@ const FILES = [
   "oyinlar/umumiy/js/python/values.js",
   "oyinlar/umumiy/js/sanoq-ui.js",
   "oyinlar/umumiy/js/sanoq.js",
+  "oyinlar/umumiy/js/sanash.js",
   "oyinlar/umumiy/js/savol-ui.js",
   "oyinlar/umumiy/js/sound.js",
   "oyinlar/umumiy/js/storage.js",
@@ -500,6 +501,17 @@ const FILES = [
   "oyinlar/40-qadamlar-soni/js/scenes/stage1.js",
   "oyinlar/40-qadamlar-soni/js/scenes/stage2.js",
   "oyinlar/40-qadamlar-soni/js/scenes/stage3.js",
+  "oyinlar/41-tanlov-daraxti/",
+  "oyinlar/41-tanlov-daraxti/index.html",
+  "oyinlar/41-tanlov-daraxti/css/style.css",
+  "oyinlar/41-tanlov-daraxti/js/game-art.js",
+  "oyinlar/41-tanlov-daraxti/js/logic.js",
+  "oyinlar/41-tanlov-daraxti/js/main.js",
+  "oyinlar/41-tanlov-daraxti/js/scenes/common.js",
+  "oyinlar/41-tanlov-daraxti/js/scenes/final.js",
+  "oyinlar/41-tanlov-daraxti/js/scenes/stage1.js",
+  "oyinlar/41-tanlov-daraxti/js/scenes/stage2.js",
+  "oyinlar/41-tanlov-daraxti/js/scenes/stage3.js",
   "oyinlar/masalalar/",
   "oyinlar/masalalar/index.html",
   "oyinlar/masalalar/css/style.css",

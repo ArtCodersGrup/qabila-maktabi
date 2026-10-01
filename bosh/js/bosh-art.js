@@ -426,7 +426,25 @@
   <circle cx="54" cy="30" r="4" fill="#F08A24" stroke="#2B2B3A" stroke-width="2"/>
   <circle cx="54" cy="10" r="4" fill="#8E5BD0" stroke="#2B2B3A" stroke-width="2"/>`);
 
-  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, bolish, qutilar2, ayri, charx, zina, qator, dastgoh, minora, ikkiyol, sxema, lupa, saralash, osish, poyga, yozuv, onlayn, tog };
+  // 41-o'yin: tanlov daraxti — ildiz, shoxlar va barglar
+  const daraxt = svg(`
+  <path d="M12 32 C 22 32, 24 12, 34 12" fill="none" stroke="#8A8577" stroke-width="3"/>
+  <path d="M12 32 C 22 32, 24 32, 34 32" fill="none" stroke="#8A8577" stroke-width="3"/>
+  <path d="M12 32 C 22 32, 24 52, 34 52" fill="none" stroke="#8A8577" stroke-width="3"/>
+  <path d="M34 12 C 44 12, 46 6, 54 6" fill="none" stroke="#8A8577" stroke-width="2.5"/>
+  <path d="M34 12 C 44 12, 46 20, 54 20" fill="none" stroke="#8A8577" stroke-width="2.5"/>
+  <path d="M34 52 C 44 52, 46 44, 54 44" fill="none" stroke="#8A8577" stroke-width="2.5"/>
+  <path d="M34 52 C 44 52, 46 58, 54 58" fill="none" stroke="#8A8577" stroke-width="2.5"/>
+  <circle cx="12" cy="32" r="7" fill="#F08A24" stroke="#2B2B3A" stroke-width="2.5"/>
+  <circle cx="34" cy="12" r="6" fill="#2F6FDE" stroke="#2B2B3A" stroke-width="2.5"/>
+  <circle cx="34" cy="32" r="6" fill="#2F6FDE" stroke="#2B2B3A" stroke-width="2.5"/>
+  <circle cx="34" cy="52" r="6" fill="#2F6FDE" stroke="#2B2B3A" stroke-width="2.5"/>
+  <circle cx="54" cy="6" r="4.5" fill="#1A9E77" stroke="#2B2B3A" stroke-width="2"/>
+  <circle cx="54" cy="20" r="4.5" fill="#1A9E77" stroke="#2B2B3A" stroke-width="2"/>
+  <circle cx="54" cy="44" r="4.5" fill="#1A9E77" stroke="#2B2B3A" stroke-width="2"/>
+  <circle cx="54" cy="58" r="4.5" fill="#1A9E77" stroke="#2B2B3A" stroke-width="2"/>`);
+
+  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, bolish, qutilar2, ayri, charx, zina, qator, dastgoh, minora, ikkiyol, sxema, lupa, saralash, osish, daraxt, poyga, yozuv, onlayn, tog };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";

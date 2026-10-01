@@ -78,12 +78,12 @@ test("yosh belgisi: umumiy yoki o'yinning o'zi (sanoq tizimlari bloki — 10–1
   for (const game of GAMES) {
     if (game.age != null) assert.match(game.age, /^\d+–\d+$/, game.dir);
     if (game.topic === "sanoq" && game.n >= 17) assert.equal(game.age, "10–12", game.dir);
-    if (game.topic === "python" || game.topic === "algoritm") assert.equal(game.age, "12–16", game.dir);
+    if (["python", "algoritm", "kombinatorika"].includes(game.topic)) assert.equal(game.age, "12–16", game.dir);
   }
 });
 
-test("💻 belgisi: klaviatura, Python va algoritm bloklariga haqiqiy klaviatura kerak", () => {
-  const needsKeyboard = ["klaviatura", "python", "algoritm"];
+test("💻 belgisi: klaviatura, Python, algoritm va kombinatorika bloklariga haqiqiy klaviatura kerak", () => {
+  const needsKeyboard = ["klaviatura", "python", "algoritm", "kombinatorika"];
   for (const game of GAMES) assert.equal(!!game.pc, needsKeyboard.includes(game.topic), game.dir);
 });
 
