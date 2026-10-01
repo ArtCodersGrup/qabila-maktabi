@@ -54,6 +54,11 @@ const CORPUS = [
   { id: "massiv-yigindi", kod: d('int a[5];\nfor (int i = 0; i < 5; i++) a[i] = (i + 1) * (i + 1);\nint s = 0;\nfor (int i = 0; i < 5; i++) s += a[i];\ncout << s << "\\n";'), kutilgan: ["55"] },
   { id: "massiv-eng-katta", kod: d('int a[6];\na[0] = 3; a[1] = 9; a[2] = 2; a[3] = 7; a[4] = 9; a[5] = 1;\nint m = a[0];\nfor (int i = 1; i < 6; i++) if (a[i] > m) m = a[i];\ncout << m << "\\n";'), kutilgan: ["9"] },
 
+  // ---------- Massivni ro'yxat bilan e'lon qilish ----------
+  { id: "royxat-toliq", kod: d('int a[3] = {5, 7, 9};\nint s = 0;\nfor (int i = 0; i < 3; i++) s += a[i];\ncout << s << "\\n";'), kutilgan: ["21"] },
+  { id: "royxat-qisqa", kod: d('int a[5] = {3, 1, 4};\nfor (int i = 0; i < 5; i++) cout << a[i] << " ";\ncout << "\\n";'), kutilgan: ["3 1 4 0 0 "] },
+  { id: "royxat-boyisiz", kod: d('int b[] = {7, 8};\ncout << b[0] + b[1] << "\\n";'), kutilgan: ["15"] },
+
   // ---------- Matn ----------
   { id: "string-qosh", kod: d('string a = "Qabila";\nstring b = " maktabi";\ncout << a + b << "\\n";'), kutilgan: ["Qabila maktabi"] },
   { id: "string-uzunlik", kod: d('string s = "salom";\ncout << s.size() << " " << s[0] << s[4] << "\\n";'), kutilgan: ["5 sm"] },

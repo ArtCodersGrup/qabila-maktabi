@@ -1,0 +1,6 @@
+/* 57-o'yinga xos uslublar. Umumiylari: umumiy/css/asos.css, kod.css, cpp.css */
+.story-art svg { width: min(100%, 420px); height: auto; }
+.story-art.small svg { width: min(100%, 300px); }
+
+/* «Bu yerda ishga tushmaydi» belgisi */
+.ms-oqish { width: 100%; box-sizing: border-box; padding: 8px 12px; border: 2px dashed var(--chiziq); border-radius: 12px; background: #F6F2E8; color: #6B6558; font-size: 15px; font-weight: 700; }

@@ -163,6 +163,7 @@
         }
         return V.amal(node.op, baho(node.chap, env, ctx), baho(node.ong, env, ctx), node);
       }
+      case "royxat": throw E.sintaksis("initializer list is only allowed in a declaration", node);
       case "tayinlash": {
         const uya = uyaTopi(node.maqsad, env, ctx);
         const nomi = node.maqsad.k === "nom" ? node.maqsad.nom : node.maqsad.obj.nom;
@@ -193,11 +194,27 @@
       case "elon": {
         for (const e of node.elonlar) {
           if (env.bormi(e.nom)) throw E.qaytaElon(e.nom, node);
+          const royxat = e.qiymat && e.qiymat.k === "royxat" ? e.qiymat.elementlar : null;
+          if (royxat && !e.boyi) {
+            // int a[] = {1, 2, 3}; — bo'yi ro'yxatdan olinadi
+            const massiv = royxat.map((x) => ({ tur: node.tur, q: V.turga(node.tur, baho(x, env, ctx), node), berilgan: true }));
+            env.qosh(e.nom, { tur: node.tur, massiv });
+            continue;
+          }
           if (e.boyi) {
             const n = Number(V.butun(baho(e.boyi, env, ctx)));
             if (!(n > 0) || n > 100000) throw E.sintaksis("invalid array size", node);
             const massiv = [];
-            for (let k = 0; k < n; k++) massiv.push({ tur: node.tur, q: V.boshlangich(node.tur), berilgan: false });
+            // Ro'yxat berilgan bo'lsa, qolgan kataklar NOL bo'ladi (C++ shuni kafolatlaydi)
+            for (let k = 0; k < n; k++) {
+              const bor = royxat && k < royxat.length;
+              massiv.push({
+                tur: node.tur,
+                q: bor ? V.turga(node.tur, baho(royxat[k], env, ctx), node) : V.boshlangich(node.tur),
+                berilgan: !!royxat,
+              });
+            }
+            if (royxat && royxat.length > n) throw E.sintaksis("excess elements in array initializer", node);
             env.qosh(e.nom, { tur: node.tur, massiv });
             continue;
           }

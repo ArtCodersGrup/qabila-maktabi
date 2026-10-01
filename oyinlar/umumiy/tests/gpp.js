@@ -76,6 +76,14 @@ const cMatn = (s) => '"' + String(s).replace(/\\/g, "\\\\").replace(/"/g, '\\"')
 // olish(t) → { kod, kirish }. Natija: [{ t, r }], r — { ok, out } yoki { ok: false, xato }
 async function hammasi(ust, royxat, olish) {
   const ishlar = royxat.map((t, k) => ({ t, k, ...olish(t) }));
+  // Dasturlarning #include lari yig'ib olinadi: vector/algorithm kerak bo'lgan misollar ham ishlasin
+  const sarlavhalar = new Set(["#include <iostream>", "#include <string>", "#include <sstream>"]);
+  for (const x of ishlar) {
+    for (const satr of String(x.kod).split("\n")) {
+      const m = /^\s*(#include\s*<[^>]+>)/.exec(satr);
+      if (m) sarlavhalar.add(m[1].replace(/\s+/g, " "));
+    }
+  }
   const qismlar = ishlar.map((x) => cFunksiya(x.kod, x.k));
   const chaqiruvlar = ishlar.map((x) => `  {
     istringstream in(${cMatn((x.kirish || []).join("\n") + ((x.kirish && x.kirish.length) ? "\n" : ""))});
@@ -89,7 +97,7 @@ async function hammasi(ust, royxat, olish) {
   }`).join("\n");
 
   const birlashgan = [
-    "#include <iostream>", "#include <string>", "#include <sstream>", "using namespace std;", "",
+    ...sarlavhalar, "using namespace std;", "",
     qismlar.join("\n\n"), "",
     "int main() {", chaqiruvlar, "  return 0;", "}", "",
   ].join("\n");

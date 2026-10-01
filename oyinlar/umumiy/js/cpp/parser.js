@@ -174,10 +174,24 @@
         let boyi = null;
         let qiymat = null;
         if (yedi("[")) {
-          boyi = expr();
+          if (!bormi("]")) boyi = expr(); // int a[] = {…} — bo'yi ro'yxatdan olinadi
           kut("]");
         }
-        if (yedi("=")) qiymat = expr();
+        if (yedi("=")) {
+          // int a[3] = {1, 2, 3};  — ro'yxat bilan to'ldirish
+          if (bormi("{")) {
+            const royxatJoyi = joy();
+            olga();
+            const elementlar = [];
+            if (!bormi("}")) {
+              do { elementlar.push(expr()); } while (yedi(","));
+            }
+            kut("}");
+            qiymat = { k: "royxat", elementlar, line: royxatJoyi.line, col: royxatJoyi.col };
+          } else {
+            qiymat = expr();
+          }
+        }
         elonlar.push({ nom, boyi, qiymat, line: nomJoyi.line, col: nomJoyi.col });
       } while (yedi(","));
       kut(";");

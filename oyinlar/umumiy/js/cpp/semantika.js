@@ -33,6 +33,7 @@
         case "oldin": case "keyin": ifoda(node.maqsad); return;
         case "ikki": ifoda(node.chap); ifoda(node.ong); return;
         case "tayinlash": ifoda(node.maqsad); ifoda(node.qiymat); return;
+        case "royxat": for (const x of node.elementlar) ifoda(x); return;
         default: return; // son, matn, belgi, bool
       }
     }
