@@ -497,7 +497,17 @@
   <path d="M36 34 h4 M38 32 v4" stroke="#2B2B3A" stroke-width="3" stroke-linecap="round"/>
   <path d="M12 54 q22 -6 44 0" fill="none" stroke="#1A9E77" stroke-width="3" stroke-linecap="round" stroke-dasharray="5 6"/>`);
 
-  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, bolish, qutilar2, ayri, charx, zina, qator, dastgoh, minora, ikkiyol, sxema, lupa, saralash, osish, daraxt, qator3, jamoa, paskal, kaptar, tezkor, poyga, yozuv, onlayn, tog };
+  // 47-o'yin: robot aqlli bo'ldi — takror va ikki yo'l
+  const robotaql = svg(`
+  <path d="M8 46 H56" stroke="#D8CDB4" stroke-width="7" stroke-linecap="round"/>
+  <path d="M30 46 C 30 24, 44 20, 56 20 L 56 36" fill="none" stroke="#1A9E77" stroke-width="4" stroke-linecap="round" stroke-dasharray="6 5"/>
+  <rect x="38" y="38" width="16" height="16" rx="4" fill="#8A8577" stroke="#2B2B3A" stroke-width="2.5"/>
+  <rect x="8" y="32" width="22" height="20" rx="5" fill="#2F6FDE" stroke="#2B2B3A" stroke-width="2.5"/>
+  <circle cx="15" cy="42" r="3" fill="#fff"/><circle cx="24" cy="42" r="3" fill="#fff"/>
+  <path d="M19 32 V24" stroke="#2B2B3A" stroke-width="2.5"/>
+  <circle cx="19" cy="21" r="3.5" fill="#F08A24" stroke="#2B2B3A" stroke-width="2"/>`);
+
+  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, bolish, qutilar2, ayri, charx, zina, qator, dastgoh, minora, ikkiyol, sxema, lupa, saralash, osish, daraxt, qator3, jamoa, paskal, kaptar, tezkor, robotaql, poyga, yozuv, onlayn, tog };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";

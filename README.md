@@ -27,6 +27,7 @@ Tartib — bosh sahifadagidek: osondan qiyinga, oldingi oʻyinga tayanadiganlari
 | Tezkor tugmalar | `46-tezkor-tugmalar` | 8–16 💻 | Ctrl + C, V, X, Z; Home/End, Backspace ↔ Delete; haqiqiy matn ustida mashq |
 | **Algoritm va dasturlash** | | | |
 | Robot yoʻli | `26-robot-yoli` | 8–11 | Robotga buyruq berish: algoritm, tartibning ahamiyati, dasturni oʻqish va izdan tiklash |
+| Robot aqlli boʻldi | `47-robot-aqlli` | 8–11 | Takror va agar bloklari: bitta dastur ikki xil maydonda ishlaydi |
 | **Python: dasturlash** | | | |
 | Birinchi buyruq | `27-birinchi-buyruq` | 12–16 💻 | print: birinchi kod, qoʻshtirnoq ichi va tashqarisi, xato xabarini oʻqish |
 | Sonlar ustaxonasi | `28-sonlar-ustaxonasi` | 12–16 💻 | `//` va `%` (nechtadan tegdi, nechtasi ortdi), `/` doim kasr, amallar tartibi, daraja |
