@@ -1,0 +1,68 @@
+/* Parol kuchi — faqat shu o'yinga xos uslublar. */
+
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(250px, 70vw); align-self: center; }
+.story-art.wide { width: min(320px, 86vw); }
+.story-art.small { width: min(200px, 54vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 17px; font-weight: 800; text-align: center; }
+
+.pk-savol { font-size: 19px; font-weight: 800; text-align: center; line-height: 1.4; max-width: 560px; }
+.pk-formula { display: flex; align-items: baseline; justify-content: center; gap: 2px; font-family: var(--kod-shrift); font-size: 30px; font-weight: 900; }
+.pk-alifbo { color: var(--asosiy); }
+.pk-formula sup { font-size: 18px; color: var(--yana); }
+
+/* ---------- Parol kartasi ---------- */
+.pk-karta {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 12px 14px; background: #fff; border: 2px solid var(--chiziq); border-radius: 14px;
+  min-width: min(260px, 90vw);
+}
+.pk-parol { display: flex; flex-wrap: wrap; justify-content: center; gap: 3px; }
+.pk-belgi {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 24px; height: 30px; padding: 0 4px;
+  font-family: var(--kod-shrift); font-size: 18px; font-weight: 800;
+  background: #F3EFE3; border-radius: 6px;
+}
+.pk-belgi.raqam { background: #D8E6FB; color: #1B4A94; }
+.pk-belgi.kichik { background: #D7F0E6; color: #116B50; }
+.pk-belgi.katta { background: #E7DBF7; color: #5B3391; }
+.pk-belgi.belgi { background: #FFE9C7; color: #8A5A10; }
+.pk-turlar { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; }
+.pk-uzunlik, .pk-tur { font-size: 13px; font-weight: 800; padding: 2px 8px; border-radius: 999px; background: #F3EFE3; color: #6B6558; }
+.pk-tur.raqam { background: #D8E6FB; color: #1B4A94; }
+.pk-tur.kichik { background: #D7F0E6; color: #116B50; }
+.pk-tur.katta { background: #E7DBF7; color: #5B3391; }
+.pk-tur.belgi { background: #FFE9C7; color: #8A5A10; }
+.pk-hisob { font-family: var(--kod-shrift); font-size: 15px; color: #4A4636; text-align: center; }
+.pk-hisob.katta { font-size: 18px; font-weight: 800; color: var(--asosiy); }
+.pk-vaqt { font-size: 16px; }
+.pk-vaqt b { font-family: var(--kod-shrift); font-size: 18px; }
+.pk-vaqt.zaif b { color: #C0392B; }
+.pk-vaqt.ortacha b, .pk-vaqt.oʻrtacha b { color: #B4760A; }
+.pk-vaqt.kuchli b { color: var(--togri); }
+.pk-ikki { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+
+/* ---------- Jadval ---------- */
+.pk-jadval { display: flex; flex-direction: column; gap: 6px; width: min(560px, 96%); }
+.pk-qator {
+  display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: baseline;
+  padding: 7px 12px; background: #fff; border: 2px solid var(--chiziq); border-radius: 10px;
+}
+.pk-nom { font-size: 15px; font-weight: 700; }
+.pk-son { font-family: var(--kod-shrift); font-size: 14px; color: #6B6558; }
+.pk-vaqt-son { font-family: var(--kod-shrift); font-size: 16px; color: var(--asosiy); }
+
+.pk-qoida { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 17px; font-weight: 700; text-align: center; }
+.pk-qoida-nom { font-size: 20px; font-weight: 900; color: var(--togri); }
+.pk-misol { font-size: 15px; color: #6B6558; font-style: italic; }
+.pk-daraja { padding: 2px 10px; border-radius: 999px; font-weight: 800; }
+
+@media (max-width: 520px) {
+  .summary { font-size: 16px; }
+  .pk-savol { font-size: 17px; }
+  .pk-formula { font-size: 25px; }
+  .pk-qator { grid-template-columns: 1fr auto; }
+  .pk-son { display: none; }
+}

@@ -22,6 +22,7 @@
     { id: "python", title: "Python: dasturlash", note: "Haqiqiy kod yozamiz: printdan funksiyagacha" },
     { id: "algoritm", title: "Algoritmlar va samaradorlik", note: "Qaysi yechim tezroq va nega" },
     { id: "kombinatorika", title: "Kombinatorika", note: "Sanashni oʻrganamiz: nechta variant bor" },
+    { id: "xavfsizlik", title: "Parol va xavfsizlik", note: "Parolingni kim va qancha vaqtda topadi" },
     { id: "kod", title: "Kodlash va shifrlash", note: "Maʼlumotni belgilarga aylantiramiz" },
     { id: "ikkilik", title: "Sonlar va ikkilik kod", note: "Yoniq-oʻchiq, xona qiymatlari va har xil sanoq tizimlari" },
     { id: "olchov", title: "Axborot oʻlchovi", note: "Bit, bayt va fayllar hajmi" },
@@ -79,6 +80,7 @@
     { n: 43, topic: "kombinatorika", dir: "43-jamoa-tanlash", title: "Jamoa tanlash", desc: "C(n,k): tartib muhim emas — takrorni topib, k! ga boʻlamiz", key: "jamoa-tanlash:v1", stages: 3, yosh: [12, 16], icon: "jamoa", pc: true },
     { n: 44, topic: "kombinatorika", dir: "44-paskal-uchburchagi", title: "Paskal uchburchagi", desc: "C(n,k) ni faqat qoʻshish bilan topish; qator yigʻindisi 2ⁿ", key: "paskal-uchburchagi:v1", stages: 3, yosh: [12, 16], icon: "paskal", pc: true },
     { n: 45, topic: "kombinatorika", dir: "45-kaptarxona", title: "Kaptarxona", desc: "Dirixle printsipi: sanamasdan isbotlash", key: "kaptarxona:v1", stages: 3, yosh: [12, 16], icon: "kaptar", pc: true },
+    { n: 50, topic: "xavfsizlik", dir: "50-parol-kuchi", title: "Parol kuchi", desc: "Nechta variant bor va kompyuter qancha vaqtda topadi", key: "parol-kuchi:v1", stages: 3, yosh: [10, 16], icon: "qulf" },
   ];
 
   // Mashqlar — o'yin emas: masalalar ro'yxati (qidiruv, filtr, sahifalash). Bosqichi yo'q,

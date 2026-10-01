@@ -50,6 +50,8 @@ Tartib — bosh sahifadagidek: osondan qiyinga, oldingi oʻyinga tayanadiganlari
 | Jamoa tanlash | `43-jamoa-tanlash` | 12–16 💻 | `C(n,k)`: bir xil jamoa `k!` marta takrorlanadi; tartib muhimmi degan savol |
 | Paskal uchburchagi | `44-paskal-uchburchagi` | 12–16 💻 | `C(n,k)` ni faqat qoʻshish bilan; simmetriya, qator yigʻindisi `2ⁿ`, juftliklar diagonali |
 | Kaptarxona | `45-kaptarxona` | 12–16 💻 | Dirixle printsipi: `n ÷ k` kafolati, eng yomon holat, nega isbot kerak |
+| **Parol va xavfsizlik** | | | |
+| Parol kuchi | `50-parol-kuchi` | 10–16 | Nechta variant bor (`aⁱ`), kompyuter qancha vaqtda topadi, nega uzunlik murakkablikdan kuchli |
 | **Kodlash va shifrlash** | | | |
 | Qabila kodlari | `01-qabila-kodlari` | 8–16 | Nechta belgidan nechta soʻz yasaladi (aⁱ, yigʻindi, teskari masala) |
 | Qabila Morzesi | `02-qabila-morzesi` | 8–11 | Morze alifbosi: nuqta va chiziq bilan oʻqish va yozish |
