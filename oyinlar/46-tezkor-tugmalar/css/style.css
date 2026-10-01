@@ -1,0 +1,81 @@
+/* Tezkor tugmalar — faqat shu o'yinga xos uslublar.
+   Umumiylari: ../../umumiy/css/asos.css */
+
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(240px, 66vw); align-self: center; }
+.story-art.wide { width: min(300px, 80vw); }
+.story-art.small { width: min(190px, 52vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 18px; font-weight: 800; text-align: center; }
+.pbox { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.tt-note { font-size: 17px; font-weight: 700; text-align: center; max-width: 560px; color: var(--asosiy); }
+.tt-answer { font-size: 20px; font-weight: 900; color: var(--togri); text-align: center; animation: pop 0.3s; }
+.tt-savol { font-size: 19px; font-weight: 800; text-align: center; line-height: 1.4; max-width: 560px; }
+
+/* ---------- Tugma qopqoqlari ---------- */
+.tt-kombo { display: inline-flex; align-items: center; gap: 6px; }
+.tt-tugma {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 44px; height: 40px; padding: 0 10px; box-sizing: border-box;
+  font-family: var(--kod-shrift); font-size: 17px; font-weight: 800;
+  background: #fff; border: 3px solid var(--matn); border-radius: 9px;
+  box-shadow: 0 3px 0 var(--matn);
+}
+.tt-plus { font-size: 18px; font-weight: 900; color: #6B6558; }
+.tt-kombo.katta .tt-tugma { min-width: 58px; height: 52px; font-size: 22px; }
+
+.tt-kartalar { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+.tt-karta {
+  display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center;
+  width: min(240px, 90vw); padding: 12px; background: #fff;
+  border: 2px solid var(--chiziq); border-radius: 14px; animation: pop 0.3s;
+}
+.tt-nom { font-size: 17px; font-weight: 900; }
+.tt-izoh { font-size: 14px; font-weight: 600; color: #6B6558; line-height: 1.35; }
+
+/* ---------- Bosilgan tugma ---------- */
+.tt-bosilgan {
+  min-width: 180px; padding: 10px 18px; text-align: center;
+  font-family: var(--kod-shrift); font-size: 22px; font-weight: 900; color: var(--asosiy);
+  background: #F3EFE3; border: 3px dashed var(--chiziq); border-radius: 12px;
+  transition: background 0.2s, border-color 0.2s;
+}
+.tt-bosilgan.yondi { background: #D8E6FB; border-color: var(--asosiy); border-style: solid; }
+
+.tt-tanlov { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+.tt-tanlov-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  min-width: 150px; min-height: 96px; padding: 12px 16px; font: inherit; cursor: pointer;
+  background: #fff; border: 3px solid var(--chiziq); border-radius: 14px;
+}
+.tt-tanlov-btn:hover { border-color: var(--asosiy); }
+.tt-tanlov-btn:active { transform: translateY(2px); }
+
+/* ---------- 3-bosqich: haqiqiy maydon ---------- */
+.tt-maqsad {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 8px 14px; background: #E7F5EE; border: 2px solid var(--togri); border-radius: 12px;
+}
+.tt-maqsad-nom { font-size: 14px; font-weight: 800; color: #116B50; }
+.tt-maqsad-matn { margin: 0; font-family: var(--kod-shrift); font-size: 17px; white-space: pre-wrap; text-align: center; }
+.tt-maydon {
+  width: min(560px, 94%); padding: 12px; box-sizing: border-box;
+  font-family: var(--kod-shrift); font-size: 18px; line-height: 1.5;
+  background: #fff; border: 3px solid var(--asosiy); border-radius: 12px; resize: vertical;
+}
+.tt-bosilganlar { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; min-height: 28px; }
+.tt-bosilgan-chip {
+  padding: 3px 10px; font-family: var(--kod-shrift); font-size: 14px; font-weight: 800;
+  background: #F3EFE3; border: 2px solid var(--chiziq); border-radius: 999px;
+}
+
+@media (max-width: 520px) {
+  .summary { font-size: 16px; }
+  .tt-savol { font-size: 17px; }
+  .tt-tugma { min-width: 40px; height: 36px; font-size: 15px; }
+  .tt-kombo.katta .tt-tugma { min-width: 50px; height: 46px; font-size: 19px; }
+  .tt-karta { width: 100%; }
+  .tt-maydon { font-size: 16px; }
+}
+.tt-tanlov-btn:disabled { opacity: 0.55; cursor: default; }
+.tt-tanlov-btn.tanlangan { border-color: var(--asosiy); opacity: 1; }

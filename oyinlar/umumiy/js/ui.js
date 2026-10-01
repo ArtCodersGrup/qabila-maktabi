@@ -375,12 +375,30 @@
     $("play").classList.remove("has-guide");
   }
 
+  // Barmoq bilan boshqariladigan ekran: klaviatura bo'lmasligi mumkin (QOIDALAR §3)
+  const touchOnly = () => !!(root.matchMedia && root.matchMedia("(hover: none) and (pointer: coarse)").matches);
+
+  // Klaviatura kerak bo'lgan o'yin boshida: telefon bo'lsa, bolani ogohlantiramiz
+  async function keyboardCheck(matn) {
+    if (!touchOnly()) return true;
+    bubble("elder", matn || "Bu oʻyinga klaviatura kerak. Uni kompyuterda och.");
+    const answer = await choice([
+      { label: "Klaviaturam bor", value: "go" },
+      { label: "Barcha oʻyinlar", value: "back", secondary: true },
+    ]);
+    if (answer === "back") {
+      root.location.href = "../../index.html";
+      await new Promise(() => {});
+    }
+    return true;
+  }
+
   QK.ui = {
     newRun, onCleanup, settle, sleep, h, button,
     work, control, clearWork, clearControl, setCompact,
     pose, resetPoses, paper, raisePaper,
     bubble, say, tile, wordChip, lettersLine, toast, sup,
     buildWords, askNumber, counter, choice, setProgress, hideProgress,
-    openGuide, closeGuide,
+    openGuide, closeGuide, touchOnly, keyboardCheck,
   };
 })(window);

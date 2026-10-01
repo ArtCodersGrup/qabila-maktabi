@@ -18,66 +18,66 @@ Eslatma: progress brauzer xotirasida saqlanadi va `file://` bilan `http://localh
 
 ## Oʻyinlar
 
-Tartib — bosh sahifadagidek: osondan qiyinga, oldingi oʻyinga tayanadiganlari keyin. № — bosh sahifadagi raqam (papka raqami boshqa boʻlishi mumkin — u oʻzgarmaydi).
+Tartib — bosh sahifadagidek: osondan qiyinga, oldingi oʻyinga tayanadiganlari keyin. Kartadagi raqam bu yerda yozilmaydi: u bola tanlagan **yosh toifasiga** qarab oʻzgaradi (papka raqami esa hech qachon oʻzgarmaydi). «Yosh» ustuni — oʻyin qaysi toifada koʻrinishi; 💻 — klaviatura kerak.
 
-| № | Oʻyin | Papka | Mavzu |
+| Oʻyin | Papka | Yosh | Mavzu |
 |---|---|---|---|
-| | **Klaviatura** | | |
-| 1 | Oʻn barmoq | `23-on-barmoq` | Klaviaturaga qaramay yozish: asosiy, yuqori va pastki qator, katta harf, aniqlik va tezlik (💻 faqat kompyuterda) |
-| | **Algoritm va dasturlash** | | |
-| 2 | Robot yoʻli | `26-robot-yoli` | Robotga buyruq berish: algoritm, tartibning ahamiyati, dasturni oʻqish va izdan tiklash |
-| | **Python: dasturlash** | | |
-| 3 | Birinchi buyruq | `27-birinchi-buyruq` | print: birinchi kod, qoʻshtirnoq ichi va tashqarisi, xato xabarini oʻqish (💻 12–16) |
-| 4 | Sonlar ustaxonasi | `28-sonlar-ustaxonasi` | `//` va `%` (nechtadan tegdi, nechtasi ortdi), `/` doim kasr, amallar tartibi, daraja (💻 12–16) |
-| 5 | Nomli qutilar | `29-nomli-qutilar` | Oʻzgaruvchi, `x = x + 1`, kuzatuv jadvali, almashtirish, `input()` va turlar (💻 12–16) |
-| 6 | Ikki yoʻl | `30-ikki-yol` | Shart: `if / elif / else`, otstup bloki, `and` `or` `not`, `=` va `==` farqi (💻 12–16) |
-| 7 | Takror charxi | `31-takror-charxi` | `while`, hisoblagich va cheksiz sikl, yigʻindi va `break`, raqamlarni ajratish (`% 10`, `// 10`) (💻 12–16) |
-| 8 | Sanoqli takror | `32-sanoqli-takror` | `for` va `range`, chegaralar (oxiri kirmaydi), manfiy qadam, ichma-ich sikl va naqsh (💻 12–16) |
-| 9 | Roʻyxat va satr | `33-royxat-va-satr` | Roʻyxat: indeks 0 dan, `len`, `append`, kesish; satr boʻylab yurish, `input().split()` (💻 12–16) |
-| 10 | Funksiya ustaxonasi | `34-funksiya-ustaxonasi` | `def`, parametr, `return` va `print` farqi, lokal oʻzgaruvchi, masalani boʻlaklash (💻 12–16) |
-| | **Algoritmlar va samaradorlik** | | |
-| 11 | Algoritm va xossalari | `36-algoritm-xossalari` | Algoritmning beshta xossasi; bir masalaning ikki yechimi va qadamlar sonini oʻlchash (💻 12–16) |
-| 12 | Blok-sxema | `37-blok-sxema` | Algoritmni chizish: belgilar, sxemani bosib yigʻish va undan Python kodi, sxemani oʻqish (💻 12–16) |
-| 13 | Izlash | `38-izlash` | Chiziqli va ikkilik izlash: “son oʻyladim” oʻyini, qadamlar jadvali, ikkala usulni yozish (💻 12–16) |
-| 14 | Saralash | `39-saralash` | Pufakcha va tanlash saralashi: ustunlar koʻz oldida almashadi, qadamlar 4 barobar oʻsadi (💻 12–16) |
-| 15 | Qadamlar soni | `40-qadamlar-soni` | Oʻlchovga nom beramiz: `O(1)`, `O(log n)`, `O(n)`, `O(n²)`; katta n da qaysi usul yaraydi (💻 12–16) |
-| | **Kombinatorika** | | |
-| 16 | Tanlov daraxti | `41-tanlov-daraxti` | Koʻpaytirish va qoʻshish qoidasi: daraxt, VA → ×, YOKI → +, sikl bilan sanash (💻 12–16) |
-| 17 | Qatorga terish | `42-qatorga-terish` | Faktorial `n!` va `A(n,k)`: tartib muhim; 23! ni dastur aniq hisoblaydi (💻 12–16) |
-| 18 | Jamoa tanlash | `43-jamoa-tanlash` | `C(n,k)`: bir xil jamoa `k!` marta takrorlanadi; tartib muhimmi degan savol (💻 12–16) |
-| 19 | Paskal uchburchagi | `44-paskal-uchburchagi` | `C(n,k)` ni faqat qoʻshish bilan; simmetriya, qator yigʻindisi `2ⁿ`, juftliklar diagonali (💻 12–16) |
-| 20 | Kaptarxona | `45-kaptarxona` | Dirixle printsipi: `n ÷ k` kafolati, eng yomon holat, nega isbot kerak (💻 12–16) |
-| | **Kodlash va shifrlash** | | |
-| 21 | Qabila kodlari | `01-qabila-kodlari` | Nechta belgidan nechta soʻz yasaladi (aⁱ, yigʻindi, teskari masala) |
-| 22 | Qabila Morzesi | `02-qabila-morzesi` | Morze alifbosi: nuqta va chiziq bilan oʻqish va yozish |
-| 23 | Sezar maktubi | `03-sezar-maktubi` | Sezar shifri: harflarni surish, kalit, kalitsiz ochish |
-| | **Ikkilik kod** | | |
-| 24 | Qabila chiroqlari | `04-qabila-chiroqlari` | Ikkilik kod: 2ⁿ naqsh, bit va bayt, rangli chiroqlar |
-| | **Axborot oʻlchovi** | | |
-| 25 | Bayt sandigʻi | `13-bayt-sandigi` | Nega 8 bit = 1 bayt, matn hajmi (1 belgi = 1 bayt), 1 Kbayt = 1024 bayt |
-| 26 | Piksel ustaxonasi | `14-piksel-ustaxonasi` | Rasm hajmi: piksel, ranglar va bitlar, rangli piksel 3 bayt, Mbayt, siqish |
-| 27 | Multfilm daftari | `15-multfilm-daftari` | Video: kadrlar, kadr/soniya, video hajmi, Gbayt, faqat oʻzgargani |
-| 28 | Xotira ombori | `16-xotira-ombori` | Bitdan Tbaytgacha zinapoya, solishtirish, nechta sigʻadi, 1 Tbayt = 931 Gbayt |
-| | **Sunʼiy intellekt: qanday oʻrganadi** | | |
-| 29 | Robotni oʻrgatamiz | `06-robotni-orgatamiz` | Mashina misollardan oʻrganadi: eng yaqin misol, chegara chizigʻi, sinov |
-| 30 | Keyingi soʻz | `07-keyingi-soz` | Til modeli: soʻz juftliklarini sanash, keyingi soʻzni tanlash |
-| 31 | Sehrli qutilar | `08-sehrli-qutilar` | Mukofot bilan oʻrganish (MENACE) |
-| 32 | Qoida yoki misol? | `09-qoida-yoki-misol` | Qoida yozilgan dastur va misoldan oʻrganish |
-| | **Koʻrish, tarmoqlar va xarita** | | |
-| 33 | Robot nimani koʻradi? | `10-robot-korishi` | Kompyuter koʻrish: piksellar, shablon, belgi |
-| 34 | Koʻp qatlamli tarmoq | `11-kop-qatlamli-tarmoq` | Neyron, qatlamlar, chuqur oʻrganish |
-| 35 | AI xaritasi | `12-ai-xaritasi` | Oddiy dastur ⊃ AI ⊃ ML ⊃ DL; usul va vazifa |
-| | **Sanoq tizimlari** | | |
-| 36 | Rim toshi | `05-rim-toshi` | Rim raqamlari, Rimliklar usulida hisob, pozitsion tizim, al-Xorazmiy |
-| 37 | Qabila choʻti | `17-qabila-choti` | Sanoq tizimi nima: asos, raqamlar 0 … n−1 va A–F, 101₂ yozuvi, xona qiymatlari (10–12 yosh) |
-| 38 | Tangalar bozori | `18-tangalar-bozori` | Istalgan tizimdan oʻnlikka: raqam × xona qiymati (10–12) |
-| 39 | Qoplarga joylash | `19-qoplarga-joylash` | Oʻnlikdan istalgan tizimga: kattadan boshlab, boʻlib-boʻlib, tekshirish (10–12) |
-| 40 | Ikkilik hisobchi | `20-ikkilik-hisobchi` | Ikkilikda qoʻshish, ayirish (qarz), koʻpaytirish (surish) (10–12) |
-| 41 | Oʻn oltilik ranglar | `21-on-oltilik-ranglar` | A–F, 2 ↔ 16, rang kodlari, 16-likda amallar (10–12) |
-| 42 | Sayyoralar sanogʻi | `22-sayyoralar-sanogi` | n-lik tizimda amallar, "qaysi tizimda 3 + 4 = 10?", Bobil va Mayya (10–12) |
-| | **Mantiq** | | |
-| 43 | Mantiq kalitlari | `24-mantiq-kalitlari` | Rost va yolgʻon, VA (ketma-ket kalitlar), YOKI (parallel), EMAS (teskari kalit), rostlik jadvali, hayotiy qoidalar, Jorj Bul |
-| 44 | Zinapoya chirogʻi | `25-zinapoya-chirogi` | XOR (faqat bittasi), amallar zanjiri (sxema), yarim qoʻshuvchi: kompyuter qanday qoʻshadi (10–12) |
+| **Klaviatura** | | | |
+| Oʻn barmoq | `23-on-barmoq` | 8–16 💻 | Klaviaturaga qaramay yozish: asosiy, yuqori va pastki qator, katta harf, aniqlik va tezlik |
+| Tezkor tugmalar | `46-tezkor-tugmalar` | 8–16 💻 | Ctrl + C, V, X, Z; Home/End, Backspace ↔ Delete; haqiqiy matn ustida mashq |
+| **Algoritm va dasturlash** | | | |
+| Robot yoʻli | `26-robot-yoli` | 8–11 | Robotga buyruq berish: algoritm, tartibning ahamiyati, dasturni oʻqish va izdan tiklash |
+| **Python: dasturlash** | | | |
+| Birinchi buyruq | `27-birinchi-buyruq` | 12–16 💻 | print: birinchi kod, qoʻshtirnoq ichi va tashqarisi, xato xabarini oʻqish |
+| Sonlar ustaxonasi | `28-sonlar-ustaxonasi` | 12–16 💻 | `//` va `%` (nechtadan tegdi, nechtasi ortdi), `/` doim kasr, amallar tartibi, daraja |
+| Nomli qutilar | `29-nomli-qutilar` | 12–16 💻 | Oʻzgaruvchi, `x = x + 1`, kuzatuv jadvali, almashtirish, `input()` va turlar |
+| Ikki yoʻl | `30-ikki-yol` | 12–16 💻 | Shart: `if / elif / else`, otstup bloki, `and` `or` `not`, `=` va `==` farqi |
+| Takror charxi | `31-takror-charxi` | 12–16 💻 | `while`, hisoblagich va cheksiz sikl, yigʻindi va `break`, raqamlarni ajratish (`% 10`, `// 10`) |
+| Sanoqli takror | `32-sanoqli-takror` | 12–16 💻 | `for` va `range`, chegaralar (oxiri kirmaydi), manfiy qadam, ichma-ich sikl va naqsh |
+| Roʻyxat va satr | `33-royxat-va-satr` | 12–16 💻 | Roʻyxat: indeks 0 dan, `len`, `append`, kesish; satr boʻylab yurish, `input().split()` |
+| Funksiya ustaxonasi | `34-funksiya-ustaxonasi` | 12–16 💻 | `def`, parametr, `return` va `print` farqi, lokal oʻzgaruvchi, masalani boʻlaklash |
+| **Algoritmlar va samaradorlik** | | | |
+| Algoritm va xossalari | `36-algoritm-xossalari` | 12–16 💻 | Algoritmning beshta xossasi; bir masalaning ikki yechimi va qadamlar sonini oʻlchash |
+| Blok-sxema | `37-blok-sxema` | 12–16 💻 | Algoritmni chizish: belgilar, sxemani bosib yigʻish va undan Python kodi, sxemani oʻqish |
+| Izlash | `38-izlash` | 12–16 💻 | Chiziqli va ikkilik izlash: “son oʻyladim” oʻyini, qadamlar jadvali, ikkala usulni yozish |
+| Saralash | `39-saralash` | 12–16 💻 | Pufakcha va tanlash saralashi: ustunlar koʻz oldida almashadi, qadamlar 4 barobar oʻsadi |
+| Qadamlar soni | `40-qadamlar-soni` | 12–16 💻 | Oʻlchovga nom beramiz: `O(1)`, `O(log n)`, `O(n)`, `O(n²)`; katta n da qaysi usul yaraydi |
+| **Kombinatorika** | | | |
+| Tanlov daraxti | `41-tanlov-daraxti` | 12–16 💻 | Koʻpaytirish va qoʻshish qoidasi: daraxt, VA → ×, YOKI → +, sikl bilan sanash |
+| Qatorga terish | `42-qatorga-terish` | 12–16 💻 | Faktorial `n!` va `A(n,k)`: tartib muhim; 23! ni dastur aniq hisoblaydi |
+| Jamoa tanlash | `43-jamoa-tanlash` | 12–16 💻 | `C(n,k)`: bir xil jamoa `k!` marta takrorlanadi; tartib muhimmi degan savol |
+| Paskal uchburchagi | `44-paskal-uchburchagi` | 12–16 💻 | `C(n,k)` ni faqat qoʻshish bilan; simmetriya, qator yigʻindisi `2ⁿ`, juftliklar diagonali |
+| Kaptarxona | `45-kaptarxona` | 12–16 💻 | Dirixle printsipi: `n ÷ k` kafolati, eng yomon holat, nega isbot kerak |
+| **Kodlash va shifrlash** | | | |
+| Qabila kodlari | `01-qabila-kodlari` | 8–16 | Nechta belgidan nechta soʻz yasaladi (aⁱ, yigʻindi, teskari masala) |
+| Qabila Morzesi | `02-qabila-morzesi` | 8–11 | Morze alifbosi: nuqta va chiziq bilan oʻqish va yozish |
+| Sezar maktubi | `03-sezar-maktubi` | 8–16 | Sezar shifri: harflarni surish, kalit, kalitsiz ochish |
+| **Sonlar va ikkilik kod** | | | |
+| Qabila chiroqlari | `04-qabila-chiroqlari` | 8–16 | Ikkilik kod: 2ⁿ naqsh, bit va bayt, rangli chiroqlar |
+| Rim toshi | `05-rim-toshi` | 8–16 | Rim raqamlari, Rimliklar usulida hisob, pozitsion tizim, al-Xorazmiy |
+| Qabila choʻti | `17-qabila-choti` | 10–16 | Sanoq tizimi nima: asos, raqamlar 0 … n−1 va A–F, 101₂ yozuvi, xona qiymatlari |
+| Tangalar bozori | `18-tangalar-bozori` | 10–16 | Istalgan tizimdan oʻnlikka: raqam × xona qiymati |
+| Qoplarga joylash | `19-qoplarga-joylash` | 10–16 | Oʻnlikdan istalgan tizimga: kattadan boshlab, boʻlib-boʻlib, tekshirish |
+| Ikkilik hisobchi | `20-ikkilik-hisobchi` | 10–16 | Ikkilikda qoʻshish, ayirish (qarz), koʻpaytirish (surish) |
+| Oʻn oltilik ranglar | `21-on-oltilik-ranglar` | 10–16 | A–F, 2 ↔ 16, rang kodlari, 16-likda amallar |
+| Sayyoralar sanogʻi | `22-sayyoralar-sanogi` | 10–16 | n-lik tizimda amallar, "qaysi tizimda 3 + 4 = 10?", Bobil va Mayya |
+| **Axborot oʻlchovi** | | | |
+| Bayt sandigʻi | `13-bayt-sandigi` | 8–16 | Nega 8 bit = 1 bayt, matn hajmi (1 belgi = 1 bayt), 1 Kbayt = 1024 bayt |
+| Piksel ustaxonasi | `14-piksel-ustaxonasi` | 8–16 | Rasm hajmi: piksel, ranglar va bitlar, rangli piksel 3 bayt, Mbayt, siqish |
+| Multfilm daftari | `15-multfilm-daftari` | 8–16 | Video: kadrlar, kadr/soniya, video hajmi, Gbayt, faqat oʻzgargani |
+| Xotira ombori | `16-xotira-ombori` | 8–16 | Bitdan Tbaytgacha zinapoya, solishtirish, nechta sigʻadi, 1 Tbayt = 931 Gbayt |
+| **Sunʼiy intellekt: qanday oʻrganadi** | | | |
+| Robotni oʻrgatamiz | `06-robotni-orgatamiz` | 8–11 | Mashina misollardan oʻrganadi: eng yaqin misol, chegara chizigʻi, sinov |
+| Keyingi soʻz | `07-keyingi-soz` | 8–11 | Til modeli: soʻz juftliklarini sanash, keyingi soʻzni tanlash |
+| Sehrli qutilar | `08-sehrli-qutilar` | 8–11 | Mukofot bilan oʻrganish (MENACE) |
+| Qoida yoki misol? | `09-qoida-yoki-misol` | 8–11 | Qoida yozilgan dastur va misoldan oʻrganish |
+| **Koʻrish, tarmoqlar va xarita** | | | |
+| Robot nimani koʻradi? | `10-robot-korishi` | 8–11 | Kompyuter koʻrish: piksellar, shablon, belgi |
+| Koʻp qatlamli tarmoq | `11-kop-qatlamli-tarmoq` | 8–11 | Neyron, qatlamlar, chuqur oʻrganish |
+| AI xaritasi | `12-ai-xaritasi` | 8–11 | Oddiy dastur ⊃ AI ⊃ ML ⊃ DL; usul va vazifa |
+| **Mantiq** | | | |
+| Mantiq kalitlari | `24-mantiq-kalitlari` | 8–16 | Rost va yolgʻon, VA (ketma-ket kalitlar), YOKI (parallel), EMAS (teskari kalit), rostlik jadvali, hayotiy qoidalar, Jorj Bul |
+| Zinapoya chirogʻi | `25-zinapoya-chirogi` | 10–16 | XOR (faqat bittasi), amallar zanjiri (sxema), yarim qoʻshuvchi: kompyuter qanday qoʻshadi |
 
 **Musobaqalar** (bosh sahifa tepasida, oʻyin emas — bosqichi yoʻq):
 

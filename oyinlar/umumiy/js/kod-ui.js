@@ -331,22 +331,9 @@
     return el;
   }
 
-  // Barmoq bilan boshqariladigan ekran: klaviatura bo'lmasligi mumkin (QOIDALAR §3)
-  const touchOnly = () => !!(root.matchMedia && root.matchMedia("(hover: none) and (pointer: coarse)").matches);
-
-  async function keyboardCheck() {
-    if (!touchOnly()) return true;
-    ui.bubble("elder", "Bu blokda kod yoziladi — klaviatura kerak. Uni kompyuterda och.");
-    const answer = await ui.choice([
-      { label: "Klaviaturam bor", value: "go" },
-      { label: "Barcha oʻyinlar", value: "back", secondary: true },
-    ]);
-    if (answer === "back") {
-      root.location.href = "../../index.html";
-      await new Promise(() => {});
-    }
-    return true;
-  }
+  // Klaviatura tekshiruvi umumiy ui.js da; bu yerda faqat Python blokiga xos matn beriladi
+  const touchOnly = () => ui.touchOnly();
+  const keyboardCheck = () => ui.keyboardCheck("Bu blokda kod yoziladi — klaviatura kerak. Uni kompyuterda och.");
 
   QK.kodUI = { codeBlock, editor, output, varsTable, stepper, workbench, stdinPanel, draft, qadamJadval, keyboardCheck, touchOnly, paint, TAB };
 })(window);
