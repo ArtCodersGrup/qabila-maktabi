@@ -109,6 +109,19 @@
       solution: 'n = int(input())\nfor i in range(1, n + 1):\n    print("*" * i)',
       hint: '"*" * i — yulduzchani i marta takrorlaydi.',
     },
+    {
+      id: "kiyim-variant",
+      rating: 200,
+      tags: ["matematika", "kombinatorika"],
+      title: "Nechta kiyinish usuli",
+      what: "a ta koʻylak va b ta shim bor. Har koʻylakni har shim bilan kiyish mumkin. Nechta kiyinish usuli bor?",
+      kirish: "Ikki satrda a va b (1 ≤ a, b ≤ 1000).",
+      chiqish: "Bitta son — usullar soni.",
+      namuna: { stdin: ["3", "4"], out: ["12"] },
+      tests: [["5", "2"], ["1", "1"], ["10", "10"], ["1000", "1000"]],
+      solution: "a = int(input())\nb = int(input())\nprint(a * b)",
+      hint: "Koʻpaytirish qoidasi: har qadamdagi tanlovlar koʻpaytiriladi.",
+    },
   ];
 
   const ORTA = [
@@ -216,6 +229,45 @@
       solution: 'soz = input()\nt = ""\nfor harf in soz:\n    t = harf + t\nif t == soz:\n    print("ha")\nelse:\n    print("yoʻq")',
       hint: "Avval soʻzni teskari yasab ol, keyin solishtir.",
     },
+    {
+      id: "qol-berish",
+      rating: 400,
+      tags: ["matematika", "kombinatorika"],
+      title: "Qoʻl berib koʻrishish",
+      what: "Xonada n kishi bor. Har ikkisi bir martadan qoʻl berib koʻrishdi. Nechta qoʻl berish boʻldi?",
+      kirish: "Bitta butun son n (1 ≤ n ≤ 100000).",
+      chiqish: "Bitta son — qoʻl berishlar soni.",
+      namuna: { stdin: ["5"], out: ["10"] },
+      tests: [["1"], ["2"], ["100"], ["100000"]],
+      solution: "n = int(input())\nprint(n * (n - 1) // 2)",
+      hint: "Har kishi qolgan n−1 kishi bilan koʻrishadi, lekin har juftlik ikki marta sanaladi.",
+    },
+    {
+      id: "jamoa-soni",
+      rating: 500,
+      tags: ["for", "kombinatorika"],
+      title: "Jamoa tanlash",
+      what: "n boladan k kishilik jamoa tuziladi. Jamoada tartib muhim emas. Nechta xil jamoa bor?",
+      kirish: "Ikki satrda n va k (0 ≤ k ≤ n ≤ 30).",
+      chiqish: "Bitta son — jamoalar soni.",
+      namuna: { stdin: ["5", "3"], out: ["10"] },
+      tests: [["6", "0"], ["7", "7"], ["10", "2"], ["30", "15"]],
+      solution: "n = int(input())\nk = int(input())\nnatija = 1\nfor i in range(k):\n    natija = natija * (n - i)\nfor i in range(1, k + 1):\n    natija = natija // i\nprint(natija)",
+      hint: "Avval n × (n−1) × … (k ta koʻpaytuvchi), keyin k! ga boʻl.",
+    },
+    {
+      id: "kaptarxona",
+      rating: 400,
+      tags: ["matematika", "kombinatorika"],
+      title: "Eng toʻla quti",
+      what: "n ta xat k ta pochta qutisiga tashlandi. Qanday tashlanganidan qatʼi nazar, eng toʻla qutida kamida nechta xat bor?",
+      kirish: "Ikki satrda n va k (1 ≤ n, k ≤ 1000000).",
+      chiqish: "Bitta son — kafolatlangan eng kichik javob.",
+      namuna: { stdin: ["13", "12"], out: ["2"] },
+      tests: [["4", "4"], ["25", "12"], ["1", "1000"], ["1000000", "7"]],
+      solution: "n = int(input())\nk = int(input())\nprint((n + k - 1) // k)",
+      hint: "Dirixle printsipi: boʻlishni yuqoriga yumalatish kerak — (n + k − 1) // k.",
+    },
   ];
 
   const QIYIN = [
@@ -287,7 +339,7 @@
     {
       id: "faktorial",
       rating: 450,
-      tags: ["for", "matematika"],
+      tags: ["for", "matematika", "kombinatorika"],
       title: "Faktorial",
       what: "Bitta musbat son n berilgan. n! ni chiqar (1 dan n gacha sonlar koʻpaytmasi).",
       kirish: "Bitta musbat butun son.",
@@ -323,11 +375,50 @@
       solution: "n = int(input())\nfor i in range(1, n + 1):\n    if n % i == 0:\n        print(i)",
       hint: "1 dan n gacha yurib, qoldiq nolga teng boʻlsa chiqar.",
     },
+    {
+      id: "paskal-qator",
+      rating: 600,
+      tags: ["roʻyxat", "kombinatorika"],
+      title: "Paskal qatori",
+      what: "Paskal uchburchagining n-qatorini chiqar. Sonlar bitta satrda, boʻsh joy bilan ajratilgan. 0-qator — bitta 1.",
+      kirish: "Bitta butun son n (0 ≤ n ≤ 30).",
+      chiqish: "n-qator sonlari bitta satrda.",
+      namuna: { stdin: ["5"], out: ["1 5 10 10 5 1"] },
+      tests: [["0"], ["1"], ["10"], ["30"]],
+      solution: "n = int(input())\na = [1]\nfor i in range(n):\n    yangi = [1]\n    for j in range(len(a) - 1):\n        yangi.append(a[j] + a[j + 1])\n    yangi.append(1)\n    a = yangi\njavob = str(a[0])\nfor i in range(1, len(a)):\n    javob = javob + \" \" + str(a[i])\nprint(javob)",
+      hint: "Har qator chekkalari 1, ichkarisi — oldingi qatordagi qoʻshni ikkitaning yigʻindisi.",
+    },
+    {
+      id: "parol-soni",
+      rating: 700,
+      tags: ["for", "kombinatorika"],
+      title: "Nechta parol bor",
+      what: "Alifboda a ta belgi bor. Uzunligi 1 dan n gacha boʻlgan nechta parol yasash mumkin? (Belgilar takrorlanishi mumkin.)",
+      kirish: "Ikki satrda a va n (1 ≤ a ≤ 100, 1 ≤ n ≤ 10).",
+      chiqish: "Bitta son — parollar soni.",
+      namuna: { stdin: ["2", "3"], out: ["14"] },
+      tests: [["1", "5"], ["10", "1"], ["26", "4"], ["100", "10"]],
+      solution: "a = int(input())\nn = int(input())\njami = 0\ndaraja = 1\nfor i in range(n):\n    daraja = daraja * a\n    jami = jami + daraja\nprint(jami)",
+      hint: "Uzunligi i boʻlgan parollar soni — a ning i-darajasi. Hammasini qoʻshish kerak (qoʻshish qoidasi).",
+    },
+    {
+      id: "tanga-gerb",
+      rating: 800,
+      tags: ["for", "kombinatorika"],
+      title: "Tanga va gerb",
+      what: "Tanga n marta tashlandi. Aynan k martasida gerb tushishining nechta xil varianti bor?",
+      kirish: "Ikki satrda n va k (0 ≤ k ≤ n ≤ 30).",
+      chiqish: "Bitta son — variantlar soni.",
+      namuna: { stdin: ["4", "2"], out: ["6"] },
+      tests: [["1", "0"], ["5", "5"], ["10", "3"], ["30", "15"]],
+      solution: "n = int(input())\nk = int(input())\nnatija = 1\nfor i in range(k):\n    natija = natija * (n - i)\nfor i in range(1, k + 1):\n    natija = natija // i\nprint(natija)",
+      hint: "Qaysi tashlashlar gerb boʻlishini tanlaymiz — bu C(n, k).",
+    },
   ];
 
 
   // Teglar — bizning mavzularimiz: masala qaysi darslarga tayanadi
-  const TAGS = ["oʻzgaruvchi", "matematika", "shart", "while", "for", "roʻyxat", "satr", "raqamlar", "saralash", "funksiya"];
+  const TAGS = ["oʻzgaruvchi", "matematika", "shart", "while", "for", "roʻyxat", "satr", "raqamlar", "saralash", "funksiya", "kombinatorika"];
 
   // Codeforces'dan olingan masalalar. SHARTLAR OʻZIMIZNIKI — asl matn koʻchirilmagan,
   // faqat masalaning gʻoyasi olingan va manbaga havola qoʻyilgan (mualliflik huquqi).

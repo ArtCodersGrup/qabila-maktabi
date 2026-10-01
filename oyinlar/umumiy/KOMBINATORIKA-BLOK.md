@@ -1,7 +1,8 @@
 # Kombinatorika bloki — reja
 
 **Holat (2026-10-01):** muallif qarori olindi — **12–16 💻 (kod bilan), 5 ta oʻyin, masalalar bankiga ham qoʻshiladi**.
-**Besh oʻyin ham yozildi (41–45)** va umumiy modul `js/sanash.js`. Qolgani: masalalar bankiga `kombinatorika` masalalari.
+**Blok toʻliq tayyor:** besh oʻyin (41–45), umumiy modul `js/sanash.js` va masalalar bankidagi
+**8 ta `kombinatorika` masalasi** (200–800 reyting). Qoladi: muallif oʻzi koʻrib chiqadi.
 
 Oldingi bloklar: [`ALGORITM-BLOK.md`](ALGORITM-BLOK.md) (36–40, yopildi), Python (27–34).
 Umumiy qoidalar: [`../../QOIDALAR.md`](../../QOIDALAR.md).
@@ -65,3 +66,22 @@ takrorli birikmalar, binomial yoyilma (`(a+b)ⁿ`) — maktab dasturining yuqori
 | Oʻyinlar soni | **5 ta**: 41 daraxt, 42 terish, 43 tanlash, 44 Paskal, 45 kaptarxona |
 | Masalalar banki | **Ha** — `kombinatorika` tegi bilan masalalar qoʻshiladi |
 | Bosh sahifada joyi | «Algoritmlar va samaradorlik» dan keyin (yangi boʻlim) |
+
+
+## 6. Bankdagi mashqlar (2026-10-01)
+
+Blokdan keyin bola darhol mashq qilishi uchun `oyinlar/masalalar/` ga `kombinatorika` tegi va
+8 ta masala qoʻshildi:
+
+| Masala | Reyting | Mavzu |
+|---|---|---|
+| Nechta kiyinish usuli | 200 | koʻpaytirish qoidasi |
+| Faktorial (bor edi, teg qoʻshildi) | 450 | `n!` |
+| Qoʻl berib koʻrishish | 400 | `C(n,2)` |
+| Eng toʻla quti | 400 | Dirixle |
+| Jamoa tanlash | 500 | `C(n,k)` |
+| Paskal qatori | 600 | uchburchak, roʻyxat |
+| Nechta parol bor | 700 | `a¹ + … + aⁿ` |
+| Tanga va gerb | 800 | `C(n,k)` qoʻllanishi |
+
+Hammasi `python3` da ham tekshirildi (bir xil natija).

@@ -21,7 +21,7 @@
 
 ### 2.1. Roʻyxat
 ```
-Masalalar                                   [🔍 qidiruv]  34 ta masala
+Masalalar                                   [🔍 qidiruv]  41 ta masala
 [Daraja ▾] [Mavzu ▾] [Qiyinlik ▾] [Holati ▾] [Tozalash]
  1  Kvadrat            oʻzgaruvchi matematika          100
  2  Ikki son yigʻindisi oʻzgaruvchi matematika         100   75%
@@ -43,7 +43,8 @@ Natija paneli:
 
 ```
 oyinlar/masalalar/
-├── js/bank.js      34 ta masala (qo'lda yozilgan; 10 tasi Codeforces g'oyasi asosida)
+├── js/bank.js      41 ta masala (qo'lda yozilgan; 10 tasi Codeforces g'oyasi asosida,
+│                   8 tasi "kombinatorika" tegi bilan — 41–45-o'yinlarga mashq)
 ├── js/royxat.js    qidiruv, filtr, sahifalash, vazifaga aylantirish (sof mantiq)
 ├── js/baho.js      har testni alohida bajarish, foiz, birinchi yiqilgan test (sof mantiq)
 ├── js/holat.js     eng yaxshi foiz va yechilganlar (brauzer xotirasi)
