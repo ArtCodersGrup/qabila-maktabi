@@ -12,6 +12,7 @@
   const T = EN.tokenizer || require("./tokenizer.js");
   const P = EN.parser || require("./parser.js");
   const I = EN.interpreter || require("./interpreter.js");
+  const S = EN.semantika || require("./semantika.js");
 
   // Chiqishni satrlarga ajratish: oxirgi "\n" dan keyingi bo'sh satr hisobga olinmaydi
   function satrlar(out) {
@@ -28,7 +29,8 @@
     return E.ichki((e && e.message) || e);
   }
 
-  const parse = (kod) => P.parse(T.tokenize(kod));
+  // Parse + nomlarni tekshirish: xato dastur ishga tushmaydi (g++ dagidek)
+  const parse = (kod) => S.tekshir(P.parse(T.tokenize(kod)));
 
   function check(kod) {
     try {

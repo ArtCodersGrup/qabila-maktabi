@@ -210,10 +210,52 @@
     }, prev, rr);
   }
 
+
+  // ---------- Kodni o'zi yozish (yadro qo'shilgandan keyin) ----------
+  // Qolip tayyor beriladi — bola faqat tanani yozadi. Yechim g++ bilan tekshirilgan
+  // (namunalar() orqali parity testiga tushadi).
+  const QOLIP = C.BOSH + "\n    \n" + C.OXIR;
+
+  const YOZISHLAR = [
+    {
+      id: "salom", savol: "Ekranga «Salom, qabila!» chiqaradigan dastur yoz.",
+      sinovlar: [{ kirish: [], chiqish: ["Salom, qabila!"] }],
+      yechim: C.dastur([C.chiqar('"Salom, qabila!"')]),
+      yolYoriq: "Matn qoʻshtirnoq ichida boʻladi, satr oxirida \"\\n\" turadi.",
+    },
+    {
+      id: "yigindi", savol: "Ikki butun sonni oʻqib, yigʻindisini chiqar.",
+      sinovlar: [{ kirish: ["3 4"], chiqish: ["7"] }, { kirish: ["25 17"], chiqish: ["42"] }],
+      yechim: C.dastur(["int a, b;", "cin >> a >> b;", C.chiqar("a + b")]),
+      yolYoriq: "Avval ikkita int eʼlon qil, keyin cin >> a >> b; bilan oʻqi.",
+    },
+    {
+      id: "kvadrat", savol: "Bitta sonni oʻqib, uning kvadratini chiqar.",
+      sinovlar: [{ kirish: ["7"], chiqish: ["49"] }, { kirish: ["12"], chiqish: ["144"] }],
+      yechim: C.dastur(["int n;", "cin >> n;", C.chiqar("n * n")]),
+      yolYoriq: "Kvadrat — sonning oʻziga koʻpaytirilgani: n * n.",
+    },
+    {
+      id: "ikki-satr", savol: "Ikki satr chiqar: birinchisida oʻqilgan son, ikkinchisida uning ikki barobari.",
+      sinovlar: [{ kirish: ["8"], chiqish: ["8", "16"] }, { kirish: ["15"], chiqish: ["15", "30"] }],
+      yechim: C.dastur(["int n;", "cin >> n;", C.chiqar("n"), C.chiqar("n * 2")]),
+      yolYoriq: "Har satr uchun alohida cout yoz.",
+    },
+  ];
+
+  function yozTask(r, prev) {
+    const rr = r || Math.random;
+    return pickNew((rnd) => {
+      const y = pick(YOZISHLAR, rnd);
+      return Object.assign({ tur: "yoz", qolip: QOLIP, rows: 7 }, y, { id: "yoz:" + y.id });
+    }, prev, rr);
+  }
+
   const bosqich2Task = (prev, correct) => {
     const n = (correct || 0) % 3;
     if (n === 0) return elonTask(null, prev);
-    return kirishTask(null, prev);
+    if (n === 1) return kirishTask(null, prev);
+    return yozTask(null, prev);
   };
 
   // ---------- 3-bosqich: Python ↔ C++ ----------
@@ -302,6 +344,13 @@
     };
     const out = [];
     const korilgan = new Set();
+    // "Kodni o'zing yoz" mashqlarining namunali yechimlari ham tekshiriladi
+    for (const y of YOZISHLAR) {
+      for (const sinov of y.sinovlar) {
+        out.push({ id: "yechim:" + y.id + ":" + (sinov.kirish.join("|") || "-"), kod: y.yechim, kirish: sinov.kirish, chiqish: sinov.chiqish });
+        korilgan.add("yechim:" + y.id);
+      }
+    }
     let prev = null;
     for (let k = 0; k < (soni || 24) * 8 && out.length < (soni || 24); k++) {
       const task = k % 2 === 0 ? natijaTask(rnd, prev) : kirishTask(rnd, prev);
@@ -314,8 +363,8 @@
   }
 
   const api = {
-    MATNLAR, ISMLAR, YETMAYDI, ELONLAR, JUFTLAR, ARALASH_SATRLAR,
-    natijaTask, yetmaydiTask, qismTask, elonTask, kirishTask, juftTask, aralashTask,
+    MATNLAR, ISMLAR, YETMAYDI, ELONLAR, JUFTLAR, ARALASH_SATRLAR, YOZISHLAR, QOLIP,
+    natijaTask, yetmaydiTask, qismTask, elonTask, kirishTask, juftTask, aralashTask, yozTask,
     bosqich1Task, bosqich2Task, bosqich3Task, namunalar,
   };
   root.QK = root.QK || {};

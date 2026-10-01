@@ -115,4 +115,19 @@ async function hammasi(ust, royxat, olish) {
   return natija;
 }
 
-module.exports = { bormi, ustaxona, ishga, hammasi, AJRATGICH };
+// Buzuq dastur: g++ ning birinchi xato satri — "satr:ustun: error: xabar"
+async function xatoMatni(ust, kod, nom) {
+  const papka = path.join(ust.uy, "x" + nom);
+  fs.mkdirSync(papka, { recursive: true });
+  const src = path.join(papka, "a.cpp");
+  fs.writeFileSync(src, kod.endsWith("\n") ? kod : kod + "\n");
+  return new Promise((resolve) => {
+    execFile("g++", ["-std=c++17", "-fsyntax-only", ...ust.bayroqlar, src], (xato, _o, stderr) => {
+      if (!xato) return resolve(null); // kompilyatsiya o'tdi — xato yo'q
+      const satr = String(stderr).split("\n").find((x) => x.includes(": error: ")) || "";
+      resolve(satr.replace(/^.*?a\.cpp:/, ""));
+    });
+  });
+}
+
+module.exports = { bormi, ustaxona, ishga, hammasi, xatoMatni, AJRATGICH };

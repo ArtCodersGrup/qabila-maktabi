@@ -114,7 +114,7 @@ test("aralash: kodda haqiqatan Python satri bor va raqami to'g'ri", () => {
 
 test("bosqichlar: har bosqich o'z turlarini navbat bilan beradi", () => {
   assert.deepEqual([0, 1, 2].map((n) => L.bosqich1Task(null, n).tur), ["natija", "yetmaydi", "qism"]);
-  assert.deepEqual([0, 1].map((n) => L.bosqich2Task(null, n).tur), ["elon", "natija"]);
+  assert.deepEqual([0, 1, 2].map((n) => L.bosqich2Task(null, n).tur), ["elon", "natija", "yoz"]);
   assert.deepEqual([0, 1].map((n) => L.bosqich3Task(null, n).tur), ["juft", "aralash"]);
 });
 
@@ -150,10 +150,23 @@ test("ko'rinadigan matnlarda to'g'ri tutuq belgisi", () => {
   for (const m of matnlar) assert.ok(!/['’`´]/.test(m), "notoʻgʻri tutuq belgisi: " + m);
 });
 
+// Bola yozadigan mashqlar: namunali yechim haqiqatan ishlashi kerak
+test("yoz: har mashqning yechimi dvigatelda ishlaydi va chiqishi mos", () => {
+  for (const y of L.YOZISHLAR) {
+    assert.ok(y.sinovlar.length >= 1, y.id);
+    const r = C.tekshir(y, y.yechim);
+    assert.equal(r.ok, true, y.id + ": " + JSON.stringify(r));
+    // Bo'sh qolip bilan o'tib ketmasin
+    assert.equal(C.tekshir(y, L.QOLIP).ok, false, y.id + ": bo'sh qolip qabul qilinmasin");
+  }
+  assert.ok(L.QOLIP.includes("int main()"), "qolipda main bo'lsin");
+});
+
 test("namunalar: parity testi uchun turli xil misollar", () => {
   const ns = L.namunalar(12);
-  assert.equal(ns.length, 12);
-  assert.equal(new Set(ns.map((n) => n.id)).size, 12, "takrorlanmasin");
+  assert.ok(ns.length >= 12);
+  assert.equal(new Set(ns.map((n) => n.id)).size, ns.length, "takrorlanmasin");
+  assert.ok(ns.some((n) => n.id.startsWith("yechim:")), "namunali yechimlar ham tekshirilsin");
   assert.ok(ns.some((n) => n.kirish.length), "cin li misol ham bo'lsin");
   for (const n of ns) assert.ok(n.chiqish.length > 0 && n.kod.includes("main"), n.id);
 });

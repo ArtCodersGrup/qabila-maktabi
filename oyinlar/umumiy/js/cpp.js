@@ -70,7 +70,25 @@
     return { ok: true };
   }
 
-  const api = { BOSH, OXIR, dastur, chiqar, QISMLAR, JADVAL, KALIT, TUR, ICHKI, satrlar, solishtir };
+
+  // ---------- "Kodni oʻzing yoz" mashqini tekshirish ----------
+  // task: { sinovlar: [{ kirish: [], chiqish: [satrlar] }], ... }
+  // Bola yozgan kod har sinovda ishga tushiriladi va chiqishi solishtiriladi.
+  function tekshir(task, kod) {
+    const dvigatel = (root.QK && root.QK.cpp && root.QK.cpp.run)
+      ? root.QK.cpp.run
+      : require("./cpp/cpp-run.js").run;
+    const sinovlar = task.sinovlar && task.sinovlar.length ? task.sinovlar : [{ kirish: [], chiqish: task.chiqish || [] }];
+    for (const sinov of sinovlar) {
+      const natija = dvigatel(kod, { stdin: sinov.kirish || [] });
+      if (natija.error) return { ok: false, kind: "xato", error: natija.error, sinov };
+      const farq = solishtir(sinov.chiqish, natija.out);
+      if (!farq.ok) return { ok: false, kind: "chiqish", izoh: farq.izoh, sinov, olingan: natija.output };
+    }
+    return { ok: true };
+  }
+
+  const api = { BOSH, OXIR, dastur, chiqar, QISMLAR, JADVAL, KALIT, TUR, ICHKI, satrlar, solishtir, tekshir };
   root.QK = root.QK || {};
   root.QK.cpp = Object.assign(root.QK.cpp || {}, api);
   if (typeof module !== "undefined" && module.exports) module.exports = api;

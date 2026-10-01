@@ -38,11 +38,13 @@
   async function stage2() {
     await turlar();
     await kirish();
-    await ui.say("elder", "Yana 3 ta toʻgʻri javob!");
+    await ui.say("elder", "Endi kodni oʻzing yozasan: qolip tayyor, faqat oʻrtasini toʻldir.");
+    await ui.say("elder", "Yozgach ▶︎ ni bos — dastur shu yerda ishga tushadi.");
     await practice.exercises({
       next: (prev, correct) => L.bosqich2Task(prev, correct),
       run: (task) => common.mashq(task),
-      praise: (task) => (task.tur === "natija" ? "cin ni toʻgʻri oʻqiding." : "Eʼlon shunday yoziladi."),
+      praise: (task) => (task.tur === "natija" ? "cin ni toʻgʻri oʻqiding."
+        : task.tur === "yoz" ? "Dasturing ishladi!" : "Eʼlon shunday yoziladi."),
     });
   }
 

@@ -28,9 +28,18 @@
     const bormi = (v) => (turi() === "belgi-op" || turi() === "kalit") && qiymat() === v;
     const yedi = (v) => (bormi(v) ? (olga(), true) : false);
 
+    // Tushib qolgan ";" OLDINGI satr oxirida ko'rsatiladi — g++ ham shunday qiladi
+    function oxiriJoyi() {
+      const oldingi = tokens[i - 1];
+      if (!oldingi) return joy();
+      const uzunlik = oldingi.uzunlik || String(oldingi.value === undefined ? "" : oldingi.value).length;
+      return { line: oldingi.line, col: oldingi.col + uzunlik };
+    }
+
     function kut(v) {
       if (!bormi(v)) {
-        if (v === ";") throw E.nuqtaliVergul(joy());
+        if (v === ";") throw E.nuqtaliVergul(oxiriJoyi());
+        if (v === "}") throw E.kutilgan(v, oxiriJoyi());
         throw E.kutilgan(v, joy());
       }
       return olga();
@@ -160,6 +169,7 @@
       do {
         if (bormi("*") || bormi("&")) throw E.yoq("koʻrsatkich", joy());
         if (turi() !== "nom") throw E.sintaksis("expected identifier", joy());
+        const nomJoyi = joy();
         const nom = olga().value;
         let boyi = null;
         let qiymat = null;
@@ -168,7 +178,7 @@
           kut("]");
         }
         if (yedi("=")) qiymat = expr();
-        elonlar.push({ nom, boyi, qiymat });
+        elonlar.push({ nom, boyi, qiymat, line: nomJoyi.line, col: nomJoyi.col });
       } while (yedi(","));
       kut(";");
       return { k: "elon", tur: turHolat.tur, elonlar, ...pos };
@@ -180,7 +190,7 @@
       kut("{");
       const tana = [];
       while (!bormi("}")) {
-        if (turi() === "oxir") throw E.kutilgan("}", joy());
+        if (turi() === "oxir") throw E.kutilgan("}", oxiriJoyi());
         tana.push(stmt());
       }
       kut("}");

@@ -7,7 +7,9 @@
   const { ui } = QK;
 
   // Bosqichlarda ikki xil mashq navbat bilan keladi
-  const mashq = (task) => (task.tur === "natija" ? U.natijaMashq(task) : U.tanlovMashq(task));
+  const mashq = (task) => (task.tur === "natija" ? U.natijaMashq(task)
+    : task.tur === "yoz" ? U.yozMashq(task)
+      : U.tanlovMashq(task));
 
   // Dastur va uning chiqishi yonma-yon: "shu kod — shu natija"
   function kodVaChiqish(host, kod, chiqish, kirish) {

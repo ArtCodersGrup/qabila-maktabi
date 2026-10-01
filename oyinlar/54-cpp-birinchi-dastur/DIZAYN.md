@@ -5,8 +5,9 @@ mavzular 1–2 (dastur qolipi va chiqish, kirish).
 
 - **Yosh:** 12–16, 💻 (javob klaviaturada yoziladi).
 - **Shart:** Python bloki (27–34) oʻtilgan boʻlsin — har bosqich Python bilan solishtiradi.
-- **Muallif qarori (2026-10-01):** 3-yoʻl — «aralash». Bu oʻyin **1-qadam**: kod ishga tushmaydi,
-  bola oʻqiydi va natijani aytadi. Yadro qoʻshilgach, «kod yoz» mashqlari ustiga qoʻshiladi.
+- **Muallif qarori (2026-10-02):** 3-yoʻl — «aralash». Oʻyin ikki qadamda yozildi:
+  avval oʻqish qismi (kod ishga tushmaydi), keyin yadro qoʻshilib **2-bosqichga «kodni oʻzing yoz»**
+  mashqi qoʻshildi. Qolgan mashqlar oʻz joyida qoldi.
 
 ## Nega oʻqishdan boshlanadi
 
@@ -31,8 +32,10 @@ Oʻyinda C++ talqinchisi yoʻq. Har misolning chiqishi `js/logic.js` da hisoblan
   ishga tushiradi va chiqishni solishtiradi (kompilyator boʻlmagan mashinada test oʻtkazib yuboriladi);
 - 1-bosqichdagi kompilyator xabari ham haqiqiy: u `g++` (Apple clang 21) chiqarganidan koʻchirilgan.
 
-Shu bilan «talqinchi yarim ishlasa, bola yolgʻon natija koʻradi» xatari yoʻqoladi: biz hech narsani
-taqlid qilmaymiz, faqat rost natijani koʻrsatamiz.
+Bola yozgan kod esa **yadroda** ishlaydi (`umumiy/js/cpp/`). Yadro ham xuddi shunday tekshiriladi:
+43 ta dasturdan iborat korpus har safar bizning yadroda ham, haqiqiy `g++` da ham ishga tushiriladi va
+chiqishlar bayt-bayt solishtiriladi (`umumiy/tests/cpp-engine-parity.test.js`).
+Yadroda yoʻq narsa (`vector`, `sort`, funksiya, koʻrsatkich) **taqlid qilinmaydi** — ochiq xabar beriladi.
 
 ## Bosqichlar
 
@@ -41,7 +44,8 @@ uchta `cout` bitta satr chiqarishi; nuqtali vergul tushib qolgan dastur va `g++`
 Mashqlar: «nima chiqaradi» (javob klaviaturada), «nimasi yetishmayapti», «bu satr nima qiladi».
 
 **2. Oʻzgaruvchi va kirish.** `int/string/double`, hisob va matn farqi, `cin >> a >> b;`.
-Mashqlar: toʻgʻri eʼlonni tanlash, berilgan maʼlumot bilan chiqishni aytish.
+Mashqlar: toʻgʻri eʼlonni tanlash, berilgan maʼlumot bilan chiqishni aytish va
+**kodni oʻzi yozish** (qolip tayyor, bola tanani yozadi va ▶︎ bilan ishga tushiradi).
 
 **3. Python ↔ C++.** Bir xil dastur ikki tilda, bir xil chiqish; sintaksis kartasi.
 Mashqlar: Python satriga mos C++ satri; C++ dasturga kirib qolgan Python satrini topish.

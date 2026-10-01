@@ -100,6 +100,7 @@
         }
         if (j >= src.length) throw E.sintaksis("missing terminating '\"' character", pos);
         push("satr", qiymat, pos);
+        tokens[tokens.length - 1].uzunlik = j + 1 - i; // manbadagi uzunligi (xato joyini aniq ko'rsatish uchun)
         olga(j + 1 - i);
         continue;
       }
@@ -119,6 +120,7 @@
         }
         if (src[j] !== "'") throw E.sintaksis("missing terminating ' character", pos);
         push("belgi", qiymat, pos);
+        tokens[tokens.length - 1].uzunlik = j + 1 - i;
         olga(j + 1 - i);
         continue;
       }

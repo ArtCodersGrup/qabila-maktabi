@@ -172,5 +172,122 @@
     });
   }
 
-  QK.cppUI = { paint, kodBlok, chiqishPanel, kirishPanel, karta, qolipKarta, box, note, answer, natijaMashq, tanlovMashq };
+
+  // ---------- Kod yoziladigan maydon ----------
+  const TAB = "    "; // otstup — 4 bo'shliq (QOIDALAR: Tab emas)
+
+  function muharrir(opts) {
+    const o = opts || {};
+    const area = ui.h("textarea", {
+      class: "kod-yozuv", spellcheck: "false", autocapitalize: "off", autocorrect: "off",
+      autocomplete: "off", rows: String(o.rows || 6), "aria-label": o.label || "Kod yoziladigan maydon",
+    });
+    area.value = o.kod || "";
+    const nums = ui.h("div", { class: "kod-raqamlar", "aria-hidden": "true" });
+    const box = ui.h("div", { class: "kod-muharrir" }, nums, area);
+
+    const yangila = () => {
+      const n = area.value.split("\n").length;
+      nums.innerHTML = "";
+      for (let k = 1; k <= n; k++) nums.append(ui.h("span", { text: String(k) }));
+      nums.scrollTop = area.scrollTop;
+    };
+    const qoy = (matn) => {
+      const a = area.selectionStart;
+      const b = area.selectionEnd;
+      area.value = area.value.slice(0, a) + matn + area.value.slice(b);
+      area.selectionStart = area.selectionEnd = a + matn.length;
+      yangila();
+    };
+
+    area.addEventListener("input", yangila);
+    area.addEventListener("scroll", () => { nums.scrollTop = area.scrollTop; });
+    area.addEventListener("keydown", (e) => {
+      if (e.key === "Tab") { e.preventDefault(); qoy(TAB); return; }
+      if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); if (o.onRun) o.onRun(); return; }
+      if (e.key === "Enter") {
+        // Otstupni saqlaymiz; "{" dan keyin bitta daraja ichkariga suriladi
+        e.preventDefault();
+        const start = area.selectionStart;
+        const boshi = area.value.lastIndexOf("\n", start - 1) + 1;
+        const satr = area.value.slice(boshi, start);
+        const otstup = (/^ */.exec(satr) || [""])[0];
+        qoy("\n" + otstup + (/\{\s*$/.test(satr) ? TAB : ""));
+        return;
+      }
+      if (e.key === "Escape") area.blur();
+    });
+
+    yangila();
+    return {
+      el: box, area,
+      get: () => area.value,
+      set: (matn) => { area.value = matn; yangila(); },
+      focus: () => { area.focus(); area.selectionStart = area.selectionEnd = area.value.length; },
+      disable: (on) => { area.disabled = !!on; },
+    };
+  }
+
+  // Xato paneli: kompilyator uslubidagi satr + o'zbekcha izoh
+  function xatoPaneli(xato) {
+    return ui.h("div", { class: "kod-chiqish xato" },
+      ui.h("div", { class: "kod-sarlavha", text: xato.title }),
+      ui.h("pre", { class: "kod-natija", text: xato.text }),
+      ui.h("div", { class: "kod-xato-izoh", text: xato.hint }));
+  }
+
+  // Ish stoli: muharrir + "Ishga tushir" + natija paneli
+  function ishStoli(host, opts) {
+    const o = opts || {};
+    const stol = ui.h("div", { class: "kod-stol" });
+    if (o.kirish && o.kirish.length) stol.append(kirishPanel(o.kirish));
+    const ed = muharrir({ kod: o.kod, rows: o.rows, onRun: () => api.run() });
+    const natija = ui.h("div", { class: "cpp-natija" });
+    stol.append(ed.el, natija);
+    host.append(stol);
+
+    const api = {
+      el: stol, muharrir: ed,
+      run() {
+        const kod = ed.get();
+        const r = QK.cpp.run(kod, { stdin: o.kirish || [] });
+        natija.innerHTML = "";
+        natija.append(r.error ? xatoPaneli(r.error) : chiqishPanel(r.output.length ? r.output : [""], "Chiqish"));
+        QK.sound.play(r.error ? "retry" : "tap");
+        if (o.onRun) o.onRun(r, kod);
+        return r;
+      },
+    };
+    if (o.tugma !== false) ui.control().append(ui.button("▶︎ Ishga tushir", () => api.run(), "big"));
+    setTimeout(() => ed.focus(), 50);
+    return api;
+  }
+
+  // "Kodni oʻzing yoz" mashqi: bola yozadi, ishga tushiradi, chiqish tekshiriladi
+  function yozMashq(task) {
+    let host = null;
+    const sinov = (task.sinovlar && task.sinovlar[0]) || { kirish: [], chiqish: task.chiqish || [] };
+    return practice.tries({
+      setup(submit) {
+        host = box();
+        host.append(note(task.savol));
+        if (task.kutilgan !== false) host.append(chiqishPanel(sinov.chiqish, "Shunday chiqishi kerak"));
+        ishStoli(host, { kod: task.qolip, kirish: sinov.kirish, rows: task.rows || 7, onRun: (r, kod) => submit(kod) });
+      },
+      check: (kod) => C.tekshir(task, kod).ok,
+      hint(kod) {
+        const bad = C.tekshir(task, kod);
+        if (bad.kind === "xato") host.append(note("↻ " + bad.error.hint));
+        else if (bad.olingan && bad.olingan.length) {
+          host.append(note("↻ Sening dasturing «" + bad.olingan[0] + "» chiqardi, kerakli javob — «" + (bad.sinov.chiqish[0] || "") + "». " + (task.yolYoriq || "")));
+        } else host.append(note("↻ Dastur hech narsa chiqarmadi. " + (task.yolYoriq || "")));
+      },
+      solution() {
+        host.append(answer("Toʻgʻri javob:"), kodBlok(task.yechim, { numbers: false }));
+      },
+    });
+  }
+
+  QK.cppUI = { paint, kodBlok, chiqishPanel, kirishPanel, karta, qolipKarta, box, note, answer,
+    muharrir, xatoPaneli, ishStoli, natijaMashq, tanlovMashq, yozMashq };
 })(window);

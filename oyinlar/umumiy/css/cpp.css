@@ -70,3 +70,8 @@
 .cpp-ikki > div { min-width: 0; }
 .cpp-ikki .cpp-til { font-size: 15px; font-weight: 800; color: #6B6558; margin-bottom: 4px; }
 @media (max-width: 560px) { .cpp-ikki { grid-template-columns: 1fr; } }
+
+/* Kod yozish ish stoli */
+.cpp-natija { width: 100%; }
+.cpp-natija:empty { display: none; }
+.cpp-natija .kod-xato-izoh { margin-top: 0; padding: 8px 12px 10px; border-top: 2px dashed var(--chiziq); }
