@@ -1,0 +1,103 @@
+/* Bir tomonlama qulf — faqat shu o'yinga xos uslublar (prefiks .bq-). */
+
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(250px, 70vw); align-self: center; }
+.story-art.wide { width: min(300px, 80vw); }
+.story-art.small { width: min(170px, 46vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 17px; font-weight: 800; text-align: center; }
+
+.bq-savol { font-size: 19px; font-weight: 800; text-align: center; line-height: 1.4; max-width: 560px; margin: 0 auto; }
+
+/* ---------- Karta: son yoki parol ---------- */
+.bq-karta {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 10px 14px; background: #fff; border: 2px solid var(--chiziq); border-radius: 14px;
+}
+.bq-karta.kichik { padding: 8px 10px; gap: 6px; }
+.bq-nom { font-size: 14px; font-weight: 800; color: #6B6558; text-align: center; }
+.bq-qator-belgi { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; }
+
+.bq-belgi {
+  display: inline-flex; flex-direction: column; align-items: center; justify-content: center;
+  min-width: 30px; padding: 3px 6px;
+  font-family: var(--kod-shrift); font-size: 22px; font-weight: 800;
+  background: #F3EFE3; color: #4A4636; border-radius: 8px;
+}
+.bq-belgi.bilan { min-width: 34px; }
+.bq-belgi .bq-qiymat { font-size: 14px; font-weight: 800; color: var(--asosiy); }
+.bq-karta.kichik .bq-belgi { font-size: 19px; min-width: 26px; }
+.bq-belgi.r0 { background: #D8E6FB; color: #1B4A94; }
+.bq-belgi.r1 { background: #FFE9C7; color: #8A5A10; }
+.bq-belgi.r2 { background: #D7F0E6; color: #116B50; }
+.bq-belgi.r3 { background: #E7DBF7; color: #5B3391; }
+
+.bq-hisob { font-family: var(--kod-shrift); font-size: 17px; color: #4A4636; text-align: center; }
+
+/* ---------- Iz chipi ---------- */
+.bq-iz {
+  display: inline-flex; align-items: baseline; gap: 6px;
+  padding: 4px 12px; border-radius: 999px; background: #E7F5EF;
+}
+.bq-iz-nom { font-size: 14px; font-weight: 800; color: #6B6558; }
+.bq-iz-son { font-family: var(--kod-shrift); font-size: 22px; font-weight: 900; color: var(--togri); }
+.bq-iz-belgi { font-size: 18px; font-weight: 900; }
+.bq-iz.togri { background: #D7F0E6; }
+.bq-iz.yana { background: #FFE9C7; }
+.bq-iz.yana .bq-iz-son { color: #B4760A; }
+
+/* ---------- Alifbo jadvali ---------- */
+.bq-alifbo { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; }
+.bq-harf {
+  display: inline-flex; flex-direction: column; align-items: center;
+  min-width: 26px; padding: 2px 4px; border-radius: 7px; background: #fff; border: 1px solid var(--chiziq);
+}
+.bq-harf b { font-family: var(--kod-shrift); font-size: 16px; }
+.bq-harf i { font-style: normal; font-size: 13px; font-weight: 800; color: var(--asosiy); }
+
+/* ---------- Uch qadamli qoida ---------- */
+.bq-qoida {
+  display: flex; flex-direction: column; gap: 7px;
+  padding: 10px 12px; background: #fff; border: 2px dashed var(--asosiy); border-radius: 14px;
+}
+.bq-qoida-qadam { display: flex; align-items: flex-start; gap: 8px; font-size: 16px; font-weight: 700; }
+.bq-raqam {
+  flex: none; width: 24px; height: 24px; border-radius: 50%;
+  display: grid; place-items: center; background: var(--asosiy); color: #fff; font-size: 15px; font-weight: 900;
+}
+.bq-qoida-boshlanish { font-size: 15px; font-weight: 800; color: var(--yana); text-align: center; }
+
+/* ---------- Qadamlar va saytlar jadvali ---------- */
+.bq-jadval { display: flex; flex-direction: column; gap: 6px; width: 100%; max-width: 440px; margin: 0 auto; }
+.bq-jadval-qator {
+  display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center;
+  padding: 6px 12px; background: #fff; border: 2px solid var(--chiziq); border-radius: 10px;
+}
+.bq-jadval-qator .bq-hisob { text-align: right; }
+.bq-jadval-qator .bq-iz-son { font-size: 20px; }
+.bq-sayt { font-size: 16px; font-weight: 800; }
+
+.bq-sayt-karta {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 8px 14px; background: #D8E6FB; border-radius: 12px;
+}
+.bq-tuz { font-family: var(--kod-shrift); font-size: 18px; font-weight: 900; color: #1B4A94; }
+
+.bq-juft { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+
+/* ---------- Javob tugmalari ---------- */
+.bq-javoblar { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; }
+.bq-javoblar.qator { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.bq-javoblar .btn.wide {
+  width: min(560px, 94%); padding: 10px 16px;
+  font-size: 18px; line-height: 1.25; white-space: normal; text-align: center;
+}
+
+@media (max-width: 520px) {
+  .summary { font-size: 16px; }
+  .bq-savol { font-size: 17px; }
+  .bq-belgi { font-size: 20px; min-width: 28px; }
+  .bq-hisob { font-size: 16px; }
+  .bq-qoida-qadam { font-size: 15px; }
+  .bq-javoblar .btn.wide { font-size: 17px; }
+}

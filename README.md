@@ -53,6 +53,7 @@ Tartib — bosh sahifadagidek: osondan qiyinga, oldingi oʻyinga tayanadiganlari
 | Kaptarxona | `45-kaptarxona` | 12–16 💻 | Dirixle printsipi: `n ÷ k` kafolati, eng yomon holat, nega isbot kerak |
 | **Parol va xavfsizlik** | | | |
 | Parol kuchi | `50-parol-kuchi` | 10–16 | Nechta variant bor (`aⁱ`), kompyuter qancha vaqtda topadi, nega uzunlik murakkablikdan kuchli |
+| Bir tomonlama qulf | `51-bir-tomonlama-qulf` | 10–16 | Sayt parolni emas, uning izini (xesh) saqlaydi; toʻqnashuv va tuz |
 | **Kodlash va shifrlash** | | | |
 | Qabila kodlari | `01-qabila-kodlari` | 8–16 | Nechta belgidan nechta soʻz yasaladi (aⁱ, yigʻindi, teskari masala) |
 | Qabila Morzesi | `02-qabila-morzesi` | 8–11 | Morze alifbosi: nuqta va chiziq bilan oʻqish va yozish |
