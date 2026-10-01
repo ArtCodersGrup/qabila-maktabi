@@ -479,7 +479,16 @@
   <circle cx="22" cy="58" r="5" fill="#E8DEC8" stroke="#2B2B3A" stroke-width="2"/>
   <circle cx="42" cy="58" r="5" fill="#E8DEC8" stroke="#2B2B3A" stroke-width="2"/>`);
 
-  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, bolish, qutilar2, ayri, charx, zina, qator, dastgoh, minora, ikkiyol, sxema, lupa, saralash, osish, daraxt, qator3, jamoa, paskal, poyga, yozuv, onlayn, tog };
+  // 45-o'yin: kaptarxona — to'rt uya, bittasida ikkita
+  const kaptar = svg(`
+  <path d="M4 22 L32 8 L60 22" fill="none" stroke="#8A8577" stroke-width="3" stroke-linejoin="round"/>
+  <rect x="7" y="22" width="22" height="34" rx="5" fill="#F2E6CF" stroke="#2B2B3A" stroke-width="2.5"/>
+  <rect x="35" y="22" width="22" height="34" rx="5" fill="#FFE9C7" stroke="#2B2B3A" stroke-width="2.5"/>
+  <circle cx="18" cy="42" r="6" fill="#2F6FDE" stroke="#2B2B3A" stroke-width="2.5"/>
+  <circle cx="46" cy="34" r="6" fill="#F08A24" stroke="#2B2B3A" stroke-width="2.5"/>
+  <circle cx="46" cy="47" r="6" fill="#F08A24" stroke="#2B2B3A" stroke-width="2.5"/>`);
+
+  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, bolish, qutilar2, ayri, charx, zina, qator, dastgoh, minora, ikkiyol, sxema, lupa, saralash, osish, daraxt, qator3, jamoa, paskal, kaptar, poyga, yozuv, onlayn, tog };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";

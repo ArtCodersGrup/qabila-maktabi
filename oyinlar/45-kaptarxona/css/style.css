@@ -1,0 +1,72 @@
+/* Kaptarxona — faqat shu o'yinga xos uslublar.
+   Umumiylari: ../../umumiy/css/asos.css va ../../umumiy/css/kod.css */
+
+.formula-box { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+.formula-row { font-size: 18px; font-weight: 800; animation: pop 0.3s; }
+.formula-row.kod { font-family: var(--kod-shrift); font-size: 20px; color: var(--asosiy); }
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(240px, 66vw); align-self: center; }
+.story-art.wide { width: min(320px, 86vw); }
+.story-art.small { width: min(200px, 54vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 18px; font-weight: 800; text-align: center; }
+
+/* ---------- Uyalar ---------- */
+.kx-uyalar { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.kx-uya {
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px;
+  width: 72px; min-height: 112px; padding: 8px 6px; box-sizing: border-box;
+  background: #F2E6CF; border: 3px solid var(--chiziq); border-radius: 12px;
+}
+.kx-uya.bosiladi { cursor: pointer; transition: transform 0.15s, border-color 0.15s; font: inherit; }
+.kx-uya.bosiladi:hover { border-color: var(--asosiy); transform: translateY(-2px); }
+.kx-uya.tola { background: #FFE9C7; border-color: var(--yana); }
+.kx-ichi { display: flex; flex-direction: column-reverse; gap: 4px; align-items: center; flex: 1; justify-content: flex-start; }
+.kx-kaptar {
+  display: block; width: 24px; height: 24px; border-radius: 50%;
+  background: #2F6FDE; border: 2px solid var(--matn); box-sizing: border-box; animation: pop 0.25s;
+}
+.kx-uya.tola .kx-kaptar { background: #F08A24; }
+.kx-raqam { font-family: var(--kod-shrift); font-size: 13px; color: #6B6558; }
+.kx-qolgan { display: flex; align-items: center; justify-content: center; gap: 6px; padding-top: 12px; font-size: 16px; font-weight: 800; }
+
+/* ---------- Eng yomon holat ---------- */
+.kx-yomon { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.kx-tur {
+  display: flex; gap: 4px; padding: 10px; border-radius: 12px;
+  border: 2px solid var(--chiziq); background: #fff;
+}
+.kx-nuqta { display: block; width: 22px; height: 22px; border-radius: 6px; background: currentColor; }
+.kx-tur.rang0 { color: #2F6FDE; } .kx-tur.rang1 { color: #F08A24; } .kx-tur.rang2 { color: #1A9E77; }
+.kx-tur.rang3 { color: #8E5BD0; } .kx-tur.rang4 { color: #C0392B; }
+
+.kx-hisob {
+  text-align: center; font-family: var(--kod-shrift); font-size: 21px; font-weight: 900;
+  color: var(--asosiy); padding-top: 10px;
+}
+
+/* ---------- Joylashuvlar jadvali ---------- */
+.kx-jadval {
+  border-collapse: collapse; margin: 0 auto; background: #fff;
+  border: 2px solid var(--chiziq); border-radius: 12px; overflow: hidden;
+}
+.kx-jadval th, .kx-jadval td { border: 1px solid var(--chiziq); padding: 7px 14px; text-align: center; }
+.kx-jadval th { background: #F3EFE3; color: #6B6558; font-size: 15px; font-weight: 800; }
+.kx-jadval td { font-family: var(--kod-shrift); font-size: 16px; }
+.kx-jadval td.katta { color: #8E5BD0; font-weight: 800; }
+
+.kx-savol { font-size: 19px; font-weight: 800; text-align: center; line-height: 1.4; max-width: 540px; margin: 0 auto; }
+
+@media (max-width: 520px) {
+  .summary { font-size: 16px; gap: 8px; }
+  .kx-uya { width: 58px; min-height: 96px; }
+  .kx-kaptar { width: 20px; height: 20px; }
+  .kx-nuqta { width: 18px; height: 18px; }
+  .kx-jadval th, .kx-jadval td { padding: 6px 9px; font-size: 14px; }
+  .kx-hisob { font-size: 18px; }
+  .kx-savol { font-size: 17px; }
+}
+@media (orientation: landscape) and (max-height: 520px) {
+  .story-art { width: min(180px, 34vh); }
+  .kx-uya { min-height: 84px; }
+}

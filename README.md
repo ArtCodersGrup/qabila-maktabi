@@ -46,37 +46,38 @@ Tartib — bosh sahifadagidek: osondan qiyinga, oldingi oʻyinga tayanadiganlari
 | 17 | Qatorga terish | `42-qatorga-terish` | Faktorial `n!` va `A(n,k)`: tartib muhim; 23! ni dastur aniq hisoblaydi (💻 12–16) |
 | 18 | Jamoa tanlash | `43-jamoa-tanlash` | `C(n,k)`: bir xil jamoa `k!` marta takrorlanadi; tartib muhimmi degan savol (💻 12–16) |
 | 19 | Paskal uchburchagi | `44-paskal-uchburchagi` | `C(n,k)` ni faqat qoʻshish bilan; simmetriya, qator yigʻindisi `2ⁿ`, juftliklar diagonali (💻 12–16) |
+| 20 | Kaptarxona | `45-kaptarxona` | Dirixle printsipi: `n ÷ k` kafolati, eng yomon holat, nega isbot kerak (💻 12–16) |
 | | **Kodlash va shifrlash** | | |
-| 20 | Qabila kodlari | `01-qabila-kodlari` | Nechta belgidan nechta soʻz yasaladi (aⁱ, yigʻindi, teskari masala) |
-| 21 | Qabila Morzesi | `02-qabila-morzesi` | Morze alifbosi: nuqta va chiziq bilan oʻqish va yozish |
-| 22 | Sezar maktubi | `03-sezar-maktubi` | Sezar shifri: harflarni surish, kalit, kalitsiz ochish |
+| 21 | Qabila kodlari | `01-qabila-kodlari` | Nechta belgidan nechta soʻz yasaladi (aⁱ, yigʻindi, teskari masala) |
+| 22 | Qabila Morzesi | `02-qabila-morzesi` | Morze alifbosi: nuqta va chiziq bilan oʻqish va yozish |
+| 23 | Sezar maktubi | `03-sezar-maktubi` | Sezar shifri: harflarni surish, kalit, kalitsiz ochish |
 | | **Ikkilik kod** | | |
-| 23 | Qabila chiroqlari | `04-qabila-chiroqlari` | Ikkilik kod: 2ⁿ naqsh, bit va bayt, rangli chiroqlar |
+| 24 | Qabila chiroqlari | `04-qabila-chiroqlari` | Ikkilik kod: 2ⁿ naqsh, bit va bayt, rangli chiroqlar |
 | | **Axborot oʻlchovi** | | |
-| 24 | Bayt sandigʻi | `13-bayt-sandigi` | Nega 8 bit = 1 bayt, matn hajmi (1 belgi = 1 bayt), 1 Kbayt = 1024 bayt |
-| 25 | Piksel ustaxonasi | `14-piksel-ustaxonasi` | Rasm hajmi: piksel, ranglar va bitlar, rangli piksel 3 bayt, Mbayt, siqish |
-| 26 | Multfilm daftari | `15-multfilm-daftari` | Video: kadrlar, kadr/soniya, video hajmi, Gbayt, faqat oʻzgargani |
-| 27 | Xotira ombori | `16-xotira-ombori` | Bitdan Tbaytgacha zinapoya, solishtirish, nechta sigʻadi, 1 Tbayt = 931 Gbayt |
+| 25 | Bayt sandigʻi | `13-bayt-sandigi` | Nega 8 bit = 1 bayt, matn hajmi (1 belgi = 1 bayt), 1 Kbayt = 1024 bayt |
+| 26 | Piksel ustaxonasi | `14-piksel-ustaxonasi` | Rasm hajmi: piksel, ranglar va bitlar, rangli piksel 3 bayt, Mbayt, siqish |
+| 27 | Multfilm daftari | `15-multfilm-daftari` | Video: kadrlar, kadr/soniya, video hajmi, Gbayt, faqat oʻzgargani |
+| 28 | Xotira ombori | `16-xotira-ombori` | Bitdan Tbaytgacha zinapoya, solishtirish, nechta sigʻadi, 1 Tbayt = 931 Gbayt |
 | | **Sunʼiy intellekt: qanday oʻrganadi** | | |
-| 28 | Robotni oʻrgatamiz | `06-robotni-orgatamiz` | Mashina misollardan oʻrganadi: eng yaqin misol, chegara chizigʻi, sinov |
-| 29 | Keyingi soʻz | `07-keyingi-soz` | Til modeli: soʻz juftliklarini sanash, keyingi soʻzni tanlash |
-| 30 | Sehrli qutilar | `08-sehrli-qutilar` | Mukofot bilan oʻrganish (MENACE) |
-| 31 | Qoida yoki misol? | `09-qoida-yoki-misol` | Qoida yozilgan dastur va misoldan oʻrganish |
+| 29 | Robotni oʻrgatamiz | `06-robotni-orgatamiz` | Mashina misollardan oʻrganadi: eng yaqin misol, chegara chizigʻi, sinov |
+| 30 | Keyingi soʻz | `07-keyingi-soz` | Til modeli: soʻz juftliklarini sanash, keyingi soʻzni tanlash |
+| 31 | Sehrli qutilar | `08-sehrli-qutilar` | Mukofot bilan oʻrganish (MENACE) |
+| 32 | Qoida yoki misol? | `09-qoida-yoki-misol` | Qoida yozilgan dastur va misoldan oʻrganish |
 | | **Koʻrish, tarmoqlar va xarita** | | |
-| 32 | Robot nimani koʻradi? | `10-robot-korishi` | Kompyuter koʻrish: piksellar, shablon, belgi |
-| 33 | Koʻp qatlamli tarmoq | `11-kop-qatlamli-tarmoq` | Neyron, qatlamlar, chuqur oʻrganish |
-| 34 | AI xaritasi | `12-ai-xaritasi` | Oddiy dastur ⊃ AI ⊃ ML ⊃ DL; usul va vazifa |
+| 33 | Robot nimani koʻradi? | `10-robot-korishi` | Kompyuter koʻrish: piksellar, shablon, belgi |
+| 34 | Koʻp qatlamli tarmoq | `11-kop-qatlamli-tarmoq` | Neyron, qatlamlar, chuqur oʻrganish |
+| 35 | AI xaritasi | `12-ai-xaritasi` | Oddiy dastur ⊃ AI ⊃ ML ⊃ DL; usul va vazifa |
 | | **Sanoq tizimlari** | | |
-| 35 | Rim toshi | `05-rim-toshi` | Rim raqamlari, Rimliklar usulida hisob, pozitsion tizim, al-Xorazmiy |
-| 36 | Qabila choʻti | `17-qabila-choti` | Sanoq tizimi nima: asos, raqamlar 0 … n−1 va A–F, 101₂ yozuvi, xona qiymatlari (10–12 yosh) |
-| 37 | Tangalar bozori | `18-tangalar-bozori` | Istalgan tizimdan oʻnlikka: raqam × xona qiymati (10–12) |
-| 38 | Qoplarga joylash | `19-qoplarga-joylash` | Oʻnlikdan istalgan tizimga: kattadan boshlab, boʻlib-boʻlib, tekshirish (10–12) |
-| 39 | Ikkilik hisobchi | `20-ikkilik-hisobchi` | Ikkilikda qoʻshish, ayirish (qarz), koʻpaytirish (surish) (10–12) |
-| 40 | Oʻn oltilik ranglar | `21-on-oltilik-ranglar` | A–F, 2 ↔ 16, rang kodlari, 16-likda amallar (10–12) |
-| 41 | Sayyoralar sanogʻi | `22-sayyoralar-sanogi` | n-lik tizimda amallar, "qaysi tizimda 3 + 4 = 10?", Bobil va Mayya (10–12) |
+| 36 | Rim toshi | `05-rim-toshi` | Rim raqamlari, Rimliklar usulida hisob, pozitsion tizim, al-Xorazmiy |
+| 37 | Qabila choʻti | `17-qabila-choti` | Sanoq tizimi nima: asos, raqamlar 0 … n−1 va A–F, 101₂ yozuvi, xona qiymatlari (10–12 yosh) |
+| 38 | Tangalar bozori | `18-tangalar-bozori` | Istalgan tizimdan oʻnlikka: raqam × xona qiymati (10–12) |
+| 39 | Qoplarga joylash | `19-qoplarga-joylash` | Oʻnlikdan istalgan tizimga: kattadan boshlab, boʻlib-boʻlib, tekshirish (10–12) |
+| 40 | Ikkilik hisobchi | `20-ikkilik-hisobchi` | Ikkilikda qoʻshish, ayirish (qarz), koʻpaytirish (surish) (10–12) |
+| 41 | Oʻn oltilik ranglar | `21-on-oltilik-ranglar` | A–F, 2 ↔ 16, rang kodlari, 16-likda amallar (10–12) |
+| 42 | Sayyoralar sanogʻi | `22-sayyoralar-sanogi` | n-lik tizimda amallar, "qaysi tizimda 3 + 4 = 10?", Bobil va Mayya (10–12) |
 | | **Mantiq** | | |
-| 42 | Mantiq kalitlari | `24-mantiq-kalitlari` | Rost va yolgʻon, VA (ketma-ket kalitlar), YOKI (parallel), EMAS (teskari kalit), rostlik jadvali, hayotiy qoidalar, Jorj Bul |
-| 43 | Zinapoya chirogʻi | `25-zinapoya-chirogi` | XOR (faqat bittasi), amallar zanjiri (sxema), yarim qoʻshuvchi: kompyuter qanday qoʻshadi (10–12) |
+| 43 | Mantiq kalitlari | `24-mantiq-kalitlari` | Rost va yolgʻon, VA (ketma-ket kalitlar), YOKI (parallel), EMAS (teskari kalit), rostlik jadvali, hayotiy qoidalar, Jorj Bul |
+| 44 | Zinapoya chirogʻi | `25-zinapoya-chirogi` | XOR (faqat bittasi), amallar zanjiri (sxema), yarim qoʻshuvchi: kompyuter qanday qoʻshadi (10–12) |
 
 **Musobaqalar** (bosh sahifa tepasida, oʻyin emas — bosqichi yoʻq):
 
