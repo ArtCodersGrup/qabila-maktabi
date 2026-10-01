@@ -1,0 +1,6 @@
+/* 56-o'yinga xos uslublar. Umumiylari: umumiy/css/asos.css, kod.css, cpp.css */
+.story-art svg { width: min(100%, 420px); height: auto; }
+.story-art.small svg { width: min(100%, 300px); }
+
+/* Yonma-yon ikki dastur: kod va uning chiqishi */
+.qt-juft { display: grid; gap: 10px; width: 100%; }

@@ -57,6 +57,7 @@ Tartib — bosh sahifadagidek: osondan qiyinga, oldingi oʻyinga tayanadiganlari
 | Firibgar xat | `52-firibgar-xat` | 10–16 | Soxta xatning belgilari va manzil qoidasi: zonadan oldingi nom |
 | C++: birinchi dastur | `54-cpp-birinchi-dastur` | 12–16 | Olimpiada tili: qolip, `cout`/`cin`, kompilyatsiya va Python bilan farqi |
 | C++: tur va chegara | `55-cpp-tur-chegara` | 12–16 | `int` toshib ketadi, `long long` sigʻdiradi; butun boʻlish tuzogʻi |
+| C++: qavs va takror | `56-cpp-qavs-takror` | 12–16 | Blokni `{ }` yasaydi; `=` va `==`; `for` ning uch qismi |
 | **Kodlash va shifrlash** | | | |
 | Qabila kodlari | `01-qabila-kodlari` | 8–16 | Nechta belgidan nechta soʻz yasaladi (aⁱ, yigʻindi, teskari masala) |
 | Qabila Morzesi | `02-qabila-morzesi` | 8–11 | Morze alifbosi: nuqta va chiziq bilan oʻqish va yozish |

@@ -602,7 +602,17 @@
   <circle cx="53" cy="26" r="3.5" fill="#F3C969" stroke="#2B2B3A" stroke-width="1.5"/>
   <circle cx="49" cy="38" r="3.5" fill="#F3C969" stroke="#2B2B3A" stroke-width="1.5"/>`);
 
-  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, bolish, qutilar2, ayri, charx, zina, qator, dastgoh, minora, ikkiyol, sxema, lupa, saralash, osish, daraxt, qator3, jamoa, paskal, kaptar, tezkor, robotaql, mantiqkod, tank, tankduel, cpp, cpptur, qulf, izqulf, qarmoq, xatoovi, poyga, yozuv, onlayn, tog };
+  // 56-o'yin: qavs va takror — qavs ichidagi blok va aylanma strelka
+  const cppsikl = svg(`
+  <path d="M22 12 q-9 0 -9 9 v7 q0 5 -6 5 q6 0 6 5 v7 q0 9 9 9" fill="none" stroke="#F08A24" stroke-width="4" stroke-linecap="round"/>
+  <path d="M44 12 q9 0 9 9 v7 q0 5 6 5 q-6 0 -6 5 v7 q0 9 -9 9" fill="none" stroke="#F08A24" stroke-width="4" stroke-linecap="round"/>
+  <rect x="26" y="20" width="16" height="5" rx="2.5" fill="#2F6FDE"/>
+  <rect x="26" y="29" width="12" height="5" rx="2.5" fill="#2F6FDE"/>
+  <rect x="26" y="38" width="15" height="5" rx="2.5" fill="#2F6FDE"/>
+  <path d="M44 56 a14 14 0 1 1 10 -20" fill="none" stroke="#1A9E77" stroke-width="4.5" stroke-linecap="round"/>
+  <path d="M48 30 l7 6 l-8 4" fill="none" stroke="#1A9E77" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>`);
+
+  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, bolish, qutilar2, ayri, charx, zina, qator, dastgoh, minora, ikkiyol, sxema, lupa, saralash, osish, daraxt, qator3, jamoa, paskal, kaptar, tezkor, robotaql, mantiqkod, tank, tankduel, cpp, cpptur, cppsikl, qulf, izqulf, qarmoq, xatoovi, poyga, yozuv, onlayn, tog };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";

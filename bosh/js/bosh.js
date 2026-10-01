@@ -84,6 +84,7 @@
     { n: 45, topic: "kombinatorika", dir: "45-kaptarxona", title: "Kaptarxona", desc: "Dirixle printsipi: sanamasdan isbotlash", key: "kaptarxona:v1", stages: 3, yosh: [12, 16], icon: "kaptar", pc: true },
     { n: 54, topic: "cpp", dir: "54-cpp-birinchi-dastur", title: "C++: birinchi dastur", desc: "Qolip, cout va cin: Pythondan farqi", key: "cpp-birinchi-dastur:v1", stages: 3, yosh: [12, 16], icon: "cpp", pc: true },
     { n: 55, topic: "cpp", dir: "55-cpp-tur-chegara", title: "C++: tur va chegara", desc: "int toshib ketadi, long long sigʻdiradi", key: "cpp-tur-chegara:v1", stages: 3, yosh: [12, 16], icon: "cpptur", pc: true },
+    { n: 56, topic: "cpp", dir: "56-cpp-qavs-takror", title: "C++: qavs va takror", desc: "Blokni { } yasaydi, sikl uch qismdan iborat", key: "cpp-qavs-takror:v1", stages: 3, yosh: [12, 16], icon: "cppsikl", pc: true },
     { n: 50, topic: "xavfsizlik", dir: "50-parol-kuchi", title: "Parol kuchi", desc: "Nechta variant bor va kompyuter qancha vaqtda topadi", key: "parol-kuchi:v1", stages: 3, yosh: [10, 16], icon: "qulf" },
     { n: 51, topic: "xavfsizlik", dir: "51-bir-tomonlama-qulf", title: "Bir tomonlama qulf", desc: "Sayt parolni emas, uning izini saqlaydi", key: "bir-tomonlama-qulf:v1", stages: 3, yosh: [10, 16], icon: "izqulf" },
     { n: 52, topic: "xavfsizlik", dir: "52-firibgar-xat", title: "Firibgar xat", desc: "Soxta xatni belgilaridan va manzilidan tanish", key: "firibgar-xat:v1", stages: 3, yosh: [10, 16], icon: "qarmoq" },
