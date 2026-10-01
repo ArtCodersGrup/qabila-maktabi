@@ -62,6 +62,7 @@
     { n: 37, topic: "algoritm", dir: "37-blok-sxema", title: "Blok-sxema", desc: "Algoritmni chizish: belgilar, yigʻish va oʻqish", key: "blok-sxema:v1", stages: 3, icon: "sxema", age: "12–16", pc: true },
     { n: 38, topic: "algoritm", dir: "38-izlash", title: "Izlash", desc: "Chiziqli va ikkilik izlash: 100 ta sondan 7 savolda", key: "izlash:v1", stages: 3, icon: "lupa", age: "12–16", pc: true },
     { n: 39, topic: "algoritm", dir: "39-saralash", title: "Saralash", desc: "Pufakcha va tanlash: koʻz bilan koʻrinadigan almashinuv", key: "saralash:v1", stages: 3, icon: "saralash", age: "12–16", pc: true },
+    { n: 40, topic: "algoritm", dir: "40-qadamlar-soni", title: "Qadamlar soni", desc: "Oʻsishga nom beramiz: O(1), O(log n), O(n), O(n²)", key: "qadamlar-soni:v1", stages: 3, icon: "osish", age: "12–16", pc: true },
   ];
 
   // Mashqlar — o'yin emas: masalalar ro'yxati (qidiruv, filtr, sahifalash). Bosqichi yo'q,

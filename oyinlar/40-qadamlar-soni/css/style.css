@@ -1,0 +1,75 @@
+/* Qadamlar soni va O(n) — faqat shu o'yinga xos uslublar.
+   Umumiylari: ../../umumiy/css/asos.css va ../../umumiy/css/kod.css */
+
+.formula-box { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+.formula-row { font-size: 18px; font-weight: 800; animation: pop 0.3s; }
+.formula-nom { font-family: var(--kod-shrift); font-weight: 900; }
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(240px, 66vw); align-self: center; }
+.story-art.wide { width: min(340px, 88vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 19px; font-weight: 800; text-align: center; }
+
+/* Sinf ranglari: O(1) yashil, O(log n) ko'k, O(n) sariq, O(n²) binafsha.
+   validate_palette.js bilan tekshirilgan; rang yolg'iz belgi emas — har joyda nomi ham yoziladi. */
+.s-1 { color: #1A9E77; }
+.s-log { color: #2F6FDE; }
+.s-n { color: #C06A10; }
+.s-n2 { color: #8E5BD0; }
+
+/* ---------- O'sish grafigi ---------- */
+.os-grafik { display: flex; flex-direction: column; gap: 10px; width: min(520px, 94%); margin: 0 auto; }
+.os-qator { display: grid; grid-template-columns: minmax(96px, 34%) 1fr auto; align-items: center; gap: 10px; }
+.os-nom { font-size: 15px; font-weight: 800; color: #4A4636; line-height: 1.2; }
+.os-yol {
+  display: flex; align-items: center; gap: 8px;
+  background: #F3EFE3; border-radius: 6px; padding: 3px;
+}
+.os-tayoq {
+  display: block; height: 18px; border-radius: 4px;
+  background: #BDB7A6; transition: width 0.4s;
+}
+.os-tayoq.s-1 { background: #1A9E77; }
+.os-tayoq.s-log { background: #2F6FDE; }
+.os-tayoq.s-n { background: #F08A24; }
+.os-tayoq.s-n2 { background: #8E5BD0; }
+.os-tayoq.s-yangi { background: #BDB7A6; }
+.os-nisbat { font-family: var(--kod-shrift); font-size: 16px; color: var(--matn); white-space: nowrap; }
+.os-sinf { font-family: var(--kod-shrift); font-size: 16px; font-weight: 900; width: 78px; text-align: right; color: #6B6558; }
+.os-izoh { font-size: 14px; color: #6B6558; text-align: center; padding-top: 2px; }
+
+/* ---------- O'lchov jadvali ---------- */
+.os-jadval {
+  border-collapse: collapse; margin: 0 auto; background: #fff;
+  border: 2px solid var(--chiziq); border-radius: 12px; overflow: hidden;
+}
+.os-jadval th, .os-jadval td { border: 1px solid var(--chiziq); padding: 8px 18px; text-align: center; }
+.os-jadval th { background: #F3EFE3; color: #6B6558; font-size: 15px; font-weight: 800; }
+.os-jadval td { font-family: var(--kod-shrift); font-size: 18px; }
+.os-jadval .os-n { font-weight: 800; }
+.os-jadval .os-nis { color: var(--asosiy); font-weight: 800; }
+.os-jadval tr.yopiq td { color: #A09A8A; background: #FAF7EF; }
+.os-jadval td.yaxshi { color: var(--togri); font-weight: 800; }
+.os-jadval td.yomon { color: #C0392B; font-weight: 800; }
+.os-jadval.katta td { font-size: 17px; }
+
+/* ---------- Kod va savol ---------- */
+.os-kod { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 100%; }
+.os-kod-nom { font-size: 15px; font-weight: 800; color: #6B6558; }
+.os-savol { font-size: 19px; font-weight: 800; text-align: center; line-height: 1.4; max-width: 520px; }
+.os-savol div { padding-top: 6px; font-weight: 700; }
+
+@media (max-width: 520px) {
+  .formula-row { font-size: 16px; }
+  .summary { font-size: 17px; gap: 8px; }
+  .os-qator { grid-template-columns: minmax(80px, 38%) 1fr auto; gap: 7px; }
+  .os-nom { font-size: 13px; }
+  .os-sinf { font-size: 13px; width: 64px; }
+  .os-tayoq { height: 15px; }
+  .os-jadval th, .os-jadval td { padding: 6px 10px; font-size: 16px; }
+  .os-savol { font-size: 17px; }
+}
+@media (orientation: landscape) and (max-height: 520px) {
+  .story-art { width: min(180px, 34vh); }
+  .story-art.wide { width: min(300px, 60vh); }
+}

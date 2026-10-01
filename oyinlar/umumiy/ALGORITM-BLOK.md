@@ -7,7 +7,8 @@ algoritm nima, qanday koʻrinadi (blok-sxema), qaysi biri tezroq va nega.
 **Shart:** Python bloki bolalarda sinalgach boshlanadi ([`PYTHON-SINOV.md`](PYTHON-SINOV.md)).
 
 > **Holat (2026-10-01):** **36-oʻyin toʻliq yozildi** va saytga ulandi (`36-algoritm-xossalari`).
-> **36–39-oʻyinlar yozildi.** Qolgani — 40 «Qadamlar soni va O(n)»: 38 va 39 dagi oʻlchovlar shu yerda nom oladi.
+> **Blok yopildi: 36–40-oʻyinlar yozildi va saytga ulandi (2026-10-01).**
+> Qoladi: muallif oʻzi koʻrib chiqadi; keyin — kombinatorika bloki.
 
 **Muallif topshirigʻi (2026-10-01):** «algoritmlar, ularning turlari va xossalari, misollar, nega ular bizga kerak.
 O bolshoy ham boʻlar edi. Blok-sxema koʻrinishini tasvirlash ham yaxshi (oʻyinga oʻxshatib, blok qoʻyadigan qilib).
@@ -48,7 +49,7 @@ Bola buni **oʻz kodida** koʻradi. `O(n)` shundan keyin nom sifatida kiritiladi
 | 37 | **Blok-sxema** ✅ | belgilar; sxemani yigʻish → kod; kodni oʻqib sxemani tanlash |
 | 38 | **Izlash** ✅ | "oʻylagan sonni top" → chiziqli izlash → ikkilik izlash |
 | 39 | **Saralash** ✅ | pufakcha va tanlash: koʻz bilan koʻrinadigan almashinuv, keyin kod |
-| 40 | **Qadamlar soni** | oʻlchov jadvali → `O(n)`, `O(n²)`, `O(log n)`; "10 000 ta son uchun qaysi biri ishlaydi?" |
+| 40 | **Qadamlar soni** ✅ | oʻlchov jadvali → `O(n)`, `O(n²)`, `O(log n)`; "10 000 ta son uchun qaysi biri ishlaydi?" |
 
 ### 36. Algoritm va xossalari
 1. **Nega kerak:** bir xil ishni ikki xil yoʻl bilan bajarish (masalan, 1 dan 100 gacha yigʻindi: sikl bilan va formula bilan) — ikkalasi ham toʻgʻri, lekin qadamlari boshqa.
@@ -72,10 +73,13 @@ Bola buni **oʻz kodida** koʻradi. `O(n)` shundan keyin nom sifatida kiritiladi
 2. **Kod:** pufakcha saralashni yozadi (ichma-ich sikl — 32-oʻyin davomi).
 3. **Tanlash saralashi** va solishtirish: ikkalasi ham `O(n²)`, lekin almashinuvlar soni boshqa.
 
-### 40. Qadamlar soni
-1. **Oʻlchov:** bitta kod, n = 10, 20, 40, 80 — jadval va ustunli grafik.
-2. **Nom qoʻyish:** uch kod — qaysi qatorga mos? `O(n)`, `O(n²)`, `O(log n)`.
-3. **Amaliy savol:** "10 000 ta son berilgan — qaysi usul ishlaydi, qaysi biri kutib boʻlmaydi?" Bola oʻlchab javob beradi.
+### 40. Qadamlar soni ✅
+1. **Oʻlchov:** bitta kod n = 10, 20, 40 da oʻlchanadi; jadvalda «oldingidan necha barobar» ustuni. Mashq: ikki oʻlchov berilgan — uchinchisini bashorat qilish.
+2. **Nom qoʻyish:** toʻrt usul yonma-yon, oʻsish grafigi, keyin nom: `O(1)`, `O(log n)`, `O(n)`, `O(n²)`. Mashq: kod + oʻlchov → nom.
+3. **Amaliy savol:** qoida bilan hisoblash (n → 2n), keyin tanlov: 1 000 000 ta sondan izlash, 100 000 ta sonni pufakcha bilan saralash va h.k.
+
+**Oʻlchov sonlari qoʻlda yozilmagan:** talqinchi sanaydi, `tests/logic.test.js` har namunaning nisbati oʻz sinfiga tushishini tekshiradi
+(formula ×1.00, ikkilik izlash ×1.13, chiziqli izlash ×1.93, pufakcha ×4.01).
 
 ## 3. Keyingi blok: Kombinatorika
 
