@@ -6,9 +6,8 @@ algoritm nima, qanday koʻrinadi (blok-sxema), qaysi biri tezroq va nega.
 **Yosh:** 12–16 · **Qurilma:** kompyuter (💻) · **Holati:** reja kelishildi (2026-10-01), kod yozilmagan.
 **Shart:** Python bloki bolalarda sinalgach boshlanadi ([`PYTHON-SINOV.md`](PYTHON-SINOV.md)).
 
-> **Holat (2026-10-01):** 36-oʻyinning dizayni va mantiqi yozildi (testlari yashil), ish **toʻxtatildi**.
-> Tugallanmagani uchun papka raqamsiz: `oyinlar/algoritm-xossalari/`. Qayerdan davom etish —
-> shu papkadagi [`REJA.md`](../algoritm-xossalari/REJA.md) da.
+> **Holat (2026-10-01):** **36-oʻyin toʻliq yozildi** va saytga ulandi (`36-algoritm-xossalari`).
+> Keyingisi — 37-oʻyin «Blok-sxema», blokning eng katta qismi.
 
 **Muallif topshirigʻi (2026-10-01):** «algoritmlar, ularning turlari va xossalari, misollar, nega ular bizga kerak.
 O bolshoy ham boʻlar edi. Blok-sxema koʻrinishini tasvirlash ham yaxshi (oʻyinga oʻxshatib, blok qoʻyadigan qilib).
@@ -45,7 +44,7 @@ Bola buni **oʻz kodida** koʻradi. `O(n)` shundan keyin nom sifatida kiritiladi
 
 | № | Oʻyin | Mavzu |
 |---|---|---|
-| 36 | **Algoritm va xossalari** | nega kerak; tushunarlilik, aniqlik, diskretlik, natijaviylik, ommaviylik |
+| 36 | **Algoritm va xossalari** ✅ | nega kerak; tushunarlilik, aniqlik, diskretlik, natijaviylik, ommaviylik |
 | 37 | **Blok-sxema** | belgilar; sxemani yigʻish → kod; kodni oʻqib sxemani tanlash |
 | 38 | **Izlash** | "oʻylagan sonni top" → chiziqli izlash → ikkilik izlash |
 | 39 | **Saralash** | pufakcha va tanlash: koʻz bilan koʻrinadigan almashinuv, keyin kod |

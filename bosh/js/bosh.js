@@ -13,6 +13,7 @@
     { id: "klaviatura", title: "Klaviatura", note: "Tez va toʻgʻri yozishni oʻrganamiz" },
     { id: "dastur", title: "Algoritm va dasturlash", note: "Robotga buyruq beramiz: yoʻl va tartib" },
     { id: "python", title: "Python: dasturlash", note: "Haqiqiy kod yozamiz: printdan funksiyagacha" },
+    { id: "algoritm", title: "Algoritmlar va samaradorlik", note: "Qaysi yechim tezroq va nega" },
     { id: "kod", title: "Kodlash va shifrlash", note: "Maʼlumotni belgilarga aylantiramiz" },
     { id: "ikkilik", title: "Ikkilik kod", note: "Kompyuter tili: yoniq va oʻchiq" },
     { id: "olchov", title: "Axborot oʻlchovi", note: "Bit, bayt va fayllar hajmi" },
@@ -57,6 +58,7 @@
     { n: 32, topic: "python", dir: "32-sanoqli-takror", title: "Sanoqli takror", desc: "for va range, chegaralar, ichma-ich sikl", key: "sanoqli-takror:v1", stages: 3, icon: "zina", age: "12–16", pc: true },
     { n: 33, topic: "python", dir: "33-royxat-va-satr", title: "Roʻyxat va satr", desc: "Indeks, len, append, kesish va split", key: "royxat-va-satr:v1", stages: 3, icon: "qator", age: "12–16", pc: true },
     { n: 34, topic: "python", dir: "34-funksiya-ustaxonasi", title: "Funksiya ustaxonasi", desc: "def, parametr, return va masalani boʻlaklash", key: "funksiya-ustaxonasi:v1", stages: 3, icon: "dastgoh", age: "12–16", pc: true },
+    { n: 36, topic: "algoritm", dir: "36-algoritm-xossalari", title: "Algoritm va xossalari", desc: "Beshta xossa va “ishlaydi ≠ yaxshi”", key: "algoritm-xossalari:v1", stages: 3, icon: "ikkiyol", age: "12–16", pc: true },
   ];
 
   // Mashqlar — o'yin emas: masalalar ro'yxati (qidiruv, filtr, sahifalash). Bosqichi yo'q,

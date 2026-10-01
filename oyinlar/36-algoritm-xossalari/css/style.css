@@ -1,0 +1,53 @@
+/* Sonlar ustaxonasi — faqat shu o'yinga xos uslublar.
+   Umumiylari: ../../umumiy/css/asos.css va ../../umumiy/css/kod.css */
+
+.formula-box { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+.formula-row { font-size: 20px; font-weight: 900; animation: pop 0.3s; }
+.formula-row.kod { font-family: var(--kod-shrift); font-size: 20px; color: var(--asosiy); white-space: pre; }
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(240px, 66vw); align-self: center; }
+.story-art.wide { width: min(340px, 88vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 19px; font-weight: 800; text-align: center; }
+
+@media (max-width: 480px) {
+  .formula-row { font-size: 17px; }
+  .formula-row.kod { font-size: 17px; }
+  .summary { font-size: 17px; gap: 8px; }
+}
+@media (orientation: landscape) and (max-height: 520px) {
+  .story-art { width: min(180px, 34vh); }
+  .story-art.wide { width: min(300px, 60vh); }
+}
+
+/* ---------- Algoritm qadamlari va xossalar ---------- */
+.alg-qadamlar { margin: 0; padding-left: 1.6em; font-size: 18px; line-height: 1.6; }
+.alg-qadamlar li { padding: 2px 6px; border-radius: 8px; }
+.alg-qadamlar li.buzuq { background: #FFF0D6; font-weight: 800; }
+.alg-nega { font-size: 18px; font-weight: 700; line-height: 1.45; }
+.alg-tuzatilgan { margin-top: 6px; font-size: 18px; color: var(--togri); font-weight: 700; }
+
+.xossa-tanlov { display: flex; flex-direction: column; gap: 6px; }
+.xossa-tugma {
+  display: flex; flex-direction: column; gap: 2px;
+  padding: 8px 12px; text-align: left;
+  border: 2px solid var(--chiziq); border-radius: 12px;
+  background: #fff; color: var(--matn); font-family: inherit; cursor: pointer;
+}
+.xossa-tugma:hover:enabled { border-color: var(--asosiy); }
+.xossa-tugma:disabled { opacity: 0.6; }
+.xossa-tugma.togri { border-color: var(--togri); background: #F2FAF6; opacity: 1; }
+.xossa-nom { font-size: 18px; font-weight: 800; color: var(--asosiy); }
+.xossa-izoh { font-size: 15px; color: #5C5648; }
+
+.xossa-royxat { display: flex; flex-direction: column; gap: 6px; }
+.xossa-qator { display: flex; flex-direction: column; padding: 6px 10px; border-left: 4px solid var(--asosiy); }
+
+.alg-juft { display: flex; gap: 10px; }
+.alg-juft > * { flex: 1 1 50%; min-width: 0; }
+.alg-yechim-nom { font-size: 17px; font-weight: 800; color: var(--asosiy); margin-bottom: 4px; }
+
+@media (max-width: 620px) {
+  .alg-juft { flex-direction: column; }
+  .alg-qadamlar { font-size: 17px; }
+}

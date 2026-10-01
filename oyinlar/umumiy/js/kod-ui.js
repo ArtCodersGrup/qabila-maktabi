@@ -307,6 +307,30 @@
     return api;
   }
 
+  // Qadamlar jadvali: bir nechta yechimni qadamlar soni bo'yicha yonma-yon ko'rsatadi.
+  // qatorlar: [{ nom, qadam, natija, eng }] — "eng" eng tejamlisini belgilaydi.
+  // 36-o'yindan boshlab ishlatiladi (38–40 ham shuni ishlatadi).
+  function qadamJadval(qatorlar) {
+    const eng = Math.max(1, ...qatorlar.map((q) => q.qadam));
+    const el = ui.h("table", { class: "qadam-jadval" });
+    const head = ui.h("tr", {},
+      ui.h("th", { text: "Yechim" }),
+      ui.h("th", { text: "Qadamlar" }),
+      ui.h("th", { text: "Natija" }));
+    const body = ui.h("tbody");
+    for (const q of qatorlar) {
+      const ulush = Math.max(4, Math.round((q.qadam / eng) * 100));
+      body.append(ui.h("tr", { class: q.eng ? "tejamli" : "" },
+        ui.h("td", { class: "qadam-nom", text: q.nom }),
+        ui.h("td", { class: "qadam-son" },
+          ui.h("span", { class: "qadam-chiziq" }, ui.h("span", { class: "qadam-ich", style: "width:" + ulush + "%" })),
+          ui.h("b", { text: String(q.qadam) })),
+        ui.h("td", { class: "qadam-natija", text: String(q.natija === undefined ? "" : q.natija) })));
+    }
+    el.append(ui.h("thead", {}, head), body);
+    return el;
+  }
+
   // Barmoq bilan boshqariladigan ekran: klaviatura bo'lmasligi mumkin (QOIDALAR §3)
   const touchOnly = () => !!(root.matchMedia && root.matchMedia("(hover: none) and (pointer: coarse)").matches);
 
@@ -324,5 +348,5 @@
     return true;
   }
 
-  QK.kodUI = { codeBlock, editor, output, varsTable, stepper, workbench, stdinPanel, draft, keyboardCheck, touchOnly, paint, TAB };
+  QK.kodUI = { codeBlock, editor, output, varsTable, stepper, workbench, stdinPanel, draft, qadamJadval, keyboardCheck, touchOnly, paint, TAB };
 })(window);

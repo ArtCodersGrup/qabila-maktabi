@@ -380,7 +380,14 @@
   <path d="M32 15 V6" stroke="#8A8577" stroke-width="3" stroke-linecap="round"/>
   <path d="M32 6 L46 10 L32 14 Z" fill="#F08A24"/>`);
 
-  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, bolish, qutilar2, ayri, charx, zina, qator, dastgoh, minora, poyga, yozuv, onlayn, tog };
+  // 36-o'yin: ikki yo'l — biri uzun, biri qisqa
+  const ikkiyol = svg(`
+  <path d="M10 30 C 20 8, 30 52, 40 30 S 54 8, 58 22" fill="none" stroke="#2F6FDE" stroke-width="5" stroke-linecap="round"/>
+  <path d="M10 48 H56" fill="none" stroke="#1A9E77" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="9" cy="39" r="6" fill="#8E5BD0"/>
+  <rect x="52" y="33" width="12" height="12" rx="3" fill="#F08A24"/>`);
+
+  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, bolish, qutilar2, ayri, charx, zina, qator, dastgoh, minora, ikkiyol, poyga, yozuv, onlayn, tog };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";

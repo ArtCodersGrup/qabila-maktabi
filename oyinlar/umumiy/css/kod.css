@@ -151,3 +151,26 @@
   .pbox { gap: 8px; }
   .pbox .note { font-size: 18px; }
 }
+
+/* ---------- Qadamlar jadvali (36, 38–40-o'yinlar) ---------- */
+.qadam-jadval {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border: 2px solid var(--chiziq);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.qadam-jadval th, .qadam-jadval td { border: 1px solid var(--chiziq); padding: 8px 10px; text-align: left; }
+.qadam-jadval th { background: #F3EFE3; color: #6B6558; font-size: 15px; font-weight: 800; }
+.qadam-jadval .qadam-nom { font-size: 17px; font-weight: 800; }
+.qadam-jadval .qadam-son { white-space: nowrap; font-family: var(--kod-shrift); font-size: 17px; }
+.qadam-jadval .qadam-natija { font-family: var(--kod-shrift); font-size: 17px; color: #6B6558; }
+.qadam-chiziq {
+  display: inline-block; width: 90px; height: 10px; margin-right: 8px;
+  border-radius: 999px; background: #EDE7D8; vertical-align: middle; overflow: hidden;
+}
+.qadam-ich { display: block; height: 100%; background: var(--yana); border-radius: 999px; }
+.qadam-jadval tr.tejamli { background: #F2FAF6; }
+.qadam-jadval tr.tejamli .qadam-ich { background: var(--togri); }
+.qadam-jadval tr.tejamli .qadam-nom::after { content: " ✓"; color: var(--togri); }
