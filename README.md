@@ -131,4 +131,4 @@ Kichik Pythonning testlari orasida `python3` bilan solishtirish ham bor: korpusd
 2. `oyinlar/NN-oyin-nomi/` papkasini oching: `DIZAYN.md` → `REJA.md` → kod → testlar.
 3. Oʻyinni [`bosh/js/bosh.js`](bosh/js/bosh.js) dagi `GAMES` roʻyxatiga qoʻshing (`bosh/tests/bosh.test.js` buni tekshiradi).
 4. Fayllarni [`sw.js`](sw.js) roʻyxatiga qoʻshing va `VERSION` ni oshiring (`bosh/tests/offline.test.js` tekshiradi).
-5. Yangi **blok** qoʻshgan boʻlsangiz, oʻyinlar matnidagi raqamli havolalarni yangilang: `node bosh/tools/renumber.js`.
+5. Oʻyinga `yosh: [min, max]` qoʻying — bola kirishda tanlagan toifaga shu oraliq boʻyicha tushadi. Boshqa oʻyinga havola **nom bilan** yoziladi («Izlash» oʻyinida koʻrgan eding), raqam bilan emas.

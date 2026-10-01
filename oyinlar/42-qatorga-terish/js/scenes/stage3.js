@@ -26,7 +26,7 @@
     el.append(common.osishJadval(L.OSISH));
     await ui.say("elder", "10 ta kitobning hamma tartibini yozsak — 3 million yarim qator.");
     await ui.say("apprentice", "20 ta boʻlsa-chi?");
-    await ui.say("elder", "Sonini bilamiz, lekin yozib chiqolmaymiz. 15-oʻyindagi gap shu edi: oʻsish hammasini hal qiladi.");
+    await ui.say("elder", "Sonini bilamiz, lekin yozib chiqolmaymiz. «Qadamlar soni» oʻyinidagi gap shu edi: oʻsish hammasini hal qiladi.");
     await ui.say("elder", "Shuning uchun formula kerak: dastur sanab ulgurmaydi, formula darhol aytadi.");
   }
 

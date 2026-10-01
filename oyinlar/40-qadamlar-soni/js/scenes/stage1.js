@@ -12,7 +12,7 @@
     await ui.say("elder", "Ikki kod bitta ishni bajaradi. Qaysi biri yaxshiroq?");
     await ui.say("apprentice", "Soat bilan oʻlchaymiz — qaysi biri tez bitsa, oʻshasi.");
     await ui.say("elder", "Soat aldaydi. Mening kompyuterim tez, seningda sekin — javob har xil chiqadi.");
-    await ui.say("elder", "Shuning uchun biz qadamni sanaymiz. 13- va 14-oʻyinda shuni qilgan edik.");
+    await ui.say("elder", "Shuning uchun biz qadamni sanaymiz. «Izlash» va «Saralash» oʻyinlarida shuni qilgan edik.");
     await ui.say("elder", "Bugun esa eng muhim savol: maʼlumot koʻpaysa, qadam qanday oʻsadi?");
   }
 

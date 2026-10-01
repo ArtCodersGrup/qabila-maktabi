@@ -148,9 +148,10 @@ Information/
 - Bir nechta o'yinga kerak bo'lgan kod `oyinlar/umumiy/` papkasida turadi. U yerga faqat **kamida 2 ta o'yin** ishlatadigan kod chiqariladi; bitta o'yinga xos narsa o'z papkasida qoladi.
 - `umumiy/` dagi kod o'zgarsa, **barcha o'yinlarning** testlari ishga tushiriladi.
 - Yangi o'yin tayyor bo'lgach, **bosh sahifadagi ro'yxatga** qo'shiladi (`bosh/js/bosh.js` dagi `GAMES`); `node --test bosh/tests/*.test.js` buni tekshiradi.
-- **Bosh sahifadagi tartib** — o'rganish yo'li: osondan qiyinga, boshqa o'yinga tayanadigan o'yin undan keyin (`SECTIONS` tartibi). Kartadagi raqam — shu tartibdagi o'rni, papka raqami emas (papka nomlari o'zgarmaydi).
-- O'yin ichida boshqa o'yinga raqam bilan havola ("5-oʻyindagi chiroqlarni esla") — **bosh sahifadagi raqam** bilan yoziladi va `bosh/tests/havolalar.json` ga qo'shiladi; tartib o'zgarsa, test eslatadi.
-- Yangi **blok** qo'shilsa, `SECTIONS` ga o'rganish yo'li bo'yicha o'z o'rniga qo'yiladi. Undan keyingi bloklarning raqamlari suriladi: o'yin matnidagi raqamli havolalarni `node bosh/tools/renumber.js` yangilaydi, `havolalar.json` testi tekshiradi.
+- **Bosh sahifadagi tartib** — o'rganish yo'li: osondan qiyinga, boshqa o'yinga tayanadigan o'yin undan keyin (`SECTIONS` tartibi). Kartadagi raqam — **tanlangan yosh toifasi ichidagi** o'rni, papka raqami emas (papka nomlari o'zgarmaydi).
+- **Yosh toifalari:** har o'yinda `yosh: [min, max]` bor. Bola kirishda yoshini tanlaydi va oralig'i mos kelgan o'yinlarnigina ko'radi. Oraliq ikkala toifa bilan kesishsa, o'yin ikkalasida ham chiqadi — bitta mavzu ikki yoshga xizmat qilishi mumkin.
+- O'yin ichida boshqa o'yinga havola **nom bilan** yoziladi: «Qabila chiroqlari» o'yinidagi chiroqlarni esla. **Raqam bilan yozilmaydi** — raqam toifaga bog'liq. `bosh/tests/bosh.test.js` ikkalasini ham tekshiradi: raqamli havola qolmaganini va «…» ichidagi nom haqiqiy o'yinga tegishli ekanini.
+- Yangi **blok** qo'shilsa, `SECTIONS` ga o'rganish yo'li bo'yicha o'z o'rniga qo'yiladi. Raqamlar o'z-o'zidan suriladi — boshqa faylga tegilmaydi.
 - **Musobaqalar** (o'yin emas, bosqichi yo'q) — bosh sahifada `CONTESTS`, ikki guruh: **bitta ekranda** (`oyinlar/musobaqa/` savol-javob, `oyinlar/poyga/` tez yozish poygasi) va **onlayn** (`oyinlar/onlayn/` aloqa sinovi; onlayn o'yinlar keyin qo'shiladi).
 
 ## 10. Ish tartibi
