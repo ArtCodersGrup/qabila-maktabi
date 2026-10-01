@@ -24,7 +24,8 @@ test("kalit, sarlavha va bosqichlar soni o'yin main.js ga mos", () => {
     const src = fs.readFileSync(path.join(dir, "js/main.js"), "utf8");
     assert.ok(src.includes(`storageKey: "${game.key}"`), `${game.dir}: kalit`);
     assert.ok(src.includes(`title: "${game.title}"`), `${game.dir}: sarlavha`);
-    const stages = src.match(/stageTitles: \[([^\]]*)\]/)[1].split(",").length;
+    // Sarlavha ichida vergul bo'lishi mumkin ("Medallar A(n,k)") — qo'shtirnoq juftlari sanaladi
+    const stages = (src.match(/stageTitles: \[([^\]]*)\]/)[1].match(/"/g) || []).length / 2;
     assert.equal(game.stages, stages, `${game.dir}: bosqichlar soni`);
   }
 });

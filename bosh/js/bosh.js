@@ -65,6 +65,7 @@
     { n: 39, topic: "algoritm", dir: "39-saralash", title: "Saralash", desc: "Pufakcha va tanlash: koʻz bilan koʻrinadigan almashinuv", key: "saralash:v1", stages: 3, icon: "saralash", age: "12–16", pc: true },
     { n: 40, topic: "algoritm", dir: "40-qadamlar-soni", title: "Qadamlar soni", desc: "Oʻsishga nom beramiz: O(1), O(log n), O(n), O(n²)", key: "qadamlar-soni:v1", stages: 3, icon: "osish", age: "12–16", pc: true },
     { n: 41, topic: "kombinatorika", dir: "41-tanlov-daraxti", title: "Tanlov daraxti", desc: "Koʻpaytirish va qoʻshish qoidasi: VA — ×, YOKI — +", key: "tanlov-daraxti:v1", stages: 3, icon: "daraxt", age: "12–16", pc: true },
+    { n: 42, topic: "kombinatorika", dir: "42-qatorga-terish", title: "Qatorga terish", desc: "Faktorial n! va A(n,k): tartib muhim boʻlgan sanash", key: "qatorga-terish:v1", stages: 3, icon: "qator3", age: "12–16", pc: true },
   ];
 
   // Mashqlar — o'yin emas: masalalar ro'yxati (qidiruv, filtr, sahifalash). Bosqichi yo'q,

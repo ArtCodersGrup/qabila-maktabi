@@ -8,8 +8,10 @@ test("fakt: kichik qiymatlar va katta son (BigInt)", () => {
   assert.equal(S.fakt(1), 1n);
   assert.equal(S.fakt(5), 120n);
   assert.equal(S.fakt(10), 3628800n);
-  // 20! JS number'ga sig'maydi — BigInt shuning uchun kerak
   assert.equal(S.fakt(20), 2432902008176640000n);
+  // 23! — number'da xato chiqadigan birinchi faktorial; BigInt shuning uchun kerak
+  assert.equal(S.fakt(23), 25852016738884976640000n);
+  assert.notEqual(BigInt(Number(S.fakt(23))), S.fakt(23));
   assert.throws(() => S.fakt(-1), RangeError);
 });
 

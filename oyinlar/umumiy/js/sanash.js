@@ -1,6 +1,7 @@
 // Kombinatorika — sof hisob (41–45-o'yinlar uchun umumiy): ko'paytirish va qo'shish qoidasi,
 // o'rin almashtirish, o'rinlashtirish, birikma, Paskal uchburchagi.
-// Sonlar BigInt (20! JS number'ga sig'maydi). Ekran bilan ishlamaydi, Node'da test qilinadi.
+// Sonlar BigInt: 19! allaqachon MAX_SAFE_INTEGER dan katta, 23! esa number'da xato qiymat beradi.
+// Ekran bilan ishlamaydi, Node'da test qilinadi.
 (function (root) {
   "use strict";
 

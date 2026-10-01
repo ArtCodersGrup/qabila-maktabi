@@ -1,0 +1,67 @@
+/* Qatorga terish — faqat shu o'yinga xos uslublar.
+   Umumiylari: ../../umumiy/css/asos.css va ../../umumiy/css/kod.css */
+
+.formula-box { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+.formula-row { font-size: 18px; font-weight: 800; animation: pop 0.3s; }
+.formula-row.kod { font-family: var(--kod-shrift); font-size: 20px; color: var(--asosiy); }
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(240px, 66vw); align-self: center; }
+.story-art.wide { width: min(320px, 86vw); }
+.story-art.small { width: min(190px, 52vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 19px; font-weight: 800; text-align: center; }
+
+/* ---------- Tartiblar ro'yxati ---------- */
+.qt-royxat {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 6px 16px;
+  width: min(620px, 96%); margin: 0 auto;
+}
+.qt-qator { display: flex; align-items: center; gap: 5px; animation: pop 0.25s; }
+.qt-raqam { color: #A09A8A; font-family: var(--kod-shrift); font-size: 14px; min-width: 22px; }
+.qt-ism {
+  font-size: 14px; font-weight: 700; padding: 4px 9px;
+  background: #F3EFE3; border: 2px solid var(--chiziq); border-radius: 8px;
+}
+
+/* ---------- Qadam chiplari: 5 × 4 × 3 ---------- */
+.qt-qadamlar { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; }
+.qt-qadam {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  min-width: 74px; padding: 8px 12px; background: #D8E6FB;
+  border: 2px solid var(--asosiy); border-radius: 12px; animation: pop 0.3s;
+}
+.qt-qadam b { font-family: var(--kod-shrift); font-size: 22px; color: #1B4A94; }
+.qt-qadam-nom { font-size: 12px; color: #4A4636; }
+.qt-belgi { font-family: var(--kod-shrift); font-size: 20px; font-weight: 900; color: #6B6558; }
+.qt-hisob {
+  text-align: center; font-family: var(--kod-shrift); font-size: 22px; font-weight: 900;
+  color: var(--asosiy); padding-top: 10px;
+}
+
+/* ---------- n! jadvali ---------- */
+.qt-jadval {
+  border-collapse: collapse; margin: 0 auto; background: #fff;
+  border: 2px solid var(--chiziq); border-radius: 12px; overflow: hidden;
+}
+.qt-jadval th, .qt-jadval td { border: 1px solid var(--chiziq); padding: 7px 16px; text-align: right; }
+.qt-jadval th { background: #F3EFE3; color: #6B6558; font-size: 15px; font-weight: 800; text-align: center; }
+.qt-jadval td { font-family: var(--kod-shrift); font-size: 17px; }
+.qt-jadval .qt-n { font-weight: 800; text-align: center; }
+.qt-jadval td.katta { color: #8E5BD0; font-weight: 800; }
+
+.qt-savol { font-size: 19px; font-weight: 800; text-align: center; line-height: 1.4; max-width: 540px; margin: 0 auto; }
+
+@media (max-width: 520px) {
+  .summary { font-size: 17px; gap: 8px; }
+  .qt-royxat { grid-template-columns: 1fr; }
+  .qt-ism { font-size: 13px; padding: 3px 7px; }
+  .qt-qadam { min-width: 60px; padding: 6px 8px; }
+  .qt-qadam b { font-size: 19px; }
+  .qt-jadval th, .qt-jadval td { padding: 6px 9px; font-size: 15px; }
+  .qt-hisob { font-size: 19px; }
+  .qt-savol { font-size: 17px; }
+}
+@media (orientation: landscape) and (max-height: 520px) {
+  .story-art { width: min(180px, 34vh); }
+  .story-art.wide { width: min(280px, 56vh); }
+}
