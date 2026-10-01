@@ -7,7 +7,7 @@ algoritm nima, qanday koʻrinadi (blok-sxema), qaysi biri tezroq va nega.
 **Shart:** Python bloki bolalarda sinalgach boshlanadi ([`PYTHON-SINOV.md`](PYTHON-SINOV.md)).
 
 > **Holat (2026-10-01):** **36-oʻyin toʻliq yozildi** va saytga ulandi (`36-algoritm-xossalari`).
-> Keyingisi — 37-oʻyin «Blok-sxema», blokning eng katta qismi.
+> **37-oʻyin ham yozildi** (eng katta qism — sxema yigʻuvchisi). Keyingisi — 38 «Izlash».
 
 **Muallif topshirigʻi (2026-10-01):** «algoritmlar, ularning turlari va xossalari, misollar, nega ular bizga kerak.
 O bolshoy ham boʻlar edi. Blok-sxema koʻrinishini tasvirlash ham yaxshi (oʻyinga oʻxshatib, blok qoʻyadigan qilib).
@@ -45,7 +45,7 @@ Bola buni **oʻz kodida** koʻradi. `O(n)` shundan keyin nom sifatida kiritiladi
 | № | Oʻyin | Mavzu |
 |---|---|---|
 | 36 | **Algoritm va xossalari** ✅ | nega kerak; tushunarlilik, aniqlik, diskretlik, natijaviylik, ommaviylik |
-| 37 | **Blok-sxema** | belgilar; sxemani yigʻish → kod; kodni oʻqib sxemani tanlash |
+| 37 | **Blok-sxema** ✅ | belgilar; sxemani yigʻish → kod; kodni oʻqib sxemani tanlash |
 | 38 | **Izlash** | "oʻylagan sonni top" → chiziqli izlash → ikkilik izlash |
 | 39 | **Saralash** | pufakcha va tanlash: koʻz bilan koʻrinadigan almashinuv, keyin kod |
 | 40 | **Qadamlar soni** | oʻlchov jadvali → `O(n)`, `O(n²)`, `O(log n)`; "10 000 ta son uchun qaysi biri ishlaydi?" |
