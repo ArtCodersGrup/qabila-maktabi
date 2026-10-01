@@ -57,6 +57,7 @@
     { n: 46, topic: "klaviatura", dir: "46-tezkor-tugmalar", title: "Tezkor tugmalar", desc: "Ctrl + C, V, Z va boshqalar: sichqonchasiz ishlash", key: "tezkor-tugmalar:v1", stages: 3, yosh: [8, 16], icon: "tezkor", pc: true },
     { n: 24, topic: "mantiq", dir: "24-mantiq-kalitlari", title: "Mantiq kalitlari", desc: "Kalitlar va chiroq: VA, YOKI, EMAS", key: "mantiq-kalitlari:v1", stages: 3, yosh: [8, 16], icon: "mantiq" },
     { n: 25, topic: "mantiq", dir: "25-zinapoya-chirogi", title: "Zinapoya chirogʻi", desc: "Faqat bittasi (XOR), sxemalar va kompyuter qanday qoʻshadi", key: "zinapoya-chirogi:v1", stages: 3, yosh: [10, 16], icon: "zinapoya" },
+    { n: 48, topic: "mantiq", dir: "48-mantiq-kodda", title: "Mantiq kodda", desc: "True va False, and / or / not, shart yozish", key: "mantiq-kodda:v1", stages: 3, yosh: [12, 16], icon: "mantiqkod", pc: true },
     { n: 26, topic: "dastur", dir: "26-robot-yoli", title: "Robot yoʻli", desc: "Robotga buyruq beramiz: algoritm va tartib", key: "robot-yoli:v1", stages: 3, yosh: [8, 11], icon: "yol" },
     { n: 47, topic: "dastur", dir: "47-robot-aqlli", title: "Robot aqlli boʻldi", desc: "Takror va agar: bitta dastur har xil maydonda ishlaydi", key: "robot-aqlli:v1", stages: 3, yosh: [8, 11], icon: "robotaql" },
     { n: 27, topic: "python", dir: "27-birinchi-buyruq", title: "Birinchi buyruq", desc: "print: birinchi kod, qoʻshtirnoq va xato xabari", key: "birinchi-buyruq:v1", stages: 3, yosh: [12, 16], icon: "buyruq", pc: true },

@@ -79,6 +79,7 @@ Tartib — bosh sahifadagidek: osondan qiyinga, oldingi oʻyinga tayanadiganlari
 | **Mantiq** | | | |
 | Mantiq kalitlari | `24-mantiq-kalitlari` | 8–16 | Rost va yolgʻon, VA (ketma-ket kalitlar), YOKI (parallel), EMAS (teskari kalit), rostlik jadvali, hayotiy qoidalar, Jorj Bul |
 | Zinapoya chirogʻi | `25-zinapoya-chirogi` | 10–16 | XOR (faqat bittasi), amallar zanjiri (sxema), yarim qoʻshuvchi: kompyuter qanday qoʻshadi |
+| Mantiq kodda | `48-mantiq-kodda` | 12–16 💻 | `True`/`False`, `and` `or` `not`, rostlik jadvalini Python hisoblaydi, shart yozish |
 
 **Musobaqalar** (bosh sahifa tepasida, oʻyin emas — bosqichi yoʻq):
 

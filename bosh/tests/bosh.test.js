@@ -112,9 +112,15 @@ test("ikki toifada turadigan o'yinlar bor va har joyda o'z raqami bilan", () => 
   assert.notEqual(number(choti, kichik), number(choti, katta), "raqam toifaga qarab o'zgarishi kerak");
 });
 
-test("💻 belgisi: klaviatura, Python, algoritm va kombinatorika bloklariga haqiqiy klaviatura kerak", () => {
-  const needsKeyboard = ["klaviatura", "python", "algoritm", "kombinatorika"];
-  for (const game of GAMES) assert.equal(!!game.pc, needsKeyboard.includes(game.topic), game.dir);
+// 💻 — bolaga haqiqiy klaviatura kerak: kod yoki matn teriladigan o'yinlar
+test("💻 belgisi: kod yoziladigan o'yinlarda bor, qolganlarida yo'q", () => {
+  const bloklar = ["klaviatura", "python", "algoritm", "kombinatorika"];
+  // Boshqa blokda turgan, lekin kod yoziladigan o'yinlar — ataylab sanab o'tiladi
+  const qoshimcha = ["48-mantiq-kodda"];
+  for (const game of GAMES) {
+    const kerak = bloklar.includes(game.topic) || qoshimcha.includes(game.dir);
+    assert.equal(!!game.pc, kerak, game.dir);
+  }
 });
 
 // O'yin matnidagi havolalar RAQAM emas, NOM bilan yoziladi ("«Izlash» o'yinida ko'rgan eding").

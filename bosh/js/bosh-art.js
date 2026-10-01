@@ -507,7 +507,17 @@
   <path d="M19 32 V24" stroke="#2B2B3A" stroke-width="2.5"/>
   <circle cx="19" cy="21" r="3.5" fill="#F08A24" stroke="#2B2B3A" stroke-width="2"/>`);
 
-  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, bolish, qutilar2, ayri, charx, zina, qator, dastgoh, minora, ikkiyol, sxema, lupa, saralash, osish, daraxt, qator3, jamoa, paskal, kaptar, tezkor, robotaql, poyga, yozuv, onlayn, tog };
+  // 48-o'yin: mantiq kodda — ikki kalit va chiroq
+  const mantiqkod = svg(`
+  <path d="M6 38 H20" stroke="#8A8577" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M20 38 L32 30" stroke="#1A9E77" stroke-width="3.5" stroke-linecap="round"/>
+  <circle cx="20" cy="38" r="3.5" fill="#2B2B3A"/><circle cx="34" cy="38" r="3.5" fill="#2B2B3A"/>
+  <path d="M34 38 H44" stroke="#8A8577" stroke-width="3.5" stroke-linecap="round"/>
+  <circle cx="52" cy="38" r="9" fill="#FFE9A8" stroke="#2B2B3A" stroke-width="3"/>
+  <path d="M52 20 v-5 M64 26 l4 -4 M40 26 l-4 -4" stroke="#F08A24" stroke-width="3" stroke-linecap="round"/>
+  <path d="M8 54 H60" stroke="#D8CDB4" stroke-width="3" stroke-linecap="round"/>`);
+
+  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, bolish, qutilar2, ayri, charx, zina, qator, dastgoh, minora, ikkiyol, sxema, lupa, saralash, osish, daraxt, qator3, jamoa, paskal, kaptar, tezkor, robotaql, mantiqkod, poyga, yozuv, onlayn, tog };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";

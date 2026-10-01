@@ -1,0 +1,37 @@
+/* Mantiq kodda — faqat shu o'yinga xos uslublar.
+   Umumiylari: ../../umumiy/css/asos.css, kod.css, mantiq.css */
+
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(250px, 70vw); align-self: center; }
+.story-art.wide { width: min(320px, 86vw); }
+.story-art.small { width: min(200px, 54vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 18px; font-weight: 800; text-align: center; }
+
+.mk-savol { font-size: 20px; font-weight: 800; text-align: center; font-family: var(--kod-shrift); }
+.mk-gap {
+  font-size: 19px; font-weight: 700; text-align: center; line-height: 1.45; max-width: 560px;
+  padding: 12px 16px; background: #fff; border: 2px solid var(--chiziq); border-radius: 14px;
+}
+
+/* ---------- Rostlik jadvali ---------- */
+.mk-jadval {
+  border-collapse: collapse; margin: 0 auto; background: #fff;
+  border: 2px solid var(--chiziq); border-radius: 12px; overflow: hidden;
+}
+.mk-jadval th, .mk-jadval td {
+  border: 1px solid var(--chiziq); padding: 6px 16px; text-align: center;
+  font-family: var(--kod-shrift); font-size: 16px;
+}
+.mk-jadval th { background: #F3EFE3; color: #6B6558; font-size: 14px; font-weight: 800; }
+.mk-jadval th.ifoda { color: var(--asosiy); font-size: 16px; }
+.mk-jadval td.rost { color: var(--togri); font-weight: 800; }
+.mk-jadval td.yolgon { color: #8E3B33; }
+.mk-jadval td.natija { background: #FBF8F0; font-weight: 900; }
+
+@media (max-width: 520px) {
+  .summary { font-size: 16px; }
+  .mk-savol { font-size: 18px; }
+  .mk-gap { font-size: 17px; }
+  .mk-jadval th, .mk-jadval td { padding: 5px 10px; font-size: 14px; }
+}
