@@ -2,7 +2,7 @@
 (function (root) {
   "use strict";
 
-  const J = (root.QK && root.QK.jang) || require("./jang.js");
+  const J = (root.QK && root.QK.jang) || require("../../umumiy/js/jang.js");
 
   const tank = (o) => J.tank(o);
 

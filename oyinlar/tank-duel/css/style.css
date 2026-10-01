@@ -1,0 +1,47 @@
+/* Tank dueli — sahifa uslublari. Maydon va buyruq paneli: ../49-tank/css/style.css */
+
+#app { height: auto; min-height: 100vh; min-height: 100dvh; gap: 12px; padding: 8px 14px 24px; }
+.topbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; max-width: 980px; margin: 0 auto; }
+.td-sarlavha { margin: 0; font-size: 22px; font-weight: 900; }
+.td-asos { width: 100%; max-width: 980px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+
+.td-forma { display: flex; flex-direction: column; align-items: center; gap: 14px; padding-top: 10px; }
+.td-izoh { margin: 0; font-size: 17px; font-weight: 700; text-align: center; max-width: 520px; }
+.td-ismlar { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.td-ism {
+  width: 200px; padding: 12px; box-sizing: border-box; font: inherit; font-size: 18px; font-weight: 700;
+  background: #fff; border: 3px solid var(--asosiy); border-radius: 12px; text-align: center;
+}
+.td-buyruqlar { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; max-width: 560px; }
+.td-buyruq {
+  font-family: var(--kod-shrift); font-size: 14px; padding: 3px 9px;
+  background: #F3EFE3; border: 1px solid var(--chiziq); border-radius: 7px; color: #4A4636;
+}
+
+.td-navbat {
+  font-size: 20px; font-weight: 900; text-align: center; padding: 8px;
+  border-radius: 12px; background: #D8E6FB; color: #1B4A94;
+}
+.td-navbat.b { background: #F6D9D4; color: #8E2B20; }
+.td-ikki { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; }
+.td-chap { display: flex; flex-direction: column; gap: 6px; flex: 2 1 420px; max-width: 620px; }
+.td-ong { display: flex; flex-direction: column; gap: 6px; flex: 1 1 300px; max-width: 400px; }
+.td-nomlar { display: flex; justify-content: center; gap: 18px; font-size: 15px; font-weight: 800; }
+.td-nom { display: flex; align-items: center; gap: 6px; }
+.td-nuqta { width: 14px; height: 14px; border-radius: 4px; border: 2px solid var(--matn); }
+.td-nuqta.a { background: #2F6FDE; }
+.td-nuqta.b { background: #C0392B; }
+
+.td-natija {
+  display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 16px;
+  background: #fff; border: 3px solid var(--togri); border-radius: 16px; animation: pop 0.3s;
+}
+.td-natija-nom { font-size: 26px; font-weight: 900; color: var(--togri); }
+.td-natija-izoh { font-size: 16px; font-weight: 700; color: #4A4636; text-align: center; }
+.td-tugmalar { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+
+@media (max-width: 760px) {
+  .td-ikki { flex-direction: column; align-items: stretch; }
+  .td-chap, .td-ong { max-width: none; }
+  .td-navbat { font-size: 17px; }
+}

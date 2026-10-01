@@ -88,6 +88,7 @@ Tartib — bosh sahifadagidek: osondan qiyinga, oldingi oʻyinga tayanadiganlari
 
 *Bitta ekranda* (internetsiz, ikki oʻyinchi yonma-yon):
 - **Savol-javob** (`oyinlar/musobaqa/`): navbat bilan savolga javob berishadi, har raundda birinchi javob beradigan almashadi. Har kimning oʻz soati (shaxmat soatidek), 3 ta yuragi va bitta oʻtkazishi bor; savollar tanlangan mavzu va qiyinlikdan tasodifiy yasaladi.
+- **Tank dueli** (`oyinlar/tank-duel/`, 💻): ikki oʻquvchi navbat bilan oʻz tankiga Python buyruqlarini yozadi (`move(50)`, `if scan() > 0: fire()`); maydon simmetrik, gʻolib — raqibning jonini tugatgan.
 - **Tez yozish poygasi** (`oyinlar/poyga/`, 💻): navbat bilan bir xil matnni yozishadi; aniqligi 90% dan past boʻlgan yuta olmaydi, keyin — kim tezroq.
 
 *Onlayn* (har kim oʻz qurilmasida, 4 xonali xona kodi bilan):

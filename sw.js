@@ -1,6 +1,6 @@
 // Offline rejim: sayt fayllari keshlanadi. Bola saytni bir marta ochsa, keyin internetsiz ham oʻynay oladi.
 // Yangi fayl qoʻshilsa, FILES roʻyxatiga ham qoʻshiladi — buni bosh/tests/offline.test.js tekshiradi.
-const VERSION = "v72";
+const VERSION = "v73";
 const CACHE = "qabila-maktabi-" + VERSION;
 
 const FILES = [
@@ -27,6 +27,8 @@ const FILES = [
   "oyinlar/umumiy/js/dastur.js",
   "oyinlar/umumiy/js/kod-mashq.js",
   "oyinlar/umumiy/js/kod-ui.js",
+  "oyinlar/umumiy/js/jang.js",
+  "oyinlar/umumiy/js/jang-ui.js",
   "oyinlar/umumiy/js/kod.js",
   "oyinlar/umumiy/js/mantiq-ui.js",
   "oyinlar/umumiy/js/offline.js",
@@ -593,7 +595,6 @@ const FILES = [
   "oyinlar/49-tank/index.html",
   "oyinlar/49-tank/css/style.css",
   "oyinlar/49-tank/js/game-art.js",
-  "oyinlar/49-tank/js/jang.js",
   "oyinlar/49-tank/js/logic.js",
   "oyinlar/49-tank/js/main.js",
   "oyinlar/49-tank/js/scenes/common.js",
@@ -638,6 +639,11 @@ const FILES = [
   "oyinlar/onlayn/index.html",
   "oyinlar/onlayn/css/style.css",
   "oyinlar/onlayn/js/sinov.js",
+  "oyinlar/tank-duel/",
+  "oyinlar/tank-duel/index.html",
+  "oyinlar/tank-duel/css/style.css",
+  "oyinlar/tank-duel/js/duel.js",
+  "oyinlar/tank-duel/js/main.js",
   "oyinlar/tog/",
   "oyinlar/tog/index.html",
   "oyinlar/tog/css/style.css",

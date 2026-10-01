@@ -94,6 +94,7 @@
   const CONTESTS = [
     { dir: "musobaqa", mode: "offline", yosh: [8, 16], title: "Savol-javob", desc: "Ikki kishi bitta ekranda: savollar, soat va 3 ta yurak", icon: "musobaqa" },
     { dir: "poyga", mode: "offline", yosh: [8, 16], title: "Tez yozish poygasi", desc: "Navbat bilan bir xil matnni yozasizlar: kim aniq va tez?", icon: "poyga", pc: true },
+    { dir: "tank-duel", mode: "offline", title: "Tank dueli", desc: "Ikki oʻquvchi navbat bilan oʻz tankiga kod yozadi: kim gʻolib?", icon: "tankduel", yosh: [12, 16], pc: true },
     { dir: "onlayn", mode: "online", yosh: [8, 16], title: "Aloqa sinovi", desc: "Ikki qurilmani ulab koʻramiz — onlayn musobaqalar uchun tayyorgarlik", icon: "onlayn" },
     { dir: "tog", mode: "online", yosh: [8, 16], title: "Togʻga chiqish", desc: "Savolga javob ber — pogʻona yuqoriga. Qolib ketsang, chiqib ketasan", icon: "tog", badge: "robotlar bilan" },
     { dir: "yozuv-poygasi", mode: "online", yosh: [8, 16], title: "Yozuv poygasi", desc: "Hamma bir xil matnni yozadi — yozgan sari togʻga koʻtarilasan", icon: "yozuv", pc: true },

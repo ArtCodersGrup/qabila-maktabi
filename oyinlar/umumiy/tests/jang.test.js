@@ -2,7 +2,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const J = require("../js/jang.js");
-const py = require("../../umumiy/js/python/python.js");
+const py = require("../js/python/python.js");
 
 const bolaMaydon = (opts) => J.maydon(Object.assign({
   tanklar: [J.tank({ id: "bola", x: 100, y: 200, burchak: 0 })],

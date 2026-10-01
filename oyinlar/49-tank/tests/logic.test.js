@@ -2,7 +2,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const L = require("../js/logic.js");
-const J = require("../js/jang.js");
+const J = require("../../umumiy/js/jang.js");
 const py = require("../../umumiy/js/python/python.js");
 
 const bajar = (m, satrlar) => {
