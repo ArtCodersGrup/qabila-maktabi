@@ -1,0 +1,5 @@
+/* 54-o'yinga xos uslublar. Umumiylari: umumiy/css/asos.css, kod.css, cpp.css */
+
+/* Kirish rasmi — kod varag'i, kompilyator va chip */
+.story-art svg { width: min(100%, 420px); height: auto; }
+.story-art.small svg { width: min(100%, 300px); }

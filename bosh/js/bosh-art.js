@@ -578,7 +578,17 @@
   <path d="M48 40 v7" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
   <circle cx="48" cy="51" r="1.8" fill="#fff"/>`);
 
-  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, bolish, qutilar2, ayri, charx, zina, qator, dastgoh, minora, ikkiyol, sxema, lupa, saralash, osish, daraxt, qator3, jamoa, paskal, kaptar, tezkor, robotaql, mantiqkod, tank, tankduel, qulf, izqulf, qarmoq, xatoovi, poyga, yozuv, onlayn, tog };
+  // 54-o'yin: C++ — kod varag'i va ikki qo'shuv belgisi
+  const cpp = svg(`
+  <rect x="6" y="10" width="34" height="44" rx="6" fill="#FFFDF7" stroke="#2B2B3A" stroke-width="2.5"/>
+  <path d="M14 22 h16 M14 30 h18 M14 38 h12 M14 46 h15" stroke="#2F6FDE" stroke-width="3.5" stroke-linecap="round"/>
+  <circle cx="44" cy="40" r="15" fill="#F08A24" stroke="#2B2B3A" stroke-width="2.5"/>
+  <path d="M39 40 h-1" stroke="#2B2B3A" stroke-width="3"/>
+  <path d="M44 22 v10 M39 27 h10" stroke="#1A9E77" stroke-width="4" stroke-linecap="round"/>
+  <path d="M56 36 v8 M52 40 h8" stroke="#1A9E77" stroke-width="4" stroke-linecap="round"/>
+  <path d="M38 44 a7 7 0 1 0 0 -8" fill="none" stroke="#2B2B3A" stroke-width="3.5" stroke-linecap="round"/>`);
+
+  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, bolish, qutilar2, ayri, charx, zina, qator, dastgoh, minora, ikkiyol, sxema, lupa, saralash, osish, daraxt, qator3, jamoa, paskal, kaptar, tezkor, robotaql, mantiqkod, tank, tankduel, cpp, qulf, izqulf, qarmoq, xatoovi, poyga, yozuv, onlayn, tog };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";

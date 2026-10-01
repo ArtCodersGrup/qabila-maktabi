@@ -97,7 +97,7 @@ test("yosh oralig'i: har o'yinda bor, to'g'ri va kamida bitta toifaga tushadi", 
   }
   // Blok qoidalari: Python/algoritm/kombinatorika — faqat katta toifa
   for (const game of GAMES) {
-    if (["python", "algoritm", "kombinatorika"].includes(game.topic)) assert.deepEqual(game.yosh, [12, 16], game.dir);
+    if (["python", "algoritm", "kombinatorika", "cpp"].includes(game.topic)) assert.deepEqual(game.yosh, [12, 16], game.dir);
   }
   assert.equal(yoshYorligi({ yosh: [10, 16] }), "10–16");
 });
@@ -114,7 +114,7 @@ test("ikki toifada turadigan o'yinlar bor va har joyda o'z raqami bilan", () => 
 
 // 💻 — bolaga haqiqiy klaviatura kerak: kod yoki matn teriladigan o'yinlar
 test("💻 belgisi: kod yoziladigan o'yinlarda bor, qolganlarida yo'q", () => {
-  const bloklar = ["klaviatura", "python", "algoritm", "kombinatorika"];
+  const bloklar = ["klaviatura", "python", "algoritm", "kombinatorika", "cpp"];
   // Boshqa blokda turgan, lekin kod yoziladigan o'yinlar — ataylab sanab o'tiladi
   const qoshimcha = ["48-mantiq-kodda"];
   for (const game of GAMES) {

@@ -1,6 +1,6 @@
 // Offline rejim: sayt fayllari keshlanadi. Bola saytni bir marta ochsa, keyin internetsiz ham oʻynay oladi.
 // Yangi fayl qoʻshilsa, FILES roʻyxatiga ham qoʻshiladi — buni bosh/tests/offline.test.js tekshiradi.
-const VERSION = "v76";
+const VERSION = "v77";
 const CACHE = "qabila-maktabi-" + VERSION;
 
 const FILES = [
@@ -16,6 +16,7 @@ const FILES = [
   "oyinlar/umumiy/css/asos.css",
   "oyinlar/umumiy/css/dastur.css",
   "oyinlar/umumiy/css/kod.css",
+  "oyinlar/umumiy/css/cpp.css",
   "oyinlar/umumiy/css/mantiq.css",
   "oyinlar/umumiy/css/onlayn.css",
   "oyinlar/umumiy/css/sanoq.css",
@@ -30,6 +31,8 @@ const FILES = [
   "oyinlar/umumiy/js/jang.js",
   "oyinlar/umumiy/js/jang-ui.js",
   "oyinlar/umumiy/js/kod.js",
+  "oyinlar/umumiy/js/cpp.js",
+  "oyinlar/umumiy/js/cpp-ui.js",
   "oyinlar/umumiy/js/mantiq-ui.js",
   "oyinlar/umumiy/js/offline.js",
   "oyinlar/umumiy/js/onlayn.js",
@@ -646,6 +649,17 @@ const FILES = [
   "oyinlar/53-xato-ovi/js/scenes/stage1.js",
   "oyinlar/53-xato-ovi/js/scenes/stage2.js",
   "oyinlar/53-xato-ovi/js/scenes/stage3.js",
+  "oyinlar/54-cpp-birinchi-dastur/",
+  "oyinlar/54-cpp-birinchi-dastur/index.html",
+  "oyinlar/54-cpp-birinchi-dastur/css/style.css",
+  "oyinlar/54-cpp-birinchi-dastur/js/game-art.js",
+  "oyinlar/54-cpp-birinchi-dastur/js/logic.js",
+  "oyinlar/54-cpp-birinchi-dastur/js/main.js",
+  "oyinlar/54-cpp-birinchi-dastur/js/scenes/common.js",
+  "oyinlar/54-cpp-birinchi-dastur/js/scenes/final.js",
+  "oyinlar/54-cpp-birinchi-dastur/js/scenes/stage1.js",
+  "oyinlar/54-cpp-birinchi-dastur/js/scenes/stage2.js",
+  "oyinlar/54-cpp-birinchi-dastur/js/scenes/stage3.js",
   "oyinlar/masalalar/",
   "oyinlar/masalalar/index.html",
   "oyinlar/masalalar/css/style.css",

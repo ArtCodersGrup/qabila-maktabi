@@ -1,6 +1,16 @@
 # C++ bloki — reja
 
-**Holat (2026-10-01):** reja yozildi, muallif qaroriga qoʻyildi.
+**Holat (2026-10-02):** muallif **3-yoʻlni (aralash)** tanladi. Blok yozilishga tushdi.
+
+| Savol | Qaror |
+|---|---|
+| Qaysi yoʻl | **3 — aralash**: kichik ishlaydigan yadro + qolgani oʻqish (muallif, 2026-10-02) |
+| Tartib | 1-qadam (oʻqish qismi) tayyor boʻlishi bilan saytga chiqadi; yadro keyin qoʻshiladi |
+| Oʻyinlar | 4 ta, yoshi **12–16** (Python bloki bilan bir xil), hammasida 💻 |
+| Masalalar banki | mavjud bankka C++ yechimi qoʻshiladi, yangi bank yasalmaydi |
+
+**Yozilgani:** 54 «C++: birinchi dastur» (mavzular 1–2) — oʻqish qismi, `g++` bilan tekshiriladigan
+misollar. Umumiy qatlam: `js/cpp.js`, `js/cpp-ui.js`, `css/cpp.css`, `tests/cpp-parity.test.js`.
 
 **Muallif talabi (2026-10-01):** *«Python bor, C++ yoʻq. Shunga ham boʻlib oʻrgatilishi kerak — kamroq oʻyin,
 koʻproq amaliyot va nazariya, shu bilan birga olimpiadaga tayyorlashni boshlash.»*
