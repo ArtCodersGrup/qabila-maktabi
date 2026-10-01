@@ -59,7 +59,7 @@ test("qidiruv katta-kichik harfga qaramaydi va bir nechta so'zni qo'llaydi", () 
 test("filtr: daraja, teg va qiyinlik", () => {
   const cf = R.filtr(hammasi, { daraja: "cf" });
   assert.equal(cf.length, bank.CF.length);
-  assert.ok(cf.every((p) => p.rating === 800));
+  assert.ok(cf.every((p) => p.rating >= 800 && p.rating <= 1200));
   const satr = R.filtr(hammasi, { teg: "satr" });
   assert.ok(satr.length > 0 && satr.every((p) => p.tags.includes("satr")));
   const q800 = R.filtr(hammasi, { qiyinlik: 800 });

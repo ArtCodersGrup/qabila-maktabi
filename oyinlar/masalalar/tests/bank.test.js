@@ -30,7 +30,7 @@ test("har masalada qiyinlik (rating) va teglar bor, teglar lug'atdan", () => {
 test("Codeforces masalalari: manba havolasi va haqiqiy reyting", () => {
   assert.ok(B.CF.length >= 10);
   for (const p of B.CF) {
-    assert.equal(p.rating, 800, p.id + ": Codeforces reytingi");
+    assert.ok(p.rating >= 800 && p.rating <= 1200, p.id + ": Codeforces reytingi " + p.rating);
     assert.ok(p.manba && p.manba.kod && p.manba.nom, p.id + ": manba");
     assert.match(p.manba.url, /^https:\/\/codeforces\.com\/problemset\/problem\/\d+\/[A-Z]\d*$/, p.id + ": havola");
     assert.ok(Array.isArray(p.manba.cfTags) && p.manba.cfTags.length, p.id + ": cfTags");
@@ -40,6 +40,11 @@ test("Codeforces masalalari: manba havolasi va haqiqiy reyting", () => {
   }
   const tartiblar = B.CF.map((p) => p.tartib).sort((a, b) => a - b);
   assert.deepEqual(tartiblar, B.CF.map((_, k) => k + 1), "tartib raqamlari 1 dan ketma-ket");
+  // Narvon: tartib bo'yicha reyting kamaymasligi kerak (muallif talabi — qiyinlik bo'yicha tartib)
+  const narvon = [...B.CF].sort((a, b) => a.tartib - b.tartib).map((p) => p.rating);
+  for (let k = 1; k < narvon.length; k++) {
+    assert.ok(narvon[k] >= narvon[k - 1], "reyting kamaydi: " + narvon.join(" → "));
+  }
 });
 
 test("Codeforces shartlari o'zimizniki: matn o'zbekcha va uzun", () => {
