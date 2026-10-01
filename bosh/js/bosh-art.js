@@ -588,7 +588,21 @@
   <path d="M56 36 v8 M52 40 h8" stroke="#1A9E77" stroke-width="4" stroke-linecap="round"/>
   <path d="M38 44 a7 7 0 1 0 0 -8" fill="none" stroke="#2B2B3A" stroke-width="3.5" stroke-linecap="round"/>`);
 
-  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, bolish, qutilar2, ayri, charx, zina, qator, dastgoh, minora, ikkiyol, sxema, lupa, saralash, osish, daraxt, qator3, jamoa, paskal, kaptar, tezkor, robotaql, mantiqkod, tank, tankduel, cpp, qulf, izqulf, qarmoq, xatoovi, poyga, yozuv, onlayn, tog };
+  // 55-o'yin: tur va chegara — kichik quti to'lib toshdi
+  const cpptur = svg(`
+  <rect x="5" y="28" width="26" height="26" rx="5" fill="#FFFDF7" stroke="#2B2B3A" stroke-width="2.5"/>
+  <rect x="9" y="34" width="18" height="14" rx="3" fill="#2F6FDE"/>
+  <circle cx="11" cy="20" r="5" fill="#C0392B" stroke="#2B2B3A" stroke-width="2"/>
+  <circle cx="25" cy="14" r="5" fill="#C0392B" stroke="#2B2B3A" stroke-width="2"/>
+  <path d="M35 40 h8" stroke="#8A8577" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M40 35 l6 5 l-6 5" fill="none" stroke="#8A8577" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="38" y="14" width="22" height="40" rx="5" fill="#FFFDF7" stroke="#2B2B3A" stroke-width="2.5"/>
+  <rect x="42" y="19" width="14" height="30" rx="3" fill="#1A9E77"/>
+  <circle cx="45" cy="26" r="3.5" fill="#F3C969" stroke="#2B2B3A" stroke-width="1.5"/>
+  <circle cx="53" cy="26" r="3.5" fill="#F3C969" stroke="#2B2B3A" stroke-width="1.5"/>
+  <circle cx="49" cy="38" r="3.5" fill="#F3C969" stroke="#2B2B3A" stroke-width="1.5"/>`);
+
+  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, bolish, qutilar2, ayri, charx, zina, qator, dastgoh, minora, ikkiyol, sxema, lupa, saralash, osish, daraxt, qator3, jamoa, paskal, kaptar, tezkor, robotaql, mantiqkod, tank, tankduel, cpp, cpptur, qulf, izqulf, qarmoq, xatoovi, poyga, yozuv, onlayn, tog };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";

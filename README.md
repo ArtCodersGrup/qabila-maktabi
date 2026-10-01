@@ -56,6 +56,7 @@ Tartib — bosh sahifadagidek: osondan qiyinga, oldingi oʻyinga tayanadiganlari
 | Bir tomonlama qulf | `51-bir-tomonlama-qulf` | 10–16 | Sayt parolni emas, uning izini (xesh) saqlaydi; toʻqnashuv va tuz |
 | Firibgar xat | `52-firibgar-xat` | 10–16 | Soxta xatning belgilari va manzil qoidasi: zonadan oldingi nom |
 | C++: birinchi dastur | `54-cpp-birinchi-dastur` | 12–16 | Olimpiada tili: qolip, `cout`/`cin`, kompilyatsiya va Python bilan farqi |
+| C++: tur va chegara | `55-cpp-tur-chegara` | 12–16 | `int` toshib ketadi, `long long` sigʻdiradi; butun boʻlish tuzogʻi |
 | **Kodlash va shifrlash** | | | |
 | Qabila kodlari | `01-qabila-kodlari` | 8–16 | Nechta belgidan nechta soʻz yasaladi (aⁱ, yigʻindi, teskari masala) |
 | Qabila Morzesi | `02-qabila-morzesi` | 8–11 | Morze alifbosi: nuqta va chiziq bilan oʻqish va yozish |
