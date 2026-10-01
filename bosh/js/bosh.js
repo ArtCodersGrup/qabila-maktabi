@@ -83,6 +83,7 @@
     { n: 45, topic: "kombinatorika", dir: "45-kaptarxona", title: "Kaptarxona", desc: "Dirixle printsipi: sanamasdan isbotlash", key: "kaptarxona:v1", stages: 3, yosh: [12, 16], icon: "kaptar", pc: true },
     { n: 50, topic: "xavfsizlik", dir: "50-parol-kuchi", title: "Parol kuchi", desc: "Nechta variant bor va kompyuter qancha vaqtda topadi", key: "parol-kuchi:v1", stages: 3, yosh: [10, 16], icon: "qulf" },
     { n: 51, topic: "xavfsizlik", dir: "51-bir-tomonlama-qulf", title: "Bir tomonlama qulf", desc: "Sayt parolni emas, uning izini saqlaydi", key: "bir-tomonlama-qulf:v1", stages: 3, yosh: [10, 16], icon: "izqulf" },
+    { n: 52, topic: "xavfsizlik", dir: "52-firibgar-xat", title: "Firibgar xat", desc: "Soxta xatni belgilaridan va manzilidan tanish", key: "firibgar-xat:v1", stages: 3, yosh: [10, 16], icon: "qarmoq" },
   ];
 
   // Mashqlar — o'yin emas: masalalar ro'yxati (qidiruv, filtr, sahifalash). Bosqichi yo'q,
