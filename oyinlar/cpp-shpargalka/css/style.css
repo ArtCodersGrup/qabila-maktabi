@@ -1,0 +1,76 @@
+/* C++ shpargalkasi: bitta sahifa, chop etsa ham bo'ladi. */
+.shp-body { background: var(--fon); }
+.shp {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 16px 16px 40px;
+  box-sizing: border-box;
+}
+.shp-top { margin-bottom: 18px; }
+.shp-orqaga {
+  display: inline-block;
+  margin-bottom: 10px;
+  color: var(--asosiy);
+  font-weight: 800;
+  text-decoration: none;
+}
+.shp h1 { margin: 0 0 4px; font-size: 30px; color: var(--matn); }
+.shp-sub { margin: 0; color: #6B6558; font-weight: 700; }
+
+.shp-blok {
+  background: #fff;
+  border: 2px solid var(--chiziq);
+  border-radius: 14px;
+  padding: 12px 14px 14px;
+  margin-top: 14px;
+}
+.shp-blok h2 { margin: 0 0 10px; font-size: 20px; color: var(--matn); }
+.shp-izoh { margin: 10px 0 0; color: #5C5648; font-weight: 700; line-height: 1.45; }
+.shp-izoh code, .shp-jadval code, .shp-tuzoq code {
+  font-family: var(--kod-shrift);
+  font-size: 0.95em;
+  background: #F6F2E8;
+  border-radius: 5px;
+  padding: 1px 5px;
+}
+
+.shp-kod {
+  margin: 0;
+  padding: 10px 12px;
+  background: #FFFDF7;
+  border: 2px solid var(--chiziq);
+  border-radius: 10px;
+  overflow-x: auto;
+}
+.shp-kod code { font-family: var(--kod-shrift); font-size: 15px; line-height: 1.5; white-space: pre; }
+
+.shp-jadval { width: 100%; border-collapse: collapse; }
+.shp-jadval th, .shp-jadval td {
+  text-align: left;
+  padding: 6px 8px;
+  border-bottom: 1px dashed var(--chiziq);
+  vertical-align: top;
+  font-weight: 700;
+}
+.shp-jadval th { font-size: 14px; color: #6B6558; letter-spacing: 0.02em; }
+.shp-jadval td:first-child { white-space: nowrap; color: var(--matn); }
+.shp-jadval tr:last-child td { border-bottom: none; }
+
+.shp-tuzoq ul { margin: 0; padding-left: 20px; }
+.shp-tuzoq li { margin-bottom: 7px; font-weight: 700; color: #5C5648; line-height: 1.45; }
+.shp-tuzoq b { color: var(--matn); }
+
+.shp-foot { margin-top: 18px; color: #6B6558; font-weight: 700; font-size: 15px; text-align: center; }
+
+@media (max-width: 430px) {
+  .shp h1 { font-size: 25px; }
+  .shp-kod code { font-size: 12.5px; }
+  .shp-jadval th, .shp-jadval td { padding: 5px 4px; font-size: 14.5px; }
+}
+
+/* Chop etish: oq fon, ramkalar yupqa, havolalar ko'rinmaydi */
+@media print {
+  .shp-orqaga, .shp-foot { display: none; }
+  .shp-body { background: #fff; }
+  .shp-blok { break-inside: avoid; border-width: 1px; }
+}

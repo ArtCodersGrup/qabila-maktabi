@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>C++ shpargalkasi</title>
+  <link rel="icon" href="../../bosh/icon.svg">
+  <meta name="theme-color" content="#FFF6E5">
+  <link rel="stylesheet" href="../umumiy/css/asos.css">
+  <link rel="stylesheet" href="../umumiy/css/kod.css">
+  <link rel="stylesheet" href="../umumiy/css/cpp.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="shp-body">
+  <main class="shp">
+    <header class="shp-top">
+      <a class="shp-orqaga" href="../../index.html">◀︎ Barcha oʻyinlar</a>
+      <h1>C++ shpargalkasi</h1>
+      <p class="shp-sub">Bitta sahifada: qolip, Python bilan farqlar va tuzoqlar. Chop etsa ham boʻladi.</p>
+    </header>
+
+    <section class="shp-blok">
+      <h2>Dastur qolipi</h2>
+      <pre class="shp-kod"><code>#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    // kod shu yerga yoziladi
+    return 0;
+}</code></pre>
+      <p class="shp-izoh">Matn bilan ishlasang, yana bitta qator qoʻshiladi: <code>#include &lt;string&gt;</code>.
+      Har buyruq <code>;</code> bilan tugaydi, blokni <code>{ }</code> yasaydi — otstup emas.</p>
+    </section>
+
+    <section class="shp-blok">
+      <h2>Python → C++</h2>
+      <table class="shp-jadval">
+        <thead><tr><th>Nima</th><th>Python</th><th>C++</th></tr></thead>
+        <tbody>
+          <tr><td>Chiqish</td><td><code>print(x)</code></td><td><code>cout &lt;&lt; x &lt;&lt; "\n";</code></td></tr>
+          <tr><td>Kirish</td><td><code>x = int(input())</code></td><td><code>cin &gt;&gt; x;</code></td></tr>
+          <tr><td>Oʻzgaruvchi</td><td><code>x = 5</code></td><td><code>int x = 5;</code></td></tr>
+          <tr><td>Shart</td><td><code>if a &gt; b:</code></td><td><code>if (a &gt; b) { … }</code></td></tr>
+          <tr><td>Aks holda</td><td><code>elif / else:</code></td><td><code>else if (…) { } else { }</code></td></tr>
+          <tr><td>Sikl</td><td><code>for i in range(n):</code></td><td><code>for (int i = 0; i &lt; n; i++) { }</code></td></tr>
+          <tr><td>Shartli sikl</td><td><code>while a &lt; b:</code></td><td><code>while (a &lt; b) { }</code></td></tr>
+          <tr><td>Roʻyxat</td><td><code>a = []</code></td><td><code>int a[100];</code> yoki <code>vector&lt;int&gt; v;</code></td></tr>
+          <tr><td>Qoʻshish</td><td><code>a.append(x)</code></td><td><code>v.push_back(x);</code></td></tr>
+          <tr><td>Uzunlik</td><td><code>len(a)</code></td><td><code>v.size()</code> / <code>s.size()</code></td></tr>
+          <tr><td>Saralash</td><td><code>a.sort()</code></td><td><code>sort(v.begin(), v.end());</code></td></tr>
+          <tr><td>Izoh</td><td><code># izoh</code></td><td><code>// izoh</code></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="shp-blok">
+      <h2>Turlar va chegaralar</h2>
+      <table class="shp-jadval">
+        <thead><tr><th>Tur</th><th>Nimadan nimagacha</th><th>Qachon</th></tr></thead>
+        <tbody>
+          <tr><td><code>int</code></td><td>−2 147 483 648 … 2 147 483 647</td><td>oddiy sanash, 2 milliardgacha</td></tr>
+          <tr><td><code>long long</code></td><td>≈ ±9 · 10<sup>18</sup></td><td>yigʻindi yoki koʻpaytma katta boʻlsa</td></tr>
+          <tr><td><code>double</code></td><td>kasr son, ≈ 15 raqam aniq</td><td>oʻrtacha, boʻlish, oʻlchov</td></tr>
+          <tr><td><code>char</code></td><td>bitta belgi: <code>'a'</code></td><td>harf bilan ishlash</td></tr>
+          <tr><td><code>string</code></td><td>matn: <code>"salom"</code></td><td>soʻz va satrlar</td></tr>
+          <tr><td><code>bool</code></td><td><code>true</code> / <code>false</code> (chiqishda 1 / 0)</td><td>belgilash, bayroqlar</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="shp-blok shp-tuzoq">
+      <h2>Tuzoqlar — eng koʻp uchraydigan xatolar</h2>
+      <ul>
+        <li><b>Butun boʻlish:</b> <code>7 / 2</code> → <code>3</code>. Kasr kerak boʻlsa: <code>7 / 2.0</code>.</li>
+        <li><b>Manfiy sonlar:</b> C++ da <code>-7 / 2 = -3</code> va <code>-7 % 3 = -1</code> (Pythonda −4 va 2).</li>
+        <li><b>Toshib ketish:</b> <code>int</code> ga sigʻmagan javob <b>jim buziladi</b>, xato chiqmaydi. Shubha boʻlsa — <code>long long</code>.</li>
+        <li><b>Massiv chegarasi:</b> <code>a[n]</code> ga yozish xato bermaydi, lekin javobni buzadi.</li>
+        <li><b>= va ==:</b> <code>if (x = 5)</code> — tayinlash, shart doim rost.</li>
+        <li><b>Qavs:</b> qavssiz <code>if</code> va <code>for</code> ga faqat <b>keyingi bitta satr</b> kiradi.</li>
+        <li><b>Boʻsh tana:</b> <code>for (…);</code> — nuqtali vergul siklni boʻsh qoldiradi.</li>
+        <li><b>int ga kasr:</b> <code>int a = 2.9;</code> → <code>2</code> (kesiladi, yaxlitlanmaydi).</li>
+      </ul>
+    </section>
+
+    <section class="shp-blok">
+      <h2>Olimpiadaning birinchi bosqichi uchun shu yetadi</h2>
+      <pre class="shp-kod"><code>int n;
+cin &gt;&gt; n;
+int a[100005];
+for (int i = 0; i &lt; n; i++) cin &gt;&gt; a[i];
+
+long long s = 0;
+int eng = a[0];
+for (int i = 0; i &lt; n; i++) {
+    s += a[i];
+    if (a[i] &gt; eng) eng = a[i];
+}
+cout &lt;&lt; s &lt;&lt; " " &lt;&lt; eng &lt;&lt; "\n";</code></pre>
+      <p class="shp-izoh">Yigʻindi uchun <code>long long</code> olinadi — sonlar koʻp boʻlsa <code>int</code> toshib ketadi.
+      Bitta oʻtishda yigʻindi, eng katta, eng kichik va sanoqni topish —
+      birinchi bosqich masalalarining yarmi shu naqshda yechiladi.</p>
+    </section>
+
+    <footer class="shp-foot">
+      Qabila maktabi · C++ bloki (54–57-oʻyinlar). Kodni brauzerda sinash uchun oʻyinlardagi
+      «▶︎ Ishga tushir» tugmasidan foydalan.
+    </footer>
+  </main>
+  <script src="../umumiy/js/offline.js"></script>
+</body>
+</html>

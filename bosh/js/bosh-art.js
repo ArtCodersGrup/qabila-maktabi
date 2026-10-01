@@ -626,7 +626,14 @@
   <rect x="26" y="42" width="11" height="16" rx="2.5" fill="#1A9E77" stroke="#2B2B3A" stroke-width="2"/>
   <rect x="42" y="34" width="11" height="24" rx="2.5" fill="#C0392B" stroke="#2B2B3A" stroke-width="2"/>`);
 
-  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, bolish, qutilar2, ayri, charx, zina, qator, dastgoh, minora, ikkiyol, sxema, lupa, saralash, osish, daraxt, qator3, jamoa, paskal, kaptar, tezkor, robotaql, mantiqkod, tank, tankduel, cpp, cpptur, cppsikl, cppmassiv, qulf, izqulf, qarmoq, xatoovi, poyga, yozuv, onlayn, tog };
+  // Shpargalka: varaq va qisqa yozuvlar
+  const varaq = svg(`
+  <rect x="12" y="6" width="40" height="52" rx="6" fill="#FFFDF7" stroke="#2B2B3A" stroke-width="2.5"/>
+  <path d="M20 18 h24 M20 27 h24 M20 36 h16 M20 45 h20" stroke="#2F6FDE" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M44 36 h8" stroke="#F08A24" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M46 45 h6" stroke="#1A9E77" stroke-width="3.5" stroke-linecap="round"/>`);
+
+  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, bolish, qutilar2, ayri, charx, zina, qator, dastgoh, minora, ikkiyol, sxema, lupa, saralash, osish, daraxt, qator3, jamoa, paskal, kaptar, tezkor, robotaql, mantiqkod, tank, tankduel, varaq, cpp, cpptur, cppsikl, cppmassiv, qulf, izqulf, qarmoq, xatoovi, poyga, yozuv, onlayn, tog };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";

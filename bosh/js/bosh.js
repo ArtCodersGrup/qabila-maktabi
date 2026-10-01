@@ -95,6 +95,7 @@
   // har masala alohida yechiladi va foiz bilan baholanadi.
   const MASHQLAR = [
     { dir: "masalalar", title: "Masalalar", desc: "Olimpiada masalalari: qidiruv, filtr va testlar bilan tekshirish", icon: "minora", yosh: [12, 16], pc: true },
+    { dir: "cpp-shpargalka", title: "C++ shpargalkasi", desc: "Bitta sahifada: qolip, Python bilan farqlar va tuzoqlar", icon: "varaq", yosh: [12, 16] },
   ];
 
   // Musobaqalar — o'yin emas (bosqichi yo'q), ro'yxat tepasida alohida bo'lim: savol-javob va tez yozish poygasi
@@ -223,7 +224,7 @@
     if (mashqlar.length) {
       const mashq = h("section", { class: "bosh-section" },
         h("h2", { class: "bosh-h2", text: "Mashqlar" }),
-        h("p", { class: "bosh-note", text: "Masalalar roʻyxati — oʻzing tanlab yechasan" }));
+        h("p", { class: "bosh-note", text: "Masalalar va qoʻllanma — oʻzing tanlaysan" }));
       const mashqCards = h("div", { class: "bosh-cards" });
       mashqlar.forEach((m) => mashqCards.append(
         h("a", { class: "bosh-card bosh-contest", href: `oyinlar/${m.dir}/index.html` },

@@ -59,6 +59,7 @@ Tartib — bosh sahifadagidek: osondan qiyinga, oldingi oʻyinga tayanadiganlari
 | C++: tur va chegara | `55-cpp-tur-chegara` | 12–16 | `int` toshib ketadi, `long long` sigʻdiradi; butun boʻlish tuzogʻi |
 | C++: qavs va takror | `56-cpp-qavs-takror` | 12–16 | Blokni `{ }` yasaydi; `=` va `==`; `for` ning uch qismi |
 | C++: massiv va saralash | `57-cpp-massiv-saralash` | 12–16 | Massiv va satr — yoziladi; `vector` va `sort` — oʻqiladi |
+| C++ shpargalkasi | `cpp-shpargalka` | 12–16 | Bitta sahifalik qoʻllanma: qolip, Python bilan farqlar, tuzoqlar |
 | **Kodlash va shifrlash** | | | |
 | Qabila kodlari | `01-qabila-kodlari` | 8–16 | Nechta belgidan nechta soʻz yasaladi (aⁱ, yigʻindi, teskari masala) |
 | Qabila Morzesi | `02-qabila-morzesi` | 8–11 | Morze alifbosi: nuqta va chiziq bilan oʻqish va yozish |

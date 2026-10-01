@@ -9,8 +9,27 @@
 | Oʻyinlar | 4 ta, yoshi **12–16** (Python bloki bilan bir xil), hammasida 💻 |
 | Masalalar banki | mavjud bankka C++ yechimi qoʻshiladi, yangi bank yasalmaydi |
 
-**Yozilgani:** 54 «C++: birinchi dastur» (mavzular 1–2) — oʻqish qismi, `g++` bilan tekshiriladigan
-misollar. Umumiy qatlam: `js/cpp.js`, `js/cpp-ui.js`, `css/cpp.css`, `tests/cpp-parity.test.js`.
+**Blok tayyor (2026-10-02).** Yozilgani:
+
+| № | Oʻyin | Mavzular | Kod ishlaydimi |
+|---|---|---|---|
+| 54 | C++: birinchi dastur | qolip, `cout`, `cin`, Python bilan farq | ha (2-bosqichda yoziladi) |
+| 55 | C++: tur va chegara | `int` toshishi, `long long`, boʻlish tuzoqlari | ha |
+| 56 | C++: qavs va takror | `{ }`, `=` va `==`, `for`/`while`, xatolar | ha |
+| 57 | C++: massiv va saralash | massiv, satr — yoziladi; `vector`, `sort` — oʻqiladi | qisman (ataylab) |
+| — | [C++ shpargalkasi](../cpp-shpargalka/index.html) | bitta sahifalik qoʻllanma, chop etsa boʻladi | — |
+
+**Yadro** (`js/cpp/`, ~1 100 satr): tokenizer, parser, semantika (nomlar ishdan oldin tekshiriladi),
+qiymatlar (BigInt bilan 32/64 bit qirqish), talqinchi va `QK.cpp.run/trace/check`.
+Qoʻllab-quvvatlaydi: `cin`/`cout`, `int`/`long long`/`double`/`bool`/`char`/`string`,
+bir oʻlchovli massiv (roʻyxat bilan eʼlon ham), `if/else`, `while`, `for`, `break`/`continue`.
+**Yoʻq va taqlid qilinmaydi:** `vector`, `sort`, `map`, `struct`, funksiya, koʻrsatkich —
+ularga «bu yerda hali yoʻq» xabari chiqadi.
+
+**Halollik tekshiruvi:** 46 ta dasturdan iborat korpus har safar bizning yadroda ham, haqiqiy `g++` da
+ham ishga tushiriladi va chiqish bayt-bayt solishtiriladi; kompilyatsiya xatolarining satr va ustuni
+ham `g++` nikiga tengligi qulflangan (`tests/cpp-engine-parity.test.js`). Oʻyinlardagi misollar
+ham shunday tekshiriladi (`tests/cpp-parity.test.js`).
 
 **Muallif talabi (2026-10-01):** *«Python bor, C++ yoʻq. Shunga ham boʻlib oʻrgatilishi kerak — kamroq oʻyin,
 koʻproq amaliyot va nazariya, shu bilan birga olimpiadaga tayyorlashni boshlash.»*
