@@ -1,6 +1,6 @@
 // Offline rejim: sayt fayllari keshlanadi. Bola saytni bir marta ochsa, keyin internetsiz ham oʻynay oladi.
 // Yangi fayl qoʻshilsa, FILES roʻyxatiga ham qoʻshiladi — buni bosh/tests/offline.test.js tekshiradi.
-const VERSION = "v77";
+const VERSION = "v78";
 const CACHE = "qabila-maktabi-" + VERSION;
 
 const FILES = [
@@ -33,6 +33,12 @@ const FILES = [
   "oyinlar/umumiy/js/kod.js",
   "oyinlar/umumiy/js/cpp.js",
   "oyinlar/umumiy/js/cpp-ui.js",
+  "oyinlar/umumiy/js/cpp/errors.js",
+  "oyinlar/umumiy/js/cpp/tokenizer.js",
+  "oyinlar/umumiy/js/cpp/values.js",
+  "oyinlar/umumiy/js/cpp/parser.js",
+  "oyinlar/umumiy/js/cpp/interpreter.js",
+  "oyinlar/umumiy/js/cpp/cpp-run.js",
   "oyinlar/umumiy/js/mantiq-ui.js",
   "oyinlar/umumiy/js/offline.js",
   "oyinlar/umumiy/js/onlayn.js",

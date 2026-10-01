@@ -72,6 +72,6 @@
 
   const api = { BOSH, OXIR, dastur, chiqar, QISMLAR, JADVAL, KALIT, TUR, ICHKI, satrlar, solishtir };
   root.QK = root.QK || {};
-  root.QK.cpp = api;
+  root.QK.cpp = Object.assign(root.QK.cpp || {}, api);
   if (typeof module !== "undefined" && module.exports) module.exports = api;
 })(typeof window !== "undefined" ? window : globalThis);
