@@ -1,0 +1,59 @@
+/* Sonlar ustaxonasi — faqat shu o'yinga xos uslublar.
+   Umumiylari: ../../umumiy/css/asos.css va ../../umumiy/css/kod.css */
+
+.formula-box { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+.formula-row { font-size: 20px; font-weight: 900; animation: pop 0.3s; }
+.formula-row.kod { font-family: var(--kod-shrift); font-size: 20px; color: var(--asosiy); white-space: pre; }
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(240px, 66vw); align-self: center; }
+.story-art.wide { width: min(340px, 88vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 19px; font-weight: 800; text-align: center; }
+
+@media (max-width: 480px) {
+  .formula-row { font-size: 17px; }
+  .formula-row.kod { font-size: 17px; }
+  .summary { font-size: 17px; gap: 8px; }
+}
+@media (orientation: landscape) and (max-height: 520px) {
+  .story-art { width: min(180px, 34vh); }
+  .story-art.wide { width: min(300px, 60vh); }
+}
+
+/* ---------- Saralash ustunlari ---------- */
+.sr-ustunlar {
+  display: flex; align-items: flex-end; justify-content: center; gap: 10px;
+  height: 160px; padding: 8px 10px;
+  border-bottom: 4px solid #8A8577;
+}
+.sr-ustun { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; width: 46px; }
+.sr-tayoq {
+  display: block; width: 100%;
+  background: #F2E6CF; border: 3px solid var(--matn); border-bottom: 0; border-radius: 6px 6px 0 0;
+  box-sizing: border-box;
+  transition: height 0.3s, background 0.3s;
+}
+.sr-son { font-family: var(--kod-shrift); font-size: 17px; font-weight: 800; padding-top: 4px; }
+.sr-ustun.belgi .sr-tayoq { background: #2F6FDE; }
+.sr-ustun.belgi .sr-son { color: var(--asosiy); }
+.sr-ustun.eng .sr-tayoq { background: #F08A24; }
+.sr-ustun.tayyor .sr-tayoq { background: #BFE3D3; border-color: #1A9E77; }
+.sr-ustun.tayyor .sr-son { color: var(--togri); }
+
+/* ---------- Qadamlar jadvali ---------- */
+.sr-jadval {
+  border-collapse: collapse; margin: 0 auto; background: #fff;
+  border: 2px solid var(--chiziq); border-radius: 12px; overflow: hidden;
+}
+.sr-jadval th, .sr-jadval td { border: 1px solid var(--chiziq); padding: 8px 16px; text-align: center; }
+.sr-jadval th { background: #F3EFE3; color: #6B6558; font-size: 15px; font-weight: 800; }
+.sr-jadval td { font-family: var(--kod-shrift); font-size: 18px; }
+.sr-jadval .sr-n { font-weight: 800; }
+.sr-jadval td.yaxshi { color: var(--togri); font-weight: 800; }
+
+@media (max-width: 520px) {
+  .sr-ustunlar { height: 130px; gap: 6px; }
+  .sr-ustun { width: 38px; }
+  .sr-son { font-size: 15px; }
+  .sr-jadval th, .sr-jadval td { padding: 6px 10px; font-size: 16px; }
+}

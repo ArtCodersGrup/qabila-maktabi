@@ -39,7 +39,7 @@
     const code = 'x = 14\nprint(x > 10 and x < 20)\nprint(x < 10 or x == 14)\nprint(not x == 14)\nprint(10 < x < 20)';
     const el = common.box();
     withOutput(el, code);
-    await ui.say("elder", "36-oʻyinni esla: VA, YOKI, EMAS kalitlari. Pythonda ular and, or, not.");
+    await ui.say("elder", "37-oʻyinni esla: VA, YOKI, EMAS kalitlari. Pythonda ular and, or, not.");
     await ui.say("elder", "Oxirgi satr — qisqa yoʻl: 10 < x < 20 degani x oraliqda ekani.");
   }
 
