@@ -397,7 +397,16 @@
   <path d="M18 45 H8" stroke="#8A8577" stroke-width="2.5"/>
   <path d="M46 45 H56" stroke="#8A8577" stroke-width="2.5"/>`);
 
-  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, bolish, qutilar2, ayri, charx, zina, qator, dastgoh, minora, ikkiyol, sxema, poyga, yozuv, onlayn, tog };
+  // 38-o'yin: izlash — kataklar va lupa
+  const lupa = svg(`
+  <rect x="4" y="34" width="13" height="16" rx="3" fill="#F2E6CF" stroke="#2B2B3A" stroke-width="2.5"/>
+  <rect x="20" y="34" width="13" height="16" rx="3" fill="#2F6FDE" stroke="#2B2B3A" stroke-width="2.5"/>
+  <rect x="36" y="34" width="13" height="16" rx="3" fill="#F2E6CF" stroke="#2B2B3A" stroke-width="2.5"/>
+  <rect x="52" y="34" width="8" height="16" rx="3" fill="#F2E6CF" stroke="#2B2B3A" stroke-width="2.5"/>
+  <circle cx="28" cy="18" r="11" fill="none" stroke="#1A9E77" stroke-width="4"/>
+  <path d="M36 26 L46 36" stroke="#1A9E77" stroke-width="5" stroke-linecap="round"/>`);
+
+  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, bolish, qutilar2, ayri, charx, zina, qator, dastgoh, minora, ikkiyol, sxema, lupa, poyga, yozuv, onlayn, tog };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";
