@@ -57,3 +57,22 @@ oyinlar/masalalar/
 
 - Masalaga **animatsiya** (muallif talabi): har masala uchun alohida kelishiladi, bank formatida `animatsiya` maydoni tayyor turibdi.
 - Bankka masala qoʻshish: `js/bank.js` ga yangi yozuv — test uni oʻzi tekshiradi.
+
+## Ikki til: Python va C++ (2026-10-02)
+
+Masala matni va kutilgan javob bitta: javob **bankdagi namunali Python yechimidan** hisoblanadi.
+Shuning uchun C++ ni qoʻshish uchun har masalaga ikkinchi yechim yozish shart boʻlmadi —
+faqat bolaning kodi qaysi dvigatelda ishlashi tanlanadi:
+
+- muharrir ustida **Til: Python | C++** tugmalari (tanlov brauzerda saqlanadi);
+- C++ tanlansa, kod `QK.cpp.run` yadrosida ishlaydi (`oyinlar/umumiy/js/cpp/`), xatolar
+  kompilyator uslubida koʻrsatiladi;
+- qoralama har til uchun alohida saqlanadi (`masala:<id>` va `masala:<id>:cpp`).
+
+**Tekshiruv:** `tests/cpp-yechimlar.js` da 24 ta masalaning C++ yechimi bor. Ular ikki marta
+sinaladi: yadroda (`cpp-yechim.test.js`) va **haqiqiy g++ da** (`cpp-gpp.test.js`) — ikkalasida ham
+bank testlaridan toʻliq oʻtishi shart. Shu bilan «C++ da ham yechsa boʻladimi?» degan savol
+taxminga qoldirilmaydi.
+
+**Yadroda yoʻq narsalar** (`vector`, `map`, funksiya) masalani yechishga halal bermaydi:
+24 ta yechim massiv, `sort`, `while (cin >> x)` va `string` bilan yozilgan.

@@ -139,6 +139,7 @@
         if (q.t !== "string") throw E.yoq(".size()", node);
         return V.son("ll", BigInt(q.v.length));
       }
+      case "keltir": return V.turga(node.tur, baho(node.ifoda, env, ctx), node);
       case "bir": {
         if (node.op === "!") return V.bool(!V.rostmi(baho(node.ifoda, env, ctx)));
         const q = baho(node.ifoda, env, ctx);
@@ -164,6 +165,7 @@
         return V.amal(node.op, baho(node.chap, env, ctx), baho(node.ong, env, ctx), node);
       }
       case "royxat": throw E.sintaksis("initializer list is only allowed in a declaration", node);
+      case "chaqiruv": return chaqiruv(node, env, ctx);
       case "tayinlash": {
         const uya = uyaTopi(node.maqsad, env, ctx);
         const nomi = node.maqsad.k === "nom" ? node.maqsad.nom : node.maqsad.obj.nom;
@@ -175,6 +177,80 @@
       default:
         throw E.ichki("nomaʼlum ifoda: " + node.k);
     }
+  }
+
+
+  // sort(a, a + n) uchun: "a" yoki "a + k" ifodasidan massiv va boshlanish o'rnini topamiz.
+  // Haqiqiy C++ da bu ko'rsatkich bo'ladi; biz faqat shu ikki ko'rinishni bilamiz.
+  function massivChegara(node, env, ctx) {
+    let nomNode = node;
+    let siljish = 0;
+    if (node.k === "ikki" && (node.op === "+" || node.op === "-")) {
+      nomNode = node.chap;
+      const qiymat = Number(V.butun(baho(node.ong, env, ctx)));
+      siljish = node.op === "+" ? qiymat : -qiymat;
+    }
+    if (nomNode.k !== "nom") return null;
+    const uya = env.izla(nomNode.nom);
+    if (!uya || !uya.massiv) return null;
+    return { uya, orin: siljish, nom: nomNode.nom };
+  }
+
+  // Tayyor funksiyalar: sort, swap, max, min, abs
+  function chaqiruv(node, env, ctx) {
+    const nom = node.nom;
+    if (nom === "sort") {
+      const bosh = massivChegara(node.args[0], env, ctx);
+      const oxir = massivChegara(node.args[1], env, ctx);
+      if (!bosh || !oxir || bosh.uya !== oxir.uya) {
+        throw E.yoq("sort — faqat massiv uchun: sort(a, a + n)", node);
+      }
+      const n = bosh.uya.massiv.length;
+      if (bosh.orin < 0 || oxir.orin > n || bosh.orin > oxir.orin) {
+        throw E.chegaradanTashqari(bosh.nom, oxir.orin, n, node);
+      }
+      const bolak = bosh.uya.massiv.slice(bosh.orin, oxir.orin);
+      for (const u of bolak) if (!u.berilgan) throw E.qiymatsiz(bosh.nom, node);
+      const qiymatlar = bolak.map((u) => u.q);
+      qiymatlar.sort((a, b) => {
+        if (a.t === "string" || a.t === "char") return a.v < b.v ? -1 : a.v > b.v ? 1 : 0;
+        const x = a.t === "double" ? a.v : V.butun(a);
+        const y = b.t === "double" ? b.v : V.butun(b);
+        return x < y ? -1 : x > y ? 1 : 0;
+      });
+      for (let k = 0; k < bolak.length; k++) bolak[k].q = qiymatlar[k];
+      return V.int(0n);
+    }
+    if (nom === "swap") {
+      const a = uyaTopi(node.args[0], env, ctx);
+      const b = uyaTopi(node.args[1], env, ctx);
+      const nomA = node.args[0].k === "nom" ? node.args[0].nom : node.args[0].obj.nom;
+      const nomB = node.args[1].k === "nom" ? node.args[1].nom : node.args[1].obj.nom;
+      const qa = oqi(a, nomA, node);
+      const qb = oqi(b, nomB, node);
+      yoz(a, qb, node);
+      yoz(b, qa, node);
+      return V.int(0n);
+    }
+    const qiymatlar = node.args.map((x) => baho(x, env, ctx));
+    if (nom === "abs") {
+      const q = qiymatlar[0];
+      if (q.t === "double") return V.dbl(Math.abs(q.v));
+      const x = V.butun(q);
+      return V.son(q.t === "ll" ? "ll" : "int", x < 0n ? -x : x);
+    }
+    // max / min — haqiqiy C++ da ikkala argument BIR XIL turda bo'lishi shart
+    const [a, b] = qiymatlar;
+    if (a.t !== b.t) {
+      throw E.sintaksis("no matching function for call to '" + nom + "'", Object.assign({}, node, {
+        hint: "max va min ikkala sonni bir xil turda talab qiladi. " + nom + "(2.5, 2) ishlamaydi — "
+          + nom + "(2.5, 2.0) deb yoz.",
+      }));
+    }
+    const katta = V.rostmi(V.solishtir(">", a, b, node));
+    const tanlangan = (nom === "max") === katta ? a : b;
+    const tur = V.umumiyTur(a, b);
+    return tur === "double" ? V.dbl(V.kasr(tanlangan)) : V.son(tur, V.butun(tanlangan));
   }
 
   // ---------- Buyruqlar ----------
@@ -246,7 +322,23 @@
         return null;
       }
       case "toki": {
-        while (V.rostmi(baho(node.shart, env, ctx))) {
+        // while (cin >> x): o'qishga urinamiz; kirish tugasa — sikl tugaydi (C++ dagidek)
+        const shartni = () => {
+          if (!node.oqiShart) return V.rostmi(baho(node.shart, env, ctx));
+          for (const q of node.oqiShart.qismlar) {
+            const uya = uyaTopi(q, env, ctx);
+            let qiymat;
+            try {
+              qiymat = oqiQiymat(uya.tur, ctx, node);
+            } catch (e) {
+              if (e && (e.kind === "runtime") && /no more input|invalid input/.test(e.cppMessage)) return false;
+              throw e;
+            }
+            yoz(uya, qiymat, node);
+          }
+          return true;
+        };
+        while (shartni()) {
           qadam(ctx, node);
           const sig = yield* bajar(node.tana, new Env(env), ctx);
           if (sig && sig.sig === "uz") break;

@@ -6,6 +6,9 @@
 
   const node = typeof module !== "undefined" && module.exports;
   const K = node ? require("../../umumiy/js/kod.js") : root.QK.kod;
+  // C++ dvigateli: bola masalani ikki tilda yechishi mumkin. Kutilgan javob ikkalasida ham
+  // bir xil — u bankdagi Python yechimidan hisoblanadi (yoki testda yozilgan bo'ladi).
+  const CPP = () => (node ? require("../../umumiy/js/cpp/cpp-run.js") : root.QK.cpp);
 
   const casesOf = (task) => (task.tests && task.tests.length ? task.tests : [{ stdin: task.stdin || [] }]);
 
@@ -18,14 +21,17 @@
   // Natija: har test uchun ✓/✗, qaysi biri yiqilgani va foiz.
   // Birinchi yiqilgan testning ma'lumoti ochiladi (bolaga yo'l ko'rsatish uchun),
   // qolganlari yopiq qoladi — aks holda javoblarni kodga yozib qo'yish mumkin bo'lardi.
-  function baho(task, code) {
+  function baho(task, code, til) {
     const matn = String(code == null ? "" : code);
+    const cpp = til === "cpp";
     if (!matn.trim()) {
       return { bosh: true, testlar: [], otgan: 0, jami: casesOf(task).length, foiz: 0, toliq: false };
     }
     const testlar = casesOf(task).map((testCase, k) => {
       const kutilganlar = kutilgan(task, testCase);
-      const r = K.run(K.withTail(matn, task), testCase);
+      const r = cpp
+        ? CPP().run(matn, { stdin: (testCase && testCase.stdin) || [] })
+        : K.run(K.withTail(matn, task), testCase);
       const chiqqan = K.normalize(r.output);
       const ok = !r.error && K.sameOutput(kutilganlar, chiqqan);
       return {

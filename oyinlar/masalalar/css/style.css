@@ -136,3 +136,20 @@
   .masala-nom { font-size: 19px; }
   .m-holat { width: 2.8em; }
 }
+
+/* Til tanlovi: Python yoki C++ (javob ikkalasida ham bir xil tekshiriladi) */
+.m-tillar { display: flex; align-items: center; gap: 8px; margin: 12px 0 6px; flex-wrap: wrap; }
+.m-til-nom { font-size: 15px; font-weight: 800; color: #6B6558; }
+.m-til {
+  min-height: 40px;
+  padding: 7px 18px;
+  border: 2px solid var(--chiziq);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--matn);
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+.m-til.hozir { background: var(--asosiy); border-color: var(--asosiy); color: #fff; }
+.m-stol { width: 100%; }

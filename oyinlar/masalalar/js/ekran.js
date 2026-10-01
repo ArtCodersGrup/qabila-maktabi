@@ -5,6 +5,7 @@
 
   const QK = root.QK;
   const { ui, sound, kod: K, kodUI: U } = QK;
+  const CU = QK.cppUI;
   const R = QK.masalaRoyxat;
   const B = QK.baho;
   const H = QK.masalaHolat;
@@ -15,6 +16,17 @@
 
   // Ro'yxat holati (sahifa, qidiruv, filtrlar) — ekranlar orasida saqlanadi
   const holat = { qidiruv: "", daraja: "", teg: "", qiyinlik: "", holat: "", sahifa: 1 };
+
+  // Masalani Python yoki C++ da yechish mumkin. Kutilgan javob ikkalasida ham bir xil —
+  // u bankdagi namunali yechimdan hisoblanadi. Tanlov brauzerda saqlanadi.
+  const TIL_KALIT = "qabila:masala-til:v1";
+  const TILLAR = [{ id: "python", nom: "Python" }, { id: "cpp", nom: "C++" }];
+  const tilOqi = () => {
+    try { return root.localStorage.getItem(TIL_KALIT) === "cpp" ? "cpp" : "python"; } catch (e) { return "python"; }
+  };
+  const tilYoz = (t) => {
+    try { root.localStorage.setItem(TIL_KALIT, t); } catch (e) { /* maxfiy rejim — muhim emas */ }
+  };
 
   function tozala() {
     ui.newRun();
@@ -168,21 +180,85 @@
     }
     box.append(karta);
 
+    let til = tilOqi();
+    const tilJoy = h("div", { class: "m-tillar" });
+    const stolJoy = h("div", { class: "m-stol" });
     const natijaJoy = h("div", { class: "m-natija" });
-    const w = U.workbench({
-      rows: 7,
-      stdin: p.namuna.stdin,
-      saveKey: "masala:" + p.id,
-      onRun: (r, code) => korsat(natijaJoy, task, code),
-    });
-    box.append(w.el, natijaJoy);
-    control().append(ui.button("▶︎ Tekshirish", () => w.run(), "big"));
-    setTimeout(() => w.editor.focus(), 60);
+    box.append(tilJoy, stolJoy, natijaJoy);
+
+    function chiz() {
+      tilJoy.innerHTML = "";
+      tilJoy.append(h("span", { class: "m-til-nom", text: "Til:" }));
+      for (const t of TILLAR) {
+        tilJoy.append(h("button", {
+          class: "m-til" + (til === t.id ? " hozir" : ""),
+          type: "button",
+          text: t.nom,
+          onClick: () => {
+            if (til === t.id) return;
+            til = t.id;
+            tilYoz(t.id);
+            natijaJoy.innerHTML = "";
+            chiz();
+          },
+        }));
+      }
+      stolJoy.innerHTML = "";
+      control().innerHTML = "";
+      if (til === "cpp") cppStol();
+      else pythonStol();
+    }
+
+    function pythonStol() {
+      const w = U.workbench({
+        rows: 7,
+        stdin: p.namuna.stdin,
+        saveKey: "masala:" + p.id,
+        onRun: (r, code) => korsat(natijaJoy, task, code, "python"),
+      });
+      stolJoy.append(w.el);
+      control().append(ui.button("▶︎ Tekshirish", () => w.run(), "big"));
+      setTimeout(() => w.editor.focus(), 60);
+    }
+
+    function cppStol() {
+      const kalit = "masala:" + p.id + ":cpp";
+      const saqlangan = U.draft.read(kalit);
+      const ed = CU.muharrir({
+        kod: saqlangan != null ? saqlangan : QK.cpp.BOSH + "\n    \n" + QK.cpp.OXIR,
+        rows: 9,
+        onRun: () => ishga(),
+      });
+      const chiqishJoy = h("div", { class: "cpp-natija" });
+      stolJoy.append(CU.kirishPanel(p.namuna.stdin), ed.el, chiqishJoy);
+
+      let kutish = null;
+      ed.area.addEventListener("input", () => {
+        if (kutish) clearTimeout(kutish);
+        kutish = setTimeout(() => U.draft.write(kalit, ed.get()), 300);
+      });
+      ui.onCleanup(() => { if (kutish) clearTimeout(kutish); });
+
+      function ishga() {
+        const kod = ed.get();
+        const r = QK.cpp.run(kod, { stdin: p.namuna.stdin });
+        chiqishJoy.innerHTML = "";
+        chiqishJoy.append(r.error
+          ? CU.xatoPaneli(r.error)
+          : CU.chiqishPanel(r.output.length ? r.output : [""], "Namunaviy kirishda chiqish"));
+        korsat(natijaJoy, task, kod, "cpp");
+      }
+
+      control().append(ui.button("▶︎ Tekshirish", ishga, "big"));
+      setTimeout(() => ed.focus(), 60);
+    }
+
+    chiz();
   }
 
   // Testlar natijasi: har test raqami bilan, foiz va birinchi yiqilganining tafsiloti
-  function korsat(host, task, code) {
-    const b = B.baho(task, code);
+  function korsat(host, task, code, til) {
+    const b = B.baho(task, code, til);
     H.belgila(task.id, b.foiz, b.toliq);
     host.innerHTML = "";
     sound.play(b.toliq ? "correct" : "retry");

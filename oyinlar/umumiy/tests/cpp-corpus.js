@@ -6,6 +6,8 @@
 const bosh = "#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n";
 const oxir = "\n    return 0;\n}\n";
 const d = (tana) => bosh + tana.split("\n").map((s) => (s ? "    " + s : "")).join("\n") + oxir;
+// sort/swap/max/min ishlatadigan dasturlar uchun: <algorithm> ham ulanadi
+const da = (tana) => d(tana).replace("#include <string>", "#include <string>\n#include <algorithm>");
 
 const CORPUS = [
   // ---------- Chiqish ----------
@@ -59,6 +61,14 @@ const CORPUS = [
   { id: "royxat-qisqa", kod: d('int a[5] = {3, 1, 4};\nfor (int i = 0; i < 5; i++) cout << a[i] << " ";\ncout << "\\n";'), kutilgan: ["3 1 4 0 0 "] },
   { id: "royxat-boyisiz", kod: d('int b[] = {7, 8};\ncout << b[0] + b[1] << "\\n";'), kutilgan: ["15"] },
 
+  // ---------- Tayyor funksiyalar (sort, max, min, abs, swap) ----------
+  { id: "sort-massiv", kod: da('int a[5] = {7, 2, 9, 1, 5};\nsort(a, a + 5);\nfor (int i = 0; i < 5; i++) cout << a[i] << " ";\ncout << "\\n";'), kutilgan: ["1 2 5 7 9 "] },
+  { id: "sort-qism", kod: da('int a[5] = {7, 2, 9, 1, 5};\nsort(a, a + 3);\nfor (int i = 0; i < 5; i++) cout << a[i] << " ";\ncout << "\\n";'), kutilgan: ["2 7 9 1 5 "] },
+  { id: "sort-ikkinchi-katta", kod: da('int n = 6;\nint a[6] = {3, 9, 2, 9, 7, 1};\nsort(a, a + n);\ncout << a[n - 2] << "\\n";'), kutilgan: ["9"] },
+  { id: "max-min-abs", kod: da('cout << max(3, 8) << " " << min(3, 8) << " " << abs(-7) << " " << abs(7) << "\\n";'), kutilgan: ["8 3 7 7"] },
+  { id: "swap", kod: da('int x = 1, y = 2;\nswap(x, y);\nint a[2] = {5, 6};\nswap(a[0], a[1]);\ncout << x << y << a[0] << a[1] << "\\n";'), kutilgan: ["2165"] },
+  { id: "max-double", kod: da('cout << max(2.5, 2.0) << " " << min(2.5, 2.0) << "\\n";'), kutilgan: ["2.5 2"] },
+
   // ---------- Matn ----------
   { id: "string-qosh", kod: d('string a = "Qabila";\nstring b = " maktabi";\ncout << a + b << "\\n";'), kutilgan: ["Qabila maktabi"] },
   { id: "string-uzunlik", kod: d('string s = "salom";\ncout << s.size() << " " << s[0] << s[4] << "\\n";'), kutilgan: ["5 sm"] },
@@ -71,10 +81,19 @@ const CORPUS = [
   { id: "cin-double", kod: d('double x;\ncin >> x;\ncout << x * 2 << "\\n";'), kirish: ["1.25"], kutilgan: ["2.5"] },
   { id: "cin-massiv", kod: d('int n;\ncin >> n;\nint a[100];\nfor (int i = 0; i < n; i++) cin >> a[i];\nint m = a[0];\nfor (int i = 1; i < n; i++) if (a[i] < m) m = a[i];\ncout << m << "\\n";'), kirish: ["5", "7 3 9 1 8"], kutilgan: ["1"] },
 
+  // ---------- Tur keltirish ----------
+  { id: "keltirish", kod: d('int a = 100000, b = 100000;\ncout << a * b << " " << (long long)a * b << "\\n";'), kutilgan: ["1410065408 10000000000"] },
+  { id: "keltirish-double", kod: d('int a = 7, b = 2;\ncout << a / b << " " << (double)a / b << "\\n";'), kutilgan: ["3 3.5"] },
+
+  // ---------- Kirish tugaguncha o'qish ----------
+  { id: "cin-oxirigacha", kod: d('int x;\nint s = 0, n = 0;\nwhile (cin >> x) {\n    s += x;\n    n++;\n}\ncout << n << " " << s << "\\n";'), kirish: ["1 2 3 4 5"], kutilgan: ["5 15"] },
+  { id: "cin-bosh", kod: d('int x;\nint n = 0;\nwhile (cin >> x) n++;\ncout << n << "\\n";'), kutilgan: ["0"] },
+  { id: "cin-soz", kod: d('string s;\nint n = 0;\nwhile (cin >> s) n++;\ncout << n << "\\n";'), kirish: ["olma anor uzum"], kutilgan: ["3"] },
+
   // ---------- Olimpiada naqshlari ----------
   { id: "raqamlar-yigindisi", kod: d('int n;\ncin >> n;\nint s = 0;\nwhile (n > 0) {\n    s += n % 10;\n    n /= 10;\n}\ncout << s << "\\n";'), kirish: ["3791"], kutilgan: ["20"] },
   { id: "tub-son", kod: d('int n;\ncin >> n;\nbool tub = n > 1;\nfor (int i = 2; i * i <= n; i++) if (n % i == 0) tub = false;\ncout << tub << "\\n";'), kirish: ["97"], kutilgan: ["1"] },
   { id: "fibonachchi", kod: d('long long a = 0, b = 1;\nfor (int i = 0; i < 50; i++) {\n    long long c = a + b;\n    a = b;\n    b = c;\n}\ncout << a << "\\n";'), kutilgan: ["12586269025"] },
 ];
 
-module.exports = { CORPUS, d };
+module.exports = { CORPUS, d, da };

@@ -11,7 +11,7 @@
     "if", "else", "while", "for", "do", "break", "continue", "return",
     "using", "namespace", "true", "false",
     // yadroda yo'q, lekin tanilishi kerak — tushunarli xabar berish uchun
-    "vector", "struct", "class", "template", "new", "delete", "sort", "map", "set", "pair",
+    "vector", "struct", "class", "template", "new", "delete", "map", "set", "pair",
   ]);
 
   // Uzun belgilar oldin tekshiriladi: "<<=" bo'lmasa ham "<<" "<=" dan oldin turadi

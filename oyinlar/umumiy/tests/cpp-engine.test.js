@@ -100,10 +100,9 @@ test("son kutilgan joyda matn kelsa — xabar aniq", () => {
 });
 
 // ---------- Yadroda yo'q imkoniyatlar: yolg'on natija o'rniga ochiq xabar ----------
-test("vector, sort, funksiya va ko'rsatkich — 'bu yerda hali yo'q'", () => {
+test("vector, map, struct va ko'rsatkich — 'bu yerda hali yo'q'", () => {
   for (const [tana, nima] of [
     ["vector<int> v;", "vector"],
-    ["int a[3];\nsort(a, a + 3);", "sort"],
     ["map<int, int> m;", "map"],
     ["struct Nuqta { int x; };", "struct"],
     ["int x = 5;\nint* p = &x;", "koʻrsatkich"],
@@ -159,4 +158,32 @@ test("yopilmagan qo'shtirnoq — tushunarli xato", () => {
   const e = xato('cout << "salom;');
   assert.equal(e.kind, "compile");
   assert.match(e.cppMessage, /missing terminating/);
+});
+
+// Yadroga qo'shilgan tayyor funksiyalar: olimpiada masalalari uchun shular yetadi
+test("sort, swap, max, min, abs — massiv bilan ishlaydi", () => {
+  assert.deepEqual(ishga(d('int a[5] = {7, 2, 9, 1, 5};\nsort(a, a + 5);\nfor (int i = 0; i < 5; i++) cout << a[i];')).output, ["12579"]);
+  assert.deepEqual(ishga(d('int a[4] = {4, 3, 2, 1};\nsort(a, a + 2);\nfor (int i = 0; i < 4; i++) cout << a[i];')).output, ["3421"]);
+  assert.deepEqual(ishga(d('cout << max(3, 8) << min(3, 8) << abs(-5);')).output, ["835"]);
+  assert.deepEqual(ishga(d('int x = 1, y = 2;\nswap(x, y);\ncout << x << y;')).output, ["21"]);
+  // C++ da max(double, int) kompilyatsiya bo'lmaydi — biz ham shunday qilamiz
+  const e = xato("cout << max(2.5, 2);");
+  assert.match(e.cppMessage, /no matching function for call to 'max'/);
+  assert.match(e.hint, /bir xil turda/);
+  // sort faqat massiv uchun
+  assert.equal(xato("int x = 5;\nsort(x, x + 1);").kind, "yoq");
+});
+
+test("while (cin >> x): kirish tugaguncha o'qiydi", () => {
+  const kod = d('int x;\nint s = 0, n = 0;\nwhile (cin >> x) {\n    s += x;\n    n++;\n}\ncout << n << " " << s;');
+  assert.deepEqual(ishga(kod, ["4 5 6"]).output, ["3 15"]);
+  assert.deepEqual(ishga(kod, []).output, ["0 0"]);
+  // Son kutilganda matn kelsa ham sikl tugaydi (C++ da oqim "yiqiladi")
+  assert.deepEqual(ishga(kod, ["4 5 salom 6"]).output, ["2 9"]);
+});
+
+test("massivni ro'yxat bilan e'lon qilish", () => {
+  assert.deepEqual(ishga(d('int a[5] = {3, 1, 4};\nfor (int i = 0; i < 5; i++) cout << a[i] << " ";')).output, ["3 1 4 0 0 "]);
+  assert.deepEqual(ishga(d('int b[] = {7, 8};\ncout << b[0] + b[1];')).output, ["15"]);
+  assert.match(xato("int a[2] = {1, 2, 3};").cppMessage, /excess elements/);
 });

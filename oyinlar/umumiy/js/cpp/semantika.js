@@ -29,11 +29,12 @@
           ifoda(node.indeks);
           return;
         case "uzunlik": ifoda(node.obj); return;
-        case "bir": ifoda(node.ifoda); return;
+        case "bir": case "keltir": ifoda(node.ifoda); return;
         case "oldin": case "keyin": ifoda(node.maqsad); return;
         case "ikki": ifoda(node.chap); ifoda(node.ong); return;
         case "tayinlash": ifoda(node.maqsad); ifoda(node.qiymat); return;
         case "royxat": for (const x of node.elementlar) ifoda(x); return;
+        case "chaqiruv": for (const x of node.args) ifoda(x); return;
         default: return; // son, matn, belgi, bool
       }
     }
@@ -61,7 +62,11 @@
           buyruq(node.tana);
           if (node.aks) buyruq(node.aks);
           return;
-        case "toki": ifoda(node.shart); buyruq(node.tana); return;
+        case "toki":
+          if (node.oqiShart) for (const q of node.oqiShart.qismlar) ifoda(q);
+          else ifoda(node.shart);
+          buyruq(node.tana);
+          return;
         case "takror":
           stek.push(new Map()); // for (int i = …) — i faqat sikl ichida
           if (node.bosh) buyruq(node.bosh);

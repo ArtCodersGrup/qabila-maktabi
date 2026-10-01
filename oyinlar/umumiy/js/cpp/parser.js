@@ -11,9 +11,11 @@
   const E = (root.QK && root.QK.cppEngine && root.QK.cppEngine.errors) || require("./errors.js");
 
   const TURLAR = new Set(["int", "long", "double", "bool", "char", "string"]);
+  // Yadro biladigan tayyor funksiyalar: nomi → nechta argument
+  const FUNKSIYALAR = { sort: 2, swap: 2, max: 2, min: 2, abs: 1 };
   // Tanilgan, lekin yadroda yo'q narsalar — tushunarli nom bilan
   const YOQ = {
-    vector: "vector", sort: "sort", map: "map", set: "set", pair: "pair",
+    vector: "vector", map: "map", set: "set", pair: "pair",
     struct: "struct", class: "class", template: "template", new: "new", delete: "delete",
     auto: "auto", float: "float", unsigned: "unsigned", do: "do-while",
   };
@@ -98,13 +100,36 @@
           node = { k: "keyin", op, maqsad: node, ...pos };
           continue;
         }
-        if (bormi("(")) throw E.yoq("funksiya chaqirish", pos);
+        if (bormi("(")) {
+          // Yadro biladigan bir nechta tayyor funksiya: sort, swap, max, min, abs
+          if (node.k !== "nom" || !FUNKSIYALAR[node.nom]) throw E.yoq("funksiya chaqirish", pos);
+          olga();
+          const args = [];
+          if (!bormi(")")) {
+            do { args.push(expr()); } while (yedi(","));
+          }
+          kut(")");
+          const kutilganSoni = FUNKSIYALAR[node.nom];
+          if (args.length !== kutilganSoni) {
+            throw E.sintaksis("no matching function for call to '" + node.nom + "'", pos);
+          }
+          node = { k: "chaqiruv", nom: node.nom, args, ...pos };
+          continue;
+        }
         return node;
       }
     }
 
     function unary() {
       const pos = joy();
+      // (long long)a * b — tur keltirish. Faqat qavsdan keyin tur nomi kelsa.
+      if (bormi("(") && tokens[i + 1] && tokens[i + 1].type === "kalit"
+          && (TURLAR.has(tokens[i + 1].value) || tokens[i + 1].value === "long")) {
+        olga();
+        const t = turNomi();
+        kut(")");
+        return { k: "keltir", tur: t.tur, ifoda: unary(), ...pos };
+      }
       if (bormi("-") || bormi("!") || bormi("+")) {
         const op = qiymat();
         olga();
@@ -230,6 +255,15 @@
       if (bormi("while")) {
         olga();
         kut("(");
+        // while (cin >> x) — kirish tugaguncha o'qiydigan mashhur naqsh
+        if (turi() === "nom" && qiymat() === "cin") {
+          olga();
+          const qismlar = [];
+          if (!bormi(">>")) throw E.kutilgan(">>", joy());
+          while (yedi(">>")) qismlar.push(add());
+          kut(")");
+          return { k: "toki", oqiShart: { k: "oqiShart", qismlar, ...pos }, tana: stmt(), ...pos };
+        }
         const shart = expr();
         kut(")");
         return { k: "toki", shart, tana: stmt(), ...pos };
@@ -309,7 +343,7 @@
     return { k: "dastur", bosh, tana, ...mainPos };
   }
 
-  const api = { parse, TURLAR };
+  const api = { parse, TURLAR, FUNKSIYALAR };
   root.QK = root.QK || {};
   root.QK.cppEngine = Object.assign(root.QK.cppEngine || {}, { parser: api });
   if (typeof module !== "undefined" && module.exports) module.exports = api;
