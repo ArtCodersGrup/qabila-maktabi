@@ -94,6 +94,19 @@ Tartib — bosh sahifadagidek: osondan qiyinga, oldingi oʻyinga tayanadiganlari
 
 Tugagan bosqichlar brauzer xotirasida (`localStorage`) saqlanadi — sahifa yangilansa ham yoʻqolmaydi.
 
+## Oʻqituvchi uchun test
+
+`oqituvchi/test-yasa.py` — savollar bankidan **chop etiladigan test** yasaydi (A4, javoblar kaliti
+va qisqa yechimlar bilan). 10 ta blok, 194 ta savol; faqat `python3` kerak.
+
+```bash
+python3 oqituvchi/test-yasa.py --royxat                    # bloklar va savollar soni
+python3 oqituvchi/test-yasa.py --blok python --soni 20     # 20 ta savollik test
+python3 oqituvchi/test-yasa.py --variant 2                 # A va B variantlar
+```
+
+Batafsil: [`oqituvchi/README.md`](oqituvchi/README.md).
+
 ## Papkalar
 
 ```

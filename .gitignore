@@ -1,3 +1,9 @@
 .DS_Store
 .playwright-mcp/
 *.log
+
+# O'qituvchi generatori yasagan testlar (har safar qaytadan yasaladi)
+oqituvchi/test*.html
+oqituvchi/.sinov*.html
+__pycache__/
+*.pyc
