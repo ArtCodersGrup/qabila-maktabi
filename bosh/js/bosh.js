@@ -68,6 +68,7 @@
     { n: 32, topic: "python", dir: "32-sanoqli-takror", title: "Sanoqli takror", desc: "for va range, chegaralar, ichma-ich sikl", key: "sanoqli-takror:v1", stages: 3, yosh: [12, 16], icon: "zina", pc: true },
     { n: 33, topic: "python", dir: "33-royxat-va-satr", title: "Roʻyxat va satr", desc: "Indeks, len, append, kesish va split", key: "royxat-va-satr:v1", stages: 3, yosh: [12, 16], icon: "qator", pc: true },
     { n: 34, topic: "python", dir: "34-funksiya-ustaxonasi", title: "Funksiya ustaxonasi", desc: "def, parametr, return va masalani boʻlaklash", key: "funksiya-ustaxonasi:v1", stages: 3, yosh: [12, 16], icon: "dastgoh", pc: true },
+    { n: 49, topic: "python", dir: "49-tank", title: "Tank jangi", desc: "Tankni Python buyruqlari bilan boshqar: move, scan, fire", key: "tank-jangi:v1", stages: 3, yosh: [12, 16], icon: "tank", pc: true },
     { n: 36, topic: "algoritm", dir: "36-algoritm-xossalari", title: "Algoritm va xossalari", desc: "Beshta xossa va “ishlaydi ≠ yaxshi”", key: "algoritm-xossalari:v1", stages: 3, yosh: [12, 16], icon: "ikkiyol", pc: true },
     { n: 37, topic: "algoritm", dir: "37-blok-sxema", title: "Blok-sxema", desc: "Algoritmni chizish: belgilar, yigʻish va oʻqish", key: "blok-sxema:v1", stages: 3, yosh: [12, 16], icon: "sxema", pc: true },
     { n: 38, topic: "algoritm", dir: "38-izlash", title: "Izlash", desc: "Chiziqli va ikkilik izlash: 100 ta sondan 7 savolda", key: "izlash:v1", stages: 3, yosh: [12, 16], icon: "lupa", pc: true },

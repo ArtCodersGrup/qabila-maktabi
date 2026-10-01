@@ -1,0 +1,80 @@
+/* Tank jangi — faqat shu o'yinga xos uslublar. */
+
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(260px, 72vw); align-self: center; }
+.story-art.wide { width: min(330px, 88vw); }
+.story-art.small { width: min(210px, 56vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 18px; font-weight: 800; text-align: center; }
+
+.tk-ekran { display: flex; flex-direction: column; gap: 10px; width: 100%; align-items: center; }
+.tk-note { font-size: 17px; font-weight: 700; text-align: center; max-width: 640px; color: var(--asosiy); }
+.tk-ikki { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; width: 100%; }
+.tk-chap { display: flex; flex-direction: column; gap: 6px; flex: 2 1 420px; max-width: 640px; }
+.tk-ong { display: flex; flex-direction: column; gap: 6px; flex: 1 1 300px; max-width: 400px; }
+
+/* ---------- Maydon ---------- */
+.tk-maydon { width: 100%; }
+.tk-svg { display: block; width: 100%; height: auto; border: 3px solid var(--matn); border-radius: 12px; }
+.tk-fon { fill: #F7F2E6; }
+.tk-tosiq { fill: #8A8577; stroke: #2B2B3A; stroke-width: 3; }
+.tk-belgi { fill: none; stroke: #2F6FDE; stroke-width: 4; stroke-dasharray: 10 8; }
+.tk-belgi-ich { fill: #2F6FDE; }
+.tk-nishon-tashqi { fill: #F6D9D4; stroke: #C0392B; stroke-width: 4; }
+.tk-nishon-ich { fill: #C0392B; }
+.tk-nishon.olgan { opacity: 0.25; }
+.tk-tank { transition: transform 0.33s ease-in-out; }
+.tk-tank.tez { transition: none; }
+.tk-tank.olgan { opacity: 0.3; }
+.tk-tana { fill: #2F6FDE; stroke: #2B2B3A; stroke-width: 3; }
+.tk-tank.robot .tk-tana { fill: #C0392B; }
+.tk-zanjir { fill: #6B6558; stroke: #2B2B3A; stroke-width: 2; }
+.tk-minora { fill: #1B4A94; stroke: #2B2B3A; stroke-width: 2.5; }
+.tk-tank.robot .tk-minora { fill: #8E2B20; }
+.tk-quvur { fill: #1B4A94; stroke: #2B2B3A; stroke-width: 2.5; }
+.tk-tank.robot .tk-quvur { fill: #8E2B20; }
+.tk-oq { stroke: #F08A24; stroke-width: 5; stroke-linecap: round; }
+.tk-portlash { fill: #F08A24; opacity: 0.6; }
+
+/* ---------- Jon va o'q ---------- */
+.tk-holat { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
+.tk-holat-qator { display: flex; align-items: center; gap: 6px; }
+.tk-holat-qator.olgan { opacity: 0.4; }
+.tk-nuqta { width: 14px; height: 14px; border-radius: 4px; background: #2F6FDE; border: 2px solid var(--matn); }
+.tk-holat-qator.robot .tk-nuqta { background: #C0392B; }
+.tk-jon, .tk-oqlar { display: flex; gap: 3px; }
+.yurak { width: 13px; height: 13px; background: #C0392B; border-radius: 50% 50% 0 50%; transform: rotate(45deg); }
+.oq { width: 7px; height: 14px; background: #F08A24; border: 1.5px solid var(--matn); border-radius: 3px 3px 1px 1px; }
+
+/* ---------- Buyruq paneli ---------- */
+.tk-panel { display: flex; flex-direction: column; gap: 6px; width: 100%; }
+.tk-yordam { display: flex; flex-wrap: wrap; gap: 5px; }
+.tk-buyruq {
+  font-family: var(--kod-shrift); font-size: 13px; padding: 2px 7px;
+  background: #F3EFE3; border: 1px solid var(--chiziq); border-radius: 6px; color: #4A4636;
+}
+.tk-tarix {
+  height: 190px; overflow-y: auto; padding: 8px; background: #fff;
+  border: 2px solid var(--chiziq); border-radius: 10px;
+  font-family: var(--kod-shrift); font-size: 14px; line-height: 1.5;
+}
+.tk-satr { white-space: pre-wrap; word-break: break-word; }
+.tk-satr.kiritilgan { color: var(--asosiy); font-weight: 700; }
+.tk-satr.chiqish { color: #116B50; }
+.tk-satr.xato { color: #C0392B; }
+.tk-satr.izoh { color: #6B6558; font-style: italic; }
+.tk-kiritish {
+  width: 100%; box-sizing: border-box; padding: 10px;
+  font-family: var(--kod-shrift); font-size: 16px; line-height: 1.4;
+  background: #fff; border: 3px solid var(--asosiy); border-radius: 10px; resize: vertical;
+}
+
+.tk-qoida { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.tk-qoida-nom { font-size: 17px; font-weight: 900; color: var(--asosiy); }
+.tk-kod { font-family: var(--kod-shrift); font-size: 17px; background: #F3EFE3; padding: 4px 10px; border-radius: 8px; }
+
+@media (max-width: 760px) {
+  .tk-ikki { flex-direction: column; align-items: stretch; }
+  .tk-chap, .tk-ong { max-width: none; }
+  .tk-tarix { height: 140px; font-size: 13px; }
+}

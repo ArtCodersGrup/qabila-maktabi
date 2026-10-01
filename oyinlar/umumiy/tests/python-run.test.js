@@ -84,3 +84,36 @@ test("check(): faqat sintaksisni tekshiradi, kodni bajarmaydi", () => {
   assert.equal(py.check('print("ochiq)').type, "SyntaxError");
   assert.equal(py.check("print(nomalum)"), null, "nom xatosi faqat bajarilganda chiqadi");
 });
+
+// O'yin qo'shadigan funksiyalar (49-o'yin: tank). builtins.js ga tegilmaydi.
+test("tashqi funksiyalar: faqat berilgan ishga tushirishda ko'rinadi", () => {
+  const yozuv = [];
+  const tashqi = {
+    move: (args) => { yozuv.push(["move", Number(args[0])]); return null; },
+    scan: () => 42n,
+  };
+  const r = py.run("for i in range(3):\n    move(10)\nprint(scan())", { tashqi });
+  assert.equal(r.error, null);
+  assert.deepEqual(yozuv, [["move", 10], ["move", 10], ["move", 10]]);
+  assert.deepEqual(r.output, ["42"]);
+
+  // tashqi berilmasa — oddiy NameError
+  const r2 = py.run("move(5)");
+  assert.equal(r2.error.type, "NameError");
+
+  // O'zgaruvchi tashqi funksiyadan ustun turadi (bola o'z nomini yozsa, shu ishlaydi)
+  const r3 = py.run("scan = 7\nprint(scan)", { tashqi });
+  assert.deepEqual(r3.output, ["7"]);
+
+  // Oddiy builtinlar joyida
+  const r4 = py.run("print(len([1, 2]), max(3, 9))", { tashqi });
+  assert.deepEqual(r4.output, ["2 9"]);
+});
+
+test("tashqi funksiyalar trace() da ham ishlaydi", () => {
+  const urilgan = [];
+  const r = py.trace("fire()\nfire()", { tashqi: { fire: () => { urilgan.push(1); return null; } } });
+  assert.equal(r.error, null);
+  assert.equal(urilgan.length, 2);
+  assert.ok(r.states.length > 0);
+});

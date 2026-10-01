@@ -37,6 +37,7 @@ Tartib — bosh sahifadagidek: osondan qiyinga, oldingi oʻyinga tayanadiganlari
 | Sanoqli takror | `32-sanoqli-takror` | 12–16 💻 | `for` va `range`, chegaralar (oxiri kirmaydi), manfiy qadam, ichma-ich sikl va naqsh |
 | Roʻyxat va satr | `33-royxat-va-satr` | 12–16 💻 | Roʻyxat: indeks 0 dan, `len`, `append`, kesish; satr boʻylab yurish, `input().split()` |
 | Funksiya ustaxonasi | `34-funksiya-ustaxonasi` | 12–16 💻 | `def`, parametr, `return` va `print` farqi, lokal oʻzgaruvchi, masalani boʻlaklash |
+| Tank jangi | `49-tank` | 12–16 💻 | Tankni Python buyruqlari bilan boshqarish: `move`, `left`, `scan`, `radar`, `fire`; robot tanklarga qarshi jang |
 | **Algoritmlar va samaradorlik** | | | |
 | Algoritm va xossalari | `36-algoritm-xossalari` | 12–16 💻 | Algoritmning beshta xossasi; bir masalaning ikki yechimi va qadamlar sonini oʻlchash |
 | Blok-sxema | `37-blok-sxema` | 12–16 💻 | Algoritmni chizish: belgilar, sxemani bosib yigʻish va undan Python kodi, sxemani oʻqish |

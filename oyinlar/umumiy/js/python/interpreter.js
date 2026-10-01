@@ -37,6 +37,9 @@
     const ctx = {
       steps: 0,
       depth: 0,
+      // O'yin qo'shadigan funksiyalar: { nom: (args, ctx, pos) => qiymat }.
+      // builtins.js ga tegilmaydi — faqat shu ishga tushirishda ko'rinadi (49-o'yin: tank).
+      tashqi: o.tashqi || null,
       get out() { return out; },
       write(text) {
         out += text;
@@ -82,6 +85,9 @@
       case "Name": {
         const found = env.get(n.id);
         if (found !== MISSING) return found;
+        if (ctx.tashqi && Object.prototype.hasOwnProperty.call(ctx.tashqi, n.id)) {
+          return { t: "tashqi", name: n.id };
+        }
         if (B.has(n.id)) return { t: "builtin", name: n.id };
         throw E.nameError(n.id, posOf(n));
       }
@@ -160,6 +166,7 @@
         }
         const fn = yield* ev(n.func, env, ctx);
         for (const a of n.args) args.push(yield* ev(a, env, ctx));
+        if (fn && fn.t === "tashqi") return ctx.tashqi[fn.name](args, ctx, pos);
         if (fn && fn.t === "builtin") return B.BUILTINS[fn.name](args, ctx, pos);
         if (V.isFunc(fn)) return yield* callUser(fn, args, ctx, pos);
         throw E.typeError("'" + V.typeName(fn) + "' object is not callable", Object.assign(pos, {

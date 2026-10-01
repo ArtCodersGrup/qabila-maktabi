@@ -517,7 +517,16 @@
   <path d="M52 20 v-5 M64 26 l4 -4 M40 26 l-4 -4" stroke="#F08A24" stroke-width="3" stroke-linecap="round"/>
   <path d="M8 54 H60" stroke="#D8CDB4" stroke-width="3" stroke-linecap="round"/>`);
 
-  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, bolish, qutilar2, ayri, charx, zina, qator, dastgoh, minora, ikkiyol, sxema, lupa, saralash, osish, daraxt, qator3, jamoa, paskal, kaptar, tezkor, robotaql, mantiqkod, poyga, yozuv, onlayn, tog };
+  // 49-o'yin: tank jangi — tepadan ko'rinadigan tank
+  const tank = svg(`
+  <rect x="10" y="16" width="38" height="7" rx="3" fill="#6B6558" stroke="#2B2B3A" stroke-width="2.5"/>
+  <rect x="10" y="41" width="38" height="7" rx="3" fill="#6B6558" stroke="#2B2B3A" stroke-width="2.5"/>
+  <rect x="13" y="22" width="32" height="20" rx="5" fill="#2F6FDE" stroke="#2B2B3A" stroke-width="2.5"/>
+  <circle cx="29" cy="32" r="8" fill="#1B4A94" stroke="#2B2B3A" stroke-width="2.5"/>
+  <rect x="36" y="29" width="22" height="6" rx="2" fill="#1B4A94" stroke="#2B2B3A" stroke-width="2.5"/>
+  <circle cx="60" cy="32" r="3.5" fill="#F08A24" stroke="#2B2B3A" stroke-width="2"/>`);
+
+  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, bolish, qutilar2, ayri, charx, zina, qator, dastgoh, minora, ikkiyol, sxema, lupa, saralash, osish, daraxt, qator3, jamoa, paskal, kaptar, tezkor, robotaql, mantiqkod, tank, poyga, yozuv, onlayn, tog };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";
