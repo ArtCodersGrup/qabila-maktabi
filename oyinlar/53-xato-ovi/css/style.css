@@ -1,0 +1,29 @@
+/* Xato ovi — faqat shu o'yinga xos uslublar. Maydon: ../../umumiy/css/dastur.css */
+
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(250px, 70vw); align-self: center; }
+.story-art.wide { width: min(320px, 86vw); }
+.story-art.small { width: min(200px, 54vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 17px; font-weight: 800; text-align: center; }
+
+.xo-ekran { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.xo-note { font-size: 17px; font-weight: 700; text-align: center; max-width: 560px; color: var(--asosiy); }
+.xo-answer { font-size: 19px; font-weight: 900; color: var(--togri); text-align: center; animation: pop 0.3s; }
+.xo-ekran .field-wrap { width: min(260px, 70vw); }
+
+.xo-dastur { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.xo-buyruq {
+  min-width: 52px; height: 52px; font: inherit; font-size: 24px; font-weight: 900; cursor: pointer;
+  background: #fff; border: 3px solid var(--matn); border-radius: 12px; box-shadow: 0 3px 0 var(--soya);
+}
+.xo-buyruq:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--soya); }
+.xo-buyruq.bosh { border-style: dashed; color: #8A8577; }
+.xo-buyruq.yonmoqda { background: #FFF0D6; border-color: var(--yana); }
+.xo-buyruq.tanlangan { border-color: var(--asosiy); background: #D8E6FB; }
+.xo-buyruq.xato { background: #F7E2E0; border-color: #C0392B; color: #8E3B33; }
+
+@media (max-width: 520px) {
+  .summary { font-size: 16px; }
+  .xo-buyruq { min-width: 46px; height: 46px; font-size: 20px; }
+}

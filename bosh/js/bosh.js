@@ -61,6 +61,7 @@
     { n: 48, topic: "mantiq", dir: "48-mantiq-kodda", title: "Mantiq kodda", desc: "True va False, and / or / not, shart yozish", key: "mantiq-kodda:v1", stages: 3, yosh: [12, 16], icon: "mantiqkod", pc: true },
     { n: 26, topic: "dastur", dir: "26-robot-yoli", title: "Robot yoʻli", desc: "Robotga buyruq beramiz: algoritm va tartib", key: "robot-yoli:v1", stages: 3, yosh: [8, 11], icon: "yol" },
     { n: 47, topic: "dastur", dir: "47-robot-aqlli", title: "Robot aqlli boʻldi", desc: "Takror va agar: bitta dastur har xil maydonda ishlaydi", key: "robot-aqlli:v1", stages: 3, yosh: [8, 11], icon: "robotaql" },
+    { n: 53, topic: "dastur", dir: "53-xato-ovi", title: "Xato ovi", desc: "Tayyor dasturdagi xatoni topish va tuzatish", key: "xato-ovi:v1", stages: 3, yosh: [8, 11], icon: "xatoovi" },
     { n: 27, topic: "python", dir: "27-birinchi-buyruq", title: "Birinchi buyruq", desc: "print: birinchi kod, qoʻshtirnoq va xato xabari", key: "birinchi-buyruq:v1", stages: 3, yosh: [12, 16], icon: "buyruq", pc: true },
     { n: 28, topic: "python", dir: "28-sonlar-ustaxonasi", title: "Sonlar ustaxonasi", desc: "// va %, amallar tartibi, daraja", key: "sonlar-ustaxonasi:v1", stages: 3, yosh: [12, 16], icon: "bolish", pc: true },
     { n: 29, topic: "python", dir: "29-nomli-qutilar", title: "Nomli qutilar", desc: "Oʻzgaruvchi, kuzatuv jadvali, input() va turlar", key: "nomli-qutilar:v1", stages: 3, yosh: [12, 16], icon: "qutilar2", pc: true },

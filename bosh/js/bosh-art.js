@@ -545,7 +545,17 @@
   <path d="M8 56 H58" stroke="#8A8577" stroke-width="3" stroke-linecap="round"/>
   <circle cx="44" cy="12" r="3" fill="#F08A24"/><circle cx="52" cy="8" r="2.5" fill="#F08A24"/>`);
 
-  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, bolish, qutilar2, ayri, charx, zina, qator, dastgoh, minora, ikkiyol, sxema, lupa, saralash, osish, daraxt, qator3, jamoa, paskal, kaptar, tezkor, robotaql, mantiqkod, tank, tankduel, qulf, poyga, yozuv, onlayn, tog };
+  // 53-o'yin: xato ovi — lupa va xato belgisi
+  const xatoovi = svg(`
+  <path d="M8 50 H26 V26 H42" fill="none" stroke="#D8CDB4" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="34" y="18" width="16" height="16" rx="4" fill="#C0392B" stroke="#2B2B3A" stroke-width="2.5"/>
+  <path d="M38 22 l8 8 M46 22 l-8 8" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+  <rect x="6" y="42" width="16" height="14" rx="4" fill="#2F6FDE" stroke="#2B2B3A" stroke-width="2.5"/>
+  <circle cx="11" cy="49" r="2" fill="#fff"/><circle cx="17" cy="49" r="2" fill="#fff"/>
+  <circle cx="46" cy="46" r="11" fill="none" stroke="#8A8577" stroke-width="3.5"/>
+  <path d="M54 54 L62 62" stroke="#8A8577" stroke-width="4" stroke-linecap="round"/>`);
+
+  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, bolish, qutilar2, ayri, charx, zina, qator, dastgoh, minora, ikkiyol, sxema, lupa, saralash, osish, daraxt, qator3, jamoa, paskal, kaptar, tezkor, robotaql, mantiqkod, tank, tankduel, qulf, xatoovi, poyga, yozuv, onlayn, tog };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";
