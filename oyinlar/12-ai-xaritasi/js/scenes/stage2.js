@@ -20,9 +20,9 @@
     const el = common.box(true);
     el.append(ui.h("div", { class: "acard", text: "Vazifa (koʻrish): rasmda krest bormi?" }));
     const ways = [
-      { zone: "plain", text: "Qoida: oʻrta ustun va oʻrta qator toʻliqmi? (30-oʻyin)" },
-      { zone: "ml", text: "Misol: eng oʻxshash rasmga qarab (27-oʻyin)" },
-      { zone: "dl", text: "Neyron tarmoq: chiziq → shakl (32-oʻyin)" },
+      { zone: "plain", text: "Qoida: oʻrta ustun va oʻrta qator toʻliqmi? (31-oʻyin)" },
+      { zone: "ml", text: "Misol: eng oʻxshash rasmga qarab (28-oʻyin)" },
+      { zone: "dl", text: "Neyron tarmoq: chiziq → shakl (33-oʻyin)" },
     ];
     const list = ui.h("div", { class: "ways" });
     el.append(list);

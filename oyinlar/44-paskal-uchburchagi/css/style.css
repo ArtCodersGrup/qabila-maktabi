@@ -1,0 +1,56 @@
+/* Paskal uchburchagi — faqat shu o'yinga xos uslublar.
+   Umumiylari: ../../umumiy/css/asos.css va ../../umumiy/css/kod.css */
+
+.formula-box { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+.formula-row { font-size: 18px; font-weight: 800; animation: pop 0.3s; }
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(240px, 66vw); align-self: center; }
+.story-art.wide { width: min(300px, 80vw); }
+.story-art.small { width: min(190px, 52vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 19px; font-weight: 800; text-align: center; }
+
+/* ---------- Uchburchak ---------- */
+.ps-uchburchak { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 6px 0; }
+.ps-qator { display: flex; justify-content: center; gap: 4px; border-radius: 10px; padding: 2px; animation: pop 0.25s; }
+.ps-qator.belgi { background: #FFF0D6; }
+.ps-katak {
+  display: flex; align-items: center; justify-content: center;
+  width: 48px; height: 36px; box-sizing: border-box;
+  font-family: var(--kod-shrift); font-size: 16px; font-weight: 700;
+  background: #fff; border: 2px solid var(--chiziq); border-radius: 8px;
+  transition: background 0.25s, border-color 0.25s;
+}
+.ps-katak.belgi { background: var(--asosiy); border-color: #1B4A94; color: #fff; }
+.ps-katak.tepa { background: #D8E6FB; border-color: var(--asosiy); color: #1B4A94; }
+.ps-katak.yashirin { background: #FFE9C7; border-color: var(--yana); color: var(--yana); font-size: 20px; }
+.ps-katak.diagonal { background: #E7DBF7; border-color: #8E5BD0; color: #5B3391; }
+
+.ps-hisob {
+  text-align: center; font-family: var(--kod-shrift); font-size: 21px; font-weight: 900;
+  color: var(--asosiy); padding-top: 8px;
+}
+
+/* ---------- Xossalar ---------- */
+.ps-xossalar { display: flex; flex-direction: column; gap: 8px; width: min(520px, 94%); margin: 0 auto; }
+.ps-xossa {
+  display: flex; flex-direction: column; gap: 2px; padding: 8px 12px;
+  background: #fff; border: 2px solid var(--chiziq); border-radius: 12px;
+}
+.ps-xossa b { font-size: 16px; }
+.ps-xossa span { font-size: 14px; color: #6B6558; font-family: var(--kod-shrift); }
+
+.ps-savol { font-size: 19px; font-weight: 800; text-align: center; line-height: 1.4; max-width: 540px; margin: 0 auto; }
+
+@media (max-width: 560px) {
+  .summary { font-size: 17px; gap: 8px; }
+  .ps-katak { width: 36px; height: 30px; font-size: 13px; border-radius: 6px; }
+  .ps-qator { gap: 3px; }
+  .ps-hisob { font-size: 18px; }
+  .ps-savol { font-size: 17px; }
+  .ps-xossa b { font-size: 15px; }
+}
+@media (orientation: landscape) and (max-height: 520px) {
+  .story-art { width: min(170px, 32vh); }
+  .ps-katak { height: 28px; font-size: 13px; }
+}

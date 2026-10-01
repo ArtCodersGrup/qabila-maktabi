@@ -23,8 +23,8 @@
     const steps = [
       { id: "plain", chip: "kalkulyator", line: "Eng tashqarida — oddiy dastur. Kalkulyator, budilnik: qoidani bajaradi, aql talab qilmaydi." },
       { id: "ai", chip: "shaxmat dasturi", line: "Ichkarida — sunʼiy intellekt: aql talab qiladigan ish. Masalan, shaxmat dasturi yurishlarni sanab, eng yaxshisini tanlaydi." },
-      { id: "ml", chip: "27–30-oʻyinlar", line: "Uning ichida — mashinali oʻrganish: qoida yozilmaydi, mashina misollardan oʻrganadi." },
-      { id: "dl", chip: "32-oʻyin", line: "Eng ichkarida — chuqur oʻrganish: koʻp qatlamli neyron tarmoq bilan oʻrganadi." },
+      { id: "ml", chip: "28–31-oʻyinlar", line: "Uning ichida — mashinali oʻrganish: qoida yozilmaydi, mashina misollardan oʻrganadi." },
+      { id: "dl", chip: "33-oʻyin", line: "Eng ichkarida — chuqur oʻrganish: koʻp qatlamli neyron tarmoq bilan oʻrganadi." },
     ];
     const shown = [];
     for (const step of steps) {
