@@ -13,12 +13,12 @@
     await ui.say("elder", "Endi oʻzing yozasan. Chegaralarga eʼtibor ber: «12 dan kichik emas» — bu >= 12.");
   }
 
-  const keyingi = (prev, togri) => (togri % 2 === 0 ? L.kodTask(Math.random, prev) : L.writeTask(Math.random, prev));
+  const keyingi = (prev, togri, tier) => (togri % 2 === 0 ? L.kodTask(Math.random, prev, tier) : L.writeTask(Math.random, prev, tier));
 
   async function stage3() {
     await kirish();
     await practice.exercises({
-      next: (prev, togri) => keyingi(prev, togri),
+      next: (prev, togri, tier) => keyingi(prev, togri, tier),
       run: (task) => (task.tur === "yoz" ? common.yozishExercise(task) : common.kodExercise(task)),
       praise: (task) => (task.tur === "yoz" ? "Shart toʻgʻri yozildi." : "Toʻgʻri oʻqildi."),
     });

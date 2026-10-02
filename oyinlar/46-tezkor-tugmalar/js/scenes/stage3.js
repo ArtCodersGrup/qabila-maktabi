@@ -15,7 +15,7 @@
   async function stage3() {
     await kirish();
     await practice.exercises({
-      next: (prev) => L.maqsadTask(Math.random, prev),
+      next: (prev, togri, tier) => L.maqsadTask(Math.random, prev, tier),
       run: (task) => common.maqsadExercise(task),
       praise: () => "Tezkor tugmalar bilan qilindi.",
     });

@@ -43,22 +43,21 @@
     await ui.say("elder", "U faqat shuni biladi: «olov» dan keyin koʻpincha «yoqdi» kelgan.");
   }
 
-  // 6.3: "Qaysi gapni robot yoza oladi?"
+  // 6.3: "Qaysi gapni robot yoza oladi?" — 4 ta gap; matn har misolda bankdan yangidan olinadi
   function sentenceTask(task) {
     const el = common.box(true);
-    const table = words.table(words.ALL);
+    const table = words.table(task.sentences);
     const need = [];
-    task.options.forEach((s) => [s[0], s[1]].forEach((w) => { if (!need.includes(w)) need.push(w); }));
+    // Faqat davomi bor so'zlarning qatorlari (4 ta gapda 8 tagacha so'z bo'lishi mumkin — jadval uzayib ketmasin)
+    task.options.forEach((s) => [s[0], s[1]].forEach((w) => { if (table[w] && !need.includes(w)) need.push(w); }));
     const ptable = wordsUi.pairTable(el);
     ptable.set(table, need);
     ui.bubble("elder", "Jadvalga qara: robot qaysi gapni yoza oladi?");
     return practice.tries({
       setup: (submit) => wordsUi.sentenceButtons(task.options, submit),
       check: (index) => index === task.answer,
-      hint: () => {
-        ptable.highlight(task.options[task.answer][0]);
-        ui.bubble("elder", "↻ Har juftlikni tekshir: birinchi soʻzdan keyin ikkinchisi kelganmi?");
-      },
+      // Maslahat to'g'ri gap qatorini yoritmaydi (javobni aytib qo'yardi) — tekshirish usulini eslatadi
+      hint: () => ui.bubble("elder", "↻ Har gapda ikkita juftlik bor. Ikkalasini ham jadvaldan tekshir: 1-soʻzdan keyin 2-si, 2-sidan keyin 3-si kelganmi?"),
       solution: () => {
         ptable.highlight(task.options[task.answer][0]);
         el.append(common.answerLine(task.options[task.answer].join(" ")));
@@ -69,7 +68,7 @@
   // 6.3: "{so'z} dan keyin nima kelishi mumkin?"
   function followTask(task) {
     const el = common.box(true);
-    const view = wordsUi.corpus(el, words.ALL);
+    const view = wordsUi.corpus(el, task.sentences);
     ui.bubble("elder", `Gaplarga qara: «${task.word}» dan keyin qaysi soʻz kelishi mumkin?`);
     return practice.tries({
       setup: (submit) => wordsUi.wordButtons(task.options, submit),
@@ -80,7 +79,7 @@
       },
       solution: () => {
         const ptable = wordsUi.pairTable(el);
-        ptable.set(words.table(words.ALL), [task.word]);
+        ptable.set(words.table(task.sentences), [task.word]);
         el.append(common.answerLine(`${task.word} → ${task.options[task.answer]}`));
       },
     });
@@ -97,9 +96,9 @@
   async function stage3() {
     await moreText();
     await meaning();
-    await ui.say("elder", "Endi oʻzing javob ber. 3 ta toʻgʻri javob kerak!");
+    await ui.say("elder", `Endi oʻzing javob ber. ${QK.practice.need()} ta toʻgʻri javob kerak!`);
     await practice.exercises({
-      next: (prev, correct) => words.makeStage3Task(words.ALL, correct, prev),
+      next: (prev, correct, tier) => words.makeStage3Task(null, correct, prev, null, tier),
       run: (task) => (task.type === "sentence" ? sentenceTask(task) : followTask(task)),
       praise: (task) => (task.type === "sentence"
         ? `«${task.options[task.answer].join(" ")}» — juftliklari jadvalda bor.`

@@ -91,3 +91,13 @@ Bosh ekran
 ## 8. Bu o'yinga kirmaydi
 
 Sonni boshqa tizimga oʻtkazish (18–19), amallar (20–22), kasr va manfiy sonlar.
+
+## 2026-10-02 qiyinlik yangilanishi
+
+Sabab: bolalar "oson" deyishdi; 2-bosqichdagi "bu yozuv toʻgʻrimi? Ha / Yoʻq" va 3-bosqichdagi "Pozitsion / Nopozitsion" 2 variantli edi (ikki urinish bilan yutqazib boʻlmasdi).
+
+- Uchala generator `tier` oladi: `makeChotiTask(prev, rng, tier)`, `makeDigitTask(…)`, `makePlaceTask(…)`.
+- **1-bosqich:** tier 0 — avvalgidek (3 sim, asos 2–9); tier 1 — "+1" da koʻchish ikki simdan oʻtishi mumkin (…44 + 1); tier 2 — **4 sim** (asos 2–6, son ≤ 255). "Oʻqi" turidagi maslahat endi raqamlarni ochmaydi (faqat usulni eslatadi).
+- **2-bosqich:** "toʻgʻrimi?" oʻrniga **xato raqamni bos**: son 3 / 4 / 5 xonali (tier boʻyicha), har raqam — tugma, bittasi xato yoki "Hammasi toʻgʻri" — 4–6 variant. Tier 2 da xato raqam aynan asosga teng (8-likda 8, 12-likda C) va harfli toʻgʻri yozuvlar (12-lik, 16-lik) chiqadi. `minBase` tier 2 da 4–5 xonali; harf qiymati ulushi 25% → 10%.
+- **3-bosqich:** xona qiymati chegarasi 64 / 256 / 1024; "raqam turgan xona" tier 2 da 4–5 xonali (3-, 4-, 5-lik). Tizim turi: **4 yozuvdan bittasi boshqa turda — oʻshani top** (4 variant; `KINDS` 7 → 11).
+- **Qoldirildi:** hisobotdagi "1-bosqich tier 2 da 16-lik" — A–F raqamlari 2-bosqichda oʻrgatiladi, choʻtda 15 ta munchoq telefon ekraniga sigʻmaydi.

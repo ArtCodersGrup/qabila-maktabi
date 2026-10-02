@@ -10,12 +10,12 @@
     await ui.say("elder", "Dasturchi shunday ishlaydi: yurgizadi, kuzatadi, tuzatadi va yana yurgizadi.");
   }
 
-  const keyingi = (prev, togri) => (togri % 2 === 0 ? L.tuzatTask(Math.random, prev) : L.topTask(Math.random, prev));
+  const keyingi = (prev, togri, tier) => (togri % 2 === 0 ? L.tuzatTask(Math.random, prev, tier) : L.topTask(Math.random, prev, tier));
 
   async function stage3() {
     await kirish();
     await practice.exercises({
-      next: (prev, togri) => keyingi(prev, togri),
+      next: (prev, togri, tier) => keyingi(prev, togri, tier),
       run: (task) => (task.tur === "tuzat" ? common.tuzatExercise(task) : common.topExercise(task)),
       praise: (task) => (task.tur === "tuzat" ? "Tuzatildi." : "Xato topildi."),
     });

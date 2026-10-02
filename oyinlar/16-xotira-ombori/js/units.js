@@ -51,19 +51,39 @@
     return shuffle([answer, ...others], rng);
   }
 
-  // 1-bosqich mashqi: "1 Mbayt = 1024 ___", "1 Gbayt = ___ Mbayt", "Kbaytdan keyingisi?"
-  function makeLadderTask(prev, rng) {
+  // Qiyinlik zinasi (QOIDALAR 4.3): tier 0 — bir pog'ona, tier 1 — ikki pog'ona, tier 2 — pog'onalar soni ham.
+  const NUMBER_OPTIONS = ["8", "10", "1000", "1024"];
+  const STEP_OPTIONS = ["1", "2", "3", "4"];
+
+  // 1-bosqich mashqi: "1 Mbayt = 1024 ___", "1 Gbayt = ___ Mbayt", "Kbaytdan keyingisi?" (hammasi 4 variant);
+  // tier 1+: ikki pog'ona ("1 Gbayt = 1024 × 1024 ___", "ikki pog'ona keyin"); tier 2: "necha marta × 1024?"
+  function makeLadderTask(prev, rng, tier) {
     rng = rng || Math.random;
+    tier = tier || 0;
     for (;;) {
       const r = rng();
+      const hard = tier > 0 && rng() < (tier === 2 ? 0.75 : 0.5);
       let task;
-      if (r < 1 / 3) {
+      if (hard && tier === 2 && r < 1 / 3) {
+        // baytdan yuqorida hamma qadam × 1024: i dan j gacha nechta qadam
+        const i = randInt(1, 4, rng);
+        const j = randInt(i + 1, 5, rng);
+        task = { type: "steps", i, j, text: `${UNITS[i]} → ${UNITS[j]}: necha marta × 1024?`, answer: String(j - i), options: STEP_OPTIONS };
+      } else if (hard && r < 2 / 3) {
+        const i = randInt(2, 5, rng);
+        task = {
+          type: "unit2", i, text: `1 ${UNITS[i]} = ${factor(i - 1)} × ${factor(i - 2)} ___`,
+          answer: UNITS[i - 2], options: unitOptions(UNITS[i - 2], UNITS[i], rng),
+        };
+      } else if (hard) {
+        const i = randInt(0, 3, rng);
+        task = { type: "next2", i, text: `${UNITS[i]}dan ikki pogʻona keyin?`, answer: UNITS[i + 2], options: unitOptions(UNITS[i + 2], UNITS[i], rng) };
+      } else if (r < 1 / 3) {
         const i = randInt(1, 5, rng);
         task = { type: "unit", i, text: `1 ${UNITS[i]} = ${factor(i - 1)} ___`, answer: UNITS[i - 1], options: unitOptions(UNITS[i - 1], UNITS[i], rng) };
       } else if (r < 2 / 3) {
         const i = randInt(1, 5, rng);
-        const options = i === 1 ? ["8", "10", "1024"] : ["8", "1000", "1024"];
-        task = { type: "number", i, text: `1 ${UNITS[i]} = ___ ${UNITS[i - 1]}`, answer: String(factor(i - 1)), options };
+        task = { type: "number", i, text: `1 ${UNITS[i]} = ___ ${UNITS[i - 1]}`, answer: String(factor(i - 1)), options: NUMBER_OPTIONS };
       } else {
         const i = randInt(0, 4, rng);
         task = { type: "next", i, text: `${UNITS[i]}dan keyingisi?`, answer: UNITS[i + 1], options: unitOptions(UNITS[i + 1], UNITS[i], rng) };
@@ -72,37 +92,33 @@
     }
   }
 
-  // 2-bosqich mashqi: "Qaysi biri katta?" — a yoki b (answer: 0 yoki 1)
+  // 2-bosqich mashqi: "Qaysi biri eng katta?" — uch karta va "Uchalasi teng" (4 variant).
+  // Kartalar: k U (katta birlik), m u (kichik birlik; 1000 ≠ 1024 tuzog'i), a U + b u (yig'indi).
+  // value — kichik birlikda. Yo bitta eng katta, yo uchalasi teng (2 Gbayt = 2048 Mbayt = 1 Gbayt + 1024 Mbayt).
   const HUNDREDS = [100, 200, 300, 400, 500, 600, 700, 800, 900];
-  function makeCompareTask(prev, rng) {
+  const CMP_K = [[1, 3], [2, 6], [4, 9]];
+  const TENG = 3; // javob indeksi: 0–2 — karta, 3 — "Uchalasi teng"
+  function makeCompareTask(prev, rng, tier) {
     rng = rng || Math.random;
+    tier = tier || 0;
     for (;;) {
-      const r = rng();
-      let type;
-      let big;
-      let small;
-      if (r < 1 / 3) {
-        type = "same";
-        const unit = pick(["Kbayt", "Mbayt", "Gbayt"], rng);
-        const [x, y] = shuffle(HUNDREDS, rng);
-        big = { n: Math.max(x, y), unit };
-        small = { n: Math.min(x, y), unit };
-      } else {
-        const bi = randInt(2, 5, rng); // katta birlik: Kbayt … Tbayt
-        if (r < 2 / 3) {
-          type = "adjacent";
-          big = { n: randInt(1, 9, rng), unit: UNITS[bi] };
-          small = { n: pick(HUNDREDS, rng), unit: UNITS[bi - 1] };
-        } else {
-          type = "trap";
-          const k = randInt(1, 3, rng);
-          const bigger = { n: k, unit: UNITS[bi] };
-          const other = { n: 1000 * k + (rng() < 0.5 ? 0 : 500), unit: UNITS[bi - 1] };
-          [big, small] = compare(bigger, other) > 0 ? [bigger, other] : [other, bigger];
-        }
-      }
-      const bigFirst = rng() < 0.5;
-      const task = { type, a: bigFirst ? big : small, b: bigFirst ? small : big, answer: bigFirst ? 0 : 1 };
+      const bi = randInt(2, 5, rng); // katta birlik: Kbayt … Tbayt
+      const U = UNITS[bi];
+      const u = UNITS[bi - 1];
+      const k = randInt(CMP_K[tier][0], CMP_K[tier][1], rng);
+      const equal = rng() < 0.2;
+      if (equal && k < 2) continue;
+      const big = { label: `${k} ${U}`, value: k * 1024 };
+      const m = equal ? k * 1024 : 1000 * k + pick([0, 500, 1000], rng);
+      const small = { label: `${m} ${u}`, value: m };
+      const a = equal ? k - 1 : k - (k > 1 && rng() < 0.5 ? 1 : 0);
+      const b2 = equal ? 1024 : pick(a < k ? [500, 900, 1000, 1100] : HUNDREDS.slice(0, 5), rng);
+      const sum = { label: `${a} ${U} + ${b2} ${u}`, value: a * 1024 + b2 };
+      const cards = shuffle([big, small, sum], rng);
+      const top = Math.max(...cards.map((c) => c.value));
+      const tops = cards.filter((c) => c.value === top).length;
+      if (tops === 2) continue; // ikkitasi teng — savol noaniq
+      const task = { type: equal ? "equal" : "mixed", unit: U, small: u, cards, answer: tops === 3 ? TENG : cards.findIndex((c) => c.value === top) };
       if (!same(prev, task)) return task;
     }
   }
@@ -117,21 +133,32 @@
     { device: "Fleshka", file: "video", unit: "Gbayt" },
     { device: "Xotira", file: "surat", unit: "Mbayt" },
   ];
+  const CROSS_CAP = [[1, 2], [1, 4], [2, 4]]; // turli birlik: xotira (katta birlikda)
+  const CROSS_SIZE = [[128, 256, 512], [64, 128, 256, 512], [64, 128, 256, 512]];
 
-  // 3-bosqich mashqi: nechta sig'adi (bir xil / turli birlik)
-  function makeFitTask(prev, rng) {
+  // 3-bosqich mashqi: nechta sig'adi (bir xil / turli birlik); tier 1+: "yana nechta sig'adi?" (ikki amal)
+  function makeFitTask(prev, rng, tier) {
     rng = rng || Math.random;
+    tier = tier || 0;
     for (;;) {
       let task;
-      if (rng() < 0.5) {
+      const r = rng();
+      if (tier > 0 && r < 1 / 3) {
+        // Xotiraga used ta fayl yozilgan — yana nechta sig'adi
+        const ctx = pick(SAME, rng);
+        const cap = pick([16, 32, 64, 128], rng);
+        const size = pick([1, 2, 4, 8, 16].filter((f) => cap / f >= 4 && cap / f <= 64), rng);
+        const used = randInt(1, cap / size - 2, rng);
+        task = { type: "left", device: ctx.device, file: ctx.file, cap, capUnit: ctx.unit, size, sizeUnit: ctx.unit, used, answer: cap / size - used };
+      } else if (tier < 2 && r < 2 / 3) {
         const ctx = pick(SAME, rng);
         const cap = pick([8, 16, 32, 64, 128], rng);
         const size = pick([1, 2, 4, 8, 16, 32].filter((f) => cap / f >= 2 && cap / f <= 64), rng);
         task = { type: "same", device: ctx.device, file: ctx.file, cap, capUnit: ctx.unit, size, sizeUnit: ctx.unit, answer: cap / size };
       } else {
         const ctx = pick(CROSS_CTX, rng);
-        const cap = randInt(1, 2, rng);
-        const size = pick([128, 256, 512], rng);
+        const cap = randInt(CROSS_CAP[tier][0], CROSS_CAP[tier][1], rng);
+        const size = pick(CROSS_SIZE[tier], rng);
         const small = UNITS[UNITS.indexOf(ctx.unit) - 1];
         task = { type: "cross", device: ctx.device, file: ctx.file, cap, capUnit: ctx.unit, size, sizeUnit: small, answer: (cap * 1024) / size };
       }
@@ -142,6 +169,7 @@
   const api = {
     UNITS, factor, toBits, compare, ITEMS, ORDER, DISK, FLASH, CROSS,
     makeLadderTask, makeCompareTask, makeFitTask,
+    NUMBER_OPTIONS, STEP_OPTIONS, CMP_K, TENG, CROSS_CAP, CROSS_SIZE,
   };
 
   if (typeof module !== "undefined" && module.exports) module.exports = api;

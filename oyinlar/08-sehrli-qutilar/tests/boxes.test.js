@@ -118,79 +118,205 @@ test("trainGames: robot o'ynab o'rganadi — yutuqlar ko'payadi", () => {
   assert.ok(correct7 >= 4, `7 li qutida toʻgʻri yurish ${correct7}/${runs} tasida ustun`);
 });
 
-test("makeBoxTask: javob — hozirgi toshlar soni", () => {
-  let prev = null;
-  for (let i = 0; i < 200; i++) {
-    const task = B.makeBoxTask(prev);
-    assert.equal(task.type, "box");
-    assert.equal(task.options[task.answer], task.n);
-    assert.equal(new Set(task.options).size, 3);
-    if (prev) assert.notEqual(task.n, prev.n);
-    prev = task;
+const fourOptions = (task) => {
+  assert.equal(task.options.length, 4, "kamida 4 variant");
+  assert.equal(new Set(task.options.map((o) => JSON.stringify(o))).size, 4, "variant takrorlandi");
+};
+
+test("makeBoxTask: javob — stoldagi toshlar soni, 4 variant; zina bilan toshlar ko'payadi", () => {
+  assert.deepEqual(B.STONES, [[2, 7], [3, 9], [5, 12]]);
+  for (const tier of [0, 1, 2]) {
+    let prev = null;
+    let max = 0;
+    for (let i = 0; i < 300; i++) {
+      const task = B.makeBoxTask(prev, Math.random, tier);
+      assert.equal(task.type, "box");
+      fourOptions(task);
+      assert.equal(task.options[task.answer], task.n);
+      assert.ok(task.n >= Math.max(2, B.STONES[tier][0]) && task.n <= B.STONES[tier][1], `tier ${tier}: ${task.n}`);
+      assert.ok(task.options.every((o) => o >= 1));
+      // Yuqori zinada chalg'ituvchilar — qo'shni sonlar (aniq sanash kerak)
+      if (tier >= 1) assert.ok(task.options.every((o) => Math.abs(o - task.n) <= 4), task.options.join());
+      if (prev) assert.notEqual(task.n, prev.n);
+      max = Math.max(max, task.n);
+      prev = task;
+    }
+    assert.equal(max, B.STONES[tier][1], `tier ${tier}: eng katta son chiqmadi`);
   }
 });
 
-test("makeBeadTask: ko'k — 1 ta, sariq — 2 ta", () => {
-  let prev = null;
-  for (let i = 0; i < 100; i++) {
-    const task = B.makeBeadTask(prev);
-    assert.equal(task.type, "bead");
-    assert.equal(task.answer, task.color === "kok" ? 1 : 2);
-    prev = task;
+test("makeLeftTask: rang → yurish → stolda qolgan toshlar; 4 variant", () => {
+  for (const tier of [0, 1, 2]) {
+    let prev = null;
+    const moves = new Set();
+    for (let i = 0; i < 300; i++) {
+      const task = B.makeLeftTask(prev, Math.random, tier);
+      assert.equal(task.type, "left");
+      fourOptions(task);
+      assert.equal(task.color, B.COLORS[task.move]);
+      assert.equal(task.left, task.n - task.move);
+      assert.equal(task.options[task.answer], task.left);
+      assert.ok(task.n >= 3 && task.n <= B.STONES[tier][1]);
+      assert.ok(task.options.includes(task.n - (3 - task.move)), "boshqa rangning natijasi ham variantlarda");
+      assert.ok(task.options.every((o) => o >= 0));
+      if (prev) assert.ok(task.n !== prev.n || task.move !== prev.move);
+      moves.add(task.move);
+      prev = task;
+    }
+    assert.equal(moves.size, 2);
   }
 });
 
-test("makeRewardTask: yutsa qo'shiladi, yutqazsa olinadi", () => {
-  let prev = null;
-  for (let i = 0; i < 200; i++) {
-    const task = B.makeRewardTask(prev);
-    assert.equal(task.type, "reward");
-    assert.equal(task.options[task.answer], task.won ? "qoʻshiladi" : "olinadi");
-    assert.equal(task.options.length, 3);
-    prev = task;
+test("makeCountTask: yutsa +1, yutqazsa −1 (kamida 1), boshqa rang o'zgarmaydi; 4 variant", () => {
+  for (const tier of [0, 1, 2]) {
+    let prev = null;
+    const asks = new Set();
+    let floor = 0;
+    for (let i = 0; i < 600; i++) {
+      const task = B.makeCountTask(prev, Math.random, tier);
+      assert.equal(task.type, "count");
+      fourOptions(task);
+      const before = { 1: task.blue, 2: task.yellow };
+      // Haqiqiy mukofot qoidasi bilan solishtiramiz
+      const boxes = { [task.n]: { 1: task.blue, 2: task.yellow } };
+      B.reward(boxes, [{ n: task.n, move: task.move }], task.won);
+      assert.deepEqual(task.after, boxes[task.n]);
+      assert.equal(task.value, boxes[task.n][task.askMove]);
+      assert.equal(task.options[task.answer], task.value);
+      assert.equal(task.askMove, task.ask === "pulled" ? task.move : 3 - task.move);
+      if (task.ask === "other") assert.equal(task.value, before[task.askMove], "tortilmagan rang o'zgarmaydi");
+      const [lo, hi] = B.BEAD_RANGE[tier];
+      assert.ok([task.blue, task.yellow].every((c) => c >= lo && c <= hi));
+      assert.notEqual(task.blue, task.yellow);
+      assert.ok(task.options.every((o) => o >= 0));
+      assert.equal(task.kept, !task.won && before[task.move] === 1);
+      if (task.kept && task.ask === "pulled") floor++;
+      asks.add(task.ask);
+      prev = task;
+    }
+    assert.deepEqual([...asks].sort(), tier === 0 ? ["pulled"] : ["other", "pulled"], `tier ${tier}`);
+    if (tier >= 1) assert.ok(floor > 0, `tier ${tier}: «kamida 1 ta qoladi» holati chiqishi kerak`);
   }
+  assert.equal(B.makeCountTask(null, Math.random, 2, "pulled").ask, "pulled");
 });
 
-test("makeUsedTask: yutqazganda o'zi tortgan munchoq olinadi", () => {
+test("makeUsedTask: yutqazganda o'zi tortgan munchoq olinadi; 4 variant", () => {
   let prev = null;
   for (let i = 0; i < 200; i++) {
     const task = B.makeUsedTask(prev);
     assert.equal(task.type, "used");
+    fourOptions(task);
     assert.equal(task.options[task.answer], task.color);
-    assert.equal(task.options.length, 3);
+    assert.deepEqual([...task.options].sort(), ["hech", "ikkalasi", "kok", "sariq"]);
     assert.ok(task.n >= 2 && task.n <= 7);
+    if (prev) assert.ok(task.n !== prev.n || task.color !== prev.color);
     prev = task;
   }
 });
 
-test("makeReadTask: ko'p munchoqli yurish", () => {
-  let prev = null;
-  for (let i = 0; i < 200; i++) {
-    const task = B.makeReadTask(prev);
-    assert.equal(task.type, "read");
-    assert.notEqual(task.blue, task.yellow);
-    assert.equal(task.answer, task.blue > task.yellow ? 1 : 2);
-    prev = task;
+test("makeRatioTask: 4 ta quti, javob — kerakli rang ulushi eng katta quti (yagona)", () => {
+  for (const tier of [0, 1, 2]) {
+    let prev = null;
+    let traps = 0;
+    for (let i = 0; i < 300; i++) {
+      const task = B.makeRatioTask(prev, Math.random, tier);
+      assert.equal(task.type, "ratio");
+      fourOptions(task);
+      assert.equal(new Set(task.options.map((o) => o.n)).size, 4, "quti raqamlari har xil");
+      const count = (o) => (task.move === 1 ? o.blue : o.yellow);
+      const share = (o) => count(o) / (o.blue + o.yellow);
+      const sorted = task.options.map(share).sort((a, b) => b - a);
+      assert.equal(share(task.options[task.answer]), sorted[0]);
+      assert.ok(sorted[0] - sorted[1] >= 0.15 - 1e-9, "javob ikkilanarli");
+      assert.ok(task.options.every((o) => o.blue >= 1 && o.yellow >= 1 && o.n >= 2 && o.n <= 7));
+      const best = task.options[task.answer];
+      const trap = task.options.some((o, k) => k !== task.answer && count(o) >= count(best));
+      if (trap) traps++;
+      if (tier === 0) assert.ok(!trap, "tier 0 da to'g'ri qutida kerakli rang soni ham eng ko'p");
+      else assert.ok(trap, `tier ${tier}: tuzoq quti bo'lishi kerak (soni ko'p, ulushi kam)`);
+      prev = task;
+    }
   }
 });
 
-test("makeStrategyTask: 3 ga karrali qoldiradigan yurish", () => {
-  let prev = null;
-  for (let i = 0; i < 200; i++) {
-    const task = B.makeStrategyTask(prev);
-    assert.equal(task.type, "strategy");
-    assert.notEqual(task.n % 3, 0, "3 ga karrali holatda yutuqli yurish yo'q");
-    assert.equal(task.answer, B.winningMove(task.n));
-    assert.equal((task.n - task.answer) % 3, 0);
-    prev = task;
+test("makeStrategyTask: 3 ga karrali qoldiradigan yurish + «nega?» (4 ta sabab, bittasi to'g'ri)", () => {
+  for (const tier of [0, 1, 2]) {
+    let prev = null;
+    const seen = new Set();
+    for (let i = 0; i < 300; i++) {
+      const task = B.makeStrategyTask(prev, Math.random, tier);
+      assert.equal(task.type, "strategy");
+      assert.ok(B.STRATEGY_N[tier].includes(task.n));
+      assert.notEqual(task.n % 3, 0, "3 ga karrali holatda yutuqli yurish yo'q");
+      assert.equal(task.answer, B.winningMove(task.n));
+      assert.equal(task.left, task.n - task.answer);
+      assert.equal(task.left % 3, 0);
+      assert.notEqual(task.wrongLeft % 3, 0, "noto'g'ri yurish 3 ga karrali qoldirmaydi");
+      assert.deepEqual([...task.whys].sort(), ["bad", "fast", "good", "more"]);
+      assert.equal(task.whys[task.whyIndex], "good");
+      if (prev) assert.notEqual(task.n, prev.n);
+      seen.add(task.n);
+      prev = task;
+    }
+    assert.equal(seen.size, B.STRATEGY_N[tier].length);
+  }
+  assert.ok(Math.max(...B.STRATEGY_N[2]) <= B.START_RANGE[1]);
+});
+
+test("makeBeatTask va perfectGame: to'g'ri o'ynagan bola xatosiz robotni yutadi, bir marta adashsa — yutqazadi", () => {
+  for (const tier of [0, 1, 2]) {
+    let prev = null;
+    for (let i = 0; i < 200; i++) {
+      const task = B.makeBeatTask(prev, Math.random, tier);
+      assert.equal(task.type, "beat");
+      assert.ok(B.BEAT_N[tier].includes(task.n));
+      assert.notEqual(task.n % 3, 0, "birinchi yurgan yuta olishi kerak");
+      assert.equal(task.first, B.winningMove(task.n));
+      assert.ok(task.n <= B.START_RANGE[1]);
+      // Sirni bilgan bola doim yutadi
+      assert.equal(B.perfectGame(task.n, (n) => B.winningMove(n), Math.random), true);
+      // Birinchi yurishda adashgan bola yuta olmaydi (robot xatosiz o'ynaydi)
+      let first = true;
+      const wrongFirst = (n) => {
+        if (first) { first = false; return 3 - B.winningMove(n) <= n ? 3 - B.winningMove(n) : B.winningMove(n); }
+        return B.winningMove(n) || 1;
+      };
+      if (task.n >= 2 && 3 - task.first <= task.n && task.n - (3 - task.first) > 0) {
+        assert.equal(B.perfectGame(task.n, wrongFirst, Math.random), false, `n=${task.n}`);
+      }
+      if (prev) assert.notEqual(task.n, prev.n);
+      prev = task;
+    }
+  }
+  assert.ok(Math.max(...B.BEAT_N[2]) > Math.max(...B.BEAT_N[0]), "zina bilan toshlar ko'payadi");
+});
+
+test("numberOptions: to'g'ri son + takrorsiz chalg'ituvchilar, min dan kichik emas", () => {
+  for (let i = 0; i < 100; i++) {
+    const opts = B.numberOptions(1, [0, 1, 1, -3], Math.random, 0);
+    assert.equal(opts.length, 4);
+    assert.equal(new Set(opts).size, 4);
+    assert.ok(opts.includes(1) && opts.every((o) => o >= 0));
   }
 });
 
-test("bosqich mashqlari: turlar navbat bilan keladi", () => {
+test("bosqich mashqlari: turlar navbat bilan keladi; 3-bosqichning yarmi — haqiqiy o'yin", () => {
   assert.equal(B.makeStage1Task(0, null).type, "box");
-  assert.equal(B.makeStage1Task(1, null).type, "bead");
-  assert.equal(B.makeStage2Task(0, null).type, "reward");
+  assert.equal(B.makeStage1Task(1, null).type, "left");
+  assert.equal(B.makeStage2Task(0, null).type, "count");
+  assert.equal(B.makeStage2Task(0, null).ask, "pulled");
   assert.equal(B.makeStage2Task(1, null).type, "used");
-  assert.equal(B.makeStage3Task(0, null).type, "read");
-  assert.equal(B.makeStage3Task(1, null).type, "strategy");
+  assert.equal(B.makeStage2Task(3, null).type, "count");
+  const order = [0, 1, 2, 3, 4, 5].map((k) => B.makeStage3Task(k, null).type);
+  assert.deepEqual(order, ["ratio", "strategy", "beat", "strategy", "beat", "beat"]);
+  assert.equal(order.filter((t) => t === "beat").length, 3);
+  assert.equal(B.makeStage3Task(6, null, Math.random, 2).type, "ratio");
+  // Zina uzatiladi; turlar aralashganda ham (prev boshqa turdan) ishlaydi
+  let prev = null;
+  for (let k = 0; k < 120; k++) {
+    prev = B.makeStage3Task(k, prev, Math.random, k % 3);
+    assert.equal(prev.tier, k % 3);
+  }
+  for (let k = 0; k < 120; k++) prev = B.makeStage1Task(k, prev, Math.random, k % 3);
+  for (let k = 0; k < 120; k++) prev = B.makeStage2Task(k, prev, Math.random, k % 3);
 });

@@ -64,7 +64,8 @@
         }, "big"));
       },
       check: (errors) => errors === 0,
-      hint: () => ui.bubble("elder", `↻ Belgilangan narsalar notoʻgʻri ajratildi. «${rules.FEATURE_NAMES[task.answer.feature]}» belgisini sinab koʻr.`),
+      // Maslahat javobni (kerakli belgini) aytmaydi — asbobni ko'rsatadi: belgilangan narsalar va ularning sonlari
+      hint: () => ui.bubble("elder", "↻ Belgilangan narsalar notoʻgʻri ajratildi. HA larning sonlariga qara: qaysi belgi boʻyicha ular bir tomonda turadi?"),
       solution: () => {
         builder.set(task.answer);
         view.run(task.answer);
@@ -81,9 +82,9 @@
     const second = rules.makeRuleTask(first);
     await guidedRule(second, "Yana bitta ish. Bu safar boshqa qoida kerak boʻlishi mumkin.");
     await explain();
-    await ui.say("elder", "Endi oʻzing qoida yoz. 3 ta toʻgʻri javob kerak!");
+    await ui.say("elder", `Endi oʻzing qoida yoz. ${QK.practice.need()} ta toʻgʻri javob kerak!`);
     await practice.exercises({
-      next: (prev) => rules.makeRuleTask(prev),
+      next: (prev, correct, tier) => rules.makeRuleTask(prev, null, tier),
       run: ruleTask,
       praise: (task) => `Qoida: ${rules.FEATURE_NAMES[task.answer.feature]} ${task.answer.op} ${task.answer.value}.`,
     });

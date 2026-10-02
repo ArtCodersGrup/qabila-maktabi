@@ -112,10 +112,12 @@
 
   // ---------- Surish jadvali (qo'llanma zonasida): tepada oddiy harf, pastda uning shifri ----------
   // Katak bosilganda pick(oddiy, shifr) chaqiriladi. Kalit o'zgarsa pastki qator yangilanadi.
+  // setBlind(true) — pastki qator yashiriladi ("?"): jadval oddiy alifbo klaviaturasiga aylanadi, bola harfni o'zi suradi.
   function table(key, onPick) {
     const zone = ui.openGuide();
     const state = keyState(key);
     let pick = onPick || null;
+    let blind = false;
     const bottoms = [];
     const grid = ui.h("div", { class: "ctable" });
     caesar.ALPHABET.forEach((letter) => {
@@ -133,9 +135,17 @@
       }, ui.h("span", { class: "ct-top", text: letter }), bottom));
     });
     zone.append(grid);
-    const render = () => caesar.ALPHABET.forEach((l, i) => { bottoms[i].textContent = caesar.shift(l, state.getKey()); });
+    const render = () => {
+      grid.classList.toggle("blind", blind);
+      caesar.ALPHABET.forEach((l, i) => { bottoms[i].textContent = blind ? "?" : caesar.shift(l, state.getKey()); });
+    };
     render();
     return {
+      setBlind(on) {
+        blind = !!on;
+        render();
+      },
+      isBlind: () => blind,
       getKey: state.getKey,
       setKey(next) {
         state.setKey(next);
@@ -161,6 +171,7 @@
       val,
       ui.h("button", { class: "key", type: "button", text: "+", "aria-label": "Kalitni oshirish", onClick: () => step(1) })));
     render();
+    return { render }; // kalit tashqaridan o'zgartirilsa (yechim ko'rsatilganda) yozuvni yangilash uchun
   }
 
   QK.caesarUi = { tile, tilesRow, wordSlots, keyState, table, keyControl };

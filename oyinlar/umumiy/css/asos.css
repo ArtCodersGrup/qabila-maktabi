@@ -1,5 +1,8 @@
-/* Barcha o'yinlar uchun umumiy uslublar: ranglar, joylashuv, pufak, tugmalar, qahramonlar. Ranglar: QOIDALAR.md, 6-bo'lim. */
+/* Barcha o'yinlar uchun umumiy uslublar: ranglar, joylashuv, pufak, tugmalar, qahramonlar. Ranglar: QOIDALAR.md, 6-bo'lim.
+   2026-10-02 dizayn yangilanishi: tokenlar (matn darajalari, rangli qirra, shkalalar), tiniq chegaralar,
+   tugma holatlari (hover/focus/disabled), pufak holatlari (ok/yana), segmentli progress, tantana, bosqich/final kartalari. */
 :root {
+  /* 6 asosiy rang — QOIDALAR §6, o'zgarmaydi */
   --fon: #FFF6E5;
   --matn: #2B2B3A;
   --asosiy: #2F6FDE;
@@ -10,8 +13,40 @@
   --c1: #F08A24;
   --c2: #1A9E77;
   --c3: #8E5BD0;
-  --chiziq: #D9D2C3;
-  --soya: rgba(43, 43, 58, 0.18);
+
+  /* Matn darajalari — hammasi AA (fon va oq ustida ≥ 4.5:1) */
+  --matn-2: #5C5648;        /* tavsif, izoh */
+  --matn-3: #6B6558;        /* sarlavhacha, satr raqamlari */
+  --asosiy-matn: #2763CC;   /* ko'k MATN (havola, eslatma); tugma foni --asosiy qoladi */
+  --togri-matn: #147A5C;    /* yashil MATN */
+  --yana-matn: #B4560C;     /* to'q sariq MATN (#F08A24 faqat fon/belgi uchun) */
+
+  /* 3D qirra — har rangning o'z to'q soyasi (xira kulrang soya o'rniga) */
+  --asosiy-qora: #1F55B5;
+  --togri-qora: #137A58;
+  --yana-qora: #B4560C;
+  --c3-qora: #6A3FA3;
+  --oq-qora: #CFC5B2;
+
+  /* Holat fonlari (och) */
+  --asosiy-och: #E6EEFC;
+  --togri-och: #DDF3EA;
+  --yana-och: #FFE9CF;
+  --sariq: #F0C040;
+  --sariq-och: #FFF4CC;
+
+  /* Yuza va chiziq */
+  --yuza: #FFFFFF;
+  --yuza-2: #FFFBF2;
+  --panel: #F7EFDF;
+  --chiziq: #CFC5B2;         /* bezak chiziq */
+  --chiziq-kuchli: #978B76;  /* interaktiv chegara: katak, kiritish — 3:1 */
+  --soya: #CFC5B2;           /* oq elementlarning qirrasi (eski shaffof soya o'rniga — tiniq) */
+
+  /* Shkalalar: bo'shliq, radius, shrift */
+  --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px;
+  --r-s: 8px; --r-m: 12px; --r-l: 16px; --r-xl: 24px; --r-pill: 999px;
+  --t-1: 15px; --t0: 18px; --t1: 20px; --t2: 24px; --t3: 30px; --t4: 40px;
 }
 
 @font-face {
@@ -25,8 +60,9 @@
 html, body { margin: 0; height: 100%; background: var(--fon); color: var(--matn); }
 body {
   font-family: "Nunito", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  font-size: 18px;
-  line-height: 1.35;
+  font-size: var(--t0);
+  line-height: 1.4;
+  font-weight: 500;
   overflow-x: hidden;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
@@ -35,18 +71,29 @@ body {
 button { font: inherit; color: inherit; cursor: pointer; touch-action: manipulation; }
 button:disabled { cursor: default; opacity: 0.45; }
 
+/* Klaviatura fokusi — hamma bosiladigan narsaga bir xil halqa (sichqoncha bosganda chiqmaydi) */
+:focus-visible { outline: 3px solid var(--asosiy); outline-offset: 3px; }
+
 /* ---------- Asosiy joylashuv ---------- */
 #app { display: flex; flex-direction: column; height: 100vh; height: 100dvh; max-width: 1200px; margin: 0 auto; }
-.topbar { display: flex; align-items: center; justify-content: space-between; padding: 8px 16px; }
+.topbar { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); min-height: 64px; padding: var(--s2) var(--s4); }
 .icon-btn {
-  width: 48px; height: 48px; padding: 10px; border: none; border-radius: 14px;
-  background: #fff; color: var(--asosiy); box-shadow: 0 3px 0 var(--soya);
+  --qirra: var(--oq-qora);
+  width: 48px; height: 48px; padding: 10px; border: 2px solid var(--chiziq); border-radius: var(--r-l);
+  background: var(--yuza); color: var(--asosiy); box-shadow: 0 3px 0 var(--qirra);
   display: grid; place-items: center;
 }
 .icon-btn svg { width: 100%; height: 100%; }
-.progress { display: flex; gap: 8px; }
-.dot { width: 18px; height: 18px; border-radius: 50%; border: 3px solid var(--togri); }
-.dot.on { background: var(--togri); }
+
+/* Progress — segmentli chiziq: har segment bitta to'g'ri javob (ui.setProgress) */
+.progress { display: flex; gap: 6px; align-items: center; padding: 6px 8px; border-radius: var(--r-pill); background: var(--yuza); border: 2px solid var(--chiziq); }
+.progress:empty { display: none; }
+.dot {
+  width: clamp(18px, 6vw, 34px); height: 12px; border-radius: var(--r-pill); border: 0;
+  background: #EAE2CF; box-shadow: inset 0 0 0 2px var(--chiziq);
+  transition: background 0.25s, box-shadow 0.25s;
+}
+.dot.on { background: var(--togri); box-shadow: inset 0 0 0 2px var(--togri-qora); animation: dot-toldi 0.35s ease-out; }
 
 .play {
   position: relative; flex: 1; min-height: 0;
@@ -84,6 +131,25 @@ button:disabled { cursor: default; opacity: 0.45; }
   .zone-stage { align-content: center; overflow: auto; }
   .actor { height: min(150px, 30vh); }
 }
+/* Kompyuter: ish zonasi ramkali "stol", qahramonlar kattaroq — bo'sh qum maydoni qolmaydi */
+@media (orientation: landscape) and (min-width: 900px) {
+  #app { max-width: 1080px; }
+  .play { gap: 0 var(--s4); padding: 0 var(--s5) var(--s5); grid-template-columns: minmax(260px, 30%) minmax(0, 1fr); } /* qator oraligi 0 — ish va boshqaruv bitta panel */
+  .zone-work {
+    background: var(--yuza-2); border: 2px solid var(--chiziq); border-bottom: 0;
+    border-radius: var(--r-xl) var(--r-xl) 0 0; padding: var(--s4);
+  }
+  .zone-control {
+    background: var(--yuza-2); border: 2px solid var(--chiziq); border-top: 0;
+    border-radius: 0 0 var(--r-xl) var(--r-xl); padding: 0 var(--s4) var(--s4);
+  }
+  .zone-control:empty { display: block; padding-bottom: var(--s3); }
+  /* Faqat tugmalardan iborat boshqaruv (4 ta variant) — keng ekranda bir qatorda, ustma-ust emas */
+  .zone-control:not(:has(> :not(.btn))) { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 12px; }
+  .actor { height: min(220px, 34vh); }
+  .compact .actor { height: min(130px, 22vh); }
+  .bubble { font-size: var(--t1); }
+}
 /* Daraxt ko'rsatilganda qahramonlar kichrayadi (media'dan keyin — ustun turadi) */
 .compact .actor { height: 64px; }
 .compact .bubble { padding: 8px 12px; min-height: 0; }
@@ -91,56 +157,82 @@ button:disabled { cursor: default; opacity: 0.45; }
 /* ---------- Nutq pufagi ---------- */
 .bubble {
   grid-area: bubble; position: relative; width: 100%;
-  min-height: 56px; padding: 12px 16px; border-radius: 18px;
-  background: var(--pufak); box-shadow: 0 3px 0 var(--soya); font-weight: 700;
+  min-height: 56px; padding: var(--s3) var(--s4); border-radius: var(--r-l);
+  background: var(--pufak); border: 2px solid var(--chiziq); box-shadow: 0 3px 0 var(--oq-qora);
+  font-weight: 700; line-height: 1.35;
 }
 .bubble[hidden] { display: none; }
 .bubble::after {
-  content: ""; position: absolute; bottom: -12px;
-  border: 12px solid transparent; border-top-color: var(--pufak); border-bottom: 0;
+  content: ""; position: absolute; bottom: -11px; width: 18px; height: 18px;
+  border-right: 2px solid var(--chiziq); border-bottom: 2px solid var(--chiziq);
+  background: var(--pufak); transform: rotate(45deg);
 }
-.bubble.from-elder::after { left: 20%; }
-.bubble.from-apprentice::after { right: 20%; }
+.bubble.from-elder::after { left: 18%; }
+.bubble.from-apprentice::after { right: 18%; }
+/* To'g'ri / yana urin — rang + belgi (QOIDALAR §6); sinfni ui.bubble() matn boshidagi ✓ / ↻ dan qo'yadi */
+.bubble.ok { background: var(--togri-och); border-color: var(--togri); color: var(--togri-matn); }
+.bubble.ok::after { background: var(--togri-och); border-color: var(--togri); }
+.bubble.yana { background: var(--yana-och); border-color: var(--yana); animation: shake 0.35s; }
+.bubble.yana::after { background: var(--yana-och); border-color: var(--yana); }
 .bubble-line { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
 
 /* ---------- Tugmalar ---------- */
 .btn {
-  min-height: 52px; min-width: 52px; padding: 10px 22px; border: none; border-radius: 14px;
-  background: var(--asosiy); color: #fff; font-size: 20px; font-weight: 800;
-  box-shadow: 0 4px 0 var(--soya);
+  --qirra: var(--asosiy-qora);
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--s2);
+  min-height: 52px; min-width: 52px; padding: 10px 22px; border: none; border-radius: var(--r-l);
+  background: var(--asosiy); color: #fff; font-size: var(--t1); font-weight: 800; line-height: 1.2;
+  box-shadow: 0 4px 0 var(--qirra);
+  transition: transform 0.08s ease, box-shadow 0.08s ease, filter 0.15s ease;
 }
-.btn.secondary { background: #fff; color: var(--asosiy); }
-.btn.big { font-size: 24px; padding: 14px 40px; }
-.btn:active, .key:active, .tile.big:active, .card:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--soya); }
+.btn.secondary { --qirra: var(--oq-qora); background: var(--yuza); color: var(--asosiy-matn); box-shadow: 0 4px 0 var(--qirra), inset 0 0 0 2px var(--chiziq); }
+.btn.ok { --qirra: var(--togri-qora); background: var(--togri); }
+.btn.yana { --qirra: var(--yana-qora); background: var(--yana); color: var(--matn); }
+.btn.big { min-height: 60px; font-size: var(--t2); padding: 14px 40px; border-radius: var(--r-xl); }
+.btn.sm { min-height: 44px; padding: 8px 16px; font-size: var(--t0); }
+.btn:focus-visible, .key.ok:focus-visible, .tile.big:focus-visible { outline-color: var(--matn); }
+/* Bosish: pastga tushadi, qirra yo'qoladi */
+.btn:active, .key:active, .tile.big:active, .card:not(:disabled):active, .icon-btn:active {
+  transform: translateY(4px); box-shadow: 0 0 0 var(--qirra, var(--oq-qora));
+}
+.btn.secondary:active { box-shadow: 0 0 0 var(--qirra), inset 0 0 0 2px var(--chiziq); }
+/* Sichqoncha bor qurilmada — yorishadi; telefonda hech narsa o'zgarmaydi (QOIDALAR §3: hover faqat bezak) */
+@media (hover: hover) and (pointer: fine) {
+  .btn:not(:disabled):hover, .key:not(:disabled):hover, .tile.big:not(:disabled):hover,
+  .card:not(:disabled):hover, .icon-btn:hover { filter: brightness(1.06); transform: translateY(-1px); }
+  .btn:not(:disabled):active, .key:not(:disabled):active, .tile.big:active, .card:not(:disabled):active, .icon-btn:active { filter: none; transform: translateY(4px); }
+}
+/* O'chirilgan tugma: xira emas — "hozir bosilmaydi" ko'rinish */
+.btn:disabled, .key:disabled { opacity: 1; background: #EFE8D8; color: var(--matn-3); box-shadow: 0 4px 0 var(--oq-qora); filter: none; transform: none; }
 .choice-row, .pad-extras { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
 
 /* ---------- Harflar va kataklar ---------- */
 .tile {
   display: inline-grid; place-items: center; width: 40px; height: 40px;
-  border: none; border-radius: 10px; color: #fff; font-size: 22px; font-weight: 900;
+  border: none; border-radius: var(--r-s); color: #fff; font-size: 22px; font-weight: 900;
 }
 .tile.sm { width: 34px; height: 34px; font-size: 20px; }
 .tile.xs { width: 26px; height: 26px; font-size: 18px; border-radius: 7px; }
-.tile.big { width: 64px; height: 64px; font-size: 32px; box-shadow: 0 4px 0 var(--soya); }
+.tile.big { width: 64px; height: 64px; font-size: 32px; box-shadow: 0 4px 0 var(--qirra, var(--oq-qora)); }
 .letter-pad { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
 .slots { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
 .slot {
-  width: 60px; height: 60px; padding: 0; border: 3px dashed var(--chiziq); border-radius: 12px;
-  background: #fff; color: #fff; font-size: 30px; font-weight: 900;
+  width: 60px; height: 60px; padding: 0; border: 3px dashed var(--chiziq-kuchli); border-radius: var(--r-m);
+  background: var(--yuza-2); color: #fff; font-size: 30px; font-weight: 900;
 }
-.slot.filled { border-style: solid; border-color: transparent; }
+.slot.filled { border-style: solid; border-color: transparent; box-shadow: 0 3px 0 var(--qirra, var(--oq-qora)); }
 .slots.hint .slot { animation: flash 0.4s 3; }
 .word {
   display: inline-flex; gap: 3px; padding: 4px; border-radius: 10px;
-  background: #fff; box-shadow: 0 2px 0 var(--soya); animation: pop 0.3s;
+  background: var(--yuza); box-shadow: 0 2px 0 var(--oq-qora); animation: pop 0.3s;
 }
 .chip-row { display: flex; gap: 10px; }
 
-/* Harf ranglari — .slot dan KEYIN turishi shart (oq fonni ustidan yozadi) */
-.c0 { background: var(--c0); }
-.c1 { background: var(--c1); }
-.c2 { background: var(--c2); }
-.c3 { background: var(--c3); }
+/* Harf ranglari — .slot dan KEYIN turishi shart (oq fonni ustidan yozadi). Har rangning o'z qirrasi. */
+.c0 { --qirra: var(--asosiy-qora); background: var(--c0); }
+.c1 { --qirra: var(--yana-qora); background: var(--c1); color: var(--matn); } /* to'q sariqda qora harf — 5.5:1 */
+.c2 { --qirra: var(--togri-qora); background: var(--c2); }
+.c3 { --qirra: var(--c3-qora); background: var(--c3); }
 
 .toast {
   position: absolute; left: 0; right: 0; top: 45%; z-index: 5;
@@ -151,16 +243,18 @@ button:disabled { cursor: default; opacity: 0.45; }
 /* ---------- Raqam klaviaturasi va hisoblagich ---------- */
 .keypad-wrap { width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 6px; }
 .num-display {
-  height: 52px; border-radius: 12px; background: #fff; box-shadow: inset 0 0 0 3px var(--chiziq);
-  display: grid; place-items: center; font-size: 32px; font-weight: 900;
+  height: 56px; border-radius: var(--r-m); background: var(--yuza); box-shadow: inset 0 0 0 3px var(--chiziq-kuchli);
+  display: grid; place-items: center; font-size: var(--t3); font-weight: 900; font-variant-numeric: tabular-nums;
 }
+.num-display.xato { box-shadow: inset 0 0 0 3px var(--yana); animation: shake 0.35s; }
 .keypad { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; }
 .key {
-  min-height: 52px; min-width: 48px; border: none; border-radius: 12px; background: #fff;
-  font-size: 24px; font-weight: 900; box-shadow: 0 3px 0 var(--soya);
+  --qirra: var(--oq-qora);
+  min-height: 52px; min-width: 48px; border: 2px solid var(--chiziq); border-radius: var(--r-m); background: var(--yuza);
+  font-size: 24px; font-weight: 900; box-shadow: 0 3px 0 var(--qirra);
 }
-.key.ok { background: var(--togri); color: #fff; }
-.key.del { color: var(--yana); }
+.key.ok { --qirra: var(--togri-qora); background: var(--togri); border-color: transparent; color: #fff; }
+.key.del { color: var(--yana-matn); }
 .counter { display: flex; align-items: center; gap: 12px; }
 .counter .key { width: 56px; }
 .counter-val { min-width: 110px; text-align: center; font-size: 22px; font-weight: 900; }
@@ -169,23 +263,76 @@ button:disabled { cursor: default; opacity: 0.45; }
 .drum { width: 110px; }
 
 /* ---------- Bosh ekran ---------- */
-.game-title { margin: 0; font-size: 30px; font-weight: 900; text-align: center; }
+.game-title { margin: 0; font-size: var(--t3); font-weight: 900; line-height: 1.15; text-align: center; }
 .back-link {
   display: inline-grid; place-items: center; min-height: 48px; padding: 10px 16px;
-  color: var(--asosiy); font-size: 18px; font-weight: 800; text-decoration: none;
+  color: var(--asosiy-matn); font-size: 18px; font-weight: 800; text-decoration: none;
 }
-.cards { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 460px; }
+.cards { display: flex; flex-direction: column; gap: var(--s3); width: 100%; max-width: 480px; }
 .card {
-  display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 10px 14px;
-  border: none; border-radius: 16px; background: #fff; box-shadow: 0 3px 0 var(--soya); text-align: left;
+  --qirra: var(--oq-qora);
+  display: flex; align-items: center; gap: var(--s3); min-height: 68px; padding: 10px 14px;
+  border: 2px solid var(--chiziq); border-radius: var(--r-l); background: var(--yuza);
+  box-shadow: 0 4px 0 var(--qirra); text-align: left; transition: transform 0.08s, box-shadow 0.08s;
 }
 .card-num {
   flex: none; width: 40px; height: 40px; border-radius: 50%;
   display: grid; place-items: center; background: var(--asosiy); color: #fff; font-weight: 900;
+  box-shadow: 0 2px 0 var(--asosiy-qora);
 }
-.card.done .card-num { background: var(--togri); }
+.card.done { border-color: var(--togri); }
+.card.done .card-num { background: var(--togri); box-shadow: 0 2px 0 var(--togri-qora); }
 .card-title { flex: 1; font-weight: 800; }
 .card-state { font-size: 22px; }
+.card.done .card-state { color: var(--togri-matn); font-weight: 900; }
+.card-stars { font-size: 18px; letter-spacing: 1px; color: var(--sariq); white-space: nowrap; }
+.card-stars .off { color: var(--chiziq); }
+/* Qulflangan bosqich: xira emas — uzuq chiziqli bo'sh karta (o'qiladi, lekin bosilmasligi ko'rinadi) */
+.card:disabled { opacity: 1; background: var(--yuza-2); color: var(--matn-3); border-style: dashed; box-shadow: none; }
+.card:disabled .card-num { background: var(--chiziq); color: var(--matn-2); box-shadow: none; }
+.hard-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.hard-note { font-size: var(--t-1); font-weight: 700; color: var(--matn-2); text-align: center; }
+
+/* ---------- Bosqich tugadi / final kartasi ---------- */
+.stage-card {
+  display: flex; flex-direction: column; align-items: center; gap: var(--s3); width: min(100%, 420px);
+  padding: var(--s5) var(--s4); border-radius: var(--r-xl); background: var(--yuza);
+  border: 3px solid var(--togri); box-shadow: 0 6px 0 var(--togri-qora); text-align: center; animation: pop 0.35s;
+}
+.stage-card .sc-num {
+  width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--togri); color: #fff; font-size: var(--t3); font-weight: 900; box-shadow: 0 4px 0 var(--togri-qora);
+}
+.stage-card .sc-title { font-size: var(--t2); font-weight: 900; line-height: 1.2; }
+.stage-card .sc-stars { display: flex; gap: 6px; font-size: 36px; line-height: 1; color: var(--sariq); }
+.stage-card .sc-stars span { animation: pop 0.4s both; }
+.stage-card .sc-stars span:nth-child(2) { animation-delay: 0.15s; }
+.stage-card .sc-stars span:nth-child(3) { animation-delay: 0.3s; }
+.stage-card .sc-stars .off { color: var(--chiziq); }
+.stage-card .sc-sub { color: var(--matn-2); font-size: var(--t-1); font-weight: 700; }
+.stage-card.final { border-color: var(--asosiy); box-shadow: 0 6px 0 var(--asosiy-qora); background: linear-gradient(180deg, var(--asosiy-och), var(--yuza) 60%); }
+.stage-card.final .sc-num { background: var(--asosiy); box-shadow: 0 4px 0 var(--asosiy-qora); font-size: 36px; }
+.stage-card.final .sc-title { font-size: var(--t3); }
+.stage-card .sc-list { display: flex; flex-direction: column; gap: 4px; width: 100%; margin: 0; padding: 0; text-align: left; font-size: var(--t0); font-weight: 700; }
+.stage-card .sc-list li { display: flex; align-items: center; gap: 8px; list-style: none; }
+.stage-card .sc-list li::before { content: "✓"; color: var(--togri-matn); font-weight: 900; }
+.stage-card .sc-list li .li-stars { margin-left: auto; color: var(--sariq); font-size: 16px; }
+.stage-card .sc-list li .li-stars .off { color: var(--chiziq); }
+
+/* ---------- Tantana: konfeti va katta ✓ (ui.pose(x, "happy") chaqirganda) ---------- */
+.tantana { position: absolute; inset: 0; z-index: 6; pointer-events: none; overflow: hidden; }
+.tantana i {
+  position: absolute; left: var(--x, 50%); top: var(--y, 42%); width: 10px; height: 14px; border-radius: 2px;
+  background: var(--c, var(--asosiy)); opacity: 0;
+  animation: konfeti 0.9s cubic-bezier(0.2, 0.7, 0.3, 1) var(--d, 0s) forwards;
+}
+.tantana i:nth-child(odd) { border-radius: 50%; width: 10px; height: 10px; }
+.ok-belgi {
+  position: absolute; left: 50%; top: 40%; z-index: 7; width: 96px; height: 96px; margin: -48px 0 0 -48px;
+  border-radius: 50%; display: grid; place-items: center; pointer-events: none;
+  background: var(--togri); color: #fff; font-size: 56px; font-weight: 900;
+  box-shadow: 0 6px 0 var(--togri-qora); animation: ok-portlash 0.8s ease-out forwards;
+}
 
 /* ---------- Qahramonlar harakati ---------- */
 .actor-svg .body { animation: breathe 3s ease-in-out infinite; }
@@ -195,8 +342,9 @@ button:disabled { cursor: default; opacity: 0.45; }
 .actor-svg .head { transform-origin: 50% 100%; transition: transform 0.2s; }
 .actor-svg .arm { transform-origin: 0 0; transition: transform 0.3s; }
 .pose-talk .mouth { animation: talk 0.25s 3; }
-.pose-happy { animation: hop 0.45s 2; }
+.pose-happy { animation: hop 0.6s 2; }
 .pose-think .head { transform: rotate(-8deg); }
+.pose-think .mouth { transform: scaleY(0.6) translateY(1px); }
 .pose-point .arm { transform: rotate(-35deg); }
 .pose-drum .body { animation: none; transform: translateY(2px); }
 .arms-up { display: none; }
@@ -208,11 +356,22 @@ button:disabled { cursor: default; opacity: 0.45; }
 @keyframes blink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
 @keyframes breathe { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(1.5px); } }
 @keyframes talk { 50% { transform: scaleY(2.2); } }
-@keyframes hop { 50% { transform: translateY(-10px); } }
+@keyframes hop { 0%, 100% { transform: translateY(0); } 30% { transform: translateY(-18px) rotate(-3deg); } 60% { transform: translateY(0); } 80% { transform: translateY(-7px); } }
 @keyframes shake { 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
 @keyframes pop { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 @keyframes flash { 50% { opacity: 0.35; } }
 @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes dot-toldi { 0% { transform: scaleX(0.4); } 60% { transform: scaleX(1.15); } 100% { transform: scaleX(1); } }
+@keyframes konfeti {
+  0% { opacity: 1; transform: translate(0, 0) rotate(0) scale(1); }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) rotate(540deg) scale(0.6); }
+}
+@keyframes ok-portlash {
+  0% { transform: scale(0.3); opacity: 0; }
+  35% { transform: scale(1.15); opacity: 1; }
+  70% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0.9) translateY(-12px); opacity: 0; }
+}
 .shake { animation: shake 0.35s; }
 
 /* ---------- Qo'llanma zonasi: telefonda pastda, yotiq ekran va kompyuterda o'ng chekkada ---------- */

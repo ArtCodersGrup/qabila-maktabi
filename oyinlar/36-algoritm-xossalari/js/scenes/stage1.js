@@ -43,14 +43,15 @@
       ui.h("div", { class: "formula-row", text: "Ishlaydi ≠ yaxshi" }),
       ui.h("div", { class: "formula-row", text: "Bir masalaning koʻp yechimi boʻladi" }),
       ui.h("div", { class: "formula-row", text: "Qaysi biri kamroq qadam bajarsa — oʻshasi tejamli" })));
-    await ui.say("elder", "Endi oʻzing ayt: qaysi yechim tejamli?");
+    await ui.say("elder", "Endi oʻzing ayt: qaysi yechim tejamli? Baʼzan ikkalasi teng ham boʻladi.");
+    await ui.say("elder", "Va sanab ber: koʻproq aylanadigan sikl necha marta aylanadi?");
   }
 
   async function stage1() {
     await ikkiYechim();
     await definition();
     await practice.exercises({
-      next: (prev) => L.juftTask(Math.random, prev),
+      next: (prev, correct, tier) => L.juftTask(Math.random, prev, tier),
       run: (task) => common.juftExercise(task),
       praise: () => "Tejamli yoʻlni topding.",
     });

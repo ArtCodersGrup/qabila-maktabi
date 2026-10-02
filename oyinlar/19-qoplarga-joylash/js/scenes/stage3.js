@@ -26,10 +26,10 @@
     await ui.say("elder", "Teskari yoʻl bilan tekshirish — eng ishonchli usul.");
   }
 
-  // 6.2: mashq — 16-lik, 8-lik, "to'g'rimi?"
+  // 6.2: mashq — 16-lik, 8-lik, "to'g'ri yozuvni tanla" (4 variant)
   function anyTask(task) {
     const el = common.box(true);
-    if (task.type !== "check") {
+    if (task.type !== "choose") {
       el.append(ui.h("div", { class: "big-value", text: `${task.n} → ${task.base}-lik` }));
       ui.bubble("elder", `Bu sonni ${task.base}-likda yoz.`);
       return sanoqUi.digitTries({
@@ -43,31 +43,31 @@
         solution: () => qopScenes.solutionTable(el, task),
       });
     }
-    el.append(ui.h("div", { class: "facts" },
-      ui.h("div", { text: `Son: ${task.n}` }),
-      ui.h("div", { text: `Javob: ${S.fmt(task.shown, task.base)}` })));
-    ui.bubble("elder", "Bu javob toʻgʻrimi?");
+    // 4 variantdan to'g'ri yozuvni tanlash: biri — qoldiqlar teskari o'qilgan, biri — bitta raqami xato
+    el.append(ui.h("div", { class: "big-value", text: `${task.n} → ${task.base}-lik` }));
+    ui.bubble("elder", "Toʻrtta javobdan faqat bittasi toʻgʻri. Qaysi biri?");
     return practice.tries({
       setup: (submit) => {
         const row = ui.h("div", { class: "choice-row" });
-        row.append(ui.button("Ha", () => submit("ha")), ui.button("Yoʻq", () => submit("yoq"), "secondary"));
+        task.options.forEach((o) => row.append(ui.button(S.fmt(o, task.base), () => submit(o))));
         ui.clearControl();
         ui.control().append(row);
       },
       check: (value) => value === task.answer,
       hint: () => {
-        common.add(el, common.line("Tekshir: raqam × xona qiymati"));
-        ui.bubble("elder", "↻ Javobni oʻnlikka qaytarib koʻr.");
+        common.add(el, common.line(`Xonalar: ${S.places(task.base, task.answer.length).reverse().join(", ")} — raqam × xona qiymati`));
+        ui.bubble("elder", "↻ Har javobni oʻnlikka qaytarib tekshir.");
       },
-      solution: () => {
-        const back = S.fromBase(task.shown, task.base);
-        common.add(el, common.answerLine(`${S.fmt(task.shown, task.base)} = ${expandText(task.shown, task.base)} = ${back}${back === task.n ? " ✓" : ` ≠ ${task.n} — qoldiqlar teskari oʻqilgan`}`));
+      solution: (value) => {
+        const lines = [common.answerLine(`${S.fmt(task.answer, task.base)} = ${expandText(task.answer, task.base)} = ${task.n} ✓`)];
+        if (value === task.reversed) lines.unshift(common.line(`${S.fmt(value, task.base)} = ${S.fromBase(value, task.base)} — qoldiqlar teskari oʻqilgan`));
+        common.add(el, ...lines);
       },
     });
   }
 
   function praise(task) {
-    if (task.type === "check") return task.answer === "ha" ? "Tekshirdik — toʻgʻri." : "Toʻgʻri topding: qoldiqlar teskari oʻqilgan.";
+    if (task.type === "choose") return `Tekshirdik: ${S.fmt(task.answer, task.base)} = ${task.n}.`;
     return `${task.n} = ${S.fmt(task.answer, task.base)}.`;
   }
 
@@ -81,9 +81,9 @@
 
   async function stage3() {
     await hexDemo();
-    await ui.say("elder", "Endi oʻzing: 16-lik, 8-lik va tekshirish. 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing: 16-lik, 8-lik va toʻgʻri javobni tanlash. ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev) => qop.makeAnyTask(prev),
+      next: (prev, correct, tier) => qop.makeAnyTask(prev, undefined, tier),
       run: anyTask,
       praise,
     });

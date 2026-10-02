@@ -35,8 +35,8 @@ O'yindan keyin bola:
 ```
 Bosh ekran
    ├─► Kirish (Rim toshi)
-   ├─► 1-bosqich: O'qish va yozish   [belgilar → qo'shish qoidasi → ayirish qoidasi → mashq 3]
-   ├─► 2-bosqich: Qo'shish va ayirish [Rimliklar usuli (qo'shish) → oddiy sonda → ayirish namoyishi → mashq 3]
+   ├─► 1-bosqich: O'qish va yozish   [belgilar → qo'shish qoidasi → ayirish qoidasi → mashq]
+   ├─► 2-bosqich: Qo'shish va ayirish [Rimliklar usuli (qo'shish) → oddiy sonda → ayirish namoyishi → mashq]
    └─► 3-bosqich: Pozitsion tizim     [yoyilma → 352/325 → nol → mashq 3 → hikoya] → tabrik
 ```
 
@@ -56,7 +56,7 @@ Bosh ekran
 1. **Rimliklar usulida qo'shish (interaktiv):** XII + VIII. Belgilar laganga birlashtiriladi: `X V I I I I I`. Bola qoida tugmalarini bosadi: `IIIII → V` → `X V V`; `VV → X` → `X X`. Qo'llab bo'lmaydigan qoida — "Bunday belgilar yetarli emas". Tartibga tushgach: "XII + VIII = XX".
 2. **Oddiy sonda:** "Endi oʻzimiznikida: 12 + 8 = ?" — raqam klaviaturasi. "Bir zumda!"
 3. **Ayirish namoyishi (bola kuzatadi):** XV − VII: `X V` → V ni olib tashlaymiz → `X`; I yo'q — X ni V V ga "sindiramiz" → `V V`; V ni I I I I I ga → `V I I I I I`; I I ni olib tashlaymiz → `V I I I` = 8. "Rimliklar buni hisob taxtasida qilgan." Keyin: "15 − 7 = ?" — raqam klaviaturasi.
-4. **Mashq** (3 ta to'g'ri), tasodifiy:
+4. **Mashq** (4 / 5 / 6 ta to'g'ri — oxirdagi «qiyinlik yangilanishi»ga qara), tasodifiy:
    - **Rimliklar usuli (qo'shish):** misol, lagan va qoida tugmalari, "Tayyor". Operandlar va yig'indida 4 va 9 raqami yo'q (yozuv faqat qo'shish qoidasida), yig'indi ≤ 80. "Tayyor" erta bosilsa (qoida hali qo'llanadi) — 1-xato: "Hali tartibga solsa boʻladi". 2-xato: yakuniy yozuv.
    - **Aylantirib hisoblash:** "{XXV} + {XVII} = ?" yoki "{XL} − {XII} = ?" — natija Rim klaviaturasida. Qo'shishda yig'indi ≤ 100; ayirishda natija ≥ 1. 1-xato: oddiy sonlarda misol ko'rsatiladi (`25 + 17 = 42`). 2-xato: javob.
 
@@ -65,7 +65,7 @@ Bosh ekran
 1. **Yoyilma:** 352 — `3 yuz`, `5 oʻn`, `2 bir` → `300 + 50 + 2`. Rim: XXVII → `10 + 10 + 5 + 1 + 1`.
 2. **Tajriba:** "Almashtir" tugmasi 5 va 2 ning joyini almashtiradi — 352 → 325: 5 raqami 50 dan 5 ga aylanadi. "Oddiy sonda raqam qiymati oʻrniga bogʻliq — bu **pozitsion** tizim." / "Rimda X qayerda tursa ham 10 — bu **nopozitsion** tizim."
 3. **Nol:** "105 da 0 oʻnlar joyini saqlaydi — usiz 15 boʻlib qolardi." / "Rimda nol yoʻq: 105 — CV."
-4. **Mashq** (3 ta to'g'ri): "{352} sonidagi {5} raqami nechaga teng?" — raqam klaviaturasi. Sonlar 2–3 xonali, raqamlari har xil va noldan farqli. 1-xato: o'rinlar belgisi (`yuz / oʻn / bir`). 2-xato: yoyilma.
+4. **Mashq** (4 / 5 / 6 ta to'g'ri — oxirdagi «qiyinlik yangilanishi»ga qara): "{352} sonidagi {5} raqami nechaga teng?" — raqam klaviaturasi. Sonlar 2–3 xonali, raqamlari har xil va noldan farqli. 1-xato: o'rinlar belgisi (`yuz / oʻn / bir`). 2-xato: yoyilma.
 5. **Hikoya:**
    1. (abak) "Rimliklar hisobni hisob taxtasida qilgan." / "Rim raqamlari faqat yozib qoʻyish uchun edi."
    2. (raqamlar) "Hindistonda 0 va oʻnlik pozitsion sonlar paydo boʻldi."
@@ -93,3 +93,19 @@ Bosh ekran
 ## 9. Bu o'yinga kirmaydi
 
 D (500) va 100 dan katta sonlar bilan mashq (M faqat yil misolida), Rim usulida interaktiv ayirish, ko'paytirish va bo'lish.
+
+## 10. 2026-10-02 qiyinlik yangilanishi
+
+Bolalar "o'ta oson" deyishgan; ayniqsa 3-bosqich mashqi ("352 da 5 nechaga teng?") 10 yoshli bola uchun ahamiyatsiz oson edi. Yuqoridagi mashq tavsiflariga qo'shimcha (QOIDALAR §4.3, §4.5):
+
+- **To'g'ri javoblar soni:** 4 / 5 / 6 (1- / 2- / 3-bosqich), qiyin rejimda 7 — `QK.practice.need()`.
+- **1-bosqich** (`makeReadWriteTask(k, prev, rng, tier)`): tier 0 — 3..39, tier 1 — 40..100, **tier 2 — 101..399** (C gacha; yozuvi 8 belgidan oshmaydigan sonlar — klaviatura va toshga sig'adi).
+- **2-bosqich:** lagan (`makeTidyTask`) — tier 0: yig'indi ≤ 80, 1 ta qoida; tier 1: ≤ 100, kamida 2 ta qoida; **tier 2: ≤ 150, kamida 3 ta qoida** (LL → C ham ishlaydi). Aylantirib hisoblash (`makeArithTask`) — 100 / 200 / **399** gacha. Maslahat endi oddiy sonlardagi javobni aytmaydi — faqat ikkala sonni aylantirib beradi.
+- **3-bosqich** (`makeStage3Task`) — to'rt xil savol, hammasi raqam klaviaturasida:
+  - **xona qiymati** (`makePlaceTask`): tier 0 — 2–3 xonali, nolsiz; tier 2 — **4 xonali, ichida 0 bor** ("minglar" xonasi qo'shildi);
+  - **nol** (`makeZeroTask`): "3052 sonidan 0 ni olib tashlasak, qaysi son hosil boʻladi?" — nol xonani band qilishini his qilish;
+  - **joy almashish** (`makeSwapTask`): "352 sonida 5 va 2 joy almashdi. Endi 5 nechaga teng?";
+  - **Rim + oddiy son** (`makeMixedTask`): "XIV + 26 = ?" — avval aylantirish kerak.
+  Tartib: 1–2-javob — xona qiymati; 3–4-javob — nol, almashish; 5–6-javob — Rim + oddiy son, 4 xonali xona qiymati. Qiyin rejimda to'rt tur darhol aylanib keladi (hammasi 4 xonali).
+- **Testlar:** `tests/roman.test.js` — zina chegaralari, klaviaturaga sig'ish (≤ 8 belgi, faqat I V X L C), lagan natijasi standart yozuvga tengligi, to'rt savol turi, takrorlanmaslik.
+

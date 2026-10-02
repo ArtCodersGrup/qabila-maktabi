@@ -14,7 +14,7 @@
 .menyu-karta:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--soya); }
 .menyu-karta:disabled { opacity: 0.45; box-shadow: none; }
 .menyu-nom { font-size: 21px; font-weight: 900; color: var(--asosiy); }
-.menyu-izoh { font-size: 15px; font-weight: 700; color: #7A7266; }
+.menyu-izoh { font-size: 15px; font-weight: 700; color: var(--matn-3); }
 
 /* ---------- Lobbi: kim kirdi ---------- */
 .lobbi-royxat { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 460px; }
@@ -53,7 +53,7 @@
 }
 .tog-nom { font-size: 21px; font-weight: 900; }
 .tog-metr { font-size: 19px; font-weight: 900; color: var(--asosiy); text-align: right; }
-.tog-pogona { grid-column: 1 / -1; font-size: 15px; font-weight: 700; color: #7A7266; }
+.tog-pogona { grid-column: 1 / -1; font-size: 15px; font-weight: 700; color: var(--matn-3); }
 
 /* ---------- Oʻyin maydoni ---------- */
 .tog-soat { font-size: 18px; font-weight: 900; }
@@ -122,7 +122,7 @@
 .reyting-qator { display: flex; align-items: center; gap: 5px; padding: 3px 6px; border-radius: 10px; background: #fff; font-size: 15px; font-weight: 800; }
 .reyting-qator.men { background: #E3ECFB; }
 .reyting-qator.chiqdi { opacity: 0.45; }
-.reyting-orin { width: 16px; color: #7A7266; }
+.reyting-orin { width: 16px; color: var(--matn-3); }
 .reyting-rasm { width: 22px; }
 .reyting-nom { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
@@ -130,7 +130,7 @@
 .tog-pastki { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; }
 .savol-karta { display: flex; flex-direction: column; align-items: center; gap: 8px; width: min(100%, 560px); padding: 10px 14px; border-radius: 14px; background: #fff; box-shadow: 0 3px 0 var(--soya); text-align: center; }
 .pauza { display: flex; flex-direction: column; align-items: center; gap: 4px; width: min(100%, 460px); padding: 12px; border-radius: 14px; background: #FDEEE0; }
-.pauza-bosh { font-size: 19px; font-weight: 900; color: var(--yana); }
+.pauza-bosh { font-size: 19px; font-weight: 900; color: var(--yana-matn); }
 .pauza-javob { font-size: 20px; font-weight: 900; }
 .pauza-sanoq { font-size: 28px; font-weight: 900; color: var(--matn); }
 .tomoshabin { padding: 10px 14px; border-radius: 14px; background: #fff; font-size: 18px; font-weight: 800; text-align: center; }
@@ -140,11 +140,11 @@
 .natija-golib { display: flex; align-items: center; gap: 10px; }
 .natija-rasm { width: 56px; }
 .natija-golib h1 { margin: 0; font-size: 26px; font-weight: 900; }
-.natija-sabab { margin: 0; font-size: 17px; font-weight: 700; color: #7A7266; }
+.natija-sabab { margin: 0; font-size: 17px; font-weight: 700; color: var(--matn-3); }
 .natija-royxat { display: flex; flex-direction: column; gap: 4px; width: min(100%, 460px); }
 .natija-qator { display: flex; align-items: center; gap: 6px; padding: 5px 8px; border-radius: 12px; background: #fff; font-size: 16px; font-weight: 800; }
 .natija-qator.men { background: #E3ECFB; }
-.natija-hisob { font-size: 14px; font-weight: 700; color: #7A7266; }
+.natija-hisob { font-size: 14px; font-weight: 700; color: var(--matn-3); }
 .natija-men { margin: 0; font-size: 17px; font-weight: 800; text-align: center; }
 
 /* ---------- Tor ekran ---------- */

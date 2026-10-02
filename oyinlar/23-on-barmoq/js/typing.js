@@ -225,12 +225,48 @@
     }
   }
 
-  // Mashq qatori: 1-bosqich — 4 ta asosiy qator so'zi, 2 — 4 ta so'z, 3 — maqol
-  function makeLine(stage, prev, rng) {
-    rng = rng || Math.random;
-    if (stage === 3) return fresh(() => pick(PROVERBS, rng), prev);
-    return fresh(() => words(stage === 1 ? HOME_WORDS : TOP_WORDS, 4, rng), prev);
+  // Qiyinlik zinasi (QOIDALAR 4.3): qator tier bo'yicha uzayadi — 4 / 5 / 6 ta so'z; maqollar — qisqa / har xil / uzun
+  const LINE_WORDS = [4, 5, 6];
+  const LINE_MAX = 52; // ekrandagi qatorga sig'adigan belgilar (eng uzun maqol shuncha)
+  const PROVERB_SPLIT = 28;
+  function proverbPool(tier) {
+    const pool = tier === 0 ? PROVERBS.filter((p) => p.length <= PROVERB_SPLIT)
+      : tier === 2 ? PROVERBS.filter((p) => p.length > PROVERB_SPLIT) : PROVERBS;
+    return pool.length >= 3 ? pool : PROVERBS;
   }
+
+  // Mashq qatori: 1-bosqich — asosiy qator so'zlari, 2 — yuqori qator so'zlari, 3 — maqol.
+  // tier berilmasa — avvalgidek: 4 ta so'z yoki istalgan maqol.
+  function makeLine(stage, prev, rng, tier) {
+    rng = rng || Math.random;
+    if (stage === 3) {
+      const pool = tier == null ? PROVERBS : proverbPool(tier);
+      return fresh(() => pick(pool, rng), prev);
+    }
+    const n = LINE_WORDS[tier || 0];
+    return fresh(() => {
+      for (;;) {
+        const line = words(stage === 1 ? HOME_WORDS : TOP_WORDS, n, rng);
+        if (line.length <= LINE_MAX) return line;
+      }
+    }, prev);
+  }
+
+  // Eng kam tezlik (belgi/daqiqa): 1-bosqichda talab yo'q, 2-bosqich — 60, 3-bosqich — 90; qiyin rejimda + 30
+  const MIN_CPM = [0, 60, 90];
+  const HARD_CPM = 30;
+  const minCpm = (stage, hard) => MIN_CPM[Math.max(1, Math.min(stage, MIN_CPM.length)) - 1] + (hard ? HARD_CPM : 0);
+
+  // Qator natijasi: avval aniqlik (≥ 90%), keyin tezlik (≥ min). reason: "accuracy" | "speed" | null
+  function lineResult(st, min) {
+    if (!passed(st)) return { ok: false, reason: "accuracy" };
+    if (st.cpm < (min || 0)) return { ok: false, reason: "speed" };
+    return { ok: true, reason: null };
+  }
+
+  // Sharpa (3-bosqich): cpm tezlikda bir tekis yozadigan yozuvchi — har belgining vaqti (ms).
+  // Rekord bilan poyga: sharpadan o'zgan — rekordni yangilagan bo'ladi.
+  const ghostTimes = (len, cpm) => Array.from({ length: len }, (_, i) => Math.round(((i + 1) * 60000) / cpm));
 
   const RACE_LEVELS = [
     { id: "home", title: "Asosiy qator" },
@@ -297,6 +333,7 @@
     PASS, OKINA, ROWS, FINGERS, HOME_WORDS, TOP_WORDS, PROVERBS, DRILLS, RACE_LEVELS,
     isApostrophe, isUpper, keyOf, fingerOf, shiftFor, same, keyFrom, isCyrillic, warning,
     allowed, fits, makeLine, words, proverbs, raceText, session, stats, passed, raceResult, ghostAt,
+    LINE_WORDS, LINE_MAX, MIN_CPM, HARD_CPM, minCpm, lineResult, ghostTimes, proverbPool,
   };
 
   if (typeof module !== "undefined" && module.exports) module.exports = api;

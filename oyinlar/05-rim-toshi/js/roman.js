@@ -131,75 +131,191 @@
 
   const randInt = (lo, hi, rng) => lo + Math.floor(rng() * (hi - lo + 1));
 
-  // 1-bosqich mashqi: k — nechanchi to'g'ri javob (0 — o'qish, 1 — yozish, keyin tasodifiy)
-  function makeReadWriteTask(k, prev, rng) {
-    rng = rng || Math.random;
-    const type = k === 0 ? "read" : k === 1 ? "write" : rng() < 0.5 ? "read" : "write";
-    const max = k === 0 ? 39 : 100; // birinchi misol yengilroq
-    let n;
-    do {
-      n = randInt(3, max, rng);
-    } while (prev && n === prev.n);
-    return { type, n, roman: toRoman(n) };
+  const pick = (arr, rng) => arr[Math.floor(rng() * arr.length)];
+  const tierOf = (tier) => Math.max(0, Math.min(2, tier || 0));
+  // Zina berilmasa, to'g'ri javoblar sonidan (k) olinadi: 0–1 → 0, 2–3 → 1, 4+ → 2
+  const tierFrom = (k, tier) => (tier === undefined || tier === null ? (k >= 4 ? 2 : k >= 2 ? 1 : 0) : tierOf(tier));
+
+  const MAX_SYMBOLS = 8;  // Rim klaviaturasi va tosh shuncha belgini sig'diradi (LXXXVIII)
+  const MAX_TRAY = 14;    // lagandagi belgilar soni chegarasi
+
+  // Laganni to'liq tartibga solish uchun nechta qoida qo'llanadi (qiyinlik o'lchovi)
+  function tidySteps(str) {
+    let steps = 0;
+    for (let guard = 0; guard < 50; guard++) {
+      const rule = RULES.find((r) => applyRule(str, r));
+      if (!rule) break;
+      str = applyRule(str, rule);
+      steps++;
+    }
+    return steps;
   }
 
-  // 2-bosqich: Rimliklar usulida qo'shish — 4/9 raqamisiz, yig'indi ≤ 80, kamida bitta qoida kerak
-  function makeTidyTask(prev, rng) {
+  // 1-bosqich mashqi: k — nechanchi to'g'ri javob (0 — o'qish, 1 — yozish, keyin tasodifiy).
+  // Sonlar zina bo'yicha: tier 0 — 3..39, tier 1 — 40..100, tier 2 — 101..399 (C gacha; yozuvi 8 belgidan oshmaydi).
+  const READ_RANGES = [[3, 39], [40, 100], [101, 399]];
+  function makeReadWriteTask(k, prev, rng, tier) {
     rng = rng || Math.random;
+    const t = tierFrom(k, tier);
+    const type = k === 0 ? "read" : k === 1 ? "write" : rng() < 0.5 ? "read" : "write";
+    const [lo, hi] = READ_RANGES[t];
+    let n;
+    do {
+      n = randInt(lo, hi, rng);
+    } while ((prev && n === prev.n) || toRoman(n).length > MAX_SYMBOLS);
+    return { type, n, roman: toRoman(n), tier: t };
+  }
+
+  // 2-bosqich: Rimliklar usulida qo'shish — 4/9 raqamisiz, kamida bitta qoida kerak.
+  // tier 0: qo'shiluvchilar 2..60, yig'indi ≤ 80; tier 1: 2..75, ≤ 100, kamida 2 ta qoida;
+  // tier 2: 2..90, ≤ 150, kamida 3 ta qoida (LL → C ham kerak bo'ladi).
+  const TIDY = [{ max: 60, sum: 80, steps: 1 }, { max: 75, sum: 100, steps: 2 }, { max: 90, sum: 150, steps: 3 }];
+  function makeTidyTask(prev, rng, tier) {
+    rng = rng || Math.random;
+    const t = tierOf(tier);
+    const lim = TIDY[t];
     for (;;) {
-      const a = randInt(2, 60, rng);
-      const b = randInt(2, 60, rng);
+      const a = randInt(2, lim.max, rng);
+      const b = randInt(2, lim.max, rng);
       const answer = a + b;
-      if (answer > 80 || !hasNo49(a) || !hasNo49(b) || !hasNo49(answer)) continue;
-      if (!canTidy(merge(toRoman(a), toRoman(b)))) continue;
+      if (answer > lim.sum || !hasNo49(a) || !hasNo49(b) || !hasNo49(answer)) continue;
+      const tray = merge(toRoman(a), toRoman(b));
+      if (tray.length > MAX_TRAY || tidySteps(tray) < lim.steps) continue;
       if (prev && prev.type === "tidy" && prev.a === a && prev.b === b) continue;
-      return { type: "tidy", op: "+", a, b, answer };
+      return { type: "tidy", op: "+", a, b, answer, tier: t };
     }
   }
 
-  // 2-bosqich: aylantirib hisoblash. "+": yig'indi ≤ 100; "−": natija ≥ 1
-  function makeArithTask(prev, rng) {
+  // 2-bosqich: aylantirib hisoblash. "+" va "−"; natija ≥ 1. Sonlar zina bo'yicha:
+  // tier 0 — 100 gacha, tier 1 — 200 gacha, tier 2 — 399 gacha (yozuvi 8 belgidan oshmaydi).
+  const ARITH = [
+    { plus: [[5, 70], [2, 40], 100], minus: [12, 100] },
+    { plus: [[30, 120], [15, 80], 200], minus: [60, 200] },
+    { plus: [[60, 250], [30, 149], 399], minus: [120, 399] },
+  ];
+  function makeArithTask(prev, rng, tier) {
     rng = rng || Math.random;
+    const t = tierOf(tier);
+    const lim = ARITH[t];
     for (;;) {
       const op = rng() < 0.5 ? "+" : "−";
       let a;
       let b;
       if (op === "+") {
-        a = randInt(5, 70, rng);
-        b = randInt(2, 40, rng);
-        if (a + b > 100) continue;
+        a = randInt(lim.plus[0][0], lim.plus[0][1], rng);
+        b = randInt(lim.plus[1][0], lim.plus[1][1], rng);
+        if (a + b > lim.plus[2]) continue;
       } else {
-        a = randInt(12, 100, rng);
-        b = randInt(2, a - 1, rng);
+        a = randInt(lim.minus[0], lim.minus[1], rng);
+        b = randInt(t === 0 ? 2 : 11, a - 1, rng);
       }
+      const answer = op === "+" ? a + b : a - b;
+      if ([a, b, answer].some((n) => toRoman(n).length > MAX_SYMBOLS)) continue;
+      if (t > 0 && toRoman(a).length + toRoman(b).length > 12) continue; // misol satri ekranga sig'sin
       if (prev && prev.type === "arith" && prev.op === op && prev.a === a && prev.b === b) continue;
-      return { type: "arith", op, a, b, answer: op === "+" ? a + b : a - b };
+      return { type: "arith", op, a, b, answer, tier: t };
     }
   }
 
   // 2-bosqich mashqi: avval lagan, keyin aylantirish, keyin tasodifiy
-  function makeCalcTask(k, prev, rng) {
+  function makeCalcTask(k, prev, rng, tier) {
     rng = rng || Math.random;
+    const t = tierFrom(k, tier);
     const useTidy = k === 0 ? true : k === 1 ? false : rng() < 0.5;
-    return useTidy ? makeTidyTask(prev, rng) : makeArithTask(prev, rng);
+    return useTidy ? makeTidyTask(prev, rng, t) : makeArithTask(prev, rng, t);
   }
 
-  // 3-bosqich: "352 sonidagi 5 raqami nechaga teng?" — raqamlar har xil va noldan farqli
-  function makePlaceTask(prev, rng) {
-    rng = rng || Math.random;
-    for (;;) {
-      const len = rng() < 0.7 ? 3 : 2;
-      const digits = [];
-      while (digits.length < len) {
-        const d = randInt(1, 9, rng);
-        if (!digits.includes(d)) digits.push(d);
-      }
-      const number = Number(digits.join(""));
-      if (prev && prev.number === number) continue;
-      const index = randInt(0, len - 1, rng);
-      const part = places(number)[index];
-      return { number, index, digit: part.digit, place: part.place, answer: part.value };
+  // ---------- 3-bosqich mashqlari ----------
+  // len ta har xil raqam; withZero — bittasi (birinchisi emas) 0 bo'ladi
+  function randomDigits(len, withZero, rng) {
+    const digits = [];
+    while (digits.length < len) {
+      const d = randInt(1, 9, rng);
+      if (!digits.includes(d)) digits.push(d);
     }
+    if (withZero) digits[randInt(1, len - 1, rng)] = 0;
+    return digits;
+  }
+  const sameNumber = (prev, type, number) => !!prev && prev.type === type && prev.number === number;
+
+  // "352 sonidagi 5 raqami nechaga teng?" — raqamlar har xil; so'ralgan raqam noldan farqli.
+  // tier 0: 2–3 xonali, nolsiz; tier 1: 3–4 xonali, 0 bo'lishi mumkin; tier 2: 4 xonali, ichida 0 bor.
+  function makePlaceTask(prev, rng, tier) {
+    rng = rng || Math.random;
+    const t = tierOf(tier);
+    for (;;) {
+      const len = t === 0 ? (rng() < 0.7 ? 3 : 2) : t === 1 ? (rng() < 0.5 ? 3 : 4) : 4;
+      const digits = randomDigits(len, t === 2 || (t === 1 && rng() < 0.5), rng);
+      const number = Number(digits.join(""));
+      if (sameNumber(prev, "place", number)) continue;
+      const index = randInt(0, len - 1, rng);
+      if (digits[index] === 0) continue;
+      const part = places(number)[index];
+      return { type: "place", number, index, digit: part.digit, place: part.place, answer: part.value, tier: t };
+    }
+  }
+
+  // "3052 sonidan 0 ni olib tashlasak, qaysi son chiqadi?" — nol xonani band qilib turishini his qilish uchun.
+  // tier 0, 1: 3 xonali; tier 2: 4 xonali.
+  function makeZeroTask(prev, rng, tier) {
+    rng = rng || Math.random;
+    const t = tierOf(tier);
+    for (;;) {
+      const digits = randomDigits(t === 2 ? 4 : 3, true, rng);
+      const number = Number(digits.join(""));
+      if (sameNumber(prev, "zero", number)) continue;
+      const answer = Number(digits.filter((d) => d !== 0).join(""));
+      return { type: "zero", number, index: digits.indexOf(0), answer, tier: t };
+    }
+  }
+
+  // "352 sonida 5 va 2 joy almashdi. Endi 5 nechaga teng?" — raqam qiymati xonaga bog'liq.
+  // tier 0, 1: 3 xonali; tier 2: 4 xonali.
+  function makeSwapTask(prev, rng, tier) {
+    rng = rng || Math.random;
+    const t = tierOf(tier);
+    for (;;) {
+      const len = t === 2 ? 4 : 3;
+      const digits = randomDigits(len, false, rng);
+      const number = Number(digits.join(""));
+      if (sameNumber(prev, "swap", number)) continue;
+      const i = randInt(0, len - 1, rng);
+      const j = randInt(0, len - 1, rng);
+      if (i === j) continue;
+      const moved = digits.slice();
+      moved[i] = digits[j];
+      moved[j] = digits[i];
+      const swapped = Number(moved.join(""));
+      const part = places(swapped)[j]; // digits[i] endi j-o'rinda
+      return {
+        type: "swap", number, swapped, digit: digits[i], other: digits[j], index: j,
+        place: part.place, before: places(number)[i].value, answer: part.value, tier: t,
+      };
+    }
+  }
+
+  // "XIV + 26 = ?" — Rim soni va oddiy son: avval aylantirish kerak (pozitsion tizim qulayligi).
+  // tier 0, 1: Rim soni 4..39, qo'shiluvchi 11..40; tier 2: Rim soni 14..89, qo'shiluvchi 11..60.
+  function makeMixedTask(prev, rng, tier) {
+    rng = rng || Math.random;
+    const t = tierOf(tier);
+    for (;;) {
+      const n = t === 2 ? randInt(14, 89, rng) : randInt(4, 39, rng);
+      const b = randInt(11, t === 2 ? 60 : 40, rng);
+      if (prev && prev.type === "mixed" && prev.n === n && prev.b === b) continue;
+      return { type: "mixed", n, roman: toRoman(n), b, answer: n + b, tier: t };
+    }
+  }
+
+  // 3-bosqich mashqi tartibi: tier 0 — xona qiymati; tier 1 — "0 ni olib tashla" va "joy almashdi" navbat bilan;
+  // tier 2 — to'rt tur aylanib keladi (Rim + oddiy son, 4 xonali xona qiymati, nol, almashish).
+  const STAGE3_ORDER = [["place"], ["zero", "swap"], ["mixed", "place", "zero", "swap"]];
+  const STAGE3_MAKERS = { place: makePlaceTask, zero: makeZeroTask, swap: makeSwapTask, mixed: makeMixedTask };
+  function makeStage3Task(k, prev, rng, tier) {
+    rng = rng || Math.random;
+    const t = tierFrom(k, tier);
+    const order = STAGE3_ORDER[t];
+    return STAGE3_MAKERS[order[k % order.length]](prev, rng, t);
   }
 
   const api = {
@@ -207,7 +323,9 @@
     toRoman, fromRoman, isStandard, mistake, tokens, symbolValues,
     sortSymbols, merge, applyRule, canTidy, tidy,
     partsOf, places, hasNo49,
-    makeReadWriteTask, makeTidyTask, makeArithTask, makeCalcTask, makePlaceTask,
+    MAX_SYMBOLS, MAX_TRAY, READ_RANGES, tidySteps,
+    makeReadWriteTask, makeTidyTask, makeArithTask, makeCalcTask,
+    makePlaceTask, makeZeroTask, makeSwapTask, makeMixedTask, makeStage3Task,
   };
 
   if (typeof module !== "undefined" && module.exports) module.exports = api;

@@ -59,7 +59,9 @@
   }
 
   const tartibExercise = (task) => sonExercise(task, {
-    ishora: "Ikki bolaning oʻrni almashsa, bu boshqa javobmi? Boshqa boʻlsa — tartib muhim.",
+    ishora: task.qoida === "aralash"
+      ? "Qizlarni alohida, oʻgʻillarni alohida tanla: har guruhdan nechta usul? Keyin ikkalasi ham kerak — VA qoidasi."
+      : "Ikki bolaning oʻrni almashsa, bu boshqa javobmi? Boshqa boʻlsa — tartib muhim.",
   });
 
   const kodExercise = (task) => sonExercise(Object.assign({}, task, { matn: "Bu kod nima chiqaradi?" }), {

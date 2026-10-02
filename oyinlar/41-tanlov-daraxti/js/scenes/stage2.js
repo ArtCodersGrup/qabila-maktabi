@@ -40,7 +40,7 @@
     await farq();
     await qoida();
     await practice.exercises({
-      next: (prev) => L.qoidaTask(Math.random, prev),
+      next: (prev, correct, tier) => L.qoidaTask(Math.random, prev, tier),
       run: (task) => common.qoidaExercise(task),
       praise: (task) => (task.qoida === "va" ? "VA — koʻpaytirildi: " : "YOKI — qoʻshildi: ") + task.hisob,
     });

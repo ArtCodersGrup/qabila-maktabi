@@ -49,9 +49,9 @@
   async function stage1() {
     await qavs();
     await tenglik();
-    await ui.say("elder", "Endi oʻzing ayt: dastur nima chiqaradi? 3 ta toʻgʻri javob kerak.");
+    await ui.say("elder", `Endi oʻzing ayt: dastur nima chiqaradi? ${QK.practice.need()} ta toʻgʻri javob kerak.`);
     await practice.exercises({
-      next: (prev, correct) => L.bosqich1Task(prev, correct),
+      next: (prev, correct, tier) => L.bosqich1Task(prev, correct, tier),
       run: (task) => common.mashq(task),
       praise: () => "Qavslarni toʻgʻri oʻqiding.",
     });

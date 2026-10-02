@@ -87,9 +87,9 @@
     await rule();
     await guided("34", "13", "+", 5, S.stepsAdd("34", "13", 5), "Ustunda qoʻshamiz: 34₅ + 13₅. Oʻngdan boshlaymiz!");
     await ui.say("elder", "34₅ + 13₅ = 102₅. Tekshiramiz: 19 + 8 = 27 = 25 + 2 ✓");
-    await ui.say("elder", "Endi oʻzing: turli sayyoralarda qoʻsh. 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing: turli sayyoralarda qoʻsh. ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev) => sayyora.makeAddTask(prev),
+      next: (prev, correct, tier) => sayyora.makeAddTask(prev, undefined, tier),
       run: addTask,
       praise: (task) => `${S.fmt(task.a, task.base)} + ${S.fmt(task.b, task.base)} = ${S.fmt(task.answer, task.base)}.`,
     });

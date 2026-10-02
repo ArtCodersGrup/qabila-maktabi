@@ -15,7 +15,10 @@
 .rb-maydonlar { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; }
 .rb-maydon { display: flex; flex-direction: column; align-items: center; gap: 4px; }
 .rb-maydon-nom { font-size: 14px; font-weight: 800; color: #6B6558; }
-.rb-maydon .field-wrap { width: min(210px, 40vw); }
+/* Maydon eni katak soniga qarab: generator tor yoʻlak (2×5) ham, keng yoʻlak (6×2) ham beradi —
+   katak oʻlchami bir xil qoladi, baland maydon ekrandan chiqib ketmaydi (2026-10-02) */
+.rb-maydon .field-wrap { --katak: min(42px, 7vw); width: calc(var(--fw) * var(--katak)); }
+.rb-maydon .field { width: 100%; height: auto; max-width: none; }
 
 /* ---------- Dastur ---------- */
 .rb-dastur { width: min(560px, 96%); }
@@ -52,7 +55,7 @@
 .rb-shox-nom.aks { background: #F7E2E0; color: #8E3B33; }
 .rb-zona {
   min-height: 48px; padding: 0 12px; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer;
-  background: transparent; border: 2px dashed var(--chiziq); border-radius: 10px; color: #8A8577;
+  background: transparent; border: 2px dashed var(--chiziq); border-radius: 10px; color: var(--matn-3);
 }
 .rb-zona.faol { border-color: var(--asosiy); border-style: solid; background: #EAF2FD; color: var(--asosiy); }
 
@@ -70,7 +73,7 @@
 
 @media (max-width: 520px) {
   .summary { font-size: 16px; }
-  .rb-maydon .field-wrap { width: min(160px, 42vw); }
+  .rb-maydon .field-wrap { --katak: min(32px, 7vw); }
   .rb-blok { min-width: 44px; height: 44px; font-size: 20px; }
   .rb-pad-btn { min-width: 50px; height: 50px; font-size: 20px; }
   .rb-pad-btn.qamrov { font-size: 14px; }

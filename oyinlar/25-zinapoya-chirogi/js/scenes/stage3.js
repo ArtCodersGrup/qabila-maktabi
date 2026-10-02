@@ -65,7 +65,7 @@
     });
     await ui.say("elder", "Ikki chiroq ikkilik sonni koʻrsatadi: 1 + 1 = 10, yaʼni ikki.");
     await definition();
-    await ui.say("elder", "Endi oʻzing qoʻsh. 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing qoʻsh. ${QK.practice.need()} ta toʻgʻri javob!`);
     await common.exercises(3);
     await story();
   }

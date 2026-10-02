@@ -40,12 +40,50 @@
     { tur: "c", matn: (n, k) => n + " xil mevadan " + k + " tasi bitta likopchaga solinadi. Nechta xil likopcha?", nk: [[6, 2], [6, 3], [7, 3]] },
     { tur: "a", matn: (n, k) => n + " ta bayroqdan " + k + " tasi ustunga yuqoridan pastga osiladi. Nechta koʻrinish?", nk: [[5, 2], [6, 3], [7, 2]] },
     { tur: "c", matn: (n, k) => n + " ta oʻquvchidan " + k + " tasi navbatchilikka tanlanadi (hammasi teng). Nechta usul?", nk: [[6, 2], [7, 3], [9, 2]] },
+    // ---- 2026-10-02 (zina 1–2): katta sonlar va simmetriya ----
+    { tier: 1, tur: "c", matn: (n, k) => n + " ta savoldan " + k + " tasiga javob berish kerak (qaysilariga — oʻzing tanlaysan). Nechta usul?", nk: [[6, 4], [7, 5], [8, 6], [9, 7]] },
+    { tier: 1, tur: "a", matn: (n, k) => n + " ta rasmdan " + k + " tasi devorga chapdan oʻngga qator qilib osiladi. Nechta koʻrinish?", nk: [[5, 3], [6, 3], [5, 4]] },
   ];
 
-  function tartibTask(r, prev) {
+  // 2026-10-02 (zina 2): IKKI QOIDA BIRGA — ikki guruhdan alohida tanlanadi (C × C).
+  // q — qizlar, o — oʻgʻillar; jamoa: 2 qiz VA 1 oʻgʻil (yoki 2 va 2).
+  const ARALASH = [
+    { qiz: 2, ogil: 1, soni: [[4, 3], [5, 3], [5, 4], [6, 2], [4, 5]] },
+    { qiz: 2, ogil: 2, soni: [[4, 3], [4, 4], [5, 3]] },
+  ];
+  const ZINA_HOLAT = { tier: 2, tur: "aralash" };
+
+  function aralashTask(rnd) {
+    const h = pick(ARALASH, rnd);
+    const [q, o] = pick(h.soni, rnd);
+    const cq = S.C(q, h.qiz);
+    const co = S.C(o, h.ogil);
+    const jami = h.qiz + h.ogil;
+    return {
+      id: "tartib:aralash:" + h.qiz + ":" + h.ogil + ":" + q + ":" + o, tur: "tartib", qoida: "aralash", q, o, qiz: h.qiz, ogil: h.ogil,
+      matn: "Toʻgarakda " + q + " ta qiz va " + o + " ta oʻgʻil bor. " + h.qiz + " ta qiz va " + h.ogil
+        + " ta oʻgʻildan iborat jamoa tuziladi. Nechta xil jamoa?",
+      javob: cq * co,
+      // Eng koʻp uchraydigan xato: guruhlarni ajratmasdan hammadan tanlash
+      xato: S.C(q + o, jami),
+      hisob: "C(" + q + "," + h.qiz + ") × C(" + o + "," + h.ogil + ") = " + cq + " × " + co + " = " + cq * co,
+      nega: "Qizlar alohida tanlanadi, oʻgʻillar alohida — ikkalasi ham kerak (VA), shuning uchun koʻpaytiriladi. Har guruh ichida tartib muhim emas.",
+    };
+  }
+
+  function zinaHolat(tier, rnd) {
+    if (tier == null) return pick(HOLATLAR.concat([ZINA_HOLAT]), rnd);
+    const t = Math.max(0, Math.min(2, tier));
+    const mos = HOLATLAR.concat([ZINA_HOLAT]).filter((x) => (x.tier || 0) <= t);
+    const ayni = mos.filter((x) => (x.tier || 0) === t);
+    return ayni.length && rnd() < 0.6 ? pick(ayni, rnd) : pick(mos, rnd);
+  }
+
+  function tartibTask(r, prev, tier) {
     const rr = r || Math.random;
     return pickNew((rnd) => {
-      const h = pick(HOLATLAR, rnd);
+      const h = zinaHolat(tier, rnd);
+      if (h.tur === "aralash") return aralashTask(rnd);
       const [n, k] = pick(h.nk, rnd);
       const c = S.C(n, k);
       const a = S.A(n, k);
@@ -68,7 +106,7 @@
   const juftKod = (n) => "soni = 0\nfor i in range(" + n + "):\n    for j in range(i + 1, " + n + "):\n        soni += 1\nprint(soni)";
   const uchKod = (n) => "soni = 0\nfor i in range(" + n + "):\n    for j in range(i + 1, " + n + "):\n        for k in range(j + 1, " + n + "):\n            soni += 1\nprint(soni)";
 
-  function kodTask(r, prev) {
+  function kodTask(r, prev, tier) {
     const rr = r || Math.random;
     return pickNew((rnd) => {
       if (rnd() < 0.5) {
@@ -97,12 +135,32 @@
       tail: "print(juftlar(int(input())))",
       tests: [["5"], ["2"], ["1"], ["10"]],
     },
+    // ---- 2026-10-02: ikki yangi masala (zina 1–2) ----
+    {
+      id: "uchliklar", tier: 1,
+      what: "uchliklar(n) — n ta boladan nechta uch kishilik jamoa chiqadi? Uchta sikl bilan sana: j har doim i dan katta, k esa j dan katta.",
+      solution: "def uchliklar(n):\n    soni = 0\n    for i in range(n):\n        for j in range(i + 1, n):\n            for k in range(j + 1, n):\n                soni += 1\n    return soni",
+      tail: "print(uchliklar(int(input())))",
+      tests: [["5"], ["3"], ["2"], ["10"], ["4"]],
+    },
+    {
+      id: "aralash-jamoa", tier: 2,
+      what: "jamoa(q, o) — q ta qiz va o ta oʻgʻildan 2 ta qiz va 1 ta oʻgʻildan iborat jamoa nechta usulda tuziladi? (Qizlar juftligi soni × oʻgʻillar soni.)",
+      solution: "def jamoa(q, o):\n    return q * (q - 1) // 2 * o",
+      tail: "print(jamoa(int(input()), int(input())))",
+      tests: [["4", "3"], ["5", "4"], ["2", "1"], ["1", "5"], ["6", "0"], ["10", "10"]],
+    },
   ];
 
-  function writeTask(r, prev) {
+  function writeTask(r, prev, tier) {
     const rr = r || Math.random;
     return pickNew((rnd) => {
-      const w = pick(WRITE, rnd);
+      const w = tier == null ? pick(WRITE, rnd) : (() => {
+        const t = Math.max(0, Math.min(2, tier));
+        const mos = WRITE.filter((x) => (x.tier || 0) <= t);
+        const ayni = mos.filter((x) => (x.tier || 0) === t);
+        return ayni.length && rnd() < 0.6 ? pick(ayni, rnd) : pick(mos, rnd);
+      })();
       return { id: "yoz:" + w.id, tur: "yoz", type: "kod-yoz", what: w.what, solution: w.solution, tail: w.tail,
         tests: w.tests.map((stdin) => ({ stdin })) };
     }, prev, rr);
@@ -115,7 +173,7 @@
     { id: "bitta", matn: "C(n, 1) = n", izoh: "Bittasini tanlash — n xil" },
   ];
 
-  const api = { BOLALAR, jamoalar, tartiblar, takrorlar, bolish, HOLATLAR, XOSSALAR, WRITE,
+  const api = { BOLALAR, jamoalar, tartiblar, takrorlar, bolish, HOLATLAR, ARALASH, XOSSALAR, WRITE,
     juftKod, uchKod, tartibTask, kodTask, writeTask };
 
   root.QK = root.QK || {};

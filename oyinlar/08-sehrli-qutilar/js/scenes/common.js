@@ -3,7 +3,7 @@
   "use strict";
 
   const QK = root.QK;
-  const { boxes, ui, sound, boxesUi } = QK;
+  const { boxes, ui, sound, boxesUi, practice } = QK;
 
   const VISIBLE = [7, 6, 5, 4, 3, 2]; // ko'rsatiladigan qutilar (1 li quti — bittagina yurish)
 
@@ -109,5 +109,55 @@
     await ui.sleep(300);
   }
 
-  QK.common = { VISIBLE, box, answerLine, line, playScreen, playRound, rewardStep };
+  // "Robotni yut" mashqi: bola birinchi yuradi, robot xatosiz o'ynaydi (boxes.smartOpponent).
+  // start — toshlar soni (3 ga karrali emas — bola to'g'ri o'ynasa yutadi). Natija: true — bola yutdi.
+  async function playPerfect(start) {
+    const { table } = playScreen();
+    let n = start;
+    table.reset(n);
+    for (;;) {
+      table.turn("me");
+      ui.bubble("elder", `Stolda ${n} ta tosh. Sen nechta olasan? Oxirgi toshni olgan yutadi.`);
+      const mine = await ui.settle((done) => boxesUi.moveButtons(n, (m) => { ui.clearControl(); done(m); }));
+      await table.take("me", mine);
+      n -= mine;
+      if (n === 0) {
+        table.finish("me");
+        return true;
+      }
+      table.turn("robot");
+      ui.bubble("elder", "Robot oʻylayapti…");
+      await ui.sleep(700);
+      const move = boxes.smartOpponent(n, Math.random);
+      ui.bubble("elder", `Robot ${move} ta oldi.`);
+      await table.take("robot", move);
+      n -= move;
+      if (n === 0) {
+        table.finish("robot");
+        return false;
+      }
+    }
+  }
+
+  // Ikki qadamli vazifa (QOIDALAR 4.3): 1-qadam to'g'ri bo'lsa 2-qadam ochiladi,
+  // ikkalasi to'g'ri bo'lsagina javob hisoblanadi. first / second: { setup(submit), check(qiymat) }.
+  // hint(qadam, qiymat) va solution(qadam, qiymat) — bola qaysi qadamda adashganini oladi.
+  function twoStep({ first, second, hint, solution }) {
+    return practice.tries({
+      setup: (submit) => first.setup((value) => {
+        if (!first.check(value)) {
+          submit({ step: 1, value });
+          return;
+        }
+        sound.play("tap");
+        ui.clearControl();
+        second.setup((value2) => submit({ step: 2, value: value2 }), value);
+      }),
+      check: (r) => r.step === 2 && second.check(r.value),
+      hint: (r) => hint(r.step, r.value),
+      solution: (r) => solution(r.step, r.value),
+    });
+  }
+
+  QK.common = { VISIBLE, box, answerLine, line, playScreen, playRound, rewardStep, playPerfect, twoStep };
 })(window);

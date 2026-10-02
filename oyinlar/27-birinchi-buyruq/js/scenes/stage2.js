@@ -46,9 +46,9 @@
     await stepByStep();
     await quotesMatter();
     await definition();
-    await ui.say("elder", "Endi sen ayt: kod nima chiqaradi? 3 ta toʻgʻri javob kerak.");
+    await ui.say("elder", `Endi sen ayt: kod nima chiqaradi? ${QK.practice.need()} ta toʻgʻri javob kerak.`);
     await practice.exercises({
-      next: (prev) => L.resultTask(Math.random, prev),
+      next: (prev, correct, tier) => L.resultTask(Math.random, prev, tier),
       run: (task) => common.resultExercise(task),
       praise: () => "Kodni koʻzing bilan bajarding.",
     });

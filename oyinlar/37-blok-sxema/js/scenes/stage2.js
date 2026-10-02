@@ -38,7 +38,7 @@
     await korsat();
     await korsatShart();
     await practice.exercises({
-      next: (prev) => L.qurishTask(Math.random, prev),
+      next: (prev, correct, tier) => L.qurishTask(Math.random, prev, tier),
       run: (task) => common.qurishExercise(task),
       praise: () => "Sxema ishladi.",
     });

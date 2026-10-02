@@ -39,7 +39,7 @@
     await ui.say("elder", "Faqat yomgʻir yogʻib, soyabon boʻlmaganda hoʻl boʻlding.");
     await ui.say("elder", `Buni shunday yozamiz: ${rain.expr}.`);
     await definition();
-    await ui.say("elder", "Endi ifodalar va hayotiy qoidalar. 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi ifodalar va hayotiy qoidalar. ${QK.practice.need()} ta toʻgʻri javob!`);
     await common.exercises(3);
     await story();
   }

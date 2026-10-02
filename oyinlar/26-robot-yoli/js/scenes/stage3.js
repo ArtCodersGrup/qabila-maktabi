@@ -55,7 +55,7 @@
     await guidedRead();
     await ui.say("elder", "Sen dasturni koʻzing bilan bajarding. Buni dasturni oʻqish deyiladi.");
     await ui.say("elder", "Dasturchilar ham shunday qiladi: yozadi, keyin koʻzi bilan tekshiradi.");
-    await ui.say("elder", "Endi ikki xil savol boʻladi. 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi ikki xil savol boʻladi. ${QK.practice.need()} ta toʻgʻri javob!`);
     await common.exercises(3);
     await story();
   }

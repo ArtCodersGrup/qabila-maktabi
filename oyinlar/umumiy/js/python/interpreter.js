@@ -30,7 +30,7 @@
   function makeContext(opts) {
     const o = opts || {};
     const stdin = (o.stdin || []).map(String);
-    const maxSteps = o.maxSteps || 200000;
+    const maxSteps = o.maxSteps || 3000000; // kod.js LIMITS bilan bir xil
     const maxLines = o.maxOutput || 2000;
     let out = "";
     let lines = 0;
@@ -89,6 +89,10 @@
           return { t: "tashqi", name: n.id };
         }
         if (B.has(n.id)) return { t: "builtin", name: n.id };
+        // Haqiqiy Pythonda bor, bu yerda hali yo'q funksiya: "nom topilmadi" emas, halol "hali yo'q"
+        if (Object.prototype.hasOwnProperty.call(KEYINROQ, n.id)) {
+          throw E.notYet("`" + n.id + "` funksiyasi", KEYINROQ[n.id], posOf(n));
+        }
         throw E.nameError(n.id, posOf(n));
       }
 
@@ -159,15 +163,29 @@
       case "Call": {
         const pos = posOf(n);
         const args = [];
+        const kwargs = n.kwargs || [];
+        const nomliYoq = (k) => E.notYet("nomli argument (" + k.name + "=…)", "print(a, b)", posOf(k));
         if (n.func.t === "Attribute") {
+          if (kwargs.length) throw nomliYoq(kwargs[0]);
           const obj = yield* ev(n.func.value, env, ctx);
           for (const a of n.args) args.push(yield* ev(a, env, ctx));
           return B.callMethod(obj, n.func.attr, args, ctx, pos);
         }
         const fn = yield* ev(n.func, env, ctx);
         for (const a of n.args) args.push(yield* ev(a, env, ctx));
+        // Nomli argument faqat print(…, end=…, sep=…) da qo'llanadi
+        let kw = null;
+        if (kwargs.length) {
+          const printmi = fn && fn.t === "builtin" && fn.name === "print";
+          kw = {};
+          for (const k of kwargs) {
+            if (!printmi || (k.name !== "end" && k.name !== "sep")) throw nomliYoq(k);
+            kw[k.name] = yield* ev(k.value, env, ctx);
+          }
+        }
         if (fn && fn.t === "tashqi") return ctx.tashqi[fn.name](args, ctx, pos);
-        if (fn && fn.t === "builtin") return B.BUILTINS[fn.name](args, ctx, pos);
+        if (fn && fn.t === "builtin" && fn.name === "map") return yield* callMap(args, ctx, pos);
+        if (fn && fn.t === "builtin") return B.BUILTINS[fn.name](args, ctx, pos, kw);
         if (V.isFunc(fn)) return yield* callUser(fn, args, ctx, pos);
         throw E.typeError("'" + V.typeName(fn) + "' object is not callable", Object.assign(pos, {
           hint: "Bu nom funksiya emas. Qavs faqat funksiyaga qoʻyiladi.",
@@ -177,6 +195,44 @@
       default:
         throw E.syntaxError("invalid syntax", posOf(n));
     }
+  }
+
+  // Haqiqiy Pythonda bor, bu saytda hali yo'q funksiyalar va ularning o'rniga yoziladigani
+  const KEYINROQ = {
+    enumerate: "for i in range(len(a)): … a[i]",
+    zip: "for i in range(len(a)): … a[i], b[i]",
+    filter: "for va if bilan yangi roʻyxat yigʻ",
+    dict: "ikki roʻyxat: kalitlar va qiymatlar",
+    set: "roʻyxat va `in` tekshiruvi",
+    tuple: "roʻyxat: [1, 2]",
+    reversed: "for i in range(len(a) - 1, -1, -1)",
+    round: "int(x + 0.5) — musbat son uchun",
+    pow: "a ** b",
+    divmod: "a // b va a % b",
+    any: "sikl va bayroq oʻzgaruvchi",
+    all: "sikl va bayroq oʻzgaruvchi",
+  };
+
+  // map(f, ketma-ketlik): f — tayyor funksiya (int, str, len…) yoki bolaning o'z funksiyasi.
+  // Natija — "map" qiymati (values.js): list(...), for, sum(...), a, b = ... ishlaydi; indeks va len — Python kabi xato.
+  function* callMap(args, ctx, pos) {
+    if (args.length < 2) throw E.typeError("map() must have at least two arguments.", pos);
+    if (args.length > 2) throw E.notYet("map() ga bir nechta ketma-ketlik", "map(int, a) — bitta funksiya, bitta ketma-ketlik", pos);
+    const [f, box] = args;
+    const chaqiriladi = !!f && (f.t === "builtin" || f.t === "tashqi" || V.isFunc(f));
+    if (!chaqiriladi) {
+      throw E.typeError("'" + V.typeName(f) + "' object is not callable", Object.assign({}, pos, {
+        hint: "map ning birinchi argumenti — funksiya nomi, qavssiz: map(int, a).",
+      }));
+    }
+    const out = [];
+    for (const x of V.iterate(box, pos)) {
+      ctx.step({ line: pos.line });
+      if (f.t === "tashqi") out.push(ctx.tashqi[f.name]([x], ctx, pos));
+      else if (f.t === "builtin") out.push(f.name === "map" ? yield* callMap([x], ctx, pos) : B.BUILTINS[f.name]([x], ctx, pos));
+      else out.push(yield* callUser(f, [x], ctx, pos));
+    }
+    return V.mapOf(out);
   }
 
   function* callUser(fn, args, ctx, pos) {
@@ -203,6 +259,12 @@
       return null;
     } catch (e) {
       if (e instanceof ReturnSignal) return e.value;
+      // Funksiya ichidagi break/continue chaqiruvchining siklini to'xtatmasin — Python'da bu sintaksis xatosi
+      if (e === BREAK || e === CONTINUE) {
+        throw E.syntaxError("'" + e.sig + "' outside loop", Object.assign({}, pos || {}, {
+          hint: "break va continue faqat sikl ichida yoziladi. Funksiyadan chiqish uchun return ishlatiladi.",
+        }));
+      }
       throw e;
     } finally {
       ctx.depth--;

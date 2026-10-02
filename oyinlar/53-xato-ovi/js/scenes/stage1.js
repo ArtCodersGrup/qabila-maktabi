@@ -16,7 +16,7 @@
 
   async function stage1() {
     await practice.exercises({
-      next: (prev) => L.topTask(Math.random, prev),
+      next: (prev, correct, tier) => L.topTask(Math.random, prev, tier),
       run: (task) => common.topExercise(task),
       praise: () => "Xato topildi.",
     });

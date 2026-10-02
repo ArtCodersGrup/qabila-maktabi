@@ -60,9 +60,9 @@
 
   async function stage1() {
     await buildMap();
-    await ui.say("elder", "Endi oʻzing top: qaysi doira haqida gap ketyapti? 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing top: qaysi doira haqida gap ketyapti? ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev) => atlas.makeDefTask(prev),
+      next: (prev, correct, tier) => atlas.makeDefTask(prev, null, tier),
       run: defTask,
       praise: (task) => `Bu — ${atlasUi.zoneLabel(task.answer)}.`,
     });

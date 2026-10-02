@@ -81,3 +81,14 @@ Bosh ekran
 ## 8. Bu o'yinga kirmaydi
 
 Koʻp xonali songa koʻpaytirish, boʻlish, 8-lik ↔ 2-lik (3 tadan guruhlash).
+
+## 2026-10-02 qiyinlik yangilanishi
+
+Sabab: bolalar "oson" deyishdi — rang savoli 3 variantli va ranglar bir-biridan juda farqli edi; sonlar faqat 8 bitli; maslahatlar javobni aytib qoʻyardi.
+
+- Generatorlar `tier` oladi (`makeConvTask(prev, rng, tier)` va h.k.); chegaralar `amal16.js` da jadval:
+  - 1-bosqich (`CONV`): 16–255 → 128–255 → **256–4095** (12 bit — 3 xonali 16-lik, 3 ta tetrada).
+  - 2-bosqich (`ADDSUB`): 2 xonali → 2 xonali, koʻchish/qarz **albatta** → **3 xonali** sonlar (natija ≤ FFF).
+  - 3-bosqich (`MUL_D`): × 2–9 → × 4–9 → **× A…F** (koʻpaytuvchi harf).
+- **Rang savoli — 4 variant.** Tier 0: nomli ranglardan 4 tasi. Tier 1+: **yaqin ranglar** (`nearColors`) — kanallar faqat 00 / 88 / FF, chalgʻituvchilar toʻgʻri javobdan aynan **bitta kanal** bilan farq qiladi (#FF8800 va #FF0000) — kodni oʻqimasdan topib boʻlmaydi.
+- **Maslahat javobni aytmaydi:** 16 → 2 da tetradalar jadvali belgilanmagan holda chiqadi; koʻpaytirishda faqat oʻng ustunning oʻnlikdagi hisobi koʻrsatiladi (avval har ustunning raqami va koʻchishi yozib berilardi).

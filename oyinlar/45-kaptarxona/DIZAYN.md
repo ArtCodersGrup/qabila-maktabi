@@ -44,3 +44,19 @@ mavzusi) shu fikr bilan yopiladi.
 
 - `js/logic.js` — `kafolat(n,k)`, `kerak(k,m)`, savollar, kod masalalari, `SINOV` jadvali.
 - `tests/logic.test.js` — 11 test; eng muhimi — hamma joylashuvni koʻrib chiqadigan tekshiruv.
+
+## 2026-10-02 qiyinlik yangilanishi
+
+Sabab: hisobot-5 (C jadvali) — savollarda qutilar matnda tayyor berilardi (uya, oy, quti): faqat boʻlish qolardi.
+
+- **1-bosqich (Dirixle):** **quti yashirin** savollar — «k ga boʻlgandagi qoldigʻi bir xil» (qutilar — qoldiqlar),
+  «ayirmasi k ga boʻlinadigan sonlar» (ayirma boʻlinadi ⇔ qoldiq bir xil), inglizcha soʻzning birinchi harfi (26 quti),
+  365 kunlik yil. Maslahat qutilar nima ekanini aytadi, javobni emas.
+- **2-bosqich (kamida nechta kerak):** turlar soni matnda aytilmagan savollar — bir oyda tugʻilgan m ta bola (12),
+  hafta kuni (7), ayirmasi k ga boʻlinadigan ikki son (k + 1), 4 xil mastdan m ta karta, oxirgi raqami bir xil sonlar (10).
+  Testda: kafolat aynan shu sonda paydo boʻladi, bitta kam boʻlsa — yoʻq.
+- **3-bosqich (yozish 2 → 4):** `kerak(k, m)` (k × m va k × (m − 1) yechimlari yiqiladi) va
+  `bir_xil_qoldiq(sonlar, k)` («sonlar k dan koʻp boʻlsa True» degan yechim yiqiladi — bu Dirixlening teskarisi emas).
+  Oʻqiladigan kodda sonlar zina bilan koʻpayadi.
+- Hisobotdagi «ayirmasi k ga boʻlinadigan juftlik **bormi**» (ha/yoʻq) savoli son soʻraydigan koʻrinishda berildi
+  (QOIDALAR §4.3: 2 variantli savol yolgʻiz kelmaydi). Testlar: 11 → 14.

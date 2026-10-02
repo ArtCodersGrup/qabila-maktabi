@@ -116,7 +116,7 @@
       },
       check: (value) => value === task.javob,
       hint() {
-        host.append(M.note("↻ Har usulning oʻsishini eslang: qadam n ga teng boʻlsa koʻpmi, n² boʻlsa koʻpmi?"));
+        host.append(M.note("↻ Har usulning oʻsishini esla: O(1), O(log n), O(n), O(n²). Savoldagi n ni shu qoidaga qoʻyib koʻr."));
       },
       solution() {
         const togri = task.tanlovlar.find((t) => t.id === task.javob);

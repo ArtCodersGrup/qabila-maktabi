@@ -41,7 +41,7 @@
     await splitting();
     await definition();
     await practice.exercises({
-      next: (prev) => L.stage3Task(Math.random, prev),
+      next: (prev, correct, tier) => L.stage3Task(Math.random, prev, tier),
       run: (task) => common.stage3Exercise(task),
       praise: (task) => (task.type === "kod-yoz" ? "Dastur hamma sinovdan oʻtdi." : "Satrni toʻgʻri oʻqiding."),
     });

@@ -29,7 +29,7 @@
     await uchlik();
     await ui.say("elder", "Endi oʻzing ayt: bu birikma nima qiladi?");
     await practice.exercises({
-      next: (prev) => L.tanishTask(Math.random, prev, "nusxa"),
+      next: (prev, togri, tier) => L.tanishTask(Math.random, prev, tier >= 1 ? undefined : "nusxa"), // 3-javobdan barcha tugmalar aralash
       run: (task) => common.tanishExercise(task),
       praise: (task) => L.yozuv(task.amal) + " — " + task.amal.nom,
     });

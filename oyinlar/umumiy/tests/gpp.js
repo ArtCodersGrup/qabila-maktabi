@@ -124,13 +124,16 @@ async function hammasi(ust, royxat, olish) {
 }
 
 // Buzuq dastur: g++ ning birinchi xato satri — "satr:ustun: error: xabar"
-async function xatoMatni(ust, kod, nom) {
+// opts.sarlavhasiz — tayyor sarlavha (bosh.h: <iostream>, <string>) ULANMAYDI: dasturning o'zida
+// #include bor-yo'qligini tekshiradigan sinovlar uchun (aks holda kompilyator cout ni baribir taniydi).
+async function xatoMatni(ust, kod, nom, opts) {
+  const bayroqlar = opts && opts.sarlavhasiz ? [] : ust.bayroqlar;
   const papka = path.join(ust.uy, "x" + nom);
   fs.mkdirSync(papka, { recursive: true });
   const src = path.join(papka, "a.cpp");
   fs.writeFileSync(src, kod.endsWith("\n") ? kod : kod + "\n");
   return new Promise((resolve) => {
-    execFile("g++", ["-std=c++17", "-fsyntax-only", ...ust.bayroqlar, src], (xato, _o, stderr) => {
+    execFile("g++", ["-std=c++17", "-fsyntax-only", ...bayroqlar, src], (xato, _o, stderr) => {
       if (!xato) return resolve(null); // kompilyatsiya o'tdi — xato yo'q
       const satr = String(stderr).split("\n").find((x) => x.includes(": error: ")) || "";
       resolve(satr.replace(/^.*?a\.cpp:/, ""));

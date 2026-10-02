@@ -44,7 +44,7 @@
     await sort();
     await ui.say("elder", "Oxirgi 3 ta savol — va blok tugaydi!");
     await practice.exercises({
-      next: (prev, correct) => L.bosqich3Task(prev, correct),
+      next: (prev, correct, tier) => L.bosqich3Task(prev, correct, tier),
       run: (task) => common.mashq(task),
       praise: (task) => (task.tur === "farq" ? "Esingda qoldi." : "Saralangan javobni topding."),
     });

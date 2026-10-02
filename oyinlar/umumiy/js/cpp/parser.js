@@ -20,8 +20,24 @@
     auto: "auto", float: "float", unsigned: "unsigned", do: "do-while",
   };
 
-  function parse(tokens) {
+  function parse(xom) {
+    // std::cout → cout ("std" belgisi bilan): using namespace std; yozmasdan to'liq nom bilan
+    // yozilgan dastur ham ishlaydi. Belgi semantika.js da kerak bo'ladi.
+    const tokens = [];
+    for (let k = 0; k < xom.length; k++) {
+      const t = xom[k];
+      const keyingi = xom[k + 1];
+      if (t.type === "nom" && t.value === "std" && keyingi && keyingi.type === "belgi-op" && keyingi.value === "::"
+          && xom[k + 2] && xom[k + 2].type !== "oxir") {
+        tokens.push(Object.assign({}, xom[k + 2], { std: true }));
+        k += 2;
+        continue;
+      }
+      tokens.push(t);
+    }
+
     let i = 0;
+    let siklda = 0; // nechta sikl ichidamiz: break/continue faqat sikl ichida yoziladi
     const tok = () => tokens[i];
     const turi = () => tokens[i].type;
     const qiymat = () => tokens[i].value;
@@ -57,6 +73,7 @@
       const pos = joy();
       const t = tok();
       if (t.type === "int") { olga(); return { k: "son", tur: "int", v: BigInt(t.value), ...pos }; }
+      if (t.type === "ll") { olga(); return { k: "son", tur: "ll", v: BigInt(t.value), ...pos }; } // 100000LL
       if (t.type === "double") { olga(); return { k: "son", tur: "double", v: Number(t.value), ...pos }; }
       if (t.type === "satr") { olga(); return { k: "matn", v: t.value, ...pos }; }
       if (t.type === "belgi") { olga(); return { k: "belgi", v: t.value, ...pos }; }
@@ -68,7 +85,7 @@
       }
       if (t.type === "nom") {
         olga();
-        return { k: "nom", nom: t.value, ...pos };
+        return t.std ? { k: "nom", nom: t.value, std: true, ...pos } : { k: "nom", nom: t.value, ...pos };
       }
       throw E.sintaksis("expected expression", pos);
     }
@@ -111,9 +128,9 @@
           kut(")");
           const kutilganSoni = FUNKSIYALAR[node.nom];
           if (args.length !== kutilganSoni) {
-            throw E.sintaksis("no matching function for call to '" + node.nom + "'", pos);
+            throw E.sintaksis("no matching function for call to '" + node.nom + "'", { line: node.line, col: node.col });
           }
-          node = { k: "chaqiruv", nom: node.nom, args, ...pos };
+          node = { k: "chaqiruv", nom: node.nom, std: !!node.std, args, line: node.line, col: node.col };
           continue;
         }
         return node;
@@ -178,14 +195,28 @@
     // ---------- E'lon ----------
     function turNomi() {
       const pos = joy();
-      if (!bormi("long") && !(turi() === "kalit" && TURLAR.has(qiymat()))) return null;
+      // const int N = 100; — qiymati o'zgarmaydigan o'zgaruvchi (o'zgartirishga urinishni semantika.js ushlaydi)
+      let konst = yedi("const");
+      if (!bormi("long") && !(turi() === "kalit" && TURLAR.has(qiymat()))) {
+        if (!konst) return null;
+        yoqTekshir(); // const auto, const vector<…> — "bu yerda hali yo'q"
+        throw E.sintaksis("a type specifier is required for all declarations", Object.assign(joy(), {
+          hint: "const dan keyin tur yoziladi: const int n = 5;",
+        }));
+      }
+      let tur;
+      let std = false;
+      let turJoyi = joy();
       if (yedi("long")) {
         yedi("long"); // long long
         yedi("int");
-        return { tur: "ll", pos };
+        tur = "ll";
+      } else {
+        std = !!tok().std; // std::string
+        tur = olga().value;
       }
-      const nom = olga().value;
-      return { tur: nom === "int" ? "int" : nom, pos };
+      if (yedi("const")) konst = true; // int const n — xuddi shu narsa
+      return { tur, pos, const: konst, std, turJoyi };
     }
 
     function elon(turHolat) {
@@ -198,7 +229,9 @@
         const nom = olga().value;
         let boyi = null;
         let qiymat = null;
+        let massiv = false;
         if (yedi("[")) {
+          massiv = true;
           if (!bormi("]")) boyi = expr(); // int a[] = {…} — bo'yi ro'yxatdan olinadi
           kut("]");
         }
@@ -217,10 +250,10 @@
             qiymat = expr();
           }
         }
-        elonlar.push({ nom, boyi, qiymat, line: nomJoyi.line, col: nomJoyi.col });
+        elonlar.push({ nom, boyi, massiv, qiymat, line: nomJoyi.line, col: nomJoyi.col });
       } while (yedi(","));
       kut(";");
-      return { k: "elon", tur: turHolat.tur, elonlar, ...pos };
+      return { k: "elon", tur: turHolat.tur, const: !!turHolat.const, std: !!turHolat.std, turJoyi: turHolat.turJoyi, elonlar, ...pos };
     }
 
     // ---------- Buyruqlar ----------
@@ -234,6 +267,16 @@
       }
       kut("}");
       return { k: "blok", tana, ...pos };
+    }
+
+    // Sikl tanasi: ichida break/continue yozsa bo'ladi
+    function siklTanasi() {
+      siklda++;
+      try {
+        return stmt();
+      } finally {
+        siklda--;
+      }
     }
 
     function stmt() {
@@ -257,16 +300,21 @@
         kut("(");
         // while (cin >> x) — kirish tugaguncha o'qiydigan mashhur naqsh
         if (turi() === "nom" && qiymat() === "cin") {
-          olga();
+          const cinJoyi = joy();
+          const std = !!olga().std;
           const qismlar = [];
           if (!bormi(">>")) throw E.kutilgan(">>", joy());
-          while (yedi(">>")) qismlar.push(add());
+          while (bormi(">>")) {
+            const strelkaJoyi = joy();
+            olga();
+            qismlar.push(Object.assign(add(), { strelka: strelkaJoyi }));
+          }
           kut(")");
-          return { k: "toki", oqiShart: { k: "oqiShart", qismlar, ...pos }, tana: stmt(), ...pos };
+          return { k: "toki", oqiShart: { k: "oqiShart", qismlar, std, ...cinJoyi }, tana: siklTanasi(), ...pos };
         }
         const shart = expr();
         kut(")");
-        return { k: "toki", shart, tana: stmt(), ...pos };
+        return { k: "toki", shart, tana: siklTanasi(), ...pos };
       }
       if (bormi("for")) {
         olga();
@@ -281,10 +329,25 @@
         kut(";");
         const qadam = bormi(")") ? null : expr();
         kut(")");
-        return { k: "takror", bosh, shart, qadam, tana: stmt(), ...pos };
+        return { k: "takror", bosh, shart, qadam, tana: siklTanasi(), ...pos };
       }
-      if (bormi("break")) { olga(); kut(";"); return { k: "uz", ...pos }; }
-      if (bormi("continue")) { olga(); kut(";"); return { k: "davom", ...pos }; }
+      // break va continue faqat sikl ichida: tashqarida — kompilyatsiya xatosi (dastur jim tugab qolmaydi)
+      if (bormi("break")) {
+        if (!siklda) {
+          throw E.sintaksis("'break' statement not in loop or switch statement", Object.assign(pos, {
+            hint: "break faqat sikl (for, while) ichida ishlaydi — u siklni toʻxtatadi. Dasturni tugatish uchun: return 0;",
+          }));
+        }
+        olga(); kut(";"); return { k: "uz", ...pos };
+      }
+      if (bormi("continue")) {
+        if (!siklda) {
+          throw E.sintaksis("'continue' statement not in loop statement", Object.assign(pos, {
+            hint: "continue faqat sikl (for, while) ichida ishlaydi — u keyingi aylanishga oʻtkazadi.",
+          }));
+        }
+        olga(); kut(";"); return { k: "davom", ...pos };
+      }
       if (bormi("return")) {
         olga();
         const ifoda = bormi(";") ? null : expr();
@@ -294,16 +357,24 @@
 
       // cout << … ;   va   cin >> … ;
       if (turi() === "nom" && (qiymat() === "cout" || qiymat() === "cin")) {
+        const std = !!tok().std;
         const nomi = olga().value;
         const qismlar = [];
         const strelka = nomi === "cout" ? "<<" : ">>";
         if (!bormi(strelka)) throw E.kutilgan(strelka, joy());
-        while (yedi(strelka)) {
-          if (nomi === "cout" && turi() === "nom" && qiymat() === "endl") { olga(); qismlar.push({ k: "endl", ...pos }); continue; }
-          qismlar.push(add()); // << dan yuqori darajadagi ifoda: a + b ishlaydi, a < b emas
+        while (bormi(strelka)) {
+          const strelkaJoyi = joy(); // xato aynan << yoki >> da ko'rsatiladi (kompilyator ham shunday)
+          olga();
+          if (nomi === "cout" && turi() === "nom" && qiymat() === "endl") {
+            const endlJoyi = joy();
+            qismlar.push({ k: "endl", std: !!olga().std, ...endlJoyi });
+            continue;
+          }
+          // << dan yuqori darajadagi ifoda: a + b ishlaydi, a < b emas
+          qismlar.push(Object.assign(add(), { strelka: strelkaJoyi }));
         }
         kut(";");
-        return { k: nomi === "cout" ? "chiqar" : "oqi", qismlar, ...pos };
+        return { k: nomi === "cout" ? "chiqar" : "oqi", qismlar, std, ...pos };
       }
 
       const t = turNomi();
@@ -321,7 +392,7 @@
     // ---------- Dastur ----------
     const bosh = [];
     while (turi() === "pre" || bormi("using")) {
-      if (turi() === "pre") { bosh.push({ k: "pre", v: olga().value }); continue; }
+      if (turi() === "pre") { const preJoyi = joy(); bosh.push({ k: "pre", v: olga().value, ...preJoyi }); continue; }
       olga(); // using
       if (!yedi("namespace")) throw E.yoq("using", joy());
       if (turi() !== "nom" || qiymat() !== "std") throw E.yoq("using namespace", joy());

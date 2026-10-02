@@ -46,19 +46,31 @@
     await ui.say("elder", "Yigʻindi chegaraga yetsa — neyron yonadi. Yetmasa — yonmaydi.");
   }
 
-  // 4.3: mashq — neyron yonadimi?
+  // 4.3: mashq — ikki qadam: avval yig'indi (4 variant), keyin "yonadimi?".
+  // Yig'indi va "yondi" holati ekranda yashirin — bola o'zi hisoblaydi; ikkalasi to'g'ri bo'lsagina hisoblanadi.
   function fireTask(task) {
     const el = common.box(true);
-    const view = neuralUi.neuronView(el, { inputs: task.inputs, weights: task.weights, threshold: task.threshold, hideLine: true });
-    ui.bubble("elder", "Bu neyron yonadimi?");
-    const options = ["Yonadi", "Yonmaydi"];
-    return practice.tries({
-      setup: (submit) => neuralUi.choiceButtons(options, submit),
-      check: (index) => (index === 0) === task.answer,
-      hint: () => {
-        view.showLine();
-        ui.bubble("elder", "↻ Faqat yoniq chiroqlarning ogʻirligini qoʻsh va chegara bilan solishtir.");
+    const view = neuralUi.neuronView(el, {
+      inputs: task.inputs, weights: task.weights, threshold: task.threshold,
+      hideLine: true, hideSum: true, hideFired: true,
+    });
+    ui.bubble("elder", "Yoniq chiroqlarning ogʻirliklarini qoʻsh. Yigʻindi nechchi?");
+    return common.twoStep({
+      first: {
+        setup: (submit) => neuralUi.choiceButtons(task.sumOptions.map(neuralUi.num), submit),
+        check: (index) => index === task.sumIndex,
       },
+      second: {
+        setup: (submit) => {
+          view.reveal("sum");
+          ui.bubble("elder", `Toʻgʻri, yigʻindi ${neuralUi.num(task.sum)}. Endi ayt: neyron yonadimi?`);
+          neuralUi.choiceButtons(["Yonadi", "Yonmaydi"], submit);
+        },
+        check: (index) => (index === 0) === task.answer,
+      },
+      hint: (step) => ui.bubble("elder", step === 1
+        ? "↻ Faqat yoniq chiroqlarni ol: oʻchiq chiroqning ogʻirligi qoʻshilmaydi. Minusli ogʻirlik ayiriladi."
+        : "↻ Yigʻindini chegara bilan solishtir: yetsa yoki oshsa — yonadi."),
       solution: () => {
         view.showLine();
         el.append(common.answerLine(task.answer ? "Yonadi: yigʻindi chegaraga yetdi" : "Yonmaydi: yigʻindi chegaraga yetmadi"));
@@ -69,11 +81,11 @@
   async function stage1() {
     await neuronDemo();
     await explain();
-    await ui.say("elder", "Endi oʻzing hisobla: neyron yonadimi? 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing hisobla: yigʻindi nechchi va neyron yonadimi? ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev) => neural.makeFireTask(prev),
+      next: (prev, correct, tier) => neural.makeFireTask(prev, null, tier),
       run: fireTask,
-      praise: (task) => `Yigʻindi ${neural.weightedSum(task.inputs, task.weights)}, chegara ${task.threshold} — ${task.answer ? "yonadi" : "yonmaydi"}.`,
+      praise: (task) => `Yigʻindi ${neuralUi.num(task.sum)}, chegara ${task.threshold} — ${task.answer ? "yonadi" : "yonmaydi"}.`,
     });
   }
 

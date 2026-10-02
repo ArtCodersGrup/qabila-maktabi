@@ -29,7 +29,7 @@
     await olchov();
     await ui.say("elder", "Endi oʻzing yoz: avval chiziqli, keyin ikkilik izlash.");
     await practice.exercises({
-      next: (prev) => L.writeTask(Math.random, prev),
+      next: (prev, correct, tier) => L.writeTask(Math.random, prev, tier),
       run: (task) => common.yozishExercise(task),
       praise: () => "Funksiya hamma sinovdan oʻtdi.",
     });

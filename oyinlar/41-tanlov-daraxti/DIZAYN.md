@@ -42,3 +42,17 @@ koʻpaytirmasdan, sikl bilan sanash).
 - `js/logic.js` — daraxtlar, savollar, kod masalalari. Hisob `umumiy/js/sanash.js` da (BigInt).
 - `js/scenes/common.js` — daraxt (HTML, SVG emas — QOIDALAR §6), variantlar roʻyxati, savol ekranlari.
 - `tests/logic.test.js` — 10 test; `umumiy/tests/sanash.test.js` — 10 test (formula ↔ roʻyxat).
+
+## 2026-10-02 qiyinlik yangilanishi
+
+Sabab: hisobot-5 (C jadvali) — savollar bitta qoidani bitta misolda soʻrardi; kod yozish 2 ta masala edi.
+
+- **1-bosqich (koʻpaytirish):** tanlovlar soni cheklangan yoki oldingi qadamga bogʻliq savollar — birinchi raqami
+  0 boʻlmagan sonlar (9 × 10 × 10), raqamlari har xil ikki xonali sonlar (9 × 9 = 81), sardor va oʻrinbosar
+  (n × (n − 1)), faqat juft raqamli kod, toʻrt qadamli tushlik.
+- **2-bosqich (VA / YOKI):** **ikki qoida birga** — «(a yoki b) va c»: javob (a + b) × c, eng koʻp uchraydigan xato —
+  hammasini koʻpaytirish. Maslahat «qaysi tanlovlardan faqat bittasi olinadi?» deb soʻraydi. a = b = 2 holati
+  chiqarilmaydi (qoʻshish va koʻpaytirish bir xil javob beradi).
+- **3-bosqich:** oʻqiladigan kodga uch qavat sikl va `if i != j` (n × (n − 1)); yozishga `farqli(n)` va
+  `kamida_bitta(n, k)` (toʻliq − hech biri: kⁿ − (k − 1)ⁿ; formula testda sanab tekshirilgan).
+- Zina: 0 — eski savollar; 1–2 — yangilari ustun. Testlar: 10 → 13.

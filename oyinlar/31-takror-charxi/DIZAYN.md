@@ -74,3 +74,18 @@ Bosh ekran
 ├── js/scenes/…     kirish, uch bosqich, tabrik
 └── tests/logic.test.js
 ```
+
+## 10. 2026-10-02 qiyinlik yangilanishi
+
+Sabab: hisobot-5 (C jadvali) — sikllar faqat «+1 hisoblagich», «xatoni tuzat» 3 ta qotirilgan, «kod yoz» 5 ta edi.
+
+- **1-bosqich:** yangi sikllar — ikki barobar oshadigan (`i = i * 2`), 3 tadan kamayadigan, `print` hisoblagich
+  oʻzgargandan **keyin** turgan, yarimlanadigan (`n = n // 2`), ikki oʻzgaruvchili (`a += 2`, `b -= 1`).
+- **2-bosqich:** sikl necha marta aylanishi oldindan koʻrinmaydigan yigʻuvchilar — raqamlar yigʻindisi, «necha marta
+  2 ga boʻlinadi» (`print(soni, n)`), yigʻindi chegaradan oshguncha, `continue`, Kollats qadamlari (`break` bilan).
+- **3-bosqich — xato ovi (`BROKEN` 3 → 7):** `n = n // 10` unutilgan (cheksiz), `n >= 0` (bir marta ortiq — 0 ham chiqadi),
+  yigʻindi 1 dan boshlangan, hisoblagich satri surilmagan (sikldan tashqarida — cheksiz). Cheksiz sikllar chiqish
+  chegarasiga tez uriladi — sahifa qotmaydi (testda vaqt oʻlchanadi).
+- **3-bosqich — kod yozish 5 → 10:** raqamlar koʻpaytmasi, nollar soni, eng kichik raqam, Kollats qadamlari,
+  raqamlari qatʼiy oʻsuvchimi. Har birida bir xonali va 0 bilan tugaydigan son testda bor.
+- Zina: 0 — eski sodda turlar, 1–2 — yangilari ustun. Testlar: 10 → 14.

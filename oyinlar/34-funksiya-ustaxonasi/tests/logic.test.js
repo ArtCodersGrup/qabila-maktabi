@@ -56,6 +56,67 @@ test("2-bosqichda parametr tashqaridagi qutini o'zgartirmasligi ko'rinadi", () =
   assert.equal(Number(out[0]), Number(out[1]) + 1, task.code + " → " + out.join(" "));
 });
 
+// 2026-10-02: rekursiya, ro'yxatni o'zgartirish, erta return
+test("2-bosqich: rekursiya va ro'yxatni o'zgartirish savollari — javob Pythonning haqiqiy xulqi", () => {
+  const r = rngFrom(31);
+  let prev = null;
+  const kodlar = [];
+  for (let k = 0; k < 100; k++) { prev = L.returnTask(r, prev, 2); kodlar.push(prev.code); }
+  const fakt = kodlar.find((c) => c.includes("return n * fakt(n - 1)"));
+  assert.ok(fakt, "rekursiv fakt chiqmadi");
+  const n = Number(/print\(fakt\((\d)\)\)/.exec(fakt)[1]);
+  assert.ok(n >= 3 && n <= 5, "chuqurlik 5 dan oshmasin: " + n);
+  assert.deepEqual(py.run(fakt).output, [String([0, 1, 2, 6, 24, 120][n])]);
+  const qosh = kodlar.find((c) => c.includes("r.append("));
+  assert.ok(qosh, "ro'yxatni o'zgartiradigan funksiya chiqmadi");
+  assert.match(py.run(qosh).output[0], /^\[1, 2, \d, \d\] 4$/, "ro'yxat funksiya ichida o'zgaradi");
+  const erta = kodlar.find((c) => c.includes("birinchi_juft"));
+  assert.ok(erta, "erta return savoli chiqmadi");
+  assert.match(py.run(erta).output[0], /^\d+ -1$/);
+  assert.equal(Number(py.run(erta).output[0].split(" ")[0]) % 2, 0);
+  // Rekursiv sanash: n, n−1, …, 1, keyin "tamom"
+  assert.deepEqual(py.run("def sana(n):\n    if n > 0:\n        print(n)\n        sana(n - 1)\n\nsana(3)\nprint(\"tamom\")").output, ["3", "2", "1", "tamom"]);
+});
+
+test("zina: birinchi javoblarda eski sodda savollar", () => {
+  const r = rngFrom(5);
+  let prev = null;
+  for (let k = 0; k < 40; k++) {
+    prev = L.returnTask(r, prev, 0);
+    assert.ok(!prev.code.includes("fakt") && !prev.code.includes("append") && !prev.code.includes("ikkilantir"), prev.code);
+    const c = L.callTask(r, null, 0);
+    assert.ok(!c.code.includes("def bosh") && !c.code.includes("for i in range"), c.code);
+  }
+  const idlar = new Set();
+  for (let k = 0; k < 40; k++) { prev = L.writeTask(r, prev.type === "kod-yoz" ? prev : null, 0); idlar.add(prev.id); }
+  assert.ok(![...idlar].some((id) => ["yoz:tub", "yoz:ekub", "yoz:nechta-tub", "yoz:daraja", "yoz:palindrom"].includes(id)), [...idlar].join(","));
+});
+
+test("yangi funksiya masalalari: tipik xato yechimlar o'tmaydi", () => {
+  assert.ok(L.WRITE_KINDS.length >= 10);
+  const vazifa = (id) => {
+    const kind = L.WRITE_KINDS.find((k) => k.id === id);
+    assert.ok(kind.tests.length >= 5, id + ": kamida 5 ta test");
+    return { type: "kod-yoz", solution: kind.solution, tail: kind.tail, tests: kind.tests.map((stdin) => ({ stdin })) };
+  };
+  // tub: 1 ni tub deb hisoblagan yechim; d * d < n (kvadratlarni o'tkazib yuboradi: 25, 49)
+  assert.equal(K.check(vazifa("tub"), "def tub(n):\n    for d in range(2, n):\n        if n % d == 0:\n            return False\n    return True").ok, false);
+  assert.equal(K.check(vazifa("tub"), "def tub(n):\n    if n < 2:\n        return False\n    d = 2\n    while d * d < n:\n        if n % d == 0:\n            return False\n        d += 1\n    return True").ok, false);
+  // Sodda (lekin to'g'ri) yechim ham o'tadi
+  assert.equal(K.check(vazifa("tub"), "def tub(n):\n    if n < 2:\n        return False\n    for d in range(2, n):\n        if n % d == 0:\n            return False\n    return True").ok, true);
+  // ekub: kichigini qaytargan yechim
+  assert.equal(K.check(vazifa("ekub"), "def ekub(a, b):\n    if a < b:\n        return a\n    return b").ok, false);
+  // Qo'pol usul (sanab chiqish) ham to'g'ri
+  assert.equal(K.check(vazifa("ekub"), "def ekub(a, b):\n    eng = 1\n    for d in range(1, a + 1):\n        if a % d == 0 and b % d == 0:\n            eng = d\n    return eng").ok, true);
+  // palindrom: faqat chetdagi harflarni solishtirgan yechim "abca" da yiqiladi
+  assert.equal(K.check(vazifa("palindrom"), "def palindrom(s):\n    return s[0] == s[len(s) - 1]").ok, false);
+  // nechta_tub: 1 ni tub deb sanagan yechim
+  assert.equal(K.check(vazifa("nechta-tub"), "def tub(n):\n    for d in range(2, n):\n        if n % d == 0:\n            return False\n    return True\n\ndef nechta_tub(a):\n    soni = 0\n    for x in a:\n        if tub(x):\n            soni += 1\n    return soni").ok, false);
+  // daraja: sikl bilan yozilgani ham to'g'ri; manfiy asos va n = 0 testda bor
+  assert.equal(K.check(vazifa("daraja"), "def daraja(a, n):\n    k = 1\n    for i in range(n):\n        k = k * a\n    return k").ok, true);
+  assert.deepEqual(K.expectedFor(vazifa("daraja"), { stdin: ["-2", "3"] }), ["-8"]);
+});
+
 test("funksiya yozish masalalari sinov satri bilan tekshiriladi", () => {
   for (const kind of L.WRITE_KINDS) {
     const task = {

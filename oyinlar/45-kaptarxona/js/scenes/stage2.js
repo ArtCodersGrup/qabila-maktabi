@@ -38,7 +38,7 @@
     await paypoq();
     await qoida();
     await practice.exercises({
-      next: (prev) => L.kerakTask(Math.random, prev),
+      next: (prev, correct, tier) => L.kerakTask(Math.random, prev, tier),
       run: (task) => common.kerakExercise(task),
       praise: (task) => task.hisob,
     });

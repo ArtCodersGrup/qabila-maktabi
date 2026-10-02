@@ -46,7 +46,7 @@
       });
     });
     await ui.say("elder", "Hisoblagich oʻzgarmasa — shart doim rost. Bu cheksiz sikl deyiladi.");
-    await ui.say("elder", "Saytda 200 000 qadamdan keyin toʻxtatiladi, lekin haqiqiy kompyuterda dastur qotib qoladi.");
+    await ui.say("elder", "Saytda 3 000 000 qadamdan keyin toʻxtatiladi, lekin haqiqiy kompyuterda dastur qotib qoladi.");
   }
 
   async function definition() {
@@ -62,9 +62,9 @@
     await counter();
     await endless();
     await definition();
-    await ui.say("elder", "Endi oʻzing ayt: sikl nima chiqaradi? 3 ta toʻgʻri javob kerak.");
+    await ui.say("elder", `Endi oʻzing ayt: sikl nima chiqaradi? ${QK.practice.need()} ta toʻgʻri javob kerak.`);
     await practice.exercises({
-      next: (prev) => L.countTask(Math.random, prev),
+      next: (prev, correct, tier) => L.countTask(Math.random, prev, tier),
       run: (task) => common.resultExercise(task),
       praise: () => "Aylanishlarni toʻgʻri sanading.",
     });

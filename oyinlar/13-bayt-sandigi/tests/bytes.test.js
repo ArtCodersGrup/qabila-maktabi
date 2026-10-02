@@ -61,61 +61,98 @@ test("doublings: 1 dan 1024 gacha, 10 qadam", () => {
   assert.equal(B.KB, 1024);
 });
 
-test("makeBitTask: bayt → bit va bit → bayt, javob ≤ 72", () => {
-  for (let k = 0; k < 200; k++) {
-    const t = B.makeBitTask(null);
-    assert.equal(t.bits, t.bytes * 8);
-    assert.ok(t.bytes >= 2 && t.bytes <= 9);
-    assert.equal(t.answer, t.type === "toBits" ? t.bits : t.bytes);
-    assert.ok(t.answer <= 72);
+test("makeBitTask: bayt → bit va bit → bayt, chegaralar tier bilan o'sadi", () => {
+  assert.deepEqual(B.BIT_BYTES, [[2, 6], [7, 12], [10, 15]]);
+  for (const tier of [0, 1, 2]) {
+    const types = new Set();
+    for (let k = 0; k < 300; k++) {
+      const t = B.makeBitTask(null, Math.random, tier);
+      types.add(t.type);
+      assert.equal(t.bits, t.bytes * 8);
+      assert.ok(t.bytes >= B.BIT_BYTES[tier][0] && t.bytes <= B.BIT_BYTES[tier][1]);
+      assert.equal(t.answer, t.type === "toBits" ? t.bits : t.bytes);
+      assert.ok(t.answer <= 96, "javob yoddan hisoblanadigan chegarada");
+    }
+    assert.deepEqual([...types].sort(), tier === 2 ? ["toBytes"] : ["toBits", "toBytes"]);
   }
   const t = B.makeBitTask(null, seq(0.1, 0.0));
   assert.deepEqual(t, { type: "toBits", bytes: 2, bits: 16, answer: 16 });
 });
 
 test("makeBitTask: bir xil misol ketma-ket chiqmaydi", () => {
-  let prev = null;
-  for (let k = 0; k < 200; k++) {
-    const t = B.makeBitTask(prev);
-    if (prev) assert.ok(!(prev.type === t.type && prev.bytes === t.bytes));
-    prev = t;
+  for (const tier of [0, 1, 2]) {
+    let prev = null;
+    for (let k = 0; k < 200; k++) {
+      const t = B.makeBitTask(prev, Math.random, tier);
+      if (prev) assert.ok(!(prev.type === t.type && prev.bytes === t.bytes));
+      prev = t;
+    }
   }
 });
 
-test("makeTextTask: bayt — belgilar soni, bit — × 8 va ≤ 96", () => {
-  let prev = null;
-  for (let k = 0; k < 300; k++) {
-    const t = B.makeTextTask(prev);
-    const n = t.message.length;
-    if (t.type === "bytes") assert.equal(t.answer, n);
-    else {
-      assert.equal(t.answer, n * 8);
-      assert.ok(n <= 12 && t.answer <= 96, t.message);
+test("makeTextTask: bayt — belgilar soni, bit — × 8 va ≤ 96; uzunlik tier bilan o'sadi", () => {
+  for (const tier of [0, 1, 2]) {
+    let prev = null;
+    const [lo, hi] = B.TEXT_LEN[tier];
+    for (let k = 0; k < 300; k++) {
+      const t = B.makeTextTask(prev, Math.random, tier);
+      const n = t.message.length;
+      if (t.type === "bytes") {
+        assert.equal(t.answer, n);
+        assert.ok(n >= lo && n <= hi, `${tier}: ${t.message}`);
+      } else {
+        assert.equal(t.answer, n * 8);
+        assert.ok(n <= 12 && t.answer <= 96, t.message);
+        assert.ok(n >= Math.min(lo, 10), `${tier}: ${t.message}`);
+      }
+      if (prev) assert.ok(!(prev.type === t.type && prev.message === t.message));
+      prev = t;
     }
-    if (prev) assert.ok(!(prev.type === t.type && prev.message === t.message));
-    prev = t;
+  }
+  // Har tier va turda kamida 2 ta xabar bor (takrorlanmaslik uchun)
+  for (const [lo, hi] of B.TEXT_LEN) {
+    assert.ok(B.MESSAGES.filter((m) => m.length >= lo && m.length <= hi).length >= 2);
+    assert.ok(B.MESSAGES.filter((m) => m.length >= Math.min(lo, 10) && m.length <= Math.min(hi, 12)).length >= 2);
   }
 });
 
-test("makeKbTask: sahifalar, baytdan Kbaytga, taqqoslash", () => {
-  const seen = new Set();
-  let prev = null;
-  for (let k = 0; k < 400; k++) {
-    const t = B.makeKbTask(prev);
-    seen.add(t.type);
-    if (t.type === "pages") {
-      assert.ok(t.pages >= 2 && t.pages <= 10);
-      assert.equal(t.answer, t.pages * 2);
-    } else if (t.type === "toKb") {
-      assert.equal(t.bytes, t.answer * 1024);
-      assert.ok(t.answer >= 2 && t.answer <= 6);
-    } else {
-      assert.equal(t.type, "compare");
-      assert.ok(t.bytes === 1000 * t.kb || t.bytes === 1000 * (t.kb + 1));
-      assert.equal(t.answer, t.kb * 1024 > t.bytes ? "kb" : "bytes");
+test("makeKbTask: sahifalar, baytdan Kbaytga, 4 variantli taqqoslash (teng ham bor)", () => {
+  for (const tier of [0, 1, 2]) {
+    const seen = new Set();
+    const answers = new Set();
+    let prev = null;
+    for (let k = 0; k < 800; k++) {
+      const t = B.makeKbTask(prev, Math.random, tier);
+      seen.add(t.type);
+      if (t.type === "pages") {
+        assert.ok(t.pages >= B.PAGES[tier][0] && t.pages <= B.PAGES[tier][1]);
+        assert.equal(t.answer, t.pages * 2);
+        assert.ok(t.answer <= 50);
+      } else if (t.type === "toKb") {
+        assert.equal(t.bytes, t.answer * 1024);
+        assert.ok(t.answer >= B.TO_KB[tier][0] && t.answer <= B.TO_KB[tier][1]);
+      } else {
+        assert.equal(t.type, "compare");
+        assert.ok(t.kb >= B.CMP_KB[tier][0] && t.kb <= B.CMP_KB[tier][1]);
+        assert.ok(t.pages >= 1);
+        // Mustaqil hisob: baytda
+        const v = { kb: t.kb * 1024, bytes: t.bytes, pages: t.pages * 2048 };
+        const max = Math.max(v.kb, v.bytes, v.pages);
+        const tops = Object.keys(v).filter((key) => v[key] === max);
+        if (t.answer === "teng") assert.equal(tops.length, 3);
+        else assert.deepEqual(tops, [t.answer], "bitta eng katta");
+        assert.ok(B.CMP_OPTIONS.includes(t.answer));
+        answers.add(t.answer);
+      }
+      if (prev) assert.ok(JSON.stringify(prev) !== JSON.stringify(t), "takror");
+      prev = t;
     }
-    if (prev) assert.ok(JSON.stringify(prev) !== JSON.stringify(t), "takror");
-    prev = t;
+    assert.deepEqual([...seen].sort(), ["compare", "pages", "toKb"]);
+    assert.deepEqual([...answers].sort(), ["bytes", "kb", "pages", "teng"], `tier ${tier}: 4 javobning hammasi uchraydi`);
   }
-  assert.deepEqual([...seen].sort(), ["compare", "pages", "toKb"]);
+  assert.equal(B.CMP_OPTIONS.length, 4);
+  assert.equal(B.cmpAnswer({ kb: 2, bytes: 2048, pages: 1 }), "teng");
+  assert.equal(B.cmpAnswer({ kb: 3, bytes: 3000, pages: 1 }), "kb");
+  assert.equal(B.cmpAnswer({ kb: 3, bytes: 4000, pages: 1 }), "bytes");
+  assert.equal(B.cmpAnswer({ kb: 3, bytes: 3000, pages: 2 }), "pages");
 });

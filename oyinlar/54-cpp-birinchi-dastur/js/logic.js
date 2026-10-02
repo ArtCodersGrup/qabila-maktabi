@@ -29,6 +29,16 @@
     return make(r);
   }
 
+  // Qiyinlik zinasi (QOIDALAR 4.3): 0 — birinchi javoblar, 1 — o'rta, 2 — oxirgi va qiyin rejim.
+  // Zina berilmasa (testlar, parity namunalari) — hammasidan teng.
+  function zinadan(list, tier, rnd) {
+    if (tier == null) return pick(list, rnd);
+    const t = Math.max(0, Math.min(2, tier));
+    const mos = list.filter((x) => (x.tier || 0) <= t);
+    const ayni = mos.filter((x) => (x.tier || 0) === t);
+    return ayni.length && rnd() < 0.6 ? pick(ayni, rnd) : pick(mos, rnd);
+  }
+
   // ---------- Matnlar ----------
   const MATNLAR = ["Salom, qabila!", "Salom, dunyo!", "Birinchi dastur", "Kod tayyor",
     "C++ oʻrganamiz", "Olimpiada boshlandi", "Mashina kodi", "Dastur ishladi"];
@@ -37,15 +47,29 @@
   // ---------- 1-bosqich: qolip va chiqish ----------
 
   // Dastur tanasi va uning chiqishi birga yasaladi — ikkisi hech qachon ajralmaydi
-  const NATIJA_TURLARI = ["ikki", "qoshma", "hisob", "ketma"];
+  const NATIJA_TURLARI = ["ikki", "qoshma", "hisob", "ketma", "yopishgan", "qayta"];
+  // 2026-10-02: ikki yangi tur — "yopishgan" (sonlar orasida bo'shliq yo'q: cout hech narsa qo'shmaydi)
+  // va "qayta" (o'zgaruvchi qayta tayinlanadi: satrlar yuqoridan pastga bajariladi)
+  const NATIJA_ZINA = [{ id: "ikki", tier: 0 }, { id: "qoshma", tier: 0 }, { id: "hisob", tier: 0 }, { id: "ketma", tier: 0 },
+    { id: "yopishgan", tier: 1 }, { id: "qayta", tier: 2 }];
 
-  function natijaTask(r, prev) {
+  function natijaTask(r, prev, tier) {
     const rr = r || Math.random;
     return pickNew((rnd) => {
-      const tur = pick(NATIJA_TURLARI, rnd);
+      const tur = zinadan(NATIJA_ZINA, tier, rnd).id;
       let tana = [];
       let chiqish = [];
-      if (tur === "ikki") {
+      if (tur === "yopishgan") {
+        const a = int(rnd, 2, 9);
+        const b = int(rnd, 2, 9);
+        tana = ["int a = " + a + ";", "int b = " + b + ";", "cout << a << b;", 'cout << "\\n";', C.chiqar('a + b << " " << a * b')];
+        chiqish = [String(a) + String(b), (a + b) + " " + (a * b)];
+      } else if (tur === "qayta") {
+        const a = int(rnd, 2, 9);
+        const k = int(rnd, 2, 5);
+        tana = ["int a = " + a + ";", "int b = a + " + k + ";", "a = b * 2;", C.chiqar('a << " " << b'), "b = a - b;", C.chiqar("b")];
+        chiqish = [((a + k) * 2) + " " + (a + k), String((a + k) * 2 - (a + k))];
+      } else if (tur === "ikki") {
         const a = pick(MATNLAR, rnd);
         const b = "Men " + pick(ISMLAR, rnd);
         tana = [C.chiqar('"' + a + '"'), C.chiqar('"' + b + '"')];
@@ -71,7 +95,11 @@
         savol: "Bu dastur nima chiqaradi? Har satrni alohida qatorga yoz.",
         nega: tur === "ketma"
           ? "cout oʻzidan keyin yangi satr qoʻshmaydi: uchala cout bitta satrga yozdi."
-          : "Har cout <<  … << \"\\n\"; bitta satr chiqaradi.",
+          : tur === "yopishgan"
+            ? "cout sonlar orasiga boʻshliq ham qoʻymaydi: a << b — ikki raqam yonma-yon chiqadi. Boʻshliq kerak boʻlsa, uni oʻzing yozasan: \" \"."
+            : tur === "qayta"
+              ? "Satrlar yuqoridan pastga bajariladi: a yangi qiymat olgach, b eski qiymatida qoladi — toki oʻzi qayta tayinlanmaguncha."
+              : "Har cout <<  … << \"\\n\"; bitta satr chiqaradi.",
       };
     }, prev, rr);
   }
@@ -122,9 +150,9 @@
     }, prev, rr);
   }
 
-  const bosqich1Task = (prev, correct) => {
+  const bosqich1Task = (prev, correct, tier) => {
     const n = (correct || 0) % 3;
-    if (n === 0) return natijaTask(null, prev);
+    if (n === 0) return natijaTask(null, prev, tier);
     if (n === 1) return yetmaydiTask(null, prev);
     return qismTask(null, prev);
   };
@@ -169,16 +197,33 @@
   }
 
   // cin: tur allaqachon ma'lum, shuning uchun int() kerak emas
-  const KIRISH_TURLARI = ["yigindi", "kopaytma", "ikkilantir", "ism"];
+  const KIRISH_TURLARI = ["yigindi", "kopaytma", "ikkilantir", "ism", "uch-satr", "ism-yosh"];
+  // 2026-10-02: "uch-satr" — kirish ikki satrda keladi (cin bo'shliq va yangi satrni bir xil ko'radi);
+  // "ism-yosh" — bitta cin bilan matn va son o'qiladi
+  const KIRISH_ZINA = [{ id: "yigindi", tier: 0 }, { id: "kopaytma", tier: 0 }, { id: "ikkilantir", tier: 0 }, { id: "ism", tier: 0 },
+    { id: "uch-satr", tier: 1 }, { id: "ism-yosh", tier: 2 }];
 
-  function kirishTask(r, prev) {
+  function kirishTask(r, prev, tier) {
     const rr = r || Math.random;
     return pickNew((rnd) => {
-      const tur = pick(KIRISH_TURLARI, rnd);
+      const tur = zinadan(KIRISH_ZINA, tier, rnd).id;
       let tana = [];
       let kirish = [];
       let chiqish = [];
-      if (tur === "yigindi") {
+      if (tur === "uch-satr") {
+        const a = int(rnd, 2, 20);
+        const b = int(rnd, 2, 20);
+        const c = int(rnd, 2, 9);
+        tana = ["int a, b, c;", "cin >> a >> b >> c;", C.chiqar("a + b"), C.chiqar("(a + b) * c")];
+        kirish = [a + " " + b, String(c)];
+        chiqish = [String(a + b), String((a + b) * c)];
+      } else if (tur === "ism-yosh") {
+        const ism = pick(ISMLAR, rnd);
+        const yosh = int(rnd, 10, 16);
+        tana = ["string ism;", "int yosh;", "cin >> ism >> yosh;", C.chiqar('ism << " " << yosh + 1'), C.chiqar("yosh * 2 << ism")];
+        kirish = [ism + " " + yosh];
+        chiqish = [ism + " " + (yosh + 1), (yosh * 2) + ism];
+      } else if (tur === "yigindi") {
         const a = int(rnd, 3, 40);
         const b = int(rnd, 3, 40);
         tana = ["int a, b;", "cin >> a >> b;", C.chiqar("a + b")];
@@ -203,7 +248,7 @@
       }
       return {
         id: "kirish:" + tur + ":" + kirish.join("|"), tur: "natija", kind: "kirish",
-        kod: C.dastur(tana, { string: tur === "ism" }), kirish, chiqish,
+        kod: C.dastur(tana, { string: tur === "ism" || tur === "ism-yosh" }), kirish, chiqish,
         savol: "Dasturga shu maʼlumot beriladi. Nima chiqadi?",
         nega: "cin oʻzgaruvchining turini biladi, shuning uchun int() kerak emas.",
       };
@@ -241,21 +286,53 @@
       yechim: C.dastur(["int n;", "cin >> n;", C.chiqar("n"), C.chiqar("n * 2")]),
       yolYoriq: "Har satr uchun alohida cout yoz.",
     },
+    // ---- 2026-10-02: to'rt yangi masala (zina 1–2). Hammasi yadroda ham, g++ da ham tekshirilgan ----
+    {
+      id: "tortburchak", tier: 1,
+      savol: "Toʻgʻri toʻrtburchakning ikki tomoni oʻqiladi. Birinchi satrda perimetrini, ikkinchi satrda yuzini chiqar.",
+      sinovlar: [{ kirish: ["3 4"], chiqish: ["14", "12"] }, { kirish: ["5 5"], chiqish: ["20", "25"] }, { kirish: ["1 10"], chiqish: ["22", "10"] }],
+      yechim: C.dastur(["int a, b;", "cin >> a >> b;", C.chiqar("2 * (a + b)"), C.chiqar("a * b")]),
+      yolYoriq: "Perimetr — hamma tomonlar yigʻindisi: ikkita a va ikkita b. Yuz — tomonlar koʻpaytmasi.",
+    },
+    {
+      id: "almashtir", tier: 1,
+      savol: "Ikki sonni oʻqib, ularni teskari tartibda bitta satrda chiqar (orasida bitta boʻshliq).",
+      sinovlar: [{ kirish: ["3 8"], chiqish: ["8 3"] }, { kirish: ["10 10"], chiqish: ["10 10"] }, { kirish: ["-1 5"], chiqish: ["5 -1"] }],
+      yechim: C.dastur(["int a, b;", "cin >> a >> b;", C.chiqar('b << " " << a')]),
+      yolYoriq: "cout sonlar orasiga boʻshliq qoʻymaydi — uni oʻzing qoʻsh: << \" \" <<.",
+    },
+    {
+      id: "ism-yosh", tier: 2,
+      savol: "Ism va yosh oʻqiladi (orasida boʻshliq). Shunday chiqar: «Salom, ISM! Kelasi yil N yosh.» — N bu yoshdan bitta katta son.",
+      sinovlar: [{ kirish: ["Anvar 13"], chiqish: ["Salom, Anvar! Kelasi yil 14 yosh."] },
+        { kirish: ["Dilnoza 9"], chiqish: ["Salom, Dilnoza! Kelasi yil 10 yosh."] }],
+      yechim: C.dastur(["string ism;", "int yosh;", "cin >> ism >> yosh;",
+        'cout << "Salom, " << ism << "! Kelasi yil " << yosh + 1 << " yosh.\\n";'], { string: true }),
+      yolYoriq: "Ism — string, yosh — int. Bitta cout ichida matn va oʻzgaruvchilar navbat bilan yoziladi; boʻshliqlar qoʻshtirnoq ichida turadi.",
+    },
+    {
+      id: "uch-son", tier: 2,
+      savol: "Uchta son oʻqiladi. Birinchi satrda yigʻindisini, ikkinchi satrda oʻrtachasini (kasri bilan) chiqar.",
+      sinovlar: [{ kirish: ["2 3 6"], chiqish: ["11", "3.66667"] }, { kirish: ["3 4 5"], chiqish: ["12", "4"] },
+        { kirish: ["1 2 2"], chiqish: ["5", "1.66667"] }],
+      yechim: C.dastur(["double a, b, c;", "cin >> a >> b >> c;", C.chiqar("a + b + c"), C.chiqar("(a + b + c) / 3")]),
+      yolYoriq: "Oʻrtacha kasr son boʻlishi mumkin — oʻzgaruvchilarning turiga qara: int kasrni saqlamaydi.",
+    },
   ];
 
-  function yozTask(r, prev) {
+  function yozTask(r, prev, tier) {
     const rr = r || Math.random;
     return pickNew((rnd) => {
-      const y = pick(YOZISHLAR, rnd);
+      const y = zinadan(YOZISHLAR, tier, rnd);
       return Object.assign({ tur: "yoz", qolip: QOLIP, rows: 7 }, y, { id: "yoz:" + y.id });
     }, prev, rr);
   }
 
-  const bosqich2Task = (prev, correct) => {
+  const bosqich2Task = (prev, correct, tier) => {
     const n = (correct || 0) % 3;
     if (n === 0) return elonTask(null, prev);
-    if (n === 1) return kirishTask(null, prev);
-    return yozTask(null, prev);
+    if (n === 1) return kirishTask(null, prev, tier);
+    return yozTask(null, prev, tier);
   };
 
   // ---------- 3-bosqich: Python ↔ C++ ----------
@@ -351,8 +428,10 @@
         korilgan.add("yechim:" + y.id);
       }
     }
+    // Yechimlardan TASHQARI yana `soni` ta yasalgan misol (yechimlar ko'paygani uchun alohida sanaladi)
+    const kerak = out.length + (soni || 24);
     let prev = null;
-    for (let k = 0; k < (soni || 24) * 8 && out.length < (soni || 24); k++) {
+    for (let k = 0; k < (soni || 24) * 8 && out.length < kerak; k++) {
       const task = k % 2 === 0 ? natijaTask(rnd, prev) : kirishTask(rnd, prev);
       prev = task;
       if (korilgan.has(task.id)) continue;

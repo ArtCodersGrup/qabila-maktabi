@@ -62,9 +62,9 @@
     await whichWay(8);
     await indent();
     await definition();
-    await ui.say("elder", "Endi oʻzing ayt: kod nima chiqaradi? 3 ta toʻgʻri javob kerak.");
+    await ui.say("elder", `Endi oʻzing ayt: kod nima chiqaradi? ${QK.practice.need()} ta toʻgʻri javob kerak.`);
     await practice.exercises({
-      next: (prev) => L.ifTask(Math.random, prev),
+      next: (prev, correct, tier) => L.ifTask(Math.random, prev, tier),
       run: (task) => common.resultExercise(task),
       praise: () => "Toʻgʻri yoʻlni tanlading.",
     });

@@ -25,7 +25,7 @@
     await qoida();
     await ui.say("elder", "Oxirgi 3 ta vazifa: turni tanlaysan va kod yozasan.");
     await practice.exercises({
-      next: (prev, correct) => L.bosqich3Task(prev, correct),
+      next: (prev, correct, tier) => L.bosqich3Task(prev, correct, tier),
       run: (task) => common.mashq(task),
       praise: (task) => (task.tur === "tur" ? "Chegarani toʻgʻri taxmin qilding." : "Dasturing katta sonlarni ham uddaladi!"),
     });

@@ -18,7 +18,7 @@
   background: #fff; border: 3px solid var(--matn); border-radius: 12px; box-shadow: 0 3px 0 var(--soya);
 }
 .xo-buyruq:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--soya); }
-.xo-buyruq.bosh { border-style: dashed; color: #8A8577; }
+.xo-buyruq.bosh { border-style: dashed; color: var(--matn-3); }
 .xo-buyruq.yonmoqda { background: #FFF0D6; border-color: var(--yana); }
 .xo-buyruq.tanlangan { border-color: var(--asosiy); background: #D8E6FB; }
 .xo-buyruq.xato { background: #F7E2E0; border-color: #C0392B; color: #8E3B33; }

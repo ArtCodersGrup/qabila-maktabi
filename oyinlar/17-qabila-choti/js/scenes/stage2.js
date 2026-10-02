@@ -78,30 +78,45 @@
     await ui.say("elder", "Nopozitsion tizimda belgi qiymati oʻzgarmaydi — Rim raqamlarini esla («Rim toshi» oʻyini).");
   }
 
-  // 5.4: mashq — yozuv to'g'rimi / eng kichik asos / harf qiymati
+  // 5.4: mashq — noto'g'ri raqamni bos / eng kichik asos / harf qiymati
   function digitTask(task) {
     const el = common.box(true);
     if (task.type === "valid") {
-      el.append(ui.h("div", { class: "big-value", text: S.fmt(task.number, task.base) }));
-      ui.bubble("elder", "Bu yozuv toʻgʻrimi?");
+      // Har raqam — tugma; bittasi xato bo'lishi mumkin. Variantlar: raqamlar soni + "Hammasi toʻgʻri"
+      el.append(ui.h("div", { class: "count-line", text: `${task.base}-lik son` }));
+      const tiles = ui.h("div", { class: "pick-digits" });
+      const cells = [];
+      let open = true;
+      el.append(tiles);
+      ui.bubble("elder", "Bu yozuvda xato raqam bormi? Boʻlsa — uni bos.");
       return practice.tries({
         setup: (submit) => {
-          const row = ui.h("div", { class: "choice-row" });
-          row.append(ui.button("Ha", () => submit("ha")), ui.button("Yoʻq", () => submit("yoq"), "secondary"));
+          [...task.number].forEach((ch, i) => {
+            const b = ui.h("button", { class: "pick-digit", type: "button", text: ch, "aria-label": `${i + 1}-raqam: ${ch}` });
+            b.addEventListener("click", () => { if (open) { sound.play("tap"); submit(i); } });
+            cells.push(b);
+            tiles.append(b);
+          });
+          tiles.append(ui.h("span", { class: "pick-base", text: S.sub(task.base) }));
           ui.clearControl();
-          ui.control().append(row);
+          ui.control().append(ui.h("div", { class: "choice-row" }, ui.button("Hammasi toʻgʻri", () => submit(-1), "secondary")));
         },
         check: (value) => value === task.answer,
         hint: () => {
-          common.add(el, common.line(`${task.base}-likda raqamlar: 0 … ${S.digitChar(task.base - 1)}`));
-          ui.bubble("elder", "↻ Har bir raqamni tekshir.");
+          common.add(el, common.line(`n-lik tizimda raqamlar 0 dan n−1 gacha. Bu yerda n = ${task.base}`));
+          ui.bubble("elder", "↻ Har bir raqamni asos bilan solishtir.");
         },
         solution: () => {
-          const bad = [...task.number].find((ch) => S.digitValue(ch) >= task.base);
-          common.add(el, common.answerLine(bad
-            ? `${bad} — ${task.base}-likda bunday raqam yoʻq`
-            : `Hamma raqam ${task.base} dan kichik — toʻgʻri`));
+          open = false;
+          if (task.answer >= 0) cells[task.answer].classList.add("bad");
+          common.add(el, common.answerLine(task.answer >= 0
+            ? `${task.number[task.answer]} — ${task.base}-likda bunday raqam yoʻq (eng kattasi ${S.digitChar(task.base - 1)})`
+            : `Hamma raqam ${task.base} dan kichik — yozuv toʻgʻri`));
         },
+      }).then((ok) => {
+        open = false;
+        if (ok && task.answer >= 0) cells[task.answer].classList.add("bad");
+        return ok;
       });
     }
     if (task.type === "minBase") {
@@ -130,7 +145,7 @@
   }
 
   function praise(task) {
-    if (task.type === "valid") return task.answer === "ha" ? "Yozuv toʻgʻri." : "Bunday raqam bu tizimda yoʻq.";
+    if (task.type === "valid") return task.answer < 0 ? "Yozuv toʻgʻri." : `${task.number[task.answer]} — ${task.base}-likda bunday raqam yoʻq.`;
     if (task.type === "minBase") return `Kamida ${task.answer}-lik.`;
     return `${task.digit} = ${task.answer}.`;
   }
@@ -138,9 +153,9 @@
   async function stage2() {
     await growBase();
     await kinds();
-    await ui.say("elder", "Endi oʻzing tekshir: raqamlar va asoslar. 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing tekshir: raqamlar va asoslar. ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev) => tizim.makeDigitTask(prev),
+      next: (prev, correct, tier) => tizim.makeDigitTask(prev, undefined, tier),
       run: digitTask,
       praise,
     });

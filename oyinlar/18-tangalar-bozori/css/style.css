@@ -7,9 +7,13 @@
 
 /* ---------- Son ustida xona qiymatlari ---------- */
 .placed { display: grid; gap: 0 12px; justify-items: center; padding: 6px 12px; border-radius: 12px; background: #fff; box-shadow: 0 2px 0 var(--soya); }
-.pl-place { font-size: 15px; font-weight: 900; color: var(--yana); }
+.pl-place { font-size: 15px; font-weight: 900; color: var(--yana-matn); }
 .pl-digit { font-size: 30px; font-weight: 900; line-height: 1.15; }
 .pl-value { font-size: 14px; font-weight: 900; color: var(--asosiy); }
+/* 9–10 xonali son: ustunlar zichroq (360 px telefonga sigʻadi) */
+.placed.long { gap: 0 6px; padding: 6px 8px; max-width: 100%; }
+.placed.long .pl-place { font-size: 13px; }
+.placed.long .pl-digit { font-size: 26px; }
 
 /* ---------- Tangalar ---------- */
 .coin-cols { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
@@ -20,7 +24,7 @@
 }
 button.coin:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--soya); }
 .coin.small { width: 34px; height: 34px; border-width: 2px; font-size: 12px; box-shadow: none; animation: pop 0.25s; }
-.coin-badge { font-size: 14px; font-weight: 800; color: #7A7266; }
+.coin-badge { font-size: 14px; font-weight: 800; color: var(--matn-3); }
 .purse-wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; min-height: 40px; max-width: 420px; }
 .purse-label { font-size: 17px; font-weight: 800; }
 .purse { display: flex; flex-wrap: wrap; gap: 4px; }

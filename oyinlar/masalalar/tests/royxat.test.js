@@ -63,7 +63,68 @@ test("filtr: daraja, teg va qiyinlik", () => {
   const satr = R.filtr(hammasi, { teg: "satr" });
   assert.ok(satr.length > 0 && satr.every((p) => p.tags.includes("satr")));
   const q800 = R.filtr(hammasi, { qiyinlik: 800 });
-  assert.ok(q800.every((p) => p.rating === 800));
+  assert.ok(q800.length > 0 && q800.every((p) => p.rating === 800));
+  assert.deepEqual(R.filtr(hammasi, { qiyinlik: "800" }), q800, "satr ko'rinishidagi qiymat ham ishlaydi");
+  // Yangi "Olimpiada" darajasi filtrda va masalada ko'rinadi
+  const olimpiada = R.filtr(hammasi, { daraja: "olimpiada" });
+  assert.equal(olimpiada.length, bank.OLIMPIADA.length);
+  assert.ok(olimpiada.every((p) => p.darajaNom === "Olimpiada" && p.rating >= 700 && p.rating <= 1400));
+  assert.ok(R.darajalar().some((d) => d.id === "olimpiada" && d.nom === "Olimpiada"));
+});
+
+test("qiyinlik chegarasi: «500+» — 500 va undan yuqori", () => {
+  for (const chegara of R.QIYINLIK_CHEGARALARI) {
+    const r = R.filtr(hammasi, { qiyinlik: chegara + "+" });
+    assert.equal(r.length, hammasi.filter((p) => p.rating >= chegara).length, chegara + "+");
+    assert.ok(r.length > 0 && r.every((p) => p.rating >= chegara));
+  }
+  assert.equal(R.qiyinlikMos(500, "500+"), true);
+  assert.equal(R.qiyinlikMos(450, "500+"), false);
+  assert.equal(R.qiyinlikMos(450, ""), true);
+  assert.equal(R.qiyinlikMos(800, "800"), true);
+  assert.equal(R.qiyinlikMos(900, "800"), false);
+  // Tanlovlar: avval chegaralar, keyin aniq reytinglar
+  const tanlov = R.qiyinlikTanlovlari();
+  assert.deepEqual(tanlov.slice(0, 3).map((q) => q.id), ["500+", "800+", "1000+"]);
+  assert.equal(tanlov[0].nom, "Qiyinlik: 500+");
+  assert.deepEqual(tanlov.slice(3).map((q) => q.id), R.qiyinliklar().map(String));
+});
+
+test("standart filtr «Qiyinlik: 500+»: birinchi sahifada oson masalalar turmaydi", () => {
+  assert.equal(R.STANDART_QIYINLIK, "500+");
+  const f = R.standartFiltr();
+  assert.deepEqual(f, { qidiruv: "", daraja: "", teg: "", qiyinlik: "500+", holat: "", sahifa: 1 });
+  const list = R.filtr(hammasi, f);
+  assert.ok(list.every((p) => p.rating >= 500));
+  const birinchi = R.sahifa(list, 1).items;
+  assert.equal(birinchi.length, 10);
+  assert.ok(!birinchi.some((p) => p.id === "yigindi"), "«Ikki son yigʻindisi» birinchi sahifada");
+  assert.ok(birinchi.every((p) => p.daraja !== "oson"), "oson darajadagi masala birinchi sahifada");
+  // Standart filtrda ham olimpiada masalalari bor, oson masalalar esa yo'qolmagan — "Tozalash" bilan ko'rinadi
+  assert.ok(list.some((p) => p.daraja === "olimpiada"));
+  const tozalangan = R.filtr(hammasi, { qidiruv: "", daraja: "", teg: "", qiyinlik: "", holat: "" });
+  assert.equal(tozalangan.length, hammasi.length);
+  assert.equal(tozalangan[0].rating, 100);
+});
+
+test("saqlangan filtr tekshiriladi: bankda yo'q qiymat bo'sh ro'yxatga olib kelmaydi", () => {
+  assert.deepEqual(R.tozaFiltr({ daraja: "olimpiada", teg: "satr", qiyinlik: "800+", holat: "yechilmagan" }),
+    { daraja: "olimpiada", teg: "satr", qiyinlik: "800+", holat: "yechilmagan" });
+  assert.deepEqual(R.tozaFiltr({ daraja: "eski-daraja", teg: "yoq-teg", qiyinlik: "777", holat: "boshqa" }),
+    { daraja: "", teg: "", qiyinlik: "", holat: "" });
+  // Bola "Tozalash" ni bosgan: bo'sh qiyinlik saqlangan — standart filtr qaytib kelmaydi
+  assert.deepEqual(R.tozaFiltr({ daraja: "", teg: "", qiyinlik: "", holat: "" }), { daraja: "", teg: "", qiyinlik: "", holat: "" });
+  assert.deepEqual(R.tozaFiltr(null), { daraja: "", teg: "", qiyinlik: "", holat: "" });
+  assert.equal(R.tozaFiltr({ qiyinlik: "1200" }).qiyinlik, "1200");
+});
+
+test("vazifa(): namuna + yashirin testlar, masalaning qadam chegarasi uzatiladi", () => {
+  const p = R.bittasi("oraliq-sorovlar");
+  const v = R.vazifa(p);
+  assert.equal(v.tests.length, p.tests.length + 1);
+  assert.deepEqual(v.tests[0], { stdin: p.namuna.stdin, out: p.namuna.out });
+  assert.equal(v.qadam, 200000);
+  assert.equal(R.vazifa(R.bittasi("yigindi")).qadam, null);
 });
 
 test("filtr: yechilgan va yechilmagan", () => {

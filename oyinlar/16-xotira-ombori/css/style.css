@@ -14,7 +14,7 @@
 }
 .rung.lit { background: var(--asosiy); color: #fff; }
 .rung-unit { font-size: 20px; font-weight: 900; }
-.rung-x { padding-left: 18px; font-size: 15px; font-weight: 900; color: var(--yana); }
+.rung-x { padding-left: 18px; font-size: 15px; font-weight: 900; color: var(--yana-matn); }
 .ax-h { display: none; }
 .units-row .btn { min-width: 96px; }
 
@@ -49,7 +49,7 @@ button.file-card:disabled { opacity: 0.3; }
 /* ---------- Taqqoslash ---------- */
 .cmp { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; }
 .cmp-card { padding: 12px 18px; border-radius: 14px; background: #fff; box-shadow: 0 3px 0 var(--soya); font-size: 28px; font-weight: 900; }
-.cmp-or { font-size: 18px; font-weight: 800; color: #7A7266; }
+.cmp-or { font-size: 18px; font-weight: 800; color: var(--matn-3); }
 
 /* ---------- Formula, hikoya, tabrik ---------- */
 .formula-box { display: flex; flex-direction: column; align-items: center; gap: 8px; max-width: 100%; text-align: center; }

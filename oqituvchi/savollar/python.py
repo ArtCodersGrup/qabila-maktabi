@@ -84,3 +84,45 @@ def savollar(q, M):
     q("ota", "Nega bu sikl hech qachon toʻxtamaydi? %s" % K("i = 1  ⏎  while i < 10:  ⏎      print(i)"),
       ["shart notoʻgʻri", "i hech qachon oʻzgarmaydi", "print sekin", "while xato yozilgan"], 1,
       "Sikl ichida i oʻzgarmasa, shart doim rost qoladi")
+    # ── Tahlil (2026-10-02): qadamlarni yurgizish va xatoni topish ──
+    # Har kod javobi python3 da ham, saytning oʻz talqinchisida ham tekshirilgan.
+    q("ota", "%s nima chiqaradi?" % K("s = 0  ⏎  for i in range(2, 10, 3):  ⏎      s += i  ⏎  print(s)"),
+      ["15", "17", "12", "20"], 0,
+      "range(2, 10, 3) → 2, 5, 8; yigʻindi 15 (10 kirmaydi)")
+    q("ota", "%s nima chiqaradi?" % K("a = 3  ⏎  b = 5  ⏎  a, b = b, a + b  ⏎  a, b = b, a + b  ⏎  print(a)"),
+      ["8", "5", "13", "3"], 0,
+      "1-qadam: a=5, b=8; 2-qadam: a=8, b=13 — oʻng tomon avval toʻliq hisoblanadi")
+    q("ota", "%s nima chiqaradi?" % K("a = [1, 2, 3]  ⏎  b = a  ⏎  b.append(4)  ⏎  print(len(a))"),
+      ["3", "4", "xato beradi", "7"], 1,
+      "b = a nusxa olmaydi — ikkala nom bitta roʻyxatga qaraydi")
+    q("ota", "Bu kod roʻyxatdagi eng katta sonni topmoqchi, lekin %s uchun notoʻgʻri javob beradi. Qaysi satr aybdor? %s"
+      % (K("[-5, -2, -9]"), K("best = 0  ⏎  for x in a:  ⏎      if x > best:  ⏎          best = x")),
+      [K("best = 0"), K("for x in a"), K("if x > best"), K("best = x")], 0,
+      "Boshlangʻich qiymat 0 — hamma son manfiy boʻlsa, hech biri 0 dan katta emas. a[0] dan boshlash kerak")
+    q("qiyin", "Bu kod nechta yulduzcha chiqaradi? %s" % K('for i in range(3):  ⏎      for j in range(i):  ⏎          print("*")'),
+      ["3", "6", "9", "2"], 0,
+      "i = 0 → 0 ta, i = 1 → 1 ta, i = 2 → 2 ta: jami 3")
+    q("ota", "Sikl tanasi necha marta bajariladi? %s" % K("n = 100  ⏎  while n > 1:  ⏎      n = n // 2"),
+      ["6 marta", "7 marta", "50 marta", "99 marta"], 0,
+      "100 → 50 → 25 → 12 → 6 → 3 → 1: olti marta yarimlanadi")
+    q("ota", "Bu kod 1 dan n gacha sonlar yigʻindisini chiqarishi kerak, lekin javob har doim kichik chiqadi. Qaysi satr aybdor? %s"
+      % K("s = 0  ⏎  for i in range(1, n):  ⏎      s += i  ⏎  print(s)"),
+      [K("s = 0"), K("for i in range(1, n)"), K("s += i"), K("print(s)")], 1,
+      "range(1, n) n ning oʻziga yetmaydi — range(1, n + 1) kerak")
+    q("qiyin", "%s nima chiqaradi?" % K("a = 2  ⏎  b = 3  ⏎  a = a + b  ⏎  b = a - b  ⏎  a = a - b  ⏎  print(a, b)"),
+      ["3 2", "2 3", "5 2", "5 3"], 0,
+      "a=5; b=5−3=2; a=5−2=3 — ikki quti uchinchi qutisiz almashdi")
+    q("ota", "%s nima chiqaradi?" % K("def qosh(r):  ⏎      r.append(0)  ⏎    ⏎  a = [1, 2]  ⏎  qosh(a)  ⏎  qosh(a)  ⏎  print(len(a))"),
+      ["2", "3", "4", "xato beradi"], 2,
+      "Roʻyxat funksiyaga nusxalanmaydi: har chaqiruv oʻsha roʻyxatga bitta element qoʻshadi")
+    q("ota", "Bu kod roʻyxatda 7 bor-yoʻqligini aytishi kerak, lekin %s uchun False chiqaradi. Nega? %s"
+      % (K("[3, 7, 5]"), K("for x in a:  ⏎      if x == 7:  ⏎          bor = True  ⏎      else:  ⏎          bor = False")),
+      ["else har aylanishda javobni qayta False qilib yuboradi", "for notoʻgʻri yozilgan",
+       "== oʻrniga = boʻlishi kerak", "True kichik harf bilan yoziladi"], 0,
+      "7 topilgach ham keyingi element (5) else ga tushib, bor ni oʻchiradi. bor = False sikldan oldin bir marta yoziladi")
+    q("qiyin", "%s nima chiqaradi?" % K('s = "python"  ⏎  print(s[1:4], s[-1])'),
+      ["yth n", "pyt n", "ytho n", "yth o"], 0,
+      "s[1:4] — 1, 2, 3-indekslar (y, t, h); s[-1] — oxirgi harf")
+    q("ota", "%s nima chiqaradi?" % K("def f(n):  ⏎      if n == 0:  ⏎          return 0  ⏎      return n + f(n - 1)  ⏎    ⏎  print(f(4))"),
+      ["10", "4", "24", "0"], 0,
+      "f(4) = 4 + f(3) = 4 + 3 + 2 + 1 + 0 = 10 — funksiya oʻzini chaqiradi (rekursiya)")

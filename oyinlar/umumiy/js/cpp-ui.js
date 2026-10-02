@@ -278,9 +278,7 @@
       hint(kod) {
         const bad = C.tekshir(task, kod);
         if (bad.kind === "xato") host.append(note("↻ " + bad.error.hint));
-        else if (bad.olingan && bad.olingan.length) {
-          host.append(note("↻ Sening dasturing «" + bad.olingan[0] + "» chiqardi, kerakli javob — «" + (bad.sinov.chiqish[0] || "") + "». " + (task.yolYoriq || "")));
-        } else host.append(note("↻ Dastur hech narsa chiqarmadi. " + (task.yolYoriq || "")));
+        else host.append(note("↻ " + C.farqIzohi(bad) + " " + (task.yolYoriq || "")));
       },
       solution() {
         host.append(answer("Toʻgʻri javob:"), kodBlok(task.yechim, { numbers: false }));

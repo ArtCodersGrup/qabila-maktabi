@@ -15,6 +15,9 @@
   const isNone = (v) => v === null;
   const isRange = (v) => !!v && typeof v === "object" && v.t === "range";
   const isFunc = (v) => !!v && typeof v === "object" && v.t === "func";
+  // map(f, a) natijasi: ustidan yurish, list(...), a, b = ... mumkin; indeks va len — Python kabi xato
+  const isMap = (v) => !!v && typeof v === "object" && v.t === "map";
+  const mapOf = (items) => ({ t: "map", items });
   // bool Pythonda sonning bir turi: True + True = 2
   const isNum = (v) => isInt(v) || isFloat(v) || isBool(v);
   const isIntLike = (v) => isInt(v) || isBool(v);
@@ -28,6 +31,7 @@
     if (isList(v)) return "list";
     if (isRange(v)) return "range";
     if (isFunc(v)) return "function";
+    if (isMap(v)) return "map";
     return "object";
   }
 
@@ -84,6 +88,7 @@
     if (isList(v)) return "[" + v.map(repr).join(", ") + "]";
     if (isRange(v)) return "range(" + v.start + ", " + v.stop + (v.step === 1n ? "" : ", " + v.step) + ")";
     if (isFunc(v)) return "<function " + v.name + ">";
+    if (isMap(v)) return "<map object>";
     return String(v);
   }
 
@@ -115,12 +120,25 @@
     return r !== 0n && (r < 0n) !== (b < 0n) ? r + b : r;
   }
 
+  // Qiymat hajmi chegarasi: satr/ro'yxat shundan oshsa — Limit xatosi (aks holda brauzer tabi qulaydi)
+  const MAX_LEN = 1000000;
+  const spaced = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+  function hajmTekshir(v, pos) {
+    if ((isStr(v) || isList(v)) && v.length > MAX_LEN) {
+      throw E.limitError("qiymat juda katta (" + spaced(MAX_LEN) + " dan oshdi)", Object.assign({}, pos || {}, {
+        hint: "Satr yoki roʻyxat juda tez oʻsib ketdi. Sikl ichida u har safar ikki baravar boʻlmayaptimi?",
+      }));
+    }
+    return v;
+  }
+
   function repeat(seq, n, pos) {
     if (!isIntLike(n)) {
       throw E.typeError("can't multiply sequence by non-int of type '" + typeName(n) + "'", pos);
     }
     const times = Number(toInt(n));
     if (times <= 0) return isStr(seq) ? "" : [];
+    if (seq.length * times > MAX_LEN) hajmTekshir({ length: seq.length * times, [isStr(seq) ? "str" : "list"]: true }, pos);
     if (isStr(seq)) return seq.repeat(times);
     const out = [];
     for (let k = 0; k < times; k++) out.push(...seq);
@@ -130,12 +148,12 @@
   function binary(op, a, b, pos) {
     if (op === "+") {
       if (isStr(a) || isStr(b)) {
-        if (isStr(a) && isStr(b)) return a + b;
+        if (isStr(a) && isStr(b)) return hajmTekshir(a + b, pos);
         if (isStr(a)) throw E.concatError("str", typeName(b), pos);
         throw E.operandError("+", typeName(a), typeName(b), pos);
       }
       if (isList(a) || isList(b)) {
-        if (isList(a) && isList(b)) return a.concat(b);
+        if (isList(a) && isList(b)) return hajmTekshir(a.concat(b), pos);
         if (isList(a)) throw E.concatError("list", typeName(b), pos);
         throw E.operandError("+", typeName(a), typeName(b), pos);
       }
@@ -176,6 +194,12 @@
     }
 
     if (op === "**") {
+      // 10 ** 10 ** 10 kabi daraja JS'ni qulatadi — darajani cheklaymiz (2 ** 100000 hali ham aniq chiqadi)
+      if (bothInt && toInt(b) > 100000n && toInt(a) !== 0n && toInt(a) !== 1n && toInt(a) !== -1n) {
+        throw E.limitError("daraja juda katta (koʻrsatkich 100 000 dan oshdi)", Object.assign({}, pos || {}, {
+          hint: "Bunday katta sonni hisoblab boʻlmaydi. Koʻrsatkich toʻgʻrimi?",
+        }));
+      }
       if (bothInt && toInt(b) >= 0n) return toInt(a) ** toInt(b);
       return Math.pow(toNum(a), toNum(b));
     }
@@ -242,9 +266,16 @@
     }
     if (isList(box)) return box.some((x) => eq(x, item));
     if (isRange(box)) {
-      if (!isNum(item)) return false;
-      for (const v of iterate(box, pos)) if (eq(v, item)) return true;
-      return false;
+      // Python kabi O(1): range ustida yurmaymiz (-1 in range(10**9) bir zumda)
+      if (!isIntLike(item)) {
+        if (!isNum(item)) return false;
+        for (const v of iterate(box, pos)) if (eq(v, item)) return true;
+        return false;
+      }
+      const x = toInt(item);
+      const { start, stop, step } = box;
+      const ichida = step > 0n ? x >= start && x < stop : x <= start && x > stop;
+      return ichida && (x - start) % step === 0n;
     }
     throw E.typeError("argument of type '" + typeName(box) + "' is not iterable", pos);
   }
@@ -318,6 +349,10 @@
       for (const x of v.slice()) yield x;
       return;
     }
+    if (isMap(v)) {
+      for (const x of v.items) yield x;
+      return;
+    }
     if (isRange(v)) {
       const { start, stop, step } = v;
       if (step > 0n) for (let k = start; k < stop; k += step) yield k;
@@ -328,8 +363,8 @@
   }
 
   const api = {
-    isInt, isFloat, isBool, isStr, isList, isNone, isRange, isFunc, isNum, isIntLike,
-    typeName, toInt, toNum, range, rangeLength,
+    isInt, isFloat, isBool, isStr, isList, isNone, isRange, isFunc, isMap, mapOf, isNum, isIntLike,
+    typeName, toInt, toNum, range, rangeLength, MAX_LEN,
     formatFloat, reprStr, repr, str, truthy,
     binary, unary, eq, order, compare, contains, len,
     getIndex, setIndex, getSlice, iterate,

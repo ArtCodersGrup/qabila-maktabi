@@ -39,8 +39,8 @@ Oqsoqol va Shogird (`umumiy/`). Shogird chiroqlarni yoqadi, Oqsoqol tushuntiradi
 ```
 Bosh ekran
    ├─► Kirish
-   ├─► 1-bosqich: Chiroq naqshlari   [1 chiroq → 2 chiroq (4 naqsh) → 3 chiroq (8 naqsh) → ta'rif → mashq 3]
-   ├─► 2-bosqich: Ikkilik sonlar     [4-2-1 → "5 ni yasa" → ta'rif → mashq 3]
+   ├─► 1-bosqich: Chiroq naqshlari   [1 chiroq → 2 chiroq (4 naqsh) → 3 chiroq (8 naqsh) → ta'rif → mashq]
+   ├─► 2-bosqich: Ikkilik sonlar     [4-2-1 → "5 ni yasa" → ta'rif → mashq]
    └─► 3-bosqich: Rangli chiroqlar   [2 rangli chiroq (9 naqsh) → ta'rif → mashq 3 → hikoya] → tabrik
 ```
 
@@ -52,7 +52,7 @@ Bosh ekran
 2. **2 chiroq.** Bola naqsh yasab "Saqlash"ni bosadi; har yangi naqsh devorga tushadi, takror — "Bu naqsh bor edi!". "Yordam" — yetishmayotgan naqshni chiroqlarga qo'yadi. 4 tasi topilganda: "2 ta chiroq — 4 ta naqsh."
 3. **3 chiroq.** Xuddi shunday, har naqsh ostida ma'nosi chiqadi. 8 tasi topilganda: "3 ta chiroq — 8 ta naqsh. Har biriga maʼno berdik!"
 4. **Ta'rif:** `1 chiroq: 2`, `2 chiroq: 2 × 2 = 4`, `3 chiroq: 2 × 2 × 2 = 8`; "Har bir chiroq 2 xil boʻladi. Chiroqlar soni qancha boʻlsa, 2 ni shuncha marta koʻpaytiramiz." / "1-oʻyindagi harflarni esla — xuddi shunday!"
-5. **Mashq** (3 ta to'g'ri; kod jadvali ko'rinib turadi), tasodifiy ikki xil:
+5. **Mashq** (4 ta to'g'ri; kod jadvali faqat birinchi 2 javobda ko'rinadi — 12-bo'limga qara), tasodifiy ikki xil:
    - **O'qish:** "Qoʻshni qabila chiroq yoqdi. Nima deyapti?" — katta naqsh, pastda 8 ta ma'no tugmasi.
    - **Yuborish:** "Qoʻshni qabilaga «Xavf» deb yubor." — bola 3 ta chiroqni yoqadi, "Yuborish".
    - 1-xato: jadvalda kerakli qator yonadi ("Jadvalga qara."). 2-xato: to'g'ri javob ko'rsatiladi, yangi misol.
@@ -62,7 +62,7 @@ Bosh ekran
 1. Oqsoqol: "Chiroqlar bilan son ham yuborsa boʻladi!" Chiroqlar ustida 4 2 1.
 2. "Har bir chiroqning oʻz qiymati bor. Yoniq chiroqlar qiymatini qoʻshamiz." Topshiriq: "5 ni yasa." — bola to'g'ri naqshni yoqquncha (jonli yig'indi yordam beradi).
 3. **Ta'rif:** "Yoniq — 1, oʻchiq — 0. Kompyuter 5 ni 101 deb yozadi — bu ikkilik son." / "Esingdami, «Mehmon» naqshi? U — 101, yaʼni 5!"
-4. **Mashq** (3 ta to'g'ri): 1–2-misol 3 ta chiroq (1–7), 3-misol 4 ta chiroq (8 4 2 1, 8–15 — yangi 8 lik chiroq doim kerak). Tasodifiy:
+4. **Mashq** (5 / 6 ta to'g'ri — 12-bo'limdagi «qiyinlik yangilanishi»ga qara): 1–2-misol 3 ta chiroq (1–7), 3-misol 4 ta chiroq (8 4 2 1, 8–15 — yangi 8 lik chiroq doim kerak). Tasodifiy:
    - **Naqsh → son:** raqam klaviaturasida javob. 1-xato: "4 + 1 = ?" ko'rinadi. 2-xato: "4 + 1 = 5".
    - **Son → naqsh:** bola chiroqlarni yoqadi, "Yuborish". 1-xato: "Eng katta qiymatli chiroqdan boshla." 2-xato: to'g'ri naqsh ko'rsatiladi.
 
@@ -70,7 +70,7 @@ Bosh ekran
 
 1. "Qabilaga rangli chiroqlar keldi: oʻchiq, sariq, koʻk — 3 xil!" Bola 2 ta rangli chiroq bilan 9 ta naqsh topadi. "2 ta rangli chiroq — 9 ta naqsh: 3 × 3."
 2. **Ta'rif:** jadval — `oddiy: 2, 4, 8, 16` / `rangli: 3, 9, 27, 81` (1–4 chiroq). "Holatlar sonini chiroqlar sonicha koʻpaytiramiz. Holat koʻp boʻlsa — chiroq kam kerak."
-3. **Mashq** (3 ta to'g'ri): "{29 ta harf} uchun eng kamida nechta {oddiy / rangli} chiroq kerak?" — raqam klaviaturasi. Narsalar: 29 ta harf, 10 ta raqam, 12 ta oy, 7 ta hafta kuni, 20 ta hayvon, 50 ta soʻz. 1-xato: `1 ta: 2`, `2 ta: 4`… jadvali (belgisiz). 2-xato: jadval ✓/— bilan va yangi misol.
+3. **Mashq** (5 / 6 ta to'g'ri — 12-bo'limdagi «qiyinlik yangilanishi»ga qara): "{29 ta harf} uchun eng kamida nechta {oddiy / rangli} chiroq kerak?" — raqam klaviaturasi. Narsalar: 29 ta harf, 10 ta raqam, 12 ta oy, 7 ta hafta kuni, 20 ta hayvon, 50 ta soʻz. 1-xato: `1 ta: 2`, `2 ta: 4`… jadvali (belgisiz). 2-xato: jadval ✓/— bilan va yangi misol.
 4. **Hikoya** (rasm + 1–2 pufak):
    1. "Kompyuterda millionlab juda kichik «chiroqlar» bor — ular bit deyiladi." / "Yoqilgan — 1, oʻchgan — 0."
    2. "8 ta bit — 1 bayt." / "U 256 xil boʻladi: 2 ni 8 marta koʻpaytiramiz."
@@ -102,3 +102,14 @@ Avtomatik testlar (`lamps.js`, rasmlar, `main.js`), barcha o'yinlar testlari, br
 ## 11. Bu o'yinga kirmaydi
 
 Harflarni chiroq bilan yuborish (faqat "nechta chiroq kerak" savolida), sakkizlik/o'n oltilik sanoq, chiroqlarni ketma-ket (vaqt bo'yicha) yuborish.
+
+## 12. 2026-10-02 qiyinlik yangilanishi
+
+Bolalar "o'ta oson" deyishgan: 1-bosqichda kod jadvali doim ko'rinib turardi (ko'chirish), maslahat esa kerakli qatorni yoritib berardi; 3-bosqichda atigi 6 ta narsa bor edi. Yuqoridagi mashq tavsiflariga qo'shimcha (QOIDALAR §4.3, §4.5):
+
+- **To'g'ri javoblar soni:** 4 / 5 / 6 (1- / 2- / 3-bosqich), qiyin rejimda 7 — `QK.practice.need()`.
+- **1-bosqich** (`makeCodeTask(prev, rng, tier)` → `showTable`): kod jadvali faqat **birinchi 2 javobda** ko'rinadi, keyin yashiriladi — bola naqshlarni yoddan ishlatadi. Maslahat javobni aytmaydi: jadval ko'rinib turgan bo'lsa — **ikki qo'shni qator** yonadi (`lamps.hintPair`, biri to'g'ri); yashirin bo'lsa — jadval qaytadi, qator yoritilmaydi. To'g'ri qator faqat 2-xatodagi yechimda ko'rsatiladi.
+- **2-bosqich** (`makeBinaryTask(k, prev, rng, tier)`): tier 0 — 3 chiroq (1–7), tier 1 — 4 chiroq (8–15), **tier 2 — 5 chiroq (16–31)**; yangi eng katta chiroq doim kerak bo'ladi. 5 ta chiroq ekranda ixchamroq chiziladi (`.lamp-row.many`).
+- **3-bosqich** (`makeLampsQuestion(prev, rng, tier)`): narsalar 6 → **12** — qo'shildi: 4 ta fasl, 32 ta tish (aynan 2⁵ — chegaradagi holat), 64 ta shaxmat katagi, 100 ta oʻquvchi, 256 ta rang, 365 ta kun. Zina: tier 0 — 20 gacha (javob 2–5), tier 1 — 21..64 (javob 4–6), tier 2 — 100..365 (**7–9 ta oddiy** yoki 5–6 ta rangli chiroq). Maslahat jadvali 9 (oddiy) / 6 (rangli) qatorgacha.
+- **Testlar:** `tests/lamps.test.js` — zina chegaralari, `showTable`, `hintPair` (javobni aytmasligi), 12 ta narsa, takrorlanmaslik.
+

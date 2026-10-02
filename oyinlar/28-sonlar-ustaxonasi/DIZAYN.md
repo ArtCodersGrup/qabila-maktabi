@@ -79,3 +79,16 @@ Bosh ekran
 ├── js/scenes/…        kirish, uch bosqich, tabrik
 └── tests/logic.test.js
 ```
+
+## 10. 2026-10-02 qiyinlik yangilanishi
+
+Sabab: hisobot-5 (C jadvali) — sonlar 8–12 yosh chegarasida edi (javob ≤ 200, boʻlinuvchi ≤ 99).
+
+- **1-bosqich (`//`, `%`, `/`):** boʻlinuvchi zina bilan oʻsadi — 99 → 299 → 999 (uch xonali sonlar).
+- **2-bosqich (amallar tartibi):** `MAX` 200 → 500 (zina: 200 → 350 → 500). Yangi shakllar: toʻrt amalli
+  (`a + b * c - d`, `(a - b) * (c + d)`, `a * b // c + d`, `a ** b * c % d`) va manfiy sonli (`-a // b`, `-a % b`) —
+  Pythonda `//` pastga yumalaydi, `%` manfiy boʻlmaydi. Manfiy shakllar faqat oxirgi zinada.
+- **3-bosqich (kod yozish) 4 → 8:** `orta-raqam` (`n // 10 % 10`), `tosh-bolish` (toshdan bola koʻp boʻlgan holat
+  bilan), `sekund` (soat : daqiqa : sekund — `n % 3600 // 60`), `yuzlik` (oxirgi ikki raqamni ajratish).
+  «Xatoni tuzat» da ham sonlar zina bilan kattalashadi.
+- Testlar: 10 → 12.

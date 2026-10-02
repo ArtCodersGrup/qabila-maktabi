@@ -79,7 +79,7 @@
 .results { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; min-height: 26px; }
 .res { font-size: 20px; font-weight: 900; }
 .res.win { color: var(--togri); }
-.res.lose { color: var(--yana); }
+.res.lose { color: var(--yana-matn); }
 .count-line { font-size: 18px; font-weight: 800; text-align: center; }
 .answer { font-size: 20px; font-weight: 900; color: var(--togri); text-align: center; }
 

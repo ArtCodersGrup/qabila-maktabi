@@ -109,3 +109,13 @@ Bosh ekran
 ## 10. Bu o'yinga kirmaydi
 
 Toʻliq qoʻshuvchi (3 kirish) va uch xonali qoʻshish sxemasi, NAND/NOR nomlari, mantiqiy darvozalarning maxsus belgilari, xotira (trigger).
+
+## 11. 2026-10-02 qiyinlik yangilanishi
+
+Sabab: `out` / `clicks` / `eval` savollari "Ha, yonadi / Yoʻq, oʻchiq" (2 variant) edi — ikki urinish bilan yutqazib boʻlmasdi. Endi 0/1 javobli savol yoʻq, generator `makeTask(stage, prev, rng, tier)`.
+
+- **1-bosqich:** `out` ulushi 40% → 15% va javob **sabab bilan birga** (4 variant: "Har xil — yonadi", "Har xil — oʻchiq", "Bir xil — yonadi", "Bir xil — oʻchiq"). `clicks` — **sonli savol** (raqam klaviaturasi): "chiroq oʻchiq edi, kalitlar m va n marta bosildi — chiroq necha marta yondi?" (`litCount`); bitta kalit tier boʻyicha ≤ 3 / 5 / 7 marta. `which` — 4 variant: VA / YOKI / XOR / **Hech biri** (tier 1 dan boshlab "hech biri" jadvallari ham chiqadi). Yangi `table` — amal jadvalini toʻldirish (tier 0–1: XOR, tier 2: VA / YOKI / XOR).
+- **2-bosqich:** `eval` (0/1) oʻrniga `evalTable` — **sxemaning butun jadvalini toʻldirish** (4 qator, 16 kombinatsiya). Tier 0: VA/YOKI + EMAS, tier 1: XOR ham, tier 2: **3–4 amalli** sxemalar (`bothNot`, `notBothEnds`, `xorBuild`). `fill` ("?" quti) — 4 variant: VA / YOKI / XOR / Hech biri; tier 2 da `notFirst` shabloni ham.
+- **3-bosqich:** `add2` — tier 1 da koʻchirish albatta bor, tier 2 da **uch xonali** (x, y ≤ 7, `addCols`). `whichOut` — 4 variant (EMAS qoʻshildi).
+- **Maslahat javobni aytmaydi:** `out` da jadval boʻsh (qator belgilangan); jadvallarda — "N ta qator xato"; qoʻshishda — umumiy qoida (aniq xona hisoblab berilmaydi).
+- Tekshiruv `checkTask(task, value)` — `gates.js` da, testlangan. Toʻldiriladigan jadval (`fillTable`) 24-oʻyindagi bilan bir xil — keyin `umumiy/js/mantiq-ui.js` ga koʻchirish mumkin.

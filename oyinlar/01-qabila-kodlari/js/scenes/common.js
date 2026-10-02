@@ -3,45 +3,26 @@
   "use strict";
 
   const QK = root.QK;
-  const { logic, ui, sound, art } = QK;
+  const { logic, ui, sound, art, practice } = QK;
 
-  const PRAISE = ["✓ Barakalla!", "✓ Zoʻr!", "✓ Toʻppa-toʻgʻri!", "✓ Ofarin!"];
+  const PRAISE = practice.PRAISE;
 
-  // Mashq: 3 ta to'g'ri javobgacha tasodifiy misollar (QOIDALAR 4.4, 4.5).
-  // 1-xato — maslahat (spec.hint), 2-xato — yechim (spec.solution) va yangi misol;
-  // xato qilingan misol to'g'ri javoblar soniga qo'shilmaydi.
-  async function exercises(stage, spec) {
-    let prev = null;
-    let correct = 0;
-    ui.setProgress(3, 0);
-    while (correct < 3) {
-      const ex = logic.makeExercise(stage, prev);
-      prev = ex;
-      QK.current = ex; // brauzerda tekshirish uchun
-      spec.show(ex);
-      for (let wrong = 0; ; ) {
-        const value = await ui.askNumber();
-        if (logic.checkAnswer(ex, value)) {
-          correct++;
-          ui.setProgress(3, correct);
-          sound.play("correct");
-          ui.pose("apprentice", "happy", 900);
-          await ui.say("elder", PRAISE[(correct - 1) % PRAISE.length]);
-          break;
-        }
-        wrong++;
-        sound.play("retry");
-        ui.pose("apprentice", "think", 1000);
-        if (wrong === 1) {
-          spec.hint(ex);
-        } else {
-          spec.solution(ex);
-          await ui.say("elder", `Toʻgʻri javob: ${ex.answer}. Endi yangi misol.`);
-          break;
-        }
-      }
-    }
-    ui.hideProgress();
+  // Mashq (QOIDALAR 4.4, 4.5): umumiy practice.exercises — bosqichga qarab 4 / 5 / 6 ta to'g'ri javob,
+  // qiyinlik zinasi (tier), yulduzlar va qiyin rejim. 1-xato — maslahat (spec.hint), 2-xato — yechim
+  // (spec.solution) va yangi misol; xato qilingan misol to'g'ri javoblar soniga qo'shilmaydi.
+  function exercises(stage, spec) {
+    return practice.exercises({
+      next: (prev, correct, tier) => logic.makeExercise(stage, prev, null, tier),
+      run: (ex) => {
+        spec.show(ex);
+        return practice.numberTries({
+          answer: ex.answer,
+          hint: () => spec.hint(ex),
+          solution: () => spec.solution(ex),
+        });
+      },
+      praise: (ex) => (spec.praise ? spec.praise(ex) : ""),
+    });
   }
 
   // Ko'rsatish qismidagi bitta savol. true — bola o'zi topdi, false — 2 xatodan keyin javob aytildi.
@@ -110,6 +91,9 @@
         }
         ui.work().append(box);
       },
+      praise: (ex) => (type === "exact"
+        ? `${logic.productText(ex.a, ex.i)} = ${ex.answer}.`
+        : `${ex.i} harfgacha — ${ex.answer} ta soʻz.`),
       solution(ex) {
         ui.clearWork();
         const box = ui.h("div", { class: "formula-box" });

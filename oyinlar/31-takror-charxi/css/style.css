@@ -37,4 +37,4 @@
   font-size: 18px;
 }
 .raqamlar th { background: #F3EFE3; color: var(--asosiy); font-size: 16px; font-weight: 800; }
-.raqamlar td.oxirgi { color: var(--yana); font-weight: 800; }
+.raqamlar td.oxirgi { color: var(--yana-matn); font-weight: 800; }

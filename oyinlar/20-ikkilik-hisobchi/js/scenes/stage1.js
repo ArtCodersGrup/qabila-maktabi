@@ -105,9 +105,9 @@
       intro: "Endi ustunda qoʻshamiz: 1011₂ + 110₂. Oʻngdan boshlaymiz!",
     });
     await ui.say("elder", "1011₂ + 110₂ = 10001₂. Tekshiramiz: 11 + 6 = 17 ✓");
-    await ui.say("elder", "Endi oʻzing qoʻsh. 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing qoʻsh. ${QK.practice.need()} ta toʻgʻri javob!`);
     await QK.practice.exercises({
-      next: (prev) => amal2.makeAddTask(prev),
+      next: (prev, correct, tier) => amal2.makeAddTask(prev, undefined, tier),
       run: addTask,
       praise: (task) => `${b2(task.a)} + ${b2(task.b)} = ${b2(task.answer)}.`,
     });

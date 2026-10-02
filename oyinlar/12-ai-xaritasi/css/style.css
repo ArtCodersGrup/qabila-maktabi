@@ -40,7 +40,7 @@
 .task { padding: 18px 10px; border-radius: 14px; background: #fff; box-shadow: 0 3px 0 var(--soya); font-size: 21px; font-weight: 900; text-align: center; }
 .t-korish { color: #2F6FDE; }
 .t-til { color: #1A9E77; }
-.t-harakat { color: #F08A24; }
+.t-harakat { color: var(--yana-matn); }
 .t-hisob { color: #8E5BD0; }
 .ways { display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 420px; }
 .way { display: flex; flex-direction: column; gap: 2px; padding: 8px 12px; border-radius: 12px; background: #fff; box-shadow: 0 2px 0 var(--soya); font-size: 17px; font-weight: 700; animation: pop 0.3s; }

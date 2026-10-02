@@ -8,13 +8,14 @@
   const condText = (type, i) => (type === "exact" ? `aynan ${i} harfli` : `${i} harfgacha`);
 
   // a ta harfdan yasalgan ismlar odamlarga birma-bir beriladi. a = 0 — hech kimda ism yo'q.
-  // Odam ko'p bo'lsa (12 dan ortiq), ism o'rniga ✓ ko'rsatiladi — ekranga sig'ishi uchun.
+  // Odam ko'p bo'lsa (12 dan ortiq), ism o'rniga ✓ ko'rsatiladi; 30 dan ortiq bo'lsa odamchalar yana kichrayadi.
   function renderCrowd(crowd, info, people, i, type, a) {
     const letters = logic.LETTER_POOL.slice(0, a);
     const names = logic.listWords(letters, i, type);
     const small = people > 12;
     crowd.innerHTML = "";
     crowd.classList.toggle("small", small);
+    crowd.classList.toggle("tiny", people > 30);
     for (let p = 0; p < people; p++) {
       const name = names[p];
       let label;
@@ -100,20 +101,22 @@
       ui.work().append(crowd);
       renderCrowd(crowd, null, ex.people, ex.i, ex.type, 0);
     },
+    // Maslahat javobni yozib bermaydi (QOIDALAR 4.3): "Hammaga yetdi ✓" yozuvi yo'q — faqat asbob.
+    // Bola hisoblagichni o'zi suradi va kimda ism bor-yo'qligini odamlardan o'zi ko'radi.
     hint(ex) {
       ui.clearWork();
       const crowd = ui.h("div", { class: "people" });
-      const info = ui.h("div", { class: "people-info" });
       const tools = ui.h("div");
       // Hisoblagich tepada — odamlar ko'p bo'lsa ham ko'rinib turadi
-      ui.work().append(common.hintTitle(), tools, info, crowd);
+      ui.work().append(common.hintTitle(), tools, crowd);
       ui.counter(tools, {
         start: 1,
         min: 1,
-        max: 4,
-        onChange: (a) => renderCrowd(crowd, info, ex.people, ex.i, ex.type, a),
+        max: logic.STAGE3[2].answer[1],
+        onChange: (a) => renderCrowd(crowd, null, ex.people, ex.i, ex.type, a),
       });
     },
+    praise: (ex) => `${ex.answer - 1} ta harf yetmaydi, ${ex.answer} ta yetadi.`,
     solution(ex) {
       ui.clearWork();
       ui.work().append(stepsBox(`${ex.people} ta odam, ism ${condText(ex.type, ex.i)}:`, ex.people, ex.i, ex.type));
@@ -125,7 +128,7 @@
     await peopleDemo(5, 2, "exact");
     await ui.say("elder", "Savol deyarli bir xil, lekin javoblar har xil: 2 va 3. «Aynan» va «gacha» soʻzlariga diqqat qil!");
     await ruleStage3();
-    await ui.say("elder", "Endi oʻzing top! 3 ta toʻgʻri javob — bosqich tugaydi.");
+    await ui.say("elder", `Endi oʻzing top! ${QK.practice.need()} ta toʻgʻri javob — bosqich tugaydi.`);
     await common.exercises(3, stage3Spec);
   }
 

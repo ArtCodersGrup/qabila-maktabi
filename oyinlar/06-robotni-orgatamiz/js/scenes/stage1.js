@@ -20,7 +20,7 @@
   // 4.1: 6 ta yong'oqni chaqib, o'qitish ma'lumotini yig'ish
   async function collect(points) {
     const { box, f } = common.board();
-    const counter = common.line("Misollar: 0 / 6");
+    const counter = common.line(`Misollar: 0 / ${points.length}`);
     box.append(counter);
     const holder = ui.h("div", { class: "nut-holder" });
     ui.control().append(holder);
@@ -37,7 +37,7 @@
       });
       shown.push(p);
       f.set({ points: shown.slice() });
-      counter.textContent = `Misollar: ${shown.length} / 6`;
+      counter.textContent = `Misollar: ${shown.length} / ${points.length}`;
       await ui.sleep(550);
     }
     holder.remove();
@@ -75,22 +75,39 @@
     await ui.say("elder", "Eng yaqin misol qanday boʻlsa, javob ham shunday.");
   }
 
-  // 4.4: "Robot bu yong'oqni nima deydi?"
+  // 4.4: ikki qadam — avval eng yaqin misolni maydonda bosadi, keyin "robot nima deydi?" ga javob beradi.
+  // Ikkalasi to'g'ri bo'lsagina hisoblanadi (QOIDALAR 4.3: 2 variantli savol yolg'iz kelmaydi).
   function nearestTask(task) {
     const { box, f } = common.board();
     f.set({ points: task.points, query: task.query });
     const holder = ui.h("div", { class: "nut-holder" });
     box.append(holder);
     const card = learnUi.nutCard(holder, task.query, null, true);
-    ui.bubble("elder", "Robot bu yongʻoqni nima deydi?");
-    return common.answerTask({
-      answer: task.answer,
-      hint: () => {
-        f.set({ links: learn.nearestList(task.points, task.query, 3) });
-        ui.bubble("elder", "↻ Eng yaqin uchta misolga chiziq tortdik. Eng yaqini qaysi?");
+    ui.bubble("elder", "Yangi yongʻoq — sariq halqa. Unga eng yaqin misolni maydonda bos.");
+    return common.twoStep({
+      first: {
+        setup: (submit) => f.set({ onPick: (index, kind) => { if (kind === "train") { sound.play("tap"); submit(index); } } }),
+        check: (index) => index === task.nearIndex,
+      },
+      second: {
+        setup: (submit) => {
+          f.set({ onPick: null, links: [task.near], glow: [task.near] });
+          ui.bubble("elder", "Toʻgʻri, eng yaqini shu. Endi robot bu yongʻoqni nima deydi?");
+          learnUi.answerButtons(submit);
+        },
+        check: (value) => value === task.answer,
+      },
+      hint: (step) => {
+        if (step === 1) {
+          // Asbob: uchta nomzodgacha chiziq — qaysi biri eng qisqa ekanini bola o'zi solishtiradi
+          f.set({ links: learn.nearestList(task.points, task.query, 3) });
+          ui.bubble("elder", "↻ Uchta misolgacha chiziq tortdim. Eng qisqa chiziq qaysi misolga boradi?");
+        } else {
+          ui.bubble("elder", "↻ Robot eng yaqin misolga qaraydi: u qanday boʻlsa, javob ham shunday.");
+        }
       },
       solution: () => {
-        f.set({ links: [task.near], glow: [task.near] });
+        f.set({ onPick: null, links: [task.near], glow: [task.near] });
         card.reveal(task.answer);
         box.append(common.answerLine(`Eng yaqin misol — ${common.nutName(task.near.full)}`));
       },
@@ -102,9 +119,9 @@
     await collect(first.points);
     await nearestDemo(first);
     await explain();
-    await ui.say("elder", "Endi oʻzing ayt: robot nima deydi? 3 ta toʻgʻri javob kerak!");
+    await ui.say("elder", `Endi oʻzing top: eng yaqin misol qaysi va robot nima deydi? ${QK.practice.need()} ta toʻgʻri javob kerak!`);
     await practice.exercises({
-      next: (prev) => learn.makeNearestTask(prev),
+      next: (prev, correct, tier) => learn.makeNearestTask(prev, null, tier),
       run: nearestTask,
       praise: (task) => `Eng yaqin misol — ${common.nutName(task.near.full)}.`,
     });

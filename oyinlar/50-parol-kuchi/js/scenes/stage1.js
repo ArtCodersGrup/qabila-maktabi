@@ -26,7 +26,7 @@
   async function stage1() {
     await korsat();
     await practice.exercises({
-      next: (prev) => L.variantTask(Math.random, prev),
+      next: (prev, togri, tier) => L.variantTask(Math.random, prev, tier),
       run: (task) => common.variantExercise(task),
       praise: (task) => task.hisob,
     });

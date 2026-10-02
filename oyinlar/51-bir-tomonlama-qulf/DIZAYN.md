@@ -90,3 +90,14 @@ Oʻyindan keyin bola:
 - `js/scenes/` — `common.js` (karta, alifbo jadvali, qoida, hisob jadvali, yetti xil mashq ekrani),
   `stage1.js`, `stage2.js`, `stage3.js`, `final.js`.
 - `js/game-art.js` — uch rasm (voronka, barmoq izi, baza), hammasi matnsiz SVG.
+
+## 2026-10-02 qiyinlik yangilanishi
+
+Sabab: "izlar bir xilmi? Ha / Yoʻq" 2 variantli edi (ikki urinish bilan yutqazib boʻlmasdi); xulosa savollari 3 variantli; sonlar va parollar bosqich ichida oʻsmasdi; maslahat (`nega`) koʻp joyda javobning oʻzini aytardi.
+
+- Hamma mashq `tier` oladi (`bosqich1Task(r, prev, n, tier)` va h.k.):
+  - 1-bosqich: son 4 → 5 → **6 xonali** (`SON`). Toʻqnashuv savolida chalgʻituvchilarning yigʻindisi javobdan ±3 ichida — koʻz bilan ajratib boʻlmaydi.
+  - 2–3-bosqich: parol (`parolTanla`) 3 harf → 4 harf yoki 3 harf + raqam → **5 belgi** (4 harf + raqam yoki 5 harfli soʻz). `QISQA` 12 → 26 soʻz.
+- **"Teng" savoli qayta yozildi** — "«non» parolining izi — 85. Qaysi parolning izi ham 85?": **4 variant**, har nomzodning izini bola oʻzi hisoblaydi. Tier 0 — 4 ta ikki harfli nomzod (bittasi toʻqnashadi); tier 1+ — 3 ta uch harfli nomzod + **"Hech biri"** (25% hollarda toʻgʻri javob shu). Nomzodlar unlisiz harflardan yasaladi (tasodifan soʻz chiqib qolmasin), toʻqnashuv kod bilan qidiriladi va test bilan tasdiqlanadi.
+- **Xulosa savollari 4 variantli:** `HOLATLAR2/3` ning har biriga va `QAYTAR_SOXTA` ga uchinchi chalgʻituvchi qoʻshildi.
+- **Maslahat javobni aytmaydi:** variantli savollarda `ishora` (usul yoki tushuncha eslatmasi) koʻrsatiladi; `nega` (toʻliq tushuntirish) faqat yechimda.

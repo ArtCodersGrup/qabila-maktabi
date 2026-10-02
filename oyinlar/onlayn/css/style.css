@@ -12,7 +12,7 @@
 .peer-name { font-size: 20px; font-weight: 900; }
 .side-left .peer-name { color: #2F6FDE; }
 .side-right .peer-name { color: #8E5BD0; }
-.peer-state { font-size: 15px; font-weight: 800; color: #7A7266; }
+.peer-state { font-size: 15px; font-weight: 800; color: var(--matn-3); }
 .peer.on .peer-state { color: var(--togri); }
 .o-log { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; width: min(100%, 420px); }
 .o-log li { padding: 8px 12px; border-radius: 12px; background: #fff; font-size: 17px; font-weight: 700; animation: pop 0.25s; }

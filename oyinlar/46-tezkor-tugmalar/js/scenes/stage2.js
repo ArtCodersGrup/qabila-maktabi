@@ -19,15 +19,15 @@
     await ui.say("elder", "Shift bilan oʻq bossang — matn belgilanadi. Ctrl bilan oʻq — soʻz-soʻz sakraydi.");
   }
 
-  // Mashq: yarmi farq savoli, yarmi — tugmani o'zi bosish
-  const keyingi = (prev, togri) => (togri % 2 === 0 ? L.farqTask(Math.random, prev) : L.bosishTask(Math.random, prev));
+  // Mashq (2026-10-02): farq savoli 4 variantli; 3-javobdan boshlab farqni tanlamaydi — o'zi BOSADI
+  const keyingi = (prev, togri, tier) => (togri % 2 === 0 ? L.farqTask(Math.random, prev, tier >= 1) : L.bosishTask(Math.random, prev));
 
   async function stage2() {
     await harakat();
     await tahrir();
     await ui.say("elder", "Endi sinab koʻramiz. Baʼzida javobni tanlaysan, baʼzida oʻzing bosasan.");
     await practice.exercises({
-      next: (prev, togri) => keyingi(prev, togri),
+      next: (prev, togri, tier) => keyingi(prev, togri, tier),
       run: (task) => (task.tur === "farq" ? common.farqExercise(task) : common.bosishExercise(task)),
       praise: (task) => (task.tur === "farq" ? L.amalById(task.javob).nom : L.yozuv(task.amal) + " — toʻgʻri bosildi"),
     });

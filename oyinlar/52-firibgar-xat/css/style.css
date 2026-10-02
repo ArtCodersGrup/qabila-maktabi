@@ -41,7 +41,7 @@
   display: flex; flex-direction: column; gap: 4px;
   padding: 10px 12px; background: #fff; border: 2px solid var(--chiziq); border-radius: 12px;
 }
-.fx-belgi-nom { font-size: 18px; font-weight: 900; color: var(--yana); }
+.fx-belgi-nom { font-size: 18px; font-weight: 900; color: var(--yana-matn); }
 .fx-belgi-izoh { font-size: 15px; line-height: 1.35; }
 .fx-quote {
   font-size: 16px; font-style: italic; color: #4A4636;
@@ -62,7 +62,7 @@
 .fx-qator-m.yoq { border-color: #F3C78A; }
 .fx-belgi-ha { font-size: 18px; font-weight: 900; text-align: center; }
 .fx-qator-m.ha .fx-belgi-ha { color: var(--togri); }
-.fx-qator-m.yoq .fx-belgi-ha { color: var(--yana); }
+.fx-qator-m.yoq .fx-belgi-ha { color: var(--yana-matn); }
 .fx-izoh { grid-column: 2; font-size: 14px; color: var(--fx-xira); line-height: 1.3; }
 
 /* ---------- Vaziyat va qoida ---------- */
@@ -87,3 +87,12 @@
   .fx-qator { grid-template-columns: 54px minmax(0, 1fr); }
   .btn.fx-wide { font-size: 16px; }
 }
+
+/* ---------- 2-bosqich: "belgi qayerda?" — xat qismlari bosiladi (2026-10-02) ---------- */
+.fx-qism { border-radius: 8px; }
+.fx-gap { padding: 2px 4px; line-height: 1.7; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.fx-bos .fx-qism { cursor: pointer; background: #fff; box-shadow: inset 0 0 0 2px var(--chiziq); }
+.fx-bos .fx-qism:active { background: #FFF6E5; }
+.fx-bos .fx-gap { display: block; padding: 6px 8px; margin: 3px 0; }
+.fx-bos .fx-qator.fx-qism, .fx-bos .fx-sarlavha.fx-qism { padding: 6px 8px; margin: 2px 0; min-height: 40px; }
+.fx-qism.fx-topildi { background: #FFF6E5; box-shadow: inset 0 0 0 3px var(--yana); }

@@ -44,8 +44,8 @@
     await ui.say("elder", "Uchinchi qiyshiq qator — juftliklar soni: 5 kishi qoʻl berib koʻrishsa, 10 marta.");
   }
 
-  function keyingi(prev, togri) {
-    return togri % 2 === 0 ? L.oqishTask(Math.random, prev) : L.yigindiTask(Math.random, prev);
+  function keyingi(prev, togri, tier) {
+    return togri % 2 === 0 ? L.oqishTask(Math.random, prev, tier) : L.yigindiTask(Math.random, prev, tier);
   }
 
   async function stage2() {
@@ -53,7 +53,7 @@
     await xossalar();
     await ui.say("elder", "Endi oʻzing uchburchakdan oʻqi.");
     await practice.exercises({
-      next: (prev, togri) => keyingi(prev, togri),
+      next: (prev, togri, tier) => keyingi(prev, togri, tier),
       run: (task) => (task.tur === "yigindi" ? common.yigindiExercise(task) : common.oqishExercise(task)),
       praise: (task) => task.hisob,
     });

@@ -60,7 +60,7 @@ button.sx-yorliq:hover { background: #E0D7C2; }
 .sx-yorliq.asosiy { margin-bottom: 8px; }
 .sx-yorliq.faol { background: var(--yana); color: #fff; }
 .sx-tana { padding-left: 14px; border-left: 3px dashed #8A8577; }
-.sx-bosh { padding: 6px 12px; border: 2px dashed var(--chiziq); border-radius: 8px; color: #8A8577; font-size: 15px; }
+.sx-bosh { padding: 6px 12px; border: 2px dashed var(--chiziq); border-radius: 8px; color: var(--matn-3); font-size: 15px; }
 
 /* Yig'uvchi: chapda palitra, o'ngda maydon */
 .sx-quruvchi { display: flex; gap: 14px; align-items: flex-start; width: 100%; }

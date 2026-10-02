@@ -52,7 +52,28 @@ test("long long bilan o'sha hisob to'g'ri chiqadi", () => {
 test("bo'lish tuzoqlari: butun, kasr, qoldiq va manfiy", () => {
   const korilgan = new Set();
   for (let k = 0; k < 300; k++) korilgan.add(L.bolishTask(r, null).id.split(":")[1]);
-  assert.deepEqual([...korilgan].sort(), ["butun", "kasr", "manfiy", "manfiy-qoldiq", "qoldiq"]);
+  assert.deepEqual([...korilgan].sort(), ["butun", "erta-kasr", "kasr", "kech-kasr", "manfiy", "manfiy-qoldiq", "qaytarib", "qoldiq"]);
+});
+
+// 2026-10-02: bo'lish QACHON bajarilishi — amallar chapdan o'ngga
+test("bo'lish tartibi: a / b * 1.0 kasrni qaytarmaydi, 1.0 * a / b — beradi", () => {
+  assert.deepEqual(E.run(C.dastur([C.chiqar("7 / 2 * 1.0")]), {}).output, ["3"]);
+  assert.deepEqual(E.run(C.dastur([C.chiqar("1.0 * 7 / 2")]), {}).output, ["3.5"]);
+  assert.deepEqual(E.run(C.dastur([C.chiqar("7 / 2 * 2")]), {}).output, ["6"]);
+  // Birinchi zinada faqat eski besh tur
+  for (let k = 0; k < 60; k++) {
+    assert.ok(["butun", "kasr", "manfiy", "manfiy-qoldiq", "qoldiq"].includes(L.bolishTask(r, null, 0).id.split(":")[1]));
+  }
+});
+
+test("toshish: manfiy tomonga va uch ko'paytuvchi bilan (zina 1–2)", () => {
+  const turlar = new Set();
+  for (let k = 0; k < 200; k++) turlar.add(L.toshishTask(r, null).id.split(":")[1]);
+  assert.deepEqual([...turlar].sort(), ["ayir", "kopayt", "kub", "max", "qosh"]);
+  for (let k = 0; k < 60; k++) assert.ok(["qosh", "kopayt", "max"].includes(L.toshishTask(r, null, 0).id.split(":")[1]));
+  // 2000³ = 8·10⁹: a × a (4·10⁶) hali sig'adi, uchinchi ko'paytirishda toshadi
+  assert.equal(L.int32(2000n * 2000n * 2000n), -589934592n);
+  assert.equal(L.int32(-2000000000n - 2000000000n), 294967296n);
 });
 
 test("int ga kasr qiymat: kasr qismi tashlanadi, yaxlitlanmaydi", () => {
@@ -68,14 +89,31 @@ test("tur tanlash: har vazifada bitta to'g'ri javob va izoh", () => {
   for (let k = 0; k < 200; k++) {
     const t = L.turTask(r, null);
     korilgan.add(t.id);
-    assert.deepEqual(t.variantlar, [L.INT_YETADI, L.LL_KERAK, L.DOUBLE_KERAK], t.id);
+    // 2026-10-02: to'rt variant (QOIDALAR 4.3) — to'rtinchisi "string kerak"
+    assert.deepEqual(t.variantlar, [L.INT_YETADI, L.LL_KERAK, L.DOUBLE_KERAK, L.STRING_KERAK], t.id);
     assert.ok(t.variantlar.includes(t.javob), t.id);
     assert.ok(t.nega.length > 20, t.id);
   }
   assert.equal(korilgan.size, L.VAZIFALAR.length);
-  // Uch xil javob ham uchrasin
+  // To'rt xil javob ham uchrasin, har biri kamida ikki marta
   const javoblar = new Set(L.VAZIFALAR.map((v) => v.javob));
-  assert.equal(javoblar.size, 3);
+  assert.equal(javoblar.size, 4);
+  for (const j of L.TUR_VARIANTLAR) assert.ok(L.VAZIFALAR.filter((v) => v.javob === j).length >= 2, j);
+  assert.ok(L.VAZIFALAR.length >= 15);
+});
+
+// 2026-10-02: izohlardagi sonlar rost bo'lishi kerak — hisoblab tekshiramiz
+test("tur vazifalari: chegaraga yaqin hisoblar to'g'ri baholangan", () => {
+  assert.ok(L.sigadi(24n * 60n * 60n), "bir kundagi sekundlar int ga sig'adi");
+  assert.equal(100n * 365n * 86400n, 3153600000n);
+  assert.ok(!L.sigadi(100n * 365n * 86400n), "100 yildagi sekundlar int ga sig'maydi");
+  assert.ok(!L.sigadi(100000n * 99999n / 2n), "juftliklar soni int ga sig'maydi");
+  assert.ok(2n ** 60n <= L.LL_MAX && !L.sigadi(2n ** 60n));
+  assert.ok(10n ** 49n > L.LL_MAX, "50 xonali son long long ga sig'maydi");
+  // 12! sig'adi, 13! — yo'q
+  const fakt = (n) => { let f = 1n; for (let i = 2n; i <= n; i++) f *= i; return f; };
+  assert.ok(L.sigadi(fakt(12n)) && !L.sigadi(fakt(13n)));
+  assert.ok(fakt(20n) <= L.LL_MAX && fakt(21n) > L.LL_MAX);
 });
 
 test("yozish mashqlari: namunali yechim ishlaydi, noto'g'ri tur esa o'tmaydi", () => {
@@ -90,6 +128,30 @@ test("yozish mashqlari: namunali yechim ishlaydi, noto'g'ri tur esa o'tmaydi", (
   // double o'rniga int: o'rtacha kasri yo'qoladi
   const ortacha = L.YOZISHLAR.find((y) => y.id === "ortacha");
   assert.equal(C.tekshir(ortacha, ortacha.yechim.replace(/double/g, "int")).ok, false);
+});
+
+// 2026-10-02: yangi masalalar — noto'g'ri tur bilan yozilgan yechim jim buziladi va sinovdan o'tmaydi
+test("yangi yozish mashqlari: int bilan yozilsa, katta sinovda yiqiladi", () => {
+  assert.ok(L.YOZISHLAR.length >= 6);
+  const top = (id) => L.YOZISHLAR.find((y) => y.id === id);
+  for (const id of ["faktorial", "ikki-daraja", "kvadratlar"]) {
+    const y = top(id);
+    assert.ok(y.sinovlar.length >= 3, id);
+    const intBilan = y.yechim.replace(/long long/g, "int");
+    assert.notEqual(intBilan, y.yechim);
+    const natija = C.tekshir(y, intBilan);
+    assert.equal(natija.ok, false, id + ": int bilan o'tib ketdi");
+    // Kichik sinovdan o'tadi, kattasida yiqiladi — xato "jim": dastur to'xtamaydi
+    assert.equal(natija.kind, "chiqish", id + ": " + JSON.stringify(natija).slice(0, 200));
+    assert.notDeepEqual(natija.sinov, y.sinovlar[0], id + ": birinchi (kichik) sinovdayoq yiqildi");
+  }
+  // Kvadratlar: yig'indi long long, lekin hisoblagich int — i * i ning o'zi toshadi
+  const kv = top("kvadratlar");
+  const yarim = kv.yechim.replace("for (long long i = 1;", "for (int i = 1;");
+  assert.notEqual(yarim, kv.yechim);
+  assert.equal(C.tekshir(kv, yarim).ok, false, "i * i int da hisoblansa ham yiqilishi kerak");
+  // Zina 0 da faqat eski uch masala
+  for (let k = 0; k < 40; k++) assert.ok(["yoz:yigindi", "yoz:kopaytma", "yoz:ortacha"].includes(L.yozTask(r, null, 0).id));
 });
 
 test("bosqichlar: turlar navbat bilan keladi", () => {
@@ -123,6 +185,7 @@ test("ko'rinadigan matnlarda to'g'ri tutuq belgisi", () => {
 test("namunalar: yechimlar ham, misollar ham tekshiruvga tushadi", () => {
   const ns = L.namunalar(20);
   assert.ok(ns.length >= 20, ns.length);
+  assert.ok(ns.filter((n) => !n.id.startsWith("yechim:")).length >= 20, "yasalgan misollar yechimlardan tashqari sanaladi");
   assert.ok(ns.some((n) => n.id.startsWith("yechim:")), "namunali yechimlar");
   assert.ok(ns.some((n) => n.kirish && n.kirish.length), "cin li misol");
   assert.equal(new Set(ns.map((n) => n.id)).size, ns.length, "takrorlanmasin");

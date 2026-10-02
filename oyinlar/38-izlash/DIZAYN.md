@@ -57,3 +57,16 @@ Bosh ekran
 ├── js/scenes/…    kirish, uch bosqich, tabrik
 └── tests/logic.test.js  (11 ta): strategiya 7 savoldan oshmaydi, jadval o'sishi, yechimlar testdan o'tishi
 ```
+
+## 6. 2026-10-02 qiyinlik yangilanishi
+
+Hisobot-5 bu oʻyinni «eng yaxshi» deb baholagan; qoʻshilgani — **qadamlarni yurgizish** va ikki yangi masala.
+
+- **2-bosqich (kodni oʻqish, `OQISH` 3 → 6):** «chiziqli izlash nechta solishtirish qiladi?» (topgach `break`),
+  «ikkilik izlash necha marta oʻrtaga qaraydi?», «ikkilik izlash **qaysi indekslarga** qaraydi?» (javob 2–4 satr).
+  Roʻyxat 7–10 ta son; 30% hollarda izlangan son roʻyxatda yoʻq — yoʻl oxirigacha boradi. Mashq ekranida endi
+  masalaning oʻz savoli koʻrsatiladi; maslahat usulni aytadi («har aylanishda chap, oʻng, oʻrta jadvalini tuz»).
+- **3-bosqich (`WRITE` 2 → 4):** `sana(a, x)` — tartiblangan roʻyxatda x necha marta uchraydi; `birinchi(a, x)` —
+  x dan kichik boʻlmagan birinchi son indeksi (lower bound; topilmasa — roʻyxat uzunligi). Testlarda takrorlar,
+  bitta element, roʻyxatdan tashqari qiymatlar; `>` bilan yoki «−1» qaytargan yechimlar yiqiladi.
+- Zina: 0 — faqat «nima chiqaradi» va ikki asosiy masala; 1–2 — yangilari. Testlar: 11 → 14.

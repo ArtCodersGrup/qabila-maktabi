@@ -55,7 +55,7 @@
     await withParam();
     await definition();
     await practice.exercises({
-      next: (prev) => L.callTask(Math.random, prev),
+      next: (prev, correct, tier) => L.callTask(Math.random, prev, tier),
       run: (task) => common.resultExercise(task),
       praise: () => "Chaqiruvlarni toʻgʻri kuzatding.",
     });

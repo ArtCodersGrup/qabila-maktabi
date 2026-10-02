@@ -14,9 +14,9 @@
 
   async function stage3() {
     await kirish();
-    let k = 0;
     await practice.exercises({
-      next: () => L.daraja("birga", k++),
+      // Har safar yangi maydon (generator); tier bilan yoʻl uzayadi va toshlar koʻpayadi
+      next: (prev, correct, tier) => L.yasa("birga", prev, undefined, tier),
       run: (level) => common.qurExercise(level),
       praise: () => "Takror ichidagi agar — kuchli juftlik.",
     });

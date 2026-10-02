@@ -43,7 +43,7 @@
     await ui.say("elder", "Chiroq faqat bitta kalit bosilganda yondi. Ikkalasi ham bosilsa — oʻchdi!");
     await ui.say("elder", "Bu — XOR: «faqat bittasi». A va B har xil — 1, bir xil — 0.");
     await definition();
-    await ui.say("elder", "Endi oʻzing oʻyla. 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing oʻyla. ${QK.practice.need()} ta toʻgʻri javob!`);
     await common.exercises(1);
   }
 

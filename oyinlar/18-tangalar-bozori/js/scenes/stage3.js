@@ -43,14 +43,18 @@
     await ui.say("elder", "Avval harfni songa aylantir, keyin xona qiymatiga koʻpaytir.");
   }
 
-  // 6.3: mashq — 16-lik son → o'nlik (A–F qatori doim ko'rinadi)
+  // 6.3: mashq — 16-lik son → o'nlik
   function hexTask(task) {
     const el = common.box(true);
-    el.append(bozorUi.hexStrip(), ui.h("div", { class: "big-value", text: S.fmt(task.number, 16) }));
+    // A–F qatori faqat birinchi javoblarda (tier 0) ko'rinadi; keyin yashirin — maslahat qaytaradi
+    if (!task.tier) el.append(bozorUi.hexStrip());
+    el.append(ui.h("div", { class: "big-value", text: S.fmt(task.number, 16) }));
     ui.bubble("elder", "Bu son oʻnlikda nechaga teng?");
     return practice.numberTries({
       answer: task.answer,
+      maxLen: 4,
       hint: () => {
+        if (task.tier) el.prepend(bozorUi.hexStrip());
         common.add(el, bozorUi.placed(task.number, 16, { values: true }));
         ui.bubble("elder", "↻ Harfni songa aylantirdim. Endi xona qiymatiga koʻpaytir.");
       },
@@ -69,9 +73,9 @@
   async function stage3() {
     await letters();
     await definition();
-    await ui.say("elder", "Endi oʻzing: 16-likdan oʻnlikka. 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing: 16-likdan oʻnlikka. ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev) => bozor.makeHexTask(prev),
+      next: (prev, correct, tier) => bozor.makeHexTask(prev, undefined, tier),
       run: hexTask,
       praise: (task) => `${S.fmt(task.number, 16)} = ${task.answer}.`,
     });

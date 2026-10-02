@@ -60,12 +60,12 @@
 }
 .m-qator:hover { border-color: var(--asosiy); }
 .m-qator.yechilgan { background: #F2FAF6; border-color: #BFE3D3; }
-.m-raqam { flex: none; width: 2em; color: #8A8577; font-size: 15px; font-weight: 800; text-align: right; }
+.m-raqam { flex: none; width: 2em; color: var(--matn-3); font-size: 15px; font-weight: 800; text-align: right; }
 .m-nom { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
 .m-nom-matn { font-size: 18px; font-weight: 800; }
 .m-teglar { display: flex; flex-wrap: wrap; gap: 4px; }
 .m-qiyinlik { flex: none; }
-.m-holat { flex: none; width: 3.4em; text-align: right; font-size: 16px; font-weight: 900; color: #8A8577; }
+.m-holat { flex: none; width: 3.4em; text-align: right; font-size: 16px; font-weight: 900; color: var(--matn-3); }
 .m-holat.ok { color: var(--togri); font-size: 20px; }
 .m-bosh { padding: 18px; text-align: center; color: #6B6558; font-size: 18px; font-weight: 700; }
 
@@ -112,7 +112,7 @@
 
 /* ---------- Testlar natijasi ---------- */
 .m-natija { display: flex; flex-direction: column; gap: 8px; }
-.m-xulosa { font-size: 19px; font-weight: 900; color: var(--yana); }
+.m-xulosa { font-size: 19px; font-weight: 900; color: var(--yana-matn); }
 .m-xulosa.ok { color: var(--togri); }
 .m-bar { height: 10px; border-radius: 999px; background: #EDE7D8; overflow: hidden; }
 .m-bar-ich { height: 100%; background: var(--yana); border-radius: 999px; transition: width 0.3s; }
@@ -125,7 +125,10 @@
 .m-yordam.ok { border-color: var(--togri); color: var(--togri); font-weight: 800; }
 .m-yordam-bosh { font-size: 17px; font-weight: 900; color: #A85C10; margin-bottom: 6px; }
 .m-solishtir { display: flex; flex-direction: column; gap: 4px; font-size: 17px; }
-.m-solishtir code { font-family: var(--kod-shrift); font-size: 17px; }
+.m-solishtir code { font-family: var(--kod-shrift); font-size: 17px; overflow-wrap: anywhere; }
+/* Yopiq testlar: faqat hukm (javob notoʻgʻri / xato berdi / juda sekin), kirish va javob koʻrsatilmaydi */
+.m-yopiq { display: flex; flex-direction: column; gap: 2px; font-size: 16px; font-weight: 800; color: #A85C10; }
+.m-yopiq-izoh { margin-top: 6px; font-size: 16px; font-weight: 700; color: #5C5648; line-height: 1.4; }
 .m-xato-matn { font-family: var(--kod-shrift); font-size: 16px; color: #A85C10; font-weight: 700; }
 .m-xato-izoh { margin-top: 4px; font-size: 16px; font-weight: 700; }
 .m-maslahat { margin-top: 8px; padding-top: 8px; border-top: 2px dashed var(--chiziq); font-size: 17px; font-weight: 700; color: var(--asosiy); }

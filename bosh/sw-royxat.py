@@ -12,16 +12,19 @@ import sys
 
 root = pathlib.Path(__file__).resolve().parent.parent
 games = sorted(d.name for d in (root / "oyinlar").iterdir() if d.name[:2].isdigit())
-pages = games + ["musobaqa", "poyga", "onlayn", "tog", "yozuv-poygasi"]  # musobaqalar (savol-javob, tez yozish poygasi, onlayn) — alohida sahifalar
+# Alohida sahifalar: o'yinlar, musobaqalar, masalalar va shpargalka (bosh/tests/offline.test.js dagi pageDirs bilan bir xil)
+pages = games + ["masalalar", "cpp-shpargalka", "musobaqa", "poyga", "tank-duel", "onlayn", "tog", "yozuv-poygasi"]
 
 files = ["./", "index.html", "manifest.json", "bosh/style.css", "bosh/icon.svg", "bosh/icon-192.png", "bosh/icon-512.png"]
 files += sorted(f"bosh/js/{p.name}" for p in (root / "bosh/js").glob("*.js"))
 files += sorted(f"oyinlar/umumiy/css/{p.name}" for p in (root / "oyinlar/umumiy/css").glob("*.css"))
 files += ["oyinlar/umumiy/fonts/Nunito.woff2"]
 files += sorted(f"oyinlar/umumiy/js/{p.name}" for p in (root / "oyinlar/umumiy/js").glob("*.js"))
+# Talqinchilar (python/, cpp/) — ichki papkalar
+files += sorted(str(p.relative_to(root).as_posix()) for p in (root / "oyinlar/umumiy/js").glob("*/*.js"))
 for page in pages:
     files += [f"oyinlar/{page}/", f"oyinlar/{page}/index.html", f"oyinlar/{page}/css/style.css"]
-    files += sorted(str(p.relative_to(root).as_posix()) for p in (root / "oyinlar" / page / "js").rglob("*.js"))
+    files += sorted(str(p.relative_to(root).as_posix()) for p in (root / "oyinlar" / page / "js").rglob("*.js")) if (root / "oyinlar" / page / "js").exists() else []
 
 sw = root / "sw.js"
 text = sw.read_text()

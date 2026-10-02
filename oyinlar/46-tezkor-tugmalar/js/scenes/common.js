@@ -107,7 +107,8 @@
         host.append(h("div", { class: "tt-savol", text: task.matn }));
         const joy = h("div", { class: "tt-tanlov" });
         for (const v of task.variantlar) {
-          const btn = h("button", { class: "tt-tanlov-btn", type: "button" }, kombo(v), h("span", { class: "tt-nom", text: v.nom }));
+          // Nomi yozilmaydi — "Oʻngdagini oʻchirish" kabi nom javobni aytib qoʻyardi; nom yechimda chiqadi
+          const btn = h("button", { class: "tt-tanlov-btn", type: "button", "aria-label": v.nom }, kombo(v));
           btn.addEventListener("click", () => {
             for (const b of joy.querySelectorAll("button")) b.disabled = true;
             btn.classList.add("tanlangan");
@@ -119,7 +120,7 @@
       },
       check: (value) => value === task.javob,
       hint() {
-        host.append(note("↻ Ikkalasining vazifasini solishtir — biri boshqa tomonga ishlaydi."));
+        host.append(note("↻ Savoldagi asosiy soʻzga qara (chap/oʻng, belgilash/sakrash, joyida qoladi/oʻchadi) va har variantning vazifasini solishtir."));
         for (const b of host.querySelectorAll(".tt-tanlov-btn")) b.disabled = false;
       },
       solution() {

@@ -35,9 +35,9 @@ Bosh ekran
    │
    ├─► Kirish sahnasi (1-o'yin bilan bog'lanish, 3 ta pufak)
    │
-   ├─► 1-bosqich: O'qish     [ko'rsatish → ta'rif → mashq: 3 ta xabar]
+   ├─► 1-bosqich: O'qish     [ko'rsatish → ta'rif → mashq: 4 ta xabar]
    │
-   ├─► 2-bosqich: Yozish     [ko'rsatish → mashq: 3 ta topshiriq → XAYR]   (1-bosqichdan keyin ochiladi)
+   ├─► 2-bosqich: Yozish     [ko'rsatish → mashq: 5 ta topshiriq → XAYR]   (1-bosqichdan keyin ochiladi)
    │
    └─► 3-bosqich: Hikoya     [6 ta sahna → SOS ni terish → tabrik]          (2-bosqichdan keyin ochiladi)
 ```
@@ -104,7 +104,7 @@ Yangi harflar ochilganda Oqsoqol aytadi: "Qabila yangi harflarni oʻrgandi!" va 
 - To'lgan katakni bossa — shu katak navbatdagi bo'ladi (harfini almashtirish uchun).
 - Hamma katak to'lgach — **"Tekshir"** tugmasi faollashadi.
 - **"Tinglash"** tugmasi: xabar qisqa/uzun signallar bilan chalinadi (ixtiyoriy yordam).
-- **3 ta to'g'ri javob** — bosqich tugaydi. Tepada 3 ta doira.
+- **4 ta to'g'ri javob** (2026-10-02, 15-bo'limga qara) — bosqich tugaydi. Tepada shuncha doira.
 
 **Xabarlar:**
 
@@ -139,7 +139,7 @@ Yangi harflar ochilganda Oqsoqol aytadi: "Qabila yangi harflarni oʻrgandi!" va 
 - ⌫ — oxirgi belgini (yoki oxirgi oraliqni) o'chiradi.
 - "Yuborish" — bo'sh bo'lsa hech narsa qilmaydi. Yuborilgach Shogird terilganni **o'qiydi**: har bir guruh ostida qaysi harf chiqqani ko'rinadi (kodi yo'q guruh — `?`).
 - Qo'llanma (20 harf) doim ko'rinib turadi.
-- **3 ta to'g'ri javob** — keyin yakun: qabila **XAYR** yuboradi, bola uni 1-bosqichdagidek o'qiydi (baholanmaydi, xato bo'lsa to'g'ri javob ko'rsatiladi).
+- **5 ta to'g'ri javob** (2026-10-02, 15-bo'limga qara) — keyin yakun: qabila **XAYR** yuboradi, bola uni 1-bosqichdagidek o'qiydi (baholanmaydi, xato bo'lsa to'g'ri javob ko'rsatiladi).
 
 **Topshiriqlar** (tasodifiy, ketma-ket takrorlanmaydi):
 
@@ -272,3 +272,19 @@ QOIDALAR 9-bo'limi bo'yicha, 2-o'yin boshlanganda ikkala o'yinga kerak kod umumi
 - Diktor ovozi
 - Kirill Morzesi, `oʻ`/`gʻ` kodlari
 - Bir nechta so'zli xabarlarni o'qish/yozish (faqat ta'rifda ko'rsatiladi)
+
+## 15. 2026-10-02 qiyinlik yangilanishi
+
+Bolalar "o'ta oson" deyishgan: hamma narsa qo'llanmadan ko'chirilardi, yod talab qilinmasdi; mashq 3 ta javobda tugardi. 5–6-bo'limlardagi mashq tavsiflariga qo'shimcha (QOIDALAR §4.3, §4.5):
+
+- **Mashq sikli** umumiy `QK.practice` ga o'tdi (`scenes/common.js`): 1-bosqich — **4 ta** xabar, 2-bosqich — **5 ta** javob, yulduzlar, seriya 🔥, qiyin rejim (7 ta, bitta urinish). Ko'rsatish qismidagi savollar (E, T, ET, SOS, XAYR) statistikaga kirmaydi.
+- **Qo'llanma kodlari yashirinadi** (qo'llanma — harf kiritish klaviaturasi ham, shuning uchun butunlay yopilmaydi: harf qoladi, kodi yashirinadi — `guide(..., { hidden })`, `.guide-cell.nocode`):
+  - 1-bosqich (`morse.hiddenSets`): 1–2-xabar — hammasi ko'rinadi; 3-xabar — eski to'plam kodlari yashirin, yangi ochilgan to'plam ko'rinadi; 4-xabardan — hammasi yashirin.
+  - 2-bosqich (`makeWriteTask` → `hide`): 2-to'g'ri javobdan keyin hamma kod yashirin.
+  - **«Qoʻllanmaga qarash»** tugmasi kodlarni 4 soniyaga ochadi (`PEEK_MS`) — bola kodni eslab qolib yozadi. 1-xato maslahati kodlarni butunlay qaytaradi (javobni aytmaydi).
+- **«Tinglash» tezlashadi:** `unitFor(correct)` — 120 ms dan har to'g'ri javobda −15 ms, eng kami 60 ms (4-javobda ikki baravar tez).
+- **So'z banklari:** 1-to'plam 12 → 20, 2-to'plam 10 → 18, yangi **3-to'plam bank** (10 ta: KITOB, DARYO, QUYOSH…) — qiyin rejimda 1-bosqich darhol shu so'zlar bilan boshlanadi (`readLevel(correct, tier)`).
+- **Topshiriqlar** 12 → 21; javob uzunligi zina bilan o'sadi (`tasksFor(tier)`): tier 0 — 2–3 harf, tier 1 — 4–5, tier 2 — 5–6 (USTOZ, QUYOSH, YULDUZ).
+- **Qilinmadi:** 3-bosqich (hikoya + SOS) ga mashq qo'shilmadi — bu bosqich tuzilishini o'zgartirish, alohida kelishish kerak.
+- **Testlar:** `tests/morse.test.js` (banklar, zina, `hiddenSets`, `unitFor`, reja), `tests/scenes.test.js` (soxta DOM: yashirin kodlar, maslahat, qarab olish, mashq sikli, qiyin rejim).
+

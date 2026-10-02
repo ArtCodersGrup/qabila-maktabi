@@ -81,3 +81,18 @@ Bosh ekran
 ├── js/scenes/…     kirish, uch bosqich, tabrik
 └── tests/logic.test.js
 ```
+
+## 10. 2026-10-02 qiyinlik yangilanishi
+
+Sabab: hisobot-5 (C jadvali) — xossa mashqida 7 ta qotirilgan algoritm (ikkinchi aylanishda takror),
+«qaysi yechim tejamli» mashqida tejamlisi **doim ikkinchi tugmada** va tanlov ikkita edi.
+
+- **`BUZUQ` 7 → 14:** har xossaga kamida ikkita misol (yugurish, robot, tanga, juft-toq, tuxum, oʻrtacha, sanash).
+- **Ikki yechim (`JUFTLAR` 4 → 9):** yangi juftliklarda ikkalasi ham sikl (break bilan toʻxtash, qadamli `range`,
+  ildizgacha sinash) va ikkita **teng** juftlik (`range(12)` / `range(1, 13)`; roʻyxat / qadamli `range`).
+  Yechimlar tasodifiy tartibda koʻrsatiladi. Javob — uch tanlovdan biri (A, B, «ikkalasi teng») **va** juft savol:
+  «koʻproq aylanadigan sikl necha marta aylanadi?» (son). Ikkalasi toʻgʻri boʻlsagina hisoblanadi (QOIDALAR §4.3).
+  Sikl aylanishlari qoʻlda yozilmagan — `aylanish()` talqinchi kuzatuvidan sanaydi.
+- **`KODLAR` 3 → 6:** `(a + b) // 2` (ommaviylik), `input()` ni `int` qilmaslik (natijaviylik — TypeError),
+  toq sonda toʻxtamaydigan `while n != 0` (natijaviylik).
+- Zina: 1-bosqichda `tier` 0 — «sikl va formula», 1–2 — ikkalasi ham sikl. Testlar: 10 → 14.

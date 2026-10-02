@@ -40,48 +40,92 @@
     }
   }
 
-  // 1-bosqich: 8 bitli ikkilik → 16-lik, 2 xonali 16-lik → ikkilik, rang kodi
-  const makeConvTask = (prev, rng) => loop(prev, rng, (r) => {
+  // Qiyinlik zinasi (QOIDALAR 4.3): chegaralar tier 0 / 1 / 2 bo'yicha
+  const CONV = [[16, 255], [128, 255], [256, 4095]]; // 1-bosqich: tier 2 — 12 bit, 3 xonali 16-lik
+  const ADDSUB = [[16, 240], [80, 240], [256, 2047]]; // 2-bosqich: tier 2 — 3 xonali sonlar
+  const MUL_D = [[2, 9], [4, 9], [10, 15]]; // 3-bosqich: ko'paytuvchi; tier 2 — A…F
+
+  // Yaqin ranglar (tier 1+): kanallar faqat 00, 88 yoki FF; chalg'ituvchilar bitta kanal bilan farq qiladi
+  const LEVELS = ["00", "88", "FF"];
+  const CHANNELS = ["qizil", "yashil", "koʻk"];
+  const channelText = (code) => [1, 3, 5].map((k, i) => `${CHANNELS[i]} ${code.slice(k, k + 2)}`).join(", ");
+  function nearColors(r) {
+    const parts = [pick(LEVELS, r), pick(LEVELS, r), pick(LEVELS, r)];
+    const code = "#" + parts.join("");
+    const others = [];
+    for (let ch = 0; ch < 3; ch++) {
+      for (const lv of LEVELS) {
+        if (lv === parts[ch]) continue;
+        const p2 = parts.slice();
+        p2[ch] = lv;
+        others.push("#" + p2.join(""));
+      }
+    }
+    const named = (c) => {
+      const known = COLORS.find((x) => x.code === c);
+      return color(c, known ? known.name : channelText(c));
+    };
+    return { answer: named(code), others: shuffle(others, r).slice(0, 3).map(named) };
+  }
+
+  // 1-bosqich: ikkilik → 16-lik, 16-lik → ikkilik, rang kodi (4 variant; tier 1+ da yaqin ranglar)
+  const makeConvTask = (prev, rng, tier) => loop(prev, rng, (r) => {
+    tier = tier || 0;
     const x = r();
+    const [lo, hi] = CONV[tier];
     if (x < 0.4) {
-      const v = randInt(16, 255, r);
-      return { type: "bin2hex", bits: S.toBase(v, 2).padStart(8, "0"), answer: S.toBase(v, 16) };
+      const v = randInt(lo, hi, r);
+      const bits = S.toBase(v, 2);
+      return { type: "bin2hex", bits: bits.padStart(Math.ceil(bits.length / 4) * 4, "0"), answer: S.toBase(v, 16) };
     }
     if (x < 0.75) {
-      const v = randInt(16, 255, r);
+      const v = randInt(lo, hi, r);
       return { type: "hex2bin", hex: S.toBase(v, 16), answer: S.toBase(v, 2) };
     }
-    const options = shuffle(COLORS, r).slice(0, 3);
-    const answer = randInt(0, 2, r);
-    return { type: "color", code: options[answer].code, options, answer };
+    let options;
+    let right;
+    if (tier === 0) {
+      options = shuffle(COLORS, r).slice(0, 4);
+      right = options[randInt(0, 3, r)];
+    } else {
+      const near = nearColors(r);
+      right = near.answer;
+      options = shuffle([near.answer, ...near.others], r);
+    }
+    return { type: "color", code: right.code, options, answer: options.indexOf(right) };
   });
 
-  // 2-bosqich: 2 xonali sonlarni qo'shish yoki ayirish; 75% hollarda birlar ustunida ko'chish/qarz
-  const makeAddSubTask = (prev, rng) => loop(prev, rng, (r) => {
+  // 2-bosqich: qo'shish yoki ayirish; 75% hollarda (tier 1+ da — doim) birlar ustunida ko'chish/qarz.
+  // tier 0–1 — 2 xonali, tier 2 — 3 xonali sonlar (natija ≤ FFF)
+  const makeAddSubTask = (prev, rng, tier) => loop(prev, rng, (r) => {
+    tier = tier || 0;
+    const [lo, hi] = ADDSUB[tier];
+    const need = (has) => has || (tier === 0 && r() >= 0.75);
     if (r() < 0.5) {
-      const x = randInt(16, 240, r);
-      const y = randInt(16, 240, r);
+      const x = randInt(lo, hi, r);
+      const y = randInt(lo, hi, r);
       const a = S.toBase(x, 16);
       const b = S.toBase(y, 16);
-      if (!S.addColumns(a, b, 16).cols[0].carryOut && r() < 0.75) return null;
+      if (!need(S.addColumns(a, b, 16).cols[0].carryOut)) return null;
       return { op: "+", a, b, answer: S.toBase(x + y, 16) };
     }
-    const x = randInt(40, 255, r);
-    const y = randInt(16, x - 1, r);
+    const x = randInt([40, 100, 512][tier], tier === 2 ? 4095 : 255, r);
+    const y = randInt(lo, x - 1, r);
     const a = S.toBase(x, 16);
     const b = S.toBase(y, 16);
-    if (b.length !== 2 || (!S.subColumns(a, b, 16).cols[0].borrowOut && r() < 0.75)) return null;
+    if (b.length !== a.length || !need(S.subColumns(a, b, 16).cols[0].borrowOut)) return null;
     return { op: "−", a, b, answer: S.toBase(x - y, 16) };
   });
 
-  // 3-bosqich: 2 xonali son × 2–9 (natija ≤ FFF)
-  const makeMulTask = (prev, rng) => loop(prev, rng, (r) => {
-    const d = randInt(2, 9, r);
-    const x = randInt(16, Math.min(255, Math.floor(4095 / d)), r);
+  // 3-bosqich: 2 xonali son × bir xonali son (natija ≤ FFF); tier 2 da ko'paytuvchi — A…F
+  const makeMulTask = (prev, rng, tier) => loop(prev, rng, (r) => {
+    tier = tier || 0;
+    const d = randInt(MUL_D[tier][0], MUL_D[tier][1], r);
+    const x = randInt(tier ? 32 : 16, Math.min(255, Math.floor(4095 / d)), r);
     return { a: S.toBase(x, 16), d, answer: S.toBase(x * d, 16) };
   });
 
-  const api = { TETRADS, groups, COLORS, makeConvTask, makeAddSubTask, makeMulTask };
+  const api = { TETRADS, groups, COLORS, CONV, ADDSUB, MUL_D, LEVELS, channelText, nearColors, makeConvTask, makeAddSubTask, makeMulTask };
 
   if (node) module.exports = api;
   else root.QK.amal16 = api;

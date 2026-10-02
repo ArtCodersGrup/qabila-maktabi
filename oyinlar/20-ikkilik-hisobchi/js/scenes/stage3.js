@@ -124,9 +124,9 @@
   async function stage3() {
     await shift();
     await columns();
-    await ui.say("elder", "Endi oʻzing koʻpaytir. 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing koʻpaytir. ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev) => amal2.makeMulTask(prev),
+      next: (prev, correct, tier) => amal2.makeMulTask(prev, undefined, tier),
       run: mulTask,
       praise: (task) => `${b2(task.a)} × ${b2(task.b)} = ${b2(task.answer)}.`,
     });

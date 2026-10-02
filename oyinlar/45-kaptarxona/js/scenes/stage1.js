@@ -72,7 +72,7 @@
     await qoida();
     await ui.say("elder", "Endi oʻzing hisobla.");
     await practice.exercises({
-      next: (prev) => L.dirixleTask(Math.random, prev),
+      next: (prev, correct, tier) => L.dirixleTask(Math.random, prev, tier),
       run: (task) => common.dirixleExercise(task),
       praise: (task) => task.hisob,
     });

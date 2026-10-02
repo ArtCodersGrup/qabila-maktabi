@@ -59,9 +59,9 @@
       intro: "Ustunda ayiramiz: 1101₂ − 110₂. Oʻngdan boshlaymiz!",
     });
     await ui.say("elder", "1101₂ − 110₂ = 111₂. Chapdagi 1 qarz berib, 0 boʻldi — boshidagi nol yozilmaydi.");
-    await ui.say("elder", "Tekshiramiz: 13 − 6 = 7 ✓. Endi oʻzing ayir. 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Tekshiramiz: 13 − 6 = 7 ✓. Endi oʻzing ayir. ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev) => amal2.makeSubTask(prev),
+      next: (prev, correct, tier) => amal2.makeSubTask(prev, undefined, tier),
       run: subTask,
       praise: (task) => `${b2(task.a)} − ${b2(task.b)} = ${b2(task.answer)}.`,
     });

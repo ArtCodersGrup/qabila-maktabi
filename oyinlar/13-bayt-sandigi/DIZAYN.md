@@ -112,3 +112,15 @@ Bosh ekran
 ## 10. Bu o'yinga kirmaydi
 
 Megabayt va undan kattasi (14–16-oʻyinlar), rasmiy KiB/KB farqi (16-oʻyin hikoyasida), UTF-8 tafsilotlari (faqat hikoyadagi qiziq fakt), toʻliq ASCII jadvali.
+
+## 2026-10-02 qiyinlik yangilanishi
+
+Sabab: bolalar "oson" deyishdi — sonlar kichik edi, "qaysi katta?" 2 variantli edi.
+
+- Uchala generator `tier` oladi (`makeBitTask(prev, rng, tier)` va h.k.); chegaralar `bytes.js` da jadval:
+  - 1-bosqich (`BIT_BYTES`): 2–6 → 7–12 → 10–15 bayt; tier 2 da faqat **bit → bayt** (80–120 bit : 8). Katta sonlarda rasm oʻrniga son yoziladi.
+  - 2-bosqich (`TEXT_LEN`): xabar uzunligi 6–9 → 9–12 → 12–16 belgi ("necha bit?" da ≤ 12 belgi, javob ≤ 96).
+  - 3-bosqich: sahifalar 2–10 → 8–18 → 15–25 (`PAGES`, javob ≤ 50 Kbayt); bayt → Kbayt 2–5 → 4–8 → 6–12 (`TO_KB`).
+- **Taqqoslash — 4 variant:** uch karta (`k Kbayt`, `bayt`, `sahifa`) — "qaysi biri eng katta?" yoki **"Uchalasi teng"** (2 Kbayt = 2048 bayt = 1 sahifa). 1000 ≠ 1024 tuzogʻi saqlangan. Generator faqat bitta eng katta yoki uchalasi teng holatni beradi (`cmpAnswer`).
+- **Maslahat javobni aytmaydi:** bit → bayt da sandiqlar chizib berilmaydi ("8 lab sanab chiq"); bayt → Kbayt da jadvalning faqat boshi koʻrsatiladi; taqqoslashda — birliklar qoidasi.
+- Qoldirildi: 1-bosqichdagi 14 ta pufakni qisqartirish (hisobotning "matn dietasi" bandi) — bu generator ishi emas, alohida vazifa.

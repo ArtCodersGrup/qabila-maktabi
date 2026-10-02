@@ -75,3 +75,18 @@ Bosh ekran
 ├── js/scenes/…     kirish, uch bosqich, tabrik
 └── tests/logic.test.js
 ```
+
+## 10. 2026-10-02 qiyinlik yangilanishi
+
+Sabab: hisobot-5 (C jadvali) — 1-bosqichda faqat bitta shartli `if/else`, «xatoni tuzat» da bitta shablon (`x == limit`).
+
+- **1-bosqich:** uch shakl — oddiy (zina 0), `and` li shart (zina 1: `if x >= a and x < b`), ichma-ich `if` (zina 2,
+  uch tarmoq). Yuqori zinalarda qiymat koʻpincha chegaraning oʻzi yoki ±1 — `>=` va `>` farqi koʻrinadi.
+- **2-bosqich:** `elif` zanjirida ball koʻpincha chegaraning oʻzida yoki bitta kam; mantiqiy ifodalarga
+  `not ( … and … )`, `x % 3 == 0 or x % 5 == 0`, `or` ichida `and` (amallar tartibi) qoʻshildi.
+- **3-bosqich — xato ovi:** uch xil dastur (teng/teng emas; oraliq `and` bilan; `if/elif/else`), buzilish turlari 4 → 6
+  (`else` dan keyin ikki nuqta yoʻq; `else` tanasi surilmagan).
+- **3-bosqich — kod yozish 4 → 8:** `uch-besh` (3 ga ham, 5 ga ham), `osish` (qatʼiy oʻsish — teng sonlar testda),
+  `uchburchak` (uch tengsizlik — uzun kesma har uch oʻrinda), `kabisa` (1900, 2000, 2100 testda). Har biriga 6 test;
+  boshqa toʻgʻri yoʻllar (`n % 15`, `a < b < c`, bitta `and/or` sharti) ham qabul qilinadi.
+- Testlar: 10 → 15.

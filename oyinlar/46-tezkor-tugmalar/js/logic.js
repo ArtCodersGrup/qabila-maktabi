@@ -99,16 +99,37 @@
     { a: "copy", b: "paste", savol: "Xotiradagi matnni qoʻyish uchun qaysi biri?", javob: "paste" },
     { a: "undo", b: "all", savol: "Notoʻgʻri oʻchirib yubording. Qaysi biri qaytaradi?", javob: "undo" },
     { a: "tab", b: "enter", savol: "Shaklda keyingi katakka oʻtish uchun qaysi biri?", javob: "tab" },
+    // 2026-10-02: qo'shimcha juftliklar
+    { a: "end", b: "home", savol: "Gap oxiriga soʻz qoʻshmoqchisan. Kursorni qaysi biri olib boradi?", javob: "end" },
+    { a: "backspace", b: "delete", savol: "Kursordan CHAPdagi harfni qaysi tugma oʻchiradi?", javob: "backspace" },
+    { a: "cut", b: "copy", savol: "Matn joyida qolib, nusxasi xotiraga olinishi uchun qaysi biri?", javob: "copy" },
+    { a: "shift-left", b: "ctrl-left", savol: "Harflarni chapga qarab BELGILASH uchun qaysi biri?", javob: "shift-left" },
+    { a: "ctrl-left", b: "shift-left", savol: "Kursorni bir soʻz chapga SAKRATISH uchun qaysi biri?", javob: "ctrl-left" },
+    { a: "save", b: "find", savol: "Matndan bitta soʻzni topish kerak. Qaysi biri?", javob: "find" },
   ];
 
-  function farqTask(r, prev) {
+  // 2026-10-02: 4 variant (adashtiradigan juftlik + 2 ta boshqa) — ikki variantda taxmin bilan o'tib bo'lardi.
+  // bos: true — variant tanlanmaydi, bola to'g'ri birikmani klaviaturada O'ZI bosadi (bosishExercise).
+  function farqTask(r, prev, bos) {
     const rr = r || Math.random;
     return pickNew((rnd) => {
       const j = pick(JUFTLAR, rnd);
+      const id = "farq:" + j.a + ":" + j.b + ":" + j.javob;
+      if (bos) {
+        const amal = amalById(j.javob);
+        return { id, tur: "bosish", amal, javob: yozuv(amal), matn: j.savol + " Uni bos.", nega: amal.izoh };
+      }
       const variantlar = [amalById(j.a), amalById(j.b)];
-      if (rnd() < 0.5) variantlar.reverse();
-      return { id: "farq:" + j.a + ":" + j.b, tur: "farq", variantlar, javob: j.javob, matn: j.savol,
-        nega: amalById(j.javob).izoh };
+      const boshqalar = AMALLAR.filter((a) => a.id !== j.a && a.id !== j.b);
+      while (variantlar.length < 4) {
+        const x = pick(boshqalar, rnd);
+        if (!variantlar.some((v) => v.id === x.id)) variantlar.push(x);
+      }
+      for (let i = variantlar.length - 1; i > 0; i--) {
+        const k = Math.floor(rnd() * (i + 1));
+        [variantlar[i], variantlar[k]] = [variantlar[k], variantlar[i]];
+      }
+      return { id, tur: "farq", variantlar, javob: j.javob, matn: j.savol, nega: amalById(j.javob).izoh };
     }, prev, rr);
   }
 
@@ -155,11 +176,52 @@
       kerak: ["shift-left"],
       ishora: "End bilan oxiriga oʻt, Shift + ← ni ikki marta bos — ikki harf belgilanadi, keyin Backspace.",
     },
+    // 2026-10-02: qiyinroq maqsadlar (lvl 1–2): bir nechta tugmani ketma-ket ishlatish
+    {
+      id: "oxiriga",
+      lvl: 1,
+      boshlangich: "men kitob",
+      maqsad: "men kitob oʻqiyman",
+      vazifa: "Gap oxiriga « oʻqiyman» soʻzini qoʻsh — avval kursorni bitta tugma bilan oxiriga olib bor.",
+      kerak: ["end"],
+      ishora: "End bossang, kursor qator oxiriga sakraydi. Keyin « oʻqiyman» deb yoz.",
+    },
+    {
+      id: "ortiqcha",
+      lvl: 1,
+      boshlangich: "men men maktabga boraman",
+      maqsad: "men maktabga boraman",
+      vazifa: "Boshidagi ortiqcha «men » ni oʻchir: kursorni boshiga olib bor va oʻngdagilarni oʻchir.",
+      kerak: ["home", "delete"],
+      ishora: "Home — qator boshiga, keyin Delete ni 4 marta bos (m, e, n va boʻsh joy).",
+    },
+    {
+      id: "sakra",
+      lvl: 2,
+      boshlangich: "qabila maktabi zoʻr",
+      maqsad: "qabila maktabi juda zoʻr",
+      vazifa: "«zoʻr» oldiga «juda » soʻzini qoʻsh — kursorni harf-harf emas, soʻz-soʻz yurgiz.",
+      kerak: ["end", "ctrl-left"],
+      ishora: "End bilan oxiriga oʻt, Ctrl + ← bir marta — kursor «zoʻr» boshida. Endi «juda » deb yoz.",
+    },
+    {
+      id: "almashtir",
+      lvl: 2,
+      boshlangich: "boraman men",
+      maqsad: "men boraman",
+      vazifa: "Soʻzlar oʻrnini almashtir: «boraman» ni kesib olib, oxiriga qoʻy. Qayta terma.",
+      kerak: ["home", "shift-right", "cut", "end", "paste"],
+      ishora: "Home, keyin Shift + → ni 8 marta bos («boraman » belgilanadi), Ctrl + X. End, boʻsh joy, Ctrl + V.",
+    },
   ];
 
-  function maqsadTask(r, prev) {
+  // tier 0 — oddiy maqsadlar, tier 1 — hammasi, tier 2 — ko'p tugmali (lvl ≥ 1)
+  function maqsadTask(r, prev, tier) {
     const rr = r || Math.random;
-    return pickNew((rnd) => Object.assign({ tur: "maqsad" }, pick(MAQSADLAR, rnd)), prev, rr);
+    const lv = (m) => m.lvl || 0;
+    const list = tier === 0 ? MAQSADLAR.filter((m) => lv(m) === 0)
+      : tier >= 2 ? MAQSADLAR.filter((m) => lv(m) >= 1) : MAQSADLAR;
+    return pickNew((rnd) => Object.assign({ tur: "maqsad" }, pick(list, rnd)), prev, rr);
   }
 
   // Matnni solishtirish: qator oxiridagi bo'sh joylar va oxirgi bo'sh qatorlar hisobga olinmaydi

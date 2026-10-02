@@ -4,9 +4,21 @@
 
   // Tasodifiy misollar uchun harflar. "O" yo'q — finaldagi 0 bilan chalkashmasin.
   const LETTER_POOL = ["A", "U", "F", "K", "M", "S", "T", "R"];
-  // 1- va 2-bosqich juftliklari (a, i): aⁱ ≤ 64 va a + … + aⁱ ≤ 84
-  const STAGE_PAIRS = [[2, 2], [2, 3], [2, 4], [2, 5], [3, 2], [3, 3], [4, 2], [4, 3]];
-  const MAX_PEOPLE = 30;
+  // 1- va 2-bosqich juftliklari (a, i), qiyinlik zinasi bo'yicha to'rttadan (QOIDALAR 4.3):
+  // tier 0 — birinchi 4 tasi (aⁱ ≤ 16), tier 1 — o'rtadagi 4 tasi (≤ 32), tier 2 — oxirgi 4 tasi (≤ 81).
+  // Yig'indi (2-bosqich) tier 2 da 126 gacha chiqadi — ustun qilib qo'shiladi.
+  const STAGE_PAIRS = [[2, 2], [2, 3], [3, 2], [2, 4], [3, 3], [4, 2], [2, 5], [5, 2], [3, 4], [6, 2], [2, 6], [4, 3]];
+  const pairsFor = (tier) => STAGE_PAIRS.slice(tierOf(tier) * 4, tierOf(tier) * 4 + 4);
+  const MAX_PEOPLE = 80;
+  // 3-bosqich chegaralari zina bo'yicha: javob (harflar soni), so'z uzunligi, odamlar soni
+  const STAGE3 = [
+    { answer: [2, 4], len: [2, 3], people: 30 },
+    { answer: [3, 5], len: [2, 3], people: 50 },
+    { answer: [3, 6], len: [2, 4], people: MAX_PEOPLE },
+  ];
+  function tierOf(tier) {
+    return Math.max(0, Math.min(2, tier || 0));
+  }
 
   function countExact(a, i) {
     return Math.pow(a, i);
@@ -56,9 +68,9 @@
   }
 
   // Javob aynan `a` bo'lishi uchun odamlar soni oralig'i: (a−1) ta harf yetmaydi, a ta yetadi
-  function stage3Range(type, i, a) {
+  function stage3Range(type, i, a, maxPeople) {
     const lo = Math.max(2, countWords(a - 1, i, type) + 1);
-    const hi = Math.min(MAX_PEOPLE, countWords(a, i, type));
+    const hi = Math.min(maxPeople || MAX_PEOPLE, countWords(a, i, type));
     return lo <= hi ? [lo, hi] : null;
   }
 
@@ -89,26 +101,28 @@
     return [ex.stage, ex.type, ex.a, ex.i, ex.people].join("|");
   }
 
-  function makeOne(stage, rng) {
+  function makeOne(stage, rng, tier) {
     if (stage === 1 || stage === 2) {
-      const [a, i] = pick(rng, STAGE_PAIRS);
+      const [a, i] = pick(rng, pairsFor(tier));
       const type = stage === 1 ? "exact" : "upto";
-      return { stage, type, a, i, letters: pickLetters(a, rng), answer: countWords(a, i, type) };
+      return { stage, type, a, i, letters: pickLetters(a, rng), answer: countWords(a, i, type), tier: tierOf(tier) };
     }
+    const lim = STAGE3[tierOf(tier)];
     for (;;) {
       const type = rng() < 0.5 ? "exact" : "upto";
-      const i = randInt(rng, 2, 3);
-      const answer = randInt(rng, 2, 4);
-      const range = stage3Range(type, i, answer);
-      if (range) return { stage: 3, type, i, people: randInt(rng, range[0], range[1]), answer };
+      const i = randInt(rng, lim.len[0], lim.len[1]);
+      const answer = randInt(rng, lim.answer[0], lim.answer[1]);
+      const range = stage3Range(type, i, answer, lim.people);
+      if (range) return { stage: 3, type, i, people: randInt(rng, range[0], range[1]), answer, tier: tierOf(tier) };
     }
   }
 
-  function makeExercise(stage, prev, rng) {
+  // tier — qiyinlik zinasi (0, 1, 2): practice.exercises generatorga uchinchi argument qilib beradi
+  function makeExercise(stage, prev, rng, tier) {
     rng = rng || Math.random;
     let ex;
     do {
-      ex = makeOne(stage, rng);
+      ex = makeOne(stage, rng, tier);
     } while (prev && exerciseKey(ex) === exerciseKey(prev));
     return ex;
   }
@@ -136,7 +150,7 @@
   }
 
   const api = {
-    LETTER_POOL, STAGE_PAIRS, MAX_PEOPLE,
+    LETTER_POOL, STAGE_PAIRS, MAX_PEOPLE, STAGE3, pairsFor,
     countExact, countUpTo, countWords, listWords, minLetters, stage3Steps, stage3Range,
     makeRng, pickLetters, exerciseKey, makeExercise, checkAnswer, productText, sumText, upToText,
   };

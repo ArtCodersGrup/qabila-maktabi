@@ -267,3 +267,79 @@ test("so'z ro'yxatlari poygaga yetarli", () => {
   // Asosiy qatorda faqat "a" unlisi bor — 50 ta haqiqiy so'z yig'ilmaydi, bori shuncha
   assert.ok(T.HOME_WORDS.length >= 25, "asosiy qator so'zlari: " + T.HOME_WORDS.length);
 });
+
+// ---------- 2026-10-02: qiyinlik zinasi, eng kam tezlik, rekord sharpasi ----------
+test("makeLine tier bilan: 4 / 5 / 6 ta so'z, qatorga sig'adi; maqollar qisqa → uzun", () => {
+  assert.deepEqual(T.LINE_WORDS, [4, 5, 6]);
+  for (const tier of [0, 1, 2]) {
+    let prev = null;
+    for (let k = 0; k < 150; k++) {
+      for (const stage of [1, 2]) {
+        const line = T.makeLine(stage, prev, Math.random, tier);
+        const ws = line.split(" ");
+        assert.equal(ws.length, T.LINE_WORDS[tier], line);
+        assert.equal(new Set(ws).size, ws.length, line);
+        assert.ok(T.fits(line, stage), line);
+        assert.ok(line.length <= T.LINE_MAX, line);
+        assert.notEqual(line, prev);
+        prev = line;
+      }
+      const p = T.makeLine(3, prev, Math.random, tier);
+      assert.ok(T.PROVERBS.includes(p));
+      assert.notEqual(p, prev);
+      if (tier === 0) assert.ok(p.length <= 28, p);
+      if (tier === 2) assert.ok(p.length > 28, p);
+      prev = p;
+    }
+    assert.ok(T.proverbPool(tier).length >= 3, `tier ${tier}: maqollar kam`);
+  }
+});
+
+test("minCpm: 1-bosqich — talab yo'q, 2 — 60, 3 — 90; qiyin rejimda + 30", () => {
+  assert.deepEqual([1, 2, 3].map((s) => T.minCpm(s)), [0, 60, 90]);
+  assert.deepEqual([1, 2, 3].map((s) => T.minCpm(s, true)), [30, 90, 120]);
+  assert.equal(T.minCpm(4), 90, "4+ bosqich — oxirgisi kabi");
+});
+
+test("lineResult: avval aniqlik, keyin tezlik", () => {
+  const st = (accuracy, cpm) => ({ accuracy, cpm });
+  assert.deepEqual(T.lineResult(st(95, 100), 90), { ok: true, reason: null });
+  assert.deepEqual(T.lineResult(st(95, 90), 90), { ok: true, reason: null }, "chegaraning o'zi — o'tadi");
+  assert.deepEqual(T.lineResult(st(95, 89), 90), { ok: false, reason: "speed" });
+  assert.deepEqual(T.lineResult(st(89, 300), 90), { ok: false, reason: "accuracy" }, "tez, lekin noaniq — o'tmaydi");
+  assert.deepEqual(T.lineResult(st(89, 10), 90), { ok: false, reason: "accuracy" }, "ikkalasi yomon — avval aniqlik aytiladi");
+  assert.deepEqual(T.lineResult(st(92, 5), 0), { ok: true, reason: null }, "1-bosqichda sekin yozsa ham o'tadi");
+  assert.deepEqual(T.lineResult(st(92, 5)), { ok: true, reason: null });
+});
+
+test("lineResult haqiqiy sessiyada: sekin yozilgan qator 2-bosqichda o'tmaydi", () => {
+  const text = "salom";
+  const yoz = (msPerChar) => {
+    const s = T.session(text);
+    [...text].forEach((ch, i) => s.press(ch, i * msPerChar));
+    return T.stats(s);
+  };
+  const sekin = yoz(2000); // 4 oraliq × 2 s = 8 s → 5 belgi / 8 s = 37 belgi/daqiqa
+  const tez = yoz(500); // 2 s → 150 belgi/daqiqa
+  assert.ok(sekin.cpm < 60 && tez.cpm > 90, `${sekin.cpm} / ${tez.cpm}`);
+  assert.equal(T.lineResult(sekin, T.minCpm(1)).ok, true);
+  assert.equal(T.lineResult(sekin, T.minCpm(2)).reason, "speed");
+  assert.equal(T.lineResult(tez, T.minCpm(3)).ok, true);
+});
+
+test("ghostTimes: sharpa rekord tezligida bir tekis yozadi", () => {
+  const times = T.ghostTimes(30, 120); // 120 belgi/daqiqa = har belgi 500 ms
+  assert.equal(times.length, 30);
+  assert.equal(times[0], 500);
+  assert.equal(times[29], 15000);
+  for (let i = 1; i < times.length; i++) assert.ok(times[i] > times[i - 1]);
+  // ghostAt bilan: 1 soniyada 2 ta belgi, 15 soniyada — hammasi
+  assert.equal(T.ghostAt(times, 1000), 2);
+  assert.equal(T.ghostAt(times, 499), 0);
+  assert.equal(T.ghostAt(times, 15000), 30);
+  // Sharpadan tez yozgan — rekorddan yuqori tezlikda yozgan
+  const s = T.session("a".repeat(30));
+  for (let i = 0; i < 30; i++) s.press("a", i * 400);
+  assert.ok(T.stats(s).cpm > 120);
+  assert.ok(T.stats(s).ms < times[29]);
+});

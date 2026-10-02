@@ -23,7 +23,11 @@
   // Kutilmagan JS xatosi bolaga "sayt buzildi" bo'lib ko'rinmasligi kerak
   function asPyError(e) {
     if (e instanceof E.PyError) return e;
-    if (e instanceof RangeError) return E.recursionError({});
+    // JS RangeError ikki xil: chaqiruvlar zanjiri (rekursiya) yoki juda katta qiymat (satr/BigInt)
+    if (e instanceof RangeError) {
+      if (/call stack/i.test(String(e.message))) return E.recursionError({});
+      return E.limitError("qiymat juda katta", { hint: "Son yoki satr brauzer sigʻdira olmaydigan darajada katta boʻlib ketdi." });
+    }
     return E.err("InternalError", String((e && e.message) || e), {
       hint: "Bu — saytning xatosi, sening kodingniki emas. Iltimos, shu kodni oʻqituvchingga koʻrsat.",
     });

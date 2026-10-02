@@ -10,30 +10,36 @@
   const pick = (list, rng) => list[Math.floor(rng() * list.length)];
   const same = (a, b) => !!a && a.number === b.number && a.base === b.base;
 
-  function make(prev, rng, gen) {
+  function make(prev, rng, tier, gen) {
     rng = rng || Math.random;
+    tier = tier || 0;
     for (;;) {
-      const { base, value } = gen(rng);
-      const task = { base, number: S.toBase(value, base), answer: value };
+      const { base, value } = gen(rng, tier);
+      const task = { base, number: S.toBase(value, base), answer: value, tier };
       if (!same(prev, task)) return task;
     }
   }
 
-  // 1-bosqich: 4–8 xonali ikkilik son (8 … 255)
-  const makeBinTask = (prev, rng) => make(prev, rng, (r) => ({ base: 2, value: randInt(8, 255, r) }));
+  // Qiyinlik zinasi (QOIDALAR 4.3): chegaralar tier 0 / 1 / 2 bo'yicha
+  const BIN = [[8, 63], [64, 255], [256, 1023]]; // 1-bosqich: 4–6, 7–8 va 9–10 xonali ikkilik son
+  const HEX = [[16, 255], [160, 255], [256, 511]]; // 3-bosqich: 2 xonali; birinchi raqami ham harf; 3 xonali
 
-  // 2-bosqich: 3–8-lik, 2–3 xonali son (≤ 255)
-  const makeMidTask = (prev, rng) => make(prev, rng, (r) => {
+  // 1-bosqich: ikkilik son → o'nlik
+  const makeBinTask = (prev, rng, tier) => make(prev, rng, tier, (r, t) => ({ base: 2, value: randInt(BIN[t][0], BIN[t][1], r) }));
+
+  // 2-bosqich: 3–8-lik son. tier 0 — 2–3 xonali (≤ 255); tier 1 — faqat 3 xonali; tier 2 — 4 xonali (≤ 999)
+  const makeMidTask = (prev, rng, tier) => make(prev, rng, tier, (r, t) => {
     const base = pick([3, 4, 5, 6, 7, 8], r);
-    return { base, value: randInt(base, Math.min(255, base ** 3 - 1), r) };
+    if (t === 2) return { base, value: randInt(base ** 3, Math.min(999, base ** 4 - 1), r) };
+    return { base, value: randInt(t === 1 ? base ** 2 : base, Math.min(255, base ** 3 - 1), r) };
   });
 
-  // 3-bosqich: 2 xonali 16-lik son; 80% hollarda harfli
-  const makeHexTask = (prev, rng) => make(prev, rng, (r) => {
+  // 3-bosqich: 16-lik son; tier 0 da 80% hollarda harfli, tier 1 da birinchi raqam ham harf (A0…FF), tier 2 — 3 xonali
+  const makeHexTask = (prev, rng, tier) => make(prev, rng, tier, (r, t) => {
     for (;;) {
-      const value = randInt(16, 255, r);
+      const value = randInt(HEX[t][0], HEX[t][1], r);
       const letter = /[A-F]/.test(S.toBase(value, 16));
-      if (letter || r() < 0.2) return { base: 16, value };
+      if (letter || (t === 0 && r() < 0.2)) return { base: 16, value };
     }
   });
 
@@ -46,7 +52,7 @@
     return `${parts.join(" + ")} = ${S.fromBase(number, base)}`;
   };
 
-  const api = { makeBinTask, makeMidTask, makeHexTask, expandText, sumText };
+  const api = { BIN, HEX, makeBinTask, makeMidTask, makeHexTask, expandText, sumText };
 
   if (node) module.exports = api;
   else root.QK.bozor = api;

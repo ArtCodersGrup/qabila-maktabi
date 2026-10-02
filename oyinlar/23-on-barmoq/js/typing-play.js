@@ -53,7 +53,7 @@
 
   // ---------- Bitta qator yozish ----------
   // stage — o'rganilgan tugmalar (klaviaturada qolganlari xira); side — poygada o'yinchi;
-  // start — vaqt boshi (poyga); ghost — birinchi o'yinchining vaqtlari (soya); hands — qo'llarni ko'rsatish.
+  // start — vaqt boshi (poyga); ghost — soya vaqtlari (poygada birinchi o'yinchi, 3-bosqichda — rekord); hands — qo'llarni ko'rsatish.
   // Natija: { stats, session }
   function typeLine({ text, stage, side, start, ghost, ghostSide, hands = true }) {
     const el = box(true);
@@ -116,8 +116,10 @@
       ui.onCleanup(stop);
 
       if (ghost) {
+        // Poygada soya "boshla!" lahzasidan yuradi; yakka mashqda (start yo'q) — bola birinchi tugmani bosgandan
         const tick = () => {
-          tr.ghost(T.ghostAt(ghost, root.performance.now() - start) / len, ghostSide);
+          const t0 = start != null ? start : s.start;
+          tr.ghost(t0 == null ? 0 : T.ghostAt(ghost, root.performance.now() - t0) / len, ghostSide || "right");
           frame = root.requestAnimationFrame(tick);
         };
         tick();

@@ -80,3 +80,25 @@ test("makeExampleTask: javob misolning zonasi, to'rtala zona chiqadi", () => {
   }
   assert.equal(seen.size, 4);
 });
+
+test("qiyinlik zinasi: tier 0 — oddiylar, tier 2 — qiyinlar, tier 1+ ta'rifda 4 variant", () => {
+  for (let i = 0; i < 100; i++) {
+    const t0 = A.makeDefTask(null, null, 0);
+    assert.deepEqual(t0.options, ["ai", "ml", "dl"]);
+    assert.ok(!(A.DEFS.find((d) => d.text === t0.text).lvl), t0.text);
+    const t2 = A.makeDefTask(null, null, 2);
+    assert.deepEqual(t2.options, ["plain", "ai", "ml", "dl"]);
+    assert.ok(A.DEFS.find((d) => d.text === t2.text).lvl >= 1, t2.text);
+    const e2 = A.makeExampleTask(null, null, 2);
+    assert.ok(A.EXAMPLES.find((e) => e.text === e2.text).lvl >= 1, e2.text);
+    const j2 = A.makeJobTask(null, null, 2);
+    assert.ok(A.JOBS.find((j) => j.text === j2.text).lvl >= 1, j2.text);
+  }
+  // tier 2 da ham to'rtala zona chiqadi (faqat bitta javobni bosib o'tib bo'lmaydi)
+  const zones = new Set();
+  for (let i = 0; i < 300; i++) zones.add(A.makeExampleTask(null, null, 2).answer);
+  assert.equal(zones.size, 4);
+  const circles = new Set();
+  for (let i = 0; i < 300; i++) circles.add(A.makeDefTask(null, null, 2).answer);
+  assert.equal(circles.size, 4);
+});

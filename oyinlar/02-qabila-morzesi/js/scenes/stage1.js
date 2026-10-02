@@ -53,7 +53,8 @@
     await demoLetter("T", "dum", "Endi uzun zarb! Qoʻllanmadan shu kodni top.");
     await ui.say("elder", "Barakalla! Uzun zarb — T harfi.");
     await explain();
-    await ui.say("elder", "Endi qabila senga xabar yuboradi. 3 ta xabarni oʻqi!");
+    await ui.say("elder", `Endi qabila senga xabar yuboradi. ${QK.practice.need()} ta xabarni oʻqi!`);
+    await ui.say("elder", "Keyingi xabarlarda kodlar yashirinadi va signal tezlashadi — kodlarni eslab qol!");
     await common.readExercises();
   }
 

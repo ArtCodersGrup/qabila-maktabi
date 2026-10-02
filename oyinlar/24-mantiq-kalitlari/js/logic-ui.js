@@ -52,6 +52,51 @@
     });
   }
 
+  // ---------- To'ldiriladigan jadval (mashq): bola har qatorning natijasini o'zi qo'yadi ----------
+  // Katak bosilganda: ? → 1 → 0 → 1 … onChange(values) — har bosishda. values() — [0/1/null, ...]
+  function fillTable(host, { heads, rows, onChange }) {
+    const values = rows.map(() => null);
+    let locked = false;
+    const cells = [];
+    const body = h("tbody");
+    rows.forEach((r, i) => {
+      const out = h("td", { class: "out pick", text: "?", role: "button", tabindex: "0", "aria-label": `${i + 1}-qator natijasi` });
+      const press = () => {
+        if (locked) return;
+        values[i] = values[i] === 1 ? 0 : 1;
+        out.textContent = String(values[i]);
+        out.classList.remove("v0", "v1");
+        out.classList.add("v" + values[i]);
+        QK.sound.play("tap");
+        if (onChange) onChange(values.slice());
+      };
+      out.addEventListener("click", press);
+      out.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); press(); } });
+      cells.push(out);
+      body.append(h("tr", null, ...r.map((v) => h("td", { text: String(v) })), out));
+    });
+    const table = h("table", { class: "ttable fill" }, h("thead", null, h("tr", null, ...heads.map((t) => h("th", { text: t })))), body);
+    host.append(table);
+    return {
+      el: table,
+      values: () => values.slice(),
+      complete: () => values.every((v) => v !== null),
+      lock() { locked = true; table.classList.add("locked"); },
+      // Yechim: to'g'ri natijalar yoziladi, bola xato qo'ygan kataklar belgilanadi
+      reveal(outs) {
+        locked = true;
+        table.classList.add("locked");
+        cells.forEach((c, i) => {
+          const wrong = values[i] !== outs[i];
+          c.textContent = String(outs[i]);
+          c.classList.remove("v0", "v1");
+          c.classList.add("v" + outs[i]);
+          c.classList.toggle("fixed", wrong);
+        });
+      },
+    };
+  }
+
   // ---------- Hayotiy qoida ----------
   function ruleCard(host, life) {
     const res = h("div", { class: "life-res" });
@@ -83,5 +128,5 @@
     return el;
   }
 
-  QK.logicUi = { circuitView, switches, letterSwitch, lifeSwitch, truthTable, opTable, ruleCard, lifeFacts, exprView };
+  QK.logicUi = { circuitView, switches, letterSwitch, lifeSwitch, truthTable, fillTable, opTable, ruleCard, lifeFacts, exprView };
 })(window);

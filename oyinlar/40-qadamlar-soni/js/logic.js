@@ -133,36 +133,119 @@
 
   // ---------- 3-bosqich: amaliy tanlov ----------
   // Katta n da qaysi usul yaraydi: taxminiy qadamlar soni hisoblanadi
+  // 2026-10-02: har savolda TO'RT tanlov (oldin ikkita edi — 50% taxmin; QOIDALAR 4.3).
+  // Tanlovlar qadamlar sonini ham aytadi: bola usulni emas, O'SISHNI tanlaydi.
+  // tier — savol qaysi qiyinlik zinasidan boshlab chiqadi.
   const VAZIFALAR = [
     {
-      id: "izlash", savol: "1 000 000 ta tartiblangan son ichidan bittasini topish kerak. Qaysi usul?",
-      tanlovlar: [{ id: "chiziqli", nom: "Chiziqli izlash" }, { id: "ikkilik", nom: "Ikkilik izlash" }],
+      id: "izlash", savol: "1 000 000 ta tartiblangan son ichidan bittasini topish kerak. Qaysi usul eng kam qadam qiladi?",
+      tanlovlar: [
+        { id: "chiziqli", nom: "Chiziqli izlash" },
+        { id: "ikkilik", nom: "Ikkilik izlash" },
+        { id: "saralab", nom: "Avval pufakcha bilan saralab, keyin chiziqli" },
+        { id: "farqsiz", nom: "Farqi yoʻq — hammasi bir xil" },
+      ],
       javob: "ikkilik", n: 1000000,
-      nega: "Chiziqli izlash 1 000 000 ta qadam qiladi, ikkilik izlash — 20 ta.",
+      nega: "Chiziqli izlash 1 000 000 tagacha qadam qiladi, ikkilik izlash — 20 ta. Roʻyxat allaqachon tartiblangan — qayta saralash ortiqcha ish.",
     },
     {
-      id: "saralash", savol: "100 000 ta sonni saralash kerak. Pufakcha saralash yaraydimi?",
-      tanlovlar: [{ id: "ha", nom: "Ha, yaraydi" }, { id: "yoq", nom: "Yoʻq, juda sekin" }],
-      javob: "yoq", n: 100000,
-      nega: "Pufakcha saralash n² qadam qiladi: 100 000² = 10 000 000 000. Bu juda koʻp.",
+      id: "saralash", savol: "100 000 ta sonni pufakcha usulida saralasak, taxminan nechta qadam boʻladi?",
+      tanlovlar: [
+        { id: "n", nom: "100 000 — n ta" },
+        { id: "2n", nom: "200 000 — 2 × n ta" },
+        { id: "n2", nom: "10 000 000 000 — n² ta" },
+        { id: "log", nom: "17 ta — log n" },
+      ],
+      javob: "n2", n: 100000,
+      nega: "Pufakcha saralash — ikki qavat sikl, n² qadam: 100 000² = 10 000 000 000. Bu juda koʻp.",
     },
     {
-      id: "yigindi", savol: "1 dan 1 000 000 gacha yigʻindi kerak. Sikl bilan hisoblaymizmi?",
-      tanlovlar: [{ id: "sikl", nom: "Sikl bilan" }, { id: "formula", nom: "Formula bilan" }],
+      id: "yigindi", savol: "1 dan 1 000 000 gacha sonlar yigʻindisi kerak. Qaysi yoʻl eng kam qadam qiladi?",
+      tanlovlar: [
+        { id: "sikl", nom: "Sikl bilan qoʻshib chiqish" },
+        { id: "formula", nom: "Formula: n × (n + 1) ÷ 2" },
+        { id: "royxat", nom: "Roʻyxatga yigʻib, keyin qoʻshish" },
+        { id: "ikkilik", nom: "Ikkilik izlash" },
+      ],
       javob: "formula", n: 1000000,
-      nega: "Sikl 1 000 000 marta aylanadi, formula esa bitta amalda javob beradi.",
+      nega: "Sikl 1 000 000 marta aylanadi, formula esa bitta amalda javob beradi — O(1).",
     },
     {
-      id: "juftlik", savol: "10 000 ta oʻquvchidan har juftligini tekshirish kerak. Bu qancha ish?",
-      tanlovlar: [{ id: "oz", nom: "Oz — tez bitadi" }, { id: "kop", nom: "Juda koʻp — n² ta juftlik" }],
-      javob: "kop", n: 10000,
-      nega: "Har juftlik — n² ta: 10 000² = 100 000 000 ta tekshiruv.",
+      id: "juftlik", savol: "10 000 ta oʻquvchining har juftligini tekshirish kerak. Bu taxminan qancha ish?",
+      tanlovlar: [
+        { id: "n", nom: "10 000 ta — n" },
+        { id: "2n", nom: "20 000 ta — 2 × n" },
+        { id: "n2", nom: "100 000 000 ta — n²" },
+        { id: "log", nom: "14 ta — log n" },
+      ],
+      javob: "n2", n: 10000,
+      nega: "Har oʻquvchi har biri bilan — n² tartibida: 10 000² = 100 000 000 ta tekshiruv.",
+    },
+    {
+      id: "kichik", tier: 1, savol: "10 ta son ichidan bittasini topish kerak, roʻyxat tartiblanmagan. Nima qilamiz?",
+      tanlovlar: [
+        { id: "chiziqli", nom: "Chiziqli izlash — koʻpi bilan 10 qadam" },
+        { id: "ikkilik", nom: "Ikkilik izlash — tartiblanmagan boʻlsa ham" },
+        { id: "saralab", nom: "Avval saralab, keyin ikkilik izlash" },
+        { id: "bolmaydi", nom: "Topib boʻlmaydi" },
+      ],
+      javob: "chiziqli", n: 10,
+      nega: "Kichik n da oddiy usul yetadi: 10 qadam. Ikkilik izlash tartibsiz roʻyxatda ishlamaydi, saralash esa izlashning oʻzidan qimmat.",
+    },
+    {
+      id: "kop-izlash", tier: 1, savol: "1 000 000 ta tartibsiz son bor. Ular ichidan 1 000 000 marta har xil son izlanadi. Qaysi reja yaxshi?",
+      tanlovlar: [
+        { id: "chiziqli", nom: "Har safar chiziqli izlash" },
+        { id: "saralab", nom: "Bir marta saralab, har safar ikkilik izlash" },
+        { id: "ikkilik", nom: "Saralamasdan ikkilik izlash" },
+        { id: "farqsiz", nom: "Farqi yoʻq" },
+      ],
+      javob: "saralab", n: 1000000,
+      nega: "Har safar chiziqli — n × n = 10¹² qadam. Bir marta saralash qimmat, lekin keyin har izlash 20 qadam: jami ancha kam.",
+    },
+    {
+      id: "ikki-barobar", tier: 2, savol: "Dastur n = 1000 da 1 soniya ishlaydi va uning oʻsishi O(n²). n = 10 000 da taxminan qancha ishlaydi?",
+      tanlovlar: [
+        { id: "10", nom: "10 soniya" },
+        { id: "20", nom: "20 soniya" },
+        { id: "100", nom: "100 soniya" },
+        { id: "1000", nom: "1000 soniya" },
+      ],
+      javob: "100", n: 10000,
+      nega: "n oʻn barobar oshdi — O(n²) da qadam 10 × 10 = 100 barobar oshadi: 100 soniya.",
+    },
+    {
+      id: "log-osish", tier: 2, savol: "Ikkilik izlash 1 000 ta sonda 10 qadam qiladi. 1 000 000 ta sonda nechta qadam qiladi?",
+      tanlovlar: [
+        { id: "20", nom: "20 ta" },
+        { id: "100", nom: "100 ta" },
+        { id: "10000", nom: "10 000 ta" },
+        { id: "1000000", nom: "1 000 000 ta" },
+      ],
+      javob: "20", n: 1000000,
+      nega: "Har ikkilanish bitta qadam qoʻshadi. 1 000 → 1 000 000 — ming barobar, yaʼni yana 10 marta ikkilanish: 10 + 10 = 20.",
     },
   ];
 
-  function amaliyTask(r, prev) {
+  const zina = (tier) => (tier == null ? 2 : Math.max(0, Math.min(2, tier)));
+
+  // Tanlovlar har safar boshqa tartibda (to'g'ri javob bir joyda turib qolmasin)
+  function aralash(list, rnd) {
+    const out = list.slice();
+    for (let i = out.length - 1; i > 0; i--) {
+      const j = Math.floor(rnd() * (i + 1));
+      [out[i], out[j]] = [out[j], out[i]];
+    }
+    return out;
+  }
+
+  function amaliyTask(r, prev, tier) {
     const rr = r || Math.random;
-    return pickNew((rnd) => Object.assign({ tur: "amaliy" }, pick(VAZIFALAR, rnd)), prev, rr);
+    return pickNew((rnd) => {
+      const mos = VAZIFALAR.filter((v) => (v.tier || 0) <= zina(tier));
+      const v = pick(mos, rnd);
+      return Object.assign({ tur: "amaliy" }, v, { tanlovlar: aralash(v.tanlovlar, rnd) });
+    }, prev, rr);
   }
 
 
@@ -178,16 +261,21 @@
   const HISOB_N = [10, 25, 50, 100, 200];
   const HISOB_QADAM = [20, 50, 100, 300, 1000];
 
-  function hisobTask(r, prev) {
+  // karra — n necha barobar oshadi: 2 (qoida to'g'ridan-to'g'ri) yoki 4 (qoida ikki marta qo'llanadi).
+  // 2026-10-02: 4 barobar holati qo'shildi — O(n²) da 4 × 4 = 16 barobar; yoddan "×4" deb bo'lmaydi.
+  function hisobTask(r, prev, tier) {
     const rr = r || Math.random;
+    const t = zina(tier);
     return pickNew((rnd) => {
       const usul = pick(HISOB, rnd);
       const s = sinfById(usul.sinf);
       const n = pick(HISOB_N, rnd);
       const qadam = pick(HISOB_QADAM, rnd);
+      const karra = t === 0 ? 2 : pick([2, 4], rnd);
+      const marta = karra === 4 ? 2 : 1; // n necha marta ikkilandi
       return {
-        id: "hisob:" + usul.nom + ":" + n + ":" + qadam, tur: "hisob",
-        usul, sinf: s, n, qadam, yangiN: n * 2, javob: qadam * s.nisbat,
+        id: "hisob:" + usul.nom + ":" + n + ":" + qadam + ":" + karra, tur: "hisob",
+        usul, sinf: s, n, qadam, karra, yangiN: n * karra, javob: qadam * s.nisbat ** marta,
       };
     }, prev, rr);
   }

@@ -59,7 +59,7 @@
     await logic();
     await definition();
     await practice.exercises({
-      next: (prev) => L.stage2Task(Math.random, prev),
+      next: (prev, correct, tier) => L.stage2Task(Math.random, prev, tier),
       run: (task) => common.resultExercise(task),
       praise: (task) => (task.kind === "bool" ? "Rost va yolgʻonni ajratding." : "Zanjirni toʻgʻri kuzatding."),
     });

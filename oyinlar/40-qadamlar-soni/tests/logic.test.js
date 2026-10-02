@@ -104,25 +104,57 @@ test("sinf savoli: to'g'ri javob o'lchovdan chiqadi", () => {
   }
 });
 
-test("hisob savoli: 2n uchun javob qoida bo'yicha", () => {
-  for (const t of each(L.hisobTask, 24, 5)) {
+test("hisob savoli: 2n va 4n uchun javob qoida bo'yicha", () => {
+  const karralar = new Set();
+  for (const t of each(L.hisobTask, 60, 5)) {
     assert.equal(t.tur, "hisob");
-    assert.equal(t.yangiN, t.n * 2);
-    assert.equal(t.javob, t.qadam * t.sinf.nisbat);
+    karralar.add(t.karra);
+    assert.ok(t.karra === 2 || t.karra === 4, t.id);
+    assert.equal(t.yangiN, t.n * t.karra);
     assert.ok(Number.isInteger(t.javob), t.id + " javobi butun emas");
-    if (t.sinf.id === "1") assert.equal(t.javob, t.qadam);
-    if (t.sinf.id === "n") assert.equal(t.javob, t.qadam * 2);
-    if (t.sinf.id === "n2") assert.equal(t.javob, t.qadam * 4);
+    // n to'rt barobar oshsa — qoida ikki marta qo'llanadi: O(n) ×4, O(n²) ×16
+    const kop = { 1: 1, n: t.karra, n2: t.karra * t.karra }[t.sinf.id];
+    assert.equal(t.javob, t.qadam * kop, t.id);
+  }
+  assert.deepEqual([...karralar].sort(), [2, 4], "ikkala holat ham uchrasin");
+  // Birinchi zinada faqat ikki barobar (qoida to'g'ridan-to'g'ri)
+  const r = rngFrom(8);
+  let prev = null;
+  for (let k = 0; k < 30; k++) { prev = L.hisobTask(r, prev, 0); assert.equal(prev.karra, 2); }
+});
+
+// 2026-10-02: ikki tanlov (50% taxmin) o'rniga to'rt tanlov — QOIDALAR 4.3
+test("amaliy savol: to'rt tanlov, bitta to'g'ri javob va izoh", () => {
+  for (const v of L.VAZIFALAR) {
+    assert.equal(v.tanlovlar.length, 4, v.id);
+    assert.equal(new Set(v.tanlovlar.map((x) => x.id)).size, 4, v.id + ": tanlov id lari takror");
+    assert.equal(new Set(v.tanlovlar.map((x) => x.nom)).size, 4, v.id + ": tanlov matnlari takror");
+    assert.equal(v.tanlovlar.filter((x) => x.id === v.javob).length, 1, v.id + " javobi tanlovlarda yo'q");
+    assert.ok(v.savol.length > 10 && v.nega.length > 10, v.id);
+  }
+  assert.ok(L.VAZIFALAR.length >= 8, "savollar: " + L.VAZIFALAR.length);
+  for (const t of each(L.amaliyTask, 30, 7)) {
+    assert.equal(t.tur, "amaliy");
+    assert.equal(t.tanlovlar.length, 4);
+    assert.ok(t.tanlovlar.some((x) => x.id === t.javob), t.id + " javobi tanlovlarda yo'q");
   }
 });
 
-test("amaliy savol: to'g'ri javob tanlovlar ichida va izoh bor", () => {
-  for (const t of each(L.amaliyTask, 20, 7)) {
-    assert.equal(t.tur, "amaliy");
-    assert.equal(t.tanlovlar.length, 2);
-    assert.ok(t.tanlovlar.some((x) => x.id === t.javob), t.id + " javobi tanlovlarda yo'q");
-    assert.ok(t.savol.length > 10 && t.nega.length > 10, t.id);
-  }
+test("amaliy savol: to'g'ri javob har safar boshqa o'rinda, zina bilan yangi savollar ochiladi", () => {
+  const orinlar = new Set();
+  for (const t of each(L.amaliyTask, 80, 3)) orinlar.add(t.tanlovlar.findIndex((x) => x.id === t.javob));
+  assert.equal(orinlar.size, 4, "to'g'ri javob bir joyda turib qolgan: " + [...orinlar].join(","));
+  const idlar = (tier) => {
+    const r = rngFrom(6);
+    let prev = null;
+    const out = new Set();
+    for (let k = 0; k < 60; k++) { prev = L.amaliyTask(r, prev, tier); out.add(prev.id); }
+    return out;
+  };
+  assert.ok(!idlar(0).has("ikki-barobar") && !idlar(0).has("kichik"));
+  assert.ok(idlar(2).has("ikki-barobar") && idlar(2).has("log-osish") && idlar(2).has("kichik"));
+  // Bankdagi tanlovlar tartibi o'zgarmaydi (nusxa aralashtiriladi)
+  assert.equal(L.VAZIFALAR[0].tanlovlar[0].id, "chiziqli");
 });
 
 test("ketma-ket savollar takrorlanmaydi", () => {

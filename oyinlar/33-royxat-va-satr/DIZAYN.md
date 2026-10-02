@@ -77,3 +77,18 @@ Bosh ekran
 ├── js/scenes/…     kirish, uch bosqich, tabrik
 └── tests/logic.test.js
 ```
+
+## 10. 2026-10-02 qiyinlik yangilanishi
+
+Sabab: hisobot-5 (C jadvali) — roʻyxatlar 3–5 ta musbat son (1–20), kod yozish 5 ta qotirilgan masala edi.
+
+- **Roʻyxat zinasi:** 3–5 ta son (1…20) → 4–6 ta (1…30) → 4–7 ta (−9…30). Manfiy qiymat va manfiy indeks (`a[-1]`)
+  birga kelganda bola ikkalasini farqlashi kerak.
+- **1-bosqich:** `x = a.pop()`, `a[len(a) - 1] == a[-1]`, **`b = a`** (ikki nom — bitta roʻyxat: `b.append` dan keyin
+  `len(a)` ham oʻzgaradi), `a[0], a[-1] = a[-1], a[0]`, `sorted(a)[1]`.
+- **2-bosqich:** qoʻshnilarni solishtirish (`a[i] > a[i - 1]`), eng kattasining indeksi, **`best = 0` tuzogʻi**
+  (hamma son manfiy — javob 0 boʻlib qoladi; yonida `max(a)` ham chiqadi), yangi roʻyxat yigʻish, `a[1:-1]`.
+- **3-bosqich (satr):** `s[-2:]`, `in` / `not in`, `split()` va `sozlar[-1][0]`, harflarni solishtirish, `sorted(s)[0]`.
+- **Kod yozish 5 → 9:** `eng-katta-indeks` (`int()` siz solishtirish «1 2 10» da yiqiladi), `qoshni-teng`,
+  `anagramma`, `ikkinchi-har-xil` (takrorli roʻyxat — `sorted()[-2]` yiqiladi).
+- Testlar: 10 → 14.

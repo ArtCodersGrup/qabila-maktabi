@@ -40,7 +40,8 @@
     await ui.say("elder", "Endi pastki qator. Barmoq pastga tushadi, bosadi va joyiga qaytadi.");
     await common.drills(3);
     await definition();
-    await ui.say("elder", `Endi maqollar yozamiz. 3 ta maqol — aniqlik kamida ${T.PASS}%!`);
+    await ui.say("elder", `Endi maqollar yozamiz. ${QK.practice.need()} ta maqol — aniqlik kamida ${T.PASS}%, tezlik kamida ${T.minCpm(3, QK.practice.isHard())} belgi/daqiqa!`);
+    await ui.say("elder", "Yoʻlakda soya yuguradi — u sening rekording. Undan oʻzsang, yangi rekord!");
     await common.lineExercises({ stage: 3, speed: true, record: true });
     await story();
   }

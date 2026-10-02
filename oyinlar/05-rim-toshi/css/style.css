@@ -12,7 +12,7 @@
 .rtile.lg { width: 52px; height: 62px; font-size: 38px; }
 .rtile.fresh { animation: pop 0.3s; }
 .r-I { background: var(--c0); }
-.r-V { background: var(--c1); }
+.r-V { background: var(--c1); color: var(--matn); }
 .r-X { background: var(--c2); }
 .r-L { background: var(--c3); }
 .r-C { background: #6B4E3D; }

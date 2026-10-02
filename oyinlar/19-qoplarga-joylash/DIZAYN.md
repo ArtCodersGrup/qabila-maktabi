@@ -79,3 +79,14 @@ Bosh ekran
 ## 8. Bu o'yinga kirmaydi
 
 Kasr sonlarni oʻtkazish, 255 dan katta sonlar, 2 ↔ 16 tez usul (21-oʻyinda).
+
+## 2026-10-02 qiyinlik yangilanishi
+
+Sabab: bolalar "oson" deyishdi; 3-bosqichdagi "bu javob toʻgʻrimi? Ha / Yoʻq" 2 variantli edi (ikki urinish bilan yutqazib boʻlmasdi).
+
+- Generatorlar `tier` oladi (`makeGreedyTask(prev, rng, tier)` va h.k.), chegaralar `qop.js` da jadval qilib yozilgan:
+  - 1-bosqich (`GREEDY`): 5–63 → 32–127 → **64–255** (8 xonali ikkilik).
+  - 2-bosqich (`DIV`): 10–100 → 60–127 → **100–255** (tier 2 da 2-lik yoʻq: 8 marta boʻlish zerikarli, asos 3–8).
+  - 3-bosqich (`ANY`): 16-lik va 8-lik uchun 20–100 → 100–255 → **256–511** (3 xonali 16-lik: 300 = 12C₁₆).
+- **"Toʻgʻrimi?" oʻrniga "toʻgʻri yozuvni tanla"** (`choose`, `chooseOptions`): 4 variant — toʻgʻri javob, **qoldiqlar teskari oʻqilgan** (eng koʻp uchraydigan xato, doim variantlar ichida), bitta raqami xato, qoʻshni son. Tier 2 da asoslar 3, 5, 8, 16.
+- Maslahat javobni aytmaydi: xona qiymatlari qatori ("64, 8, 1 — raqam × xona qiymati"), bola variantlarni oʻzi oʻnlikka qaytaradi.

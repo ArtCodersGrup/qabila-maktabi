@@ -14,8 +14,12 @@
   const work = () => root.document.getElementById("zone-work");
   const control = () => root.document.getElementById("zone-control");
 
-  // Ro'yxat holati (sahifa, qidiruv, filtrlar) — ekranlar orasida saqlanadi
-  const holat = { qidiruv: "", daraja: "", teg: "", qiyinlik: "", holat: "", sahifa: 1 };
+  // Ro'yxat holati (sahifa, qidiruv, filtrlar) — ekranlar orasida saqlanadi.
+  // Birinchi kirishda standart filtr "Qiyinlik: 500+" (oson masalalar birinchi sahifani to'ldirmasin);
+  // bola filtrni o'zgartirsa yoki "Tozalash" ni bossa — tanlovi brauzerda saqlanadi (holat.js).
+  const saqlangan = H.filtrOqi();
+  const holat = Object.assign(R.standartFiltr(), saqlangan ? R.tozaFiltr(saqlangan) : {});
+  const filtrSaqla = () => H.filtrYoz(holat);
 
   // Masalani Python yoki C++ da yechish mumkin. Kutilgan javob ikkalasida ham bir xil —
   // u bankdagi namunali yechimdan hisoblanadi. Tanlov brauzerda saqlanadi.
@@ -82,15 +86,21 @@
 
       filtrlar.innerHTML = "";
       filtrlar.append(
-        tanlov("Daraja", holat.daraja, R.darajalar(), (v) => { holat.daraja = v; holat.sahifa = 1; chiz(); }),
-        tanlov("Mavzu", holat.teg, R.teglar().map((t) => ({ id: t, nom: t })), (v) => { holat.teg = v; holat.sahifa = 1; chiz(); }),
-        tanlov("Qiyinlik", holat.qiyinlik, R.qiyinliklar().map((q) => ({ id: q, nom: String(q) })), (v) => { holat.qiyinlik = v; holat.sahifa = 1; chiz(); }),
+        tanlov("Daraja", holat.daraja, R.darajalar(), (v) => { holat.daraja = v; holat.sahifa = 1; filtrSaqla(); chiz(); }),
+        tanlov("Mavzu", holat.teg, R.teglar().map((t) => ({ id: t, nom: t })), (v) => { holat.teg = v; holat.sahifa = 1; filtrSaqla(); chiz(); }),
+        tanlov("Qiyinlik: hammasi", holat.qiyinlik, R.qiyinlikTanlovlari(), (v) => { holat.qiyinlik = v; holat.sahifa = 1; filtrSaqla(); chiz(); }),
         tanlov("Holati", holat.holat, [{ id: "yechilgan", nom: "Yechilgan" }, { id: "yechilmagan", nom: "Yechilmagan" }],
-          (v) => { holat.holat = v; holat.sahifa = 1; chiz(); }));
+          (v) => { holat.holat = v; holat.sahifa = 1; filtrSaqla(); chiz(); }));
       if (holat.qidiruv || holat.daraja || holat.teg || holat.qiyinlik || holat.holat) {
+        // "Tozalash" standart filtrni ham olib tashlaydi — bola bankdagi hamma masalani ko'radi
         filtrlar.append(h("button", {
           class: "m-tozala", type: "button", text: "Tozalash",
-          onClick: () => { Object.assign(holat, { qidiruv: "", daraja: "", teg: "", qiyinlik: "", holat: "", sahifa: 1 }); qidiruv.value = ""; chiz(); },
+          onClick: () => {
+            Object.assign(holat, { qidiruv: "", daraja: "", teg: "", qiyinlik: "", holat: "", sahifa: 1 });
+            qidiruv.value = "";
+            filtrSaqla();
+            chiz();
+          },
         }));
       }
 
@@ -108,7 +118,7 @@
         h("span", { class: "m-raqam", text: String(s.boshi + k + 1) }),
         h("span", { class: "m-nom" },
           h("span", { class: "m-nom-matn", text: p.title }),
-          h("span", { class: "m-teglar" }, ...(p.tags || []).map((t) => chip(t)))),
+          h("span", { class: "m-teglar" }, chip(p.darajaNom, "daraja"), ...(p.tags || []).map((t) => chip(t)))),
         h("span", { class: "m-qiyinlik" }, chip(String(p.rating), "reyting")),
         h("span", { class: "m-holat" + (hp.yechilgan ? " ok" : ""), text: belgi })));
       });
@@ -225,7 +235,7 @@
       const kalit = "masala:" + p.id + ":cpp";
       const saqlangan = U.draft.read(kalit);
       const ed = CU.muharrir({
-        kod: saqlangan != null ? saqlangan : QK.cpp.BOSH + "\n    \n" + QK.cpp.OXIR,
+        kod: saqlangan != null ? saqlangan : QK.cpp.BOSH.replace("<iostream>\n", "<iostream>\n#include <algorithm>\n#include <string>\n") + "\n    \n" + QK.cpp.OXIR, // olimpiada qolipi: sort va string tayyor
         rows: 9,
         onRun: () => ishga(),
       });
@@ -256,10 +266,62 @@
     chiz();
   }
 
-  // Testlar natijasi: har test raqami bilan, foiz va birinchi yiqilganining tafsiloti
+  // Uzun kirish/chiqish (katta testlar — 1000 ta son) ekranni to'ldirib yubormasin
+  const QISQA = 160;
+  function qisqa(satrlar, bosh) {
+    const matn = (satrlar || []).join(" ⏎ ");
+    if (!matn) return bosh;
+    return matn.length > QISQA ? matn.slice(0, QISQA) + "… (juda uzun — " + satrlar.length + " satr)" : matn;
+  }
+
+  const sonMatn = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+
+  // Qadam chegarasiga urilgan test: masalada tezlik sinalsa, buni ochiq aytamiz —
+  // bola "javobim noto'g'ri" deb emas, "usulim sekin" deb tushunsin
+  const sekinIzoh = (task) => (task.qadam
+    ? "Bu masalada tezlik ham sinaladi: dasturing shu testda " + sonMatn(task.qadam) + " qadamdan oshib ketdi. Javobing toʻgʻri boʻlishi mumkin — lekin tezroq usul kerak."
+    : "Dastur juda uzoq ishladi — sikl toʻxtamayotgan boʻlishi mumkin.");
+
+  // Ochiq yiqilgan test: kirish, kutilgan javob va bolaning chiqishi (yoki xato xabari)
+  function ochiqTafsilot(task, bad) {
+    const quti = h("div", { class: "m-yordam" },
+      h("div", { class: "m-yordam-bosh", text: bad.n + "-test yiqildi" + (bad.namuna ? " (namuna)" : "") }));
+    if (bad.error) {
+      quti.append(h("div", { class: "m-solishtir" },
+        h("div", {}, h("b", { text: "Kirish: " }), h("code", { text: qisqa(bad.kirish, "(yoʻq)") }))));
+      quti.append(h("div", { class: "m-xato-matn", text: "↻ " + bad.error.text }));
+      if (bad.sekin) quti.append(h("div", { class: "m-xato-izoh", text: sekinIzoh(task) }));
+      else if (bad.error.hint) quti.append(h("div", { class: "m-xato-izoh", text: bad.error.hint }));
+    } else {
+      quti.append(h("div", { class: "m-solishtir" },
+        h("div", {}, h("b", { text: "Kirish: " }), h("code", { text: qisqa(bad.kirish, "(yoʻq)") })),
+        h("div", {}, h("b", { text: "Kutilgan: " }), h("code", { text: qisqa(bad.kutilgan, "(boʻsh)") })),
+        h("div", {}, h("b", { text: "Sendan: " }), h("code", { text: qisqa(bad.chiqqan, "(hech narsa)") }))));
+    }
+    return quti;
+  }
+
+  // Yopiq yiqilgan testlar: kirish va javob ko'rsatilmaydi — faqat hukm (olimpiadadagi kabi)
+  function yopiqTafsilot(task, yopiqlar) {
+    const quti = h("div", { class: "m-yordam" },
+      h("div", { class: "m-yordam-bosh", text: "Yopiq testlar" }));
+    const royxat = h("div", { class: "m-yopiq" });
+    for (const t of yopiqlar) royxat.append(h("div", { text: "✗ " + t.n + "-test — " + B.hukm(t) }));
+    quti.append(royxat);
+    if (yopiqlar.some((t) => t.sekin)) quti.append(h("div", { class: "m-xato-izoh", text: sekinIzoh(task) }));
+    quti.append(h("div", {
+      class: "m-yopiq-izoh",
+      text: "Bu testlarning kirishi va javobi koʻrsatilmaydi: har masalada faqat " + B.OCHIQ_SONI
+        + " ta yashirin test ochiladi. Chekka holatlarni oʻzing oʻylab koʻr: eng kichik va eng katta qiymat, nol, manfiy sonlar, takrorlar.",
+    }));
+    return quti;
+  }
+
+  // Testlar natijasi: har test raqami bilan ✓/✗ va foiz. Tafsilot faqat ochiq testlarda:
+  // namuna va shu masalada bola birinchi yiqilgan 2 ta yashirin test (baho.js; holat.js eslab qoladi).
   function korsat(host, task, code, til) {
-    const b = B.baho(task, code, til);
-    H.belgila(task.id, b.foiz, b.toliq);
+    const b = B.baho(task, code, til, H.biri(task.id).ochilgan);
+    H.belgila(task.id, b.foiz, b.toliq, b.ochilgan);
     host.innerHTML = "";
     sound.play(b.toliq ? "correct" : "retry");
 
@@ -270,32 +332,22 @@
     const qator = h("div", { class: "m-testlar" });
     b.testlar.forEach((t) => qator.append(h("span", {
       class: "m-test" + (t.ok ? " ok" : " xato"),
-      title: t.namuna ? "Namunaviy test" : "Yashirin test",
+      title: (t.namuna ? "Namunaviy test" : "Yashirin test") + (t.ok ? "" : " — " + B.hukm(t)),
       text: (t.ok ? "✓ " : "✗ ") + t.n + "-test",
     })));
     host.append(qator);
 
-    const bad = b.birinchiYiqilgan;
-    if (!bad) {
+    if (b.toliq) {
       host.append(h("div", { class: "m-yordam ok", text: "Barakalla! Masala yechildi." }));
       return;
     }
-    const tafsilot = h("div", { class: "m-yordam" },
-      h("div", { class: "m-yordam-bosh", text: bad.n + "-test yiqildi" }));
-    if (bad.error) {
-      tafsilot.append(h("div", { class: "m-xato-matn", text: "↻ " + bad.error.text }));
-      if (bad.error.hint) tafsilot.append(h("div", { class: "m-xato-izoh", text: bad.error.hint }));
-    } else {
-      tafsilot.append(h("div", { class: "m-solishtir" },
-        h("div", {}, h("b", { text: "Kirish: " }), h("code", { text: bad.kirish.join(" ⏎ ") || "(yoʻq)" })),
-        h("div", {}, h("b", { text: "Kutilgan: " }), h("code", { text: bad.kutilgan.join(" ⏎ ") })),
-        h("div", {}, h("b", { text: "Sendan: " }), h("code", { text: bad.chiqqan.join(" ⏎ ") || "(hech narsa)" }))));
-    }
+    const qutilar = b.ochiqYiqilgan.map((bad) => ochiqTafsilot(task, bad));
+    if (b.yopiqYiqilgan.length) qutilar.push(yopiqTafsilot(task, b.yopiqYiqilgan));
     // Maslahat faqat ikkinchi urinishdan keyin — avval o'zi o'ylab ko'rsin
-    if (H.biri(task.id).urinish >= 2 && task.hint) {
-      tafsilot.append(h("div", { class: "m-maslahat", text: "Maslahat: " + task.hint }));
+    if (qutilar.length && H.biri(task.id).urinish >= 2 && task.hint) {
+      qutilar[qutilar.length - 1].append(h("div", { class: "m-maslahat", text: "Maslahat: " + task.hint }));
     }
-    host.append(tafsilot);
+    host.append(...qutilar);
   }
 
   QK.masalaEkran = { royxatEkran, masalaEkran, holat };

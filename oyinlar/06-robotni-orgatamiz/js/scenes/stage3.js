@@ -71,20 +71,30 @@
     await ui.say("elder", "Maʼlumot qanday boʻlsa, robot shunday oʻylaydi.");
   }
 
-  // 6.4: "Robot bu yong'oqni nima deydi?"
-  function predictTask(task) {
+  // 6.4: "Robot qaysi yong'oqda adashadi?" — chaqilgan sinov yong'oqlaridan bittasi chiziqning noto'g'ri tomonida
+  function mistakeTask(task) {
     const { box, f } = common.board();
-    f.set({ points: [], line: task.line, query: task.query });
-    ui.bubble("elder", "Robotning modeli — mana shu chiziq. U bu yongʻoqni nima deydi?");
-    return common.answerTask({
-      answer: task.answer,
-      hint: () => {
-        f.set({ glow: [task.query] });
-        ui.bubble("elder", "↻ Yongʻoq chiziqning qaysi tomonida? Yuqorisi — toʻla, pasti — boʻsh.");
+    f.set({ points: [], line: task.line, test: task.test });
+    box.append(common.line("Kvadratlar — chaqilgan yongʻoqlar: yashil — toʻla, oq — boʻsh"));
+    ui.bubble("elder", "Chiziqdan yuqorisini robot «toʻla» deydi. U qaysi yongʻoqda adashadi? Oʻshani bos.");
+    return practice.tries({
+      setup: (submit) => f.set({ onPick: (index, kind) => { if (kind === "test") { sound.play("tap"); submit(index); } } }),
+      check: (index) => index === task.answer,
+      hint: (index) => {
+        // Asbob: bola bosgan yong'oq tekshirildi — u o'z joyida; qolganlarini o'zi tekshiradi
+        f.set({ test: task.test.map((p, i) => (i === index ? Object.assign({}, p, { mark: "ok" }) : p)) });
+        ui.bubble("elder", "↻ Bu yongʻoq oʻz tomonida turibdi. Yuqorida — toʻlalar, pastda — boʻshlar boʻlishi kerak.");
       },
       solution: () => {
-        f.set({ glow: [task.query] });
-        box.append(common.answerLine(`Chiziqdan ${task.answer ? "yuqorida — toʻla" : "pastda — boʻsh"}`));
+        const wrong = task.test[task.answer];
+        f.set({
+          onPick: null,
+          glow: [wrong],
+          test: task.test.map((p, i) => Object.assign({}, p, { mark: i === task.answer ? "wrong" : "ok" })),
+        });
+        box.append(common.answerLine(wrong.full
+          ? "Bu yongʻoq toʻla, lekin chiziqdan pastda — robot «boʻsh» deydi"
+          : "Bu yongʻoq boʻsh, lekin chiziqdan yuqorida — robot «toʻla» deydi"));
       },
     });
   }
@@ -100,7 +110,7 @@
       check: (value) => value === task.answer,
       hint: () => {
         f.set({ glow: task.points });
-        ui.bubble("elder", "↻ Robot shu joylarni koʻrgan. Boʻsh joydagi yongʻoq koʻproq oʻrgatadi.");
+        ui.bubble("elder", "↻ Robot shu joylarni koʻrgan. Qaysi shakl ulardan eng uzoqda?");
       },
       solution: () => {
         f.set({ glow: [task.options[task.answer]] });
@@ -119,12 +129,12 @@
 
   async function stage3() {
     await testAndFix();
-    await ui.say("elder", "Endi oʻzing javob ber. 3 ta toʻgʻri javob kerak!");
+    await ui.say("elder", `Endi oʻzing javob ber. ${QK.practice.need()} ta toʻgʻri javob kerak!`);
     await practice.exercises({
-      next: (prev, correct) => learn.makeStage3Task(correct, prev),
-      run: (task) => (task.type === "predict" ? predictTask(task) : usefulTask(task)),
-      praise: (task) => (task.type === "predict"
-        ? `Chiziqdan ${task.answer ? "yuqorida — toʻla" : "pastda — boʻsh"}.`
+      next: (prev, correct, tier) => learn.makeStage3Task(correct, prev, null, tier),
+      run: (task) => (task.type === "mistake" ? mistakeTask(task) : usefulTask(task)),
+      praise: (task) => (task.type === "mistake"
+        ? "Robot aynan shu yongʻoqda adashadi."
         : "Robot u yerda misol koʻrmagan edi."),
     });
     for (const scene of SCENES) await showScene(scene);

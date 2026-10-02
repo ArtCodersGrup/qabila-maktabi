@@ -117,13 +117,26 @@
     }
   }
 
-  // 1-bosqich: 6 ta misol va savol yong'og'i (eng yaqin misol aniq va to'g'ri bo'lsin)
-  function makeNearestTask(prev, rng) {
+  // Qiyinlik zinasi (QOIDALAR 4.3): tier 0 — birinchi javoblar, 1 — o'rta, 2 — oxirgi va qiyin rejim
+  const tierOf = (tier) => Math.max(0, Math.min(2, tier || 0));
+
+  // 1-bosqich: n ta misol va savol yong'og'i. Javob ikki qadam: eng yaqin misolni bosish (nearIndex),
+  // keyin "to'la / bo'sh" (answer). tier 0: 6 misol, so'rov 2..8, boshqa sinfdagi misol kamida 1.5 uzoqroq;
+  // tier 1: so'rov 1..9, farq 1.2..3.0; tier 2: 8 misol, farq 0.8..2.0 va ikkinchi nomzod 0.5..1.5 yaqinlikda.
+  function makeNearestTask(prev, rng, tier) {
     rng = rng || Math.random;
+    const t = tierOf(tier);
+    const n = t >= 2 ? 8 : 6;
+    const sepBase = [1.5, 1.2, 0.8][t];
+    const sepMax = [9, 3.0, 2.0][t]; // yuqori zinada boshqa sinfdagi misol ham yaqin tursin — aks holda savol oson
+    const uniq = [1.0, 0.7, 0.5][t]; // eng yaqin va undan keyingi misol orasidagi farq — bosganda ikkilanmasin
+    const uniqMax = [9, 9, 1.5][t]; // tier 2: ikkinchi nomzod ham yaqin — chamalab emas, solishtirib topiladi
+    const lo = t >= 1 ? 1 : 2;
+    const hi = t >= 1 ? 9 : 8;
     for (let attempt = 0; ; attempt++) {
-      const sep = attempt < 150 ? 1.5 : 1.0;
-      const set = makeExamples(6, rng, { margin: 1.5 });
-      const query = { x: randInt(2, 8, rng), y: randInt(2, 8, rng) };
+      const sep = attempt < 150 ? sepBase : Math.max(0.5, sepBase - 0.4);
+      const set = makeExamples(n, rng, { margin: 1.5 });
+      const query = { x: randInt(lo, hi, rng), y: randInt(lo, hi, rng) };
       if (set.points.some((p) => p.x === query.x && p.y === query.y)) continue;
       if (gap(set.hidden, query) < 1.5) continue;
       const list = nearestList(set.points, query, set.points.length);
@@ -131,23 +144,29 @@
       const other = list.find((p) => p.full !== near.full);
       const answer = above(set.hidden, query);
       if (near.full !== answer) continue;
-      if (dist(other, query) - dist(near, query) < sep) continue;
+      const d = dist(other, query) - dist(near, query);
+      if (d < sep || d > sepMax) continue;
+      const u = dist(list[1], query) - dist(near, query);
+      if (u < uniq || u > uniqMax) continue;
       if (prev && prev.query.x === query.x && prev.query.y === query.y) continue;
-      return { points: set.points, query, answer, near };
+      return { points: set.points, query, answer, near, nearIndex: set.points.indexOf(near), tier: t };
     }
   }
 
-  // 2-bosqich: 10 ta misol va qiyshiq boshlang'ich chiziq (3–5 xato), robot 0 ga keltira oladi
-  function makeLineTask(prev, rng) {
+  // 2-bosqich: 10 ta misol va qiyshiq boshlang'ich chiziq, robot 0 ga keltira oladi.
+  // Boshlang'ich xato: tier 0 — 3..5, tier 1 — 4..6, tier 2 — 5..7 (ko'proq surish kerak).
+  const LINE_ERRORS = [[3, 5], [4, 6], [5, 7]];
+  function makeLineTask(prev, rng, tier) {
     rng = rng || Math.random;
+    const [eLo, eHi] = LINE_ERRORS[tierOf(tier)];
     for (;;) {
       const set = makeExamples(10, rng, { margin: 1.0 });
       const start = { angle: pick(ANGLES, rng), y0: randInt(3, 7, rng) };
       const e = errorsOf(set.points, start);
-      if (e < 3 || e > 5) continue;
+      if (e < eLo || e > eHi) continue;
       if (errorsOf(set.points, fit(set.points, start)) !== 0) continue;
       if (prev && prev.start.angle === start.angle && prev.start.y0 === start.y0) continue;
-      return { points: set.points, start, hidden: set.hidden };
+      return { points: set.points, start, hidden: set.hidden, tier: tierOf(tier) };
     }
   }
 
@@ -176,45 +195,63 @@
     }
   }
 
-  // 3-bosqich mashqi: "Robot bu yong'oqni nima deydi?"
-  function makePredictTask(prev, rng) {
+  // 3-bosqich mashqi: "Robot qaysi yong'oqda adashadi?" — model chizig'i va n ta chaqilgan sinov yong'og'i,
+  // faqat bittasi chiziqning noto'g'ri tomonida. tier 0: 6 ta, adashgani chiziqdan 1.0..3.0 uzoqda;
+  // tier 1: 0.8..2.0; tier 2: 8 ta, 0.5..1.5 (chiziqqa yaqin — diqqat bilan qarash kerak).
+  const MISTAKE_GAP = [[1.0, 3.0], [0.8, 2.0], [0.5, 1.5]];
+  function makeMistakeTask(prev, rng, tier) {
     rng = rng || Math.random;
+    const t = tierOf(tier);
+    const n = t >= 2 ? 8 : 6;
+    const [gLo, gHi] = MISTAKE_GAP[t];
     for (;;) {
       const line = { angle: pick([-45, -30, -15, 0, 15, 30, 45], rng), y0: randInt(3, 7, rng) };
-      const query = { x: randInt(1, 9, rng), y: randInt(1, 9, rng) };
-      if (gap(line, query) < 1.2) continue;
-      if (prev && prev.query && prev.query.x === query.x && prev.query.y === query.y) continue;
-      return { type: "predict", line, query, answer: predict(line, query) };
+      const pool = poolFor(line, 0.5, 1, 9);
+      const nearLine = pool.filter((p) => gap(line, p) >= gLo && gap(line, p) <= gHi);
+      if (!nearLine.length || pool.length < n) continue;
+      const wrong = pick(nearLine, rng);
+      const rest = take(pool.filter((p) => p !== wrong), n - 1, rng);
+      const test = take(rest.concat([{ x: wrong.x, y: wrong.y, full: !wrong.full }]), n, rng);
+      const answer = test.findIndex((p) => p.x === wrong.x && p.y === wrong.y);
+      if (prev && prev.type === "mistake" && prev.line.angle === line.angle && prev.line.y0 === line.y0) continue;
+      return { type: "mistake", line, test, answer, tier: t };
     }
   }
 
-  // 3-bosqich mashqi: "Robot qaysi yong'oqdan ko'p narsa o'rganadi?" — misollardan eng uzoqdagisi
-  function makeUsefulTask(prev, rng) {
+  // 3-bosqich mashqi: "Robot qaysi yong'oqdan ko'p narsa o'rganadi?" — 4 variantdan misollardan eng uzoqdagisi.
+  // tier 0: misollar o'ng yarmida, eng uzoq variant boshqalardan 1.5 ga ustun; tier 1: yarmi tasodifiy; tier 2: farq 1.0.
+  function makeUsefulTask(prev, rng, tier) {
     rng = rng || Math.random;
+    const t = tierOf(tier);
+    const margin = t >= 2 ? 1.0 : 1.5;
     for (;;) {
-      const set = makeExamples(6, rng, { margin: 1.2, xLo: 5, xHi: 9 });
+      const side = t >= 1 && rng() < 0.5 ? { xLo: 1, xHi: 5 } : { xLo: 5, xHi: 9 };
+      const set = makeExamples(6, rng, { margin: 1.2, xLo: side.xLo, xHi: side.xHi });
       const options = [];
-      for (let k = 0; k < 3; k++) options.push({ x: randInt(1, 9, rng), y: randInt(1, 9, rng) });
-      if (new Set(options.map((o) => `${o.x}:${o.y}`)).size !== 3) continue;
+      for (let k = 0; k < 4; k++) options.push({ x: randInt(1, 9, rng), y: randInt(1, 9, rng) });
+      if (new Set(options.map((o) => `${o.x}:${o.y}`)).size !== 4) continue;
+      if (options.some((o) => set.points.some((p) => p.x === o.x && p.y === o.y))) continue;
       const far = options.map((o) => Math.min.apply(null, set.points.map((p) => dist(p, o))));
       const sorted = far.slice().sort((a, b) => b - a);
-      if (sorted[0] - sorted[1] < 1.5) continue;
-      return { type: "useful", points: set.points, options, answer: far.indexOf(sorted[0]) };
+      if (sorted[0] - sorted[1] < margin) continue;
+      const answer = far.indexOf(sorted[0]);
+      if (prev && prev.type === "useful" && prev.options[prev.answer].x === options[answer].x && prev.options[prev.answer].y === options[answer].y) continue;
+      return { type: "useful", points: set.points, options, answer, tier: t };
     }
   }
 
-  // Mashq tartibi: avval bashorat, keyin foydali misol, keyin tasodifiy
-  function makeStage3Task(k, prev, rng) {
+  // Mashq tartibi: avval "qaysi yong'oqda adashadi", keyin "qaysi misol foydali", keyin tasodifiy
+  function makeStage3Task(k, prev, rng, tier) {
     rng = rng || Math.random;
-    const usePredict = k === 0 ? true : k === 1 ? false : rng() < 0.5;
-    return usePredict ? makePredictTask(prev, rng) : makeUsefulTask(prev, rng);
+    const useMistake = k === 0 ? true : k === 1 ? false : rng() < 0.5;
+    return useMistake ? makeMistakeTask(prev, rng, tier) : makeUsefulTask(prev, rng, tier);
   }
 
   const api = {
     ANGLES, START, ACTIONS, Y_MIN, Y_MAX, Y_STEP,
     slope, lineY, above, predict, gap, wrongOnes, errorsOf, loss,
     dist, nearest, nearestList, move, train, fit,
-    makeExamples, makeNearestTask, makeLineTask, makeBiasTask, makePredictTask, makeUsefulTask, makeStage3Task,
+    makeExamples, makeNearestTask, makeLineTask, makeBiasTask, makeMistakeTask, makeUsefulTask, makeStage3Task,
   };
 
   if (typeof module !== "undefined" && module.exports) module.exports = api;

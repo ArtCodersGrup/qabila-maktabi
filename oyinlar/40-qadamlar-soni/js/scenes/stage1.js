@@ -40,7 +40,7 @@
   async function stage1() {
     await olchovKorsat();
     await practice.exercises({
-      next: (prev) => L.bashoratTask(Math.random, prev),
+      next: (prev, correct, tier) => L.bashoratTask(Math.random, prev, tier),
       run: (task) => common.bashoratExercise(task),
       praise: () => "Oʻsishni toʻgʻri koʻrdingiz.",
     });

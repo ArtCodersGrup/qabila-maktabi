@@ -78,3 +78,8 @@ Bosh ekran
 ## 8. Bu o'yinga kirmaydi
 
 Tarixiy sanalar, kompaniya nomlari, generativ AI texnik tafsilotlari, "kuchli/zaif AI" bahslari.
+
+## 2026-10-02 qiyinlik yangilanishi
+- Generatorlar `tier` oladi (QOIDALAR §4.3): tier 0 — oddiy misollar, tier 1 — hammasi, tier 2 — chalgʻituvchilari (`lvl ≥ 1`).
+- Banklar kengaydi: taʼriflar 6 → 12, ishlar 12 → 20, real misollar 13 → 25. Yangi misollar ataylab chalgʻitadi: lift, avtomatik eshik, robot-changyutgich qoidasi — harakat bor, lekin **oddiy dastur**; sudoku va labirint — **AI**, lekin oʻrganmaydi.
+- 1-bosqich: 3-javobdan boshlab «Oddiy dastur» ham variant boʻladi (3 → 4 variant).

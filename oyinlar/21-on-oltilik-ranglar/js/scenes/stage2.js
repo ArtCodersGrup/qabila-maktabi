@@ -56,9 +56,9 @@
     await ui.say("elder", "2A₁₆ + 3F₁₆ = 69₁₆. Tekshiramiz: 42 + 63 = 105 = 6·16 + 9 ✓");
     await guided("5C", "2F", "−", S.stepsSub("5C", "2F", 16), "Endi ayiramiz: 5C₁₆ − 2F₁₆.");
     await ui.say("elder", "5C₁₆ − 2F₁₆ = 2D₁₆. Tekshiramiz: 92 − 47 = 45 ✓. Qarz — 16 birlik!");
-    await ui.say("elder", "Endi oʻzing: qoʻshish va ayirish. 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing: qoʻshish va ayirish. ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev) => amal16.makeAddSubTask(prev),
+      next: (prev, correct, tier) => amal16.makeAddSubTask(prev, undefined, tier),
       run: addSubTask,
       praise: (task) => `${h16(task.a)} ${task.op} ${h16(task.b)} = ${h16(task.answer)}.`,
     });

@@ -3,7 +3,9 @@
   "use strict";
 
   const QK = root.QK;
-  const { caesar, ui, sound, art, caesarUi } = QK;
+  const { caesar, ui, art, caesarUi, practice } = QK;
+
+  const CRACKS = 4; // kalitsiz ochiladigan so'zlar soni (har birida 28 tagacha kalit sinaladi — 6 tasi ko'plik qiladi)
 
   // Hikoya: art — rasm (QK.art.story), lines — Oqsoqol gaplari (har biri alohida pufak)
   const SCENES = [
@@ -15,7 +17,8 @@
     { art: "phone", lines: ["Bugun telefondagi xabarlar ham shifrlanadi.", "Faqat kalitlar juda uzun — hammasini sinash uchun millionlab yil kerak."] },
   ];
 
-  // 7.1: kalitsiz ochish — bola kalitni o'zgartiradi, so'z shu kalit bilan ochilib ko'rinadi
+  // 7.1: kalitsiz ochish — bola kalitni o'zgartiradi, so'z shu kalit bilan ochilib ko'rinadi.
+  // «Topdim!» ma'nosiz so'zda bosilsa — xato: 1-marta maslahat, 2-marta kalit ko'rsatiladi va yangi so'z beriladi.
   function crackWord(ex) {
     ui.setCompact(false);
     ui.clearWork();
@@ -31,21 +34,20 @@
       guess.innerHTML = "";
       guess.append(caesarUi.tilesRow(caesar.decrypt(cipher, state.getKey()), "guess-tile"));
     };
-    caesarUi.keyControl(box, state, draw);
+    const ctrl = caesarUi.keyControl(box, state, draw);
     box.append(guess);
     draw();
-    return ui.settle((done) => {
-      ui.control().append(ui.button("Topdim!", () => {
-        if (state.getKey() === ex.key) {
-          sound.play("correct");
-          ui.pose("apprentice", "happy", 900);
-          ui.clearControl();
-          done();
-        } else {
-          sound.play("retry");
-          ui.bubble("elder", "Bu soʻz maʼnoli emas. Yana sinab koʻr.");
-        }
-      }));
+    ui.bubble("elder", "Kalitni oʻzgartir. Maʼnoli soʻz chiqsa — «Topdim!»");
+    return practice.tries({
+      setup: (submit) => ui.control().append(ui.button("Topdim!", () => submit(state.getKey()))),
+      check: (key) => key === ex.key,
+      hint: () => ui.bubble("elder", "↻ Bu soʻz maʼnoli emas. Kalitni yana oʻzgartir — «−» bilan orqaga ham yursa boʻladi."),
+      solution: () => {
+        state.setKey(ex.key);
+        ctrl.render();
+        draw();
+        box.append(ui.h("div", { class: "opened", text: `Kalit ${ex.key}: ${ex.word}` }));
+      },
     });
   }
 
@@ -68,14 +70,13 @@
     ui.raisePaper(false);
     await ui.say("elder", "Dushman xatni tutib oldi. Lekin u kalitni bilmaydi!");
     await ui.say("elder", "Sen ham kalitni bilmaysan. Kalitni oʻzgartirib, maʼnoli soʻz chiqquncha sinab koʻr.");
-    let prev = null;
-    for (let n = 0; n < 2; n++) {
-      const ex = caesar.makeCrack(prev);
-      prev = ex;
-      ui.bubble("elder", "Kalitni oʻzgartir. Maʼnoli soʻz chiqsa — «Topdim!»");
-      await crackWord(ex);
-      await ui.say("elder", `✓ Toʻgʻri! Kalit ${ex.key} ekan: ${ex.word}.`);
-    }
+    await ui.say("elder", `${CRACKS} ta soʻzni och. Kalit borgan sari uzoqlashadi!`);
+    await practice.exercises({
+      need: CRACKS,
+      next: (prev, correct, tier) => caesar.makeCrack(prev, null, caesar.crackLevel(correct, tier)),
+      run: crackWord,
+      praise: (ex) => `Kalit ${ex.key} ekan: ${ex.word}.`,
+    });
     await ui.say("elder", "Kalit atigi 28 xil. Hammasini sinab chiqish oson — shuning uchun Sezar shifri kuchsiz.");
     for (const sc of SCENES) await showScene(sc);
   }

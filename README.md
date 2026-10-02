@@ -4,7 +4,7 @@
 
 8–12 yoshli bolalarga informatika, kodlash va sunʼiy intellekt qanday ishlashini **2D oʻyinlar orqali koʻrsatuvchi** sayt. Hammasi oʻzbek tilida (lotin yozuvi).
 
-Har bir oʻyin bitta mavzuni oʻrgatadi: bola avval oʻzi qiladi, keyin oʻyin unga nom beradi, oxirida tasodifiy mashqlar beriladi (3 ta toʻgʻri javob — bosqich tugadi).
+Har bir oʻyin bitta mavzuni oʻrgatadi: bola avval oʻzi qiladi, keyin oʻyin unga nom beradi, oxirida tasodifiy mashqlar beriladi: bosqichga qarab 4–6 ta toʻgʻri javob, misollar javob sari qiyinlashadi. Xatosiz oʻtgan bosqich — ★★★; hamma bosqich tugagach **qiyin rejim 🔥** ochiladi (7 ta javob, bitta urinish).
 
 ## Ochish
 
@@ -109,7 +109,7 @@ Tugagan bosqichlar brauzer xotirasida (`localStorage`) saqlanadi — sahifa yang
 ## Oʻqituvchi uchun test
 
 `oqituvchi/test-yasa.py` — savollar bankidan **chop etiladigan test** yasaydi (A4, javoblar kaliti
-va qisqa yechimlar bilan). 10 ta blok, 194 ta savol; faqat `python3` kerak.
+va qisqa yechimlar bilan). 10 ta blok, 224 ta savol (python, algoritm va kombinatorikada «xatoni top», «qadamlarni yurgiz» kabi tahlil savollari ham bor); faqat `python3` kerak.
 
 ```bash
 python3 oqituvchi/test-yasa.py --royxat                    # bloklar va savollar soni
@@ -148,7 +148,7 @@ node --test oyinlar/umumiy/tests/*.test.js              # umumiy kod va kichik P
 cd oyinlar/05-rim-toshi && node --test tests/*.test.js   # bitta oʻyin
 ```
 
-**Masalalar** (`oyinlar/masalalar/`): bosh sahifada **Mashqlar** qatorida — oʻyin emas, masalalar roʻyxati. Qidiruv, filtr (daraja, mavzu, qiyinlik, holati) va sahifalash (10 tadan). Har masalada qiyinlik (reyting), teglar, koʻrinadigan namuna va 4–5 ta yashirin test bor. Yechim **har bir testda** tekshiriladi: `6 ta testdan 2 tasi oʻtdi — 33%`, qaysi test yiqilgani va birinchi yiqilganining kirish/kutilgan javobi koʻrsatiladi; masala faqat 100% da yechilgan hisoblanadi. Masalalarning 10 tasi — **Codeforces** reyting 800 gʻoyalari asosida: shart matni oʻzimizniki, kartada asl masalaga havola bor.
+**Masalalar** (`oyinlar/masalalar/`): bosh sahifada **Mashqlar** qatorida — oʻyin emas, masalalar roʻyxati. Qidiruv, filtr (daraja, mavzu, qiyinlik, holati) va sahifalash (10 tadan). Har masalada qiyinlik (reyting), teglar, koʻrinadigan namuna va yashirin testlar bor. Yechim **har bir testda** tekshiriladi: `6 ta testdan 2 tasi oʻtdi — 33%` va qaysi test yiqilgani koʻrsatiladi; masala faqat 100% da yechilgan hisoblanadi. Masalalarning 10 tasi — **Codeforces** reyting 800 gʻoyalari asosida: shart matni oʻzimizniki, kartada asl masalaga havola bor. **71 ta masala, 5 daraja** (Oson, Oʻrta, Qiyin, Codeforces, **Olimpiada** — reyting 700–1400). Roʻyxat standart holatda 500+ reytingdan boshlanadi. Har masalada kamida 6 ta yashirin test; javob faqat namunada va bola yiqilgan dastlabki 2 ta testda ochiladi. Ayrim masalalarda **tezlik ham sinaladi** (`qadam` maydoni): toʻgʻri, lekin sekin yechim katta testda yiqiladi.
 
 Kichik Pythonning testlari orasida `python3` bilan solishtirish ham bor: korpusdagi dasturlar va tasodifiy yasalgan dasturlar ikkalasida bajarilib, chiqishi belgi-belgi tekshiriladi. `python3` topilmasa, shu ikki test oʻtkazib yuboriladi.
 

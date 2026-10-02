@@ -68,7 +68,7 @@
         host.append(answer(task.xatoIndeks >= task.dastur.length
           ? "Oxirida buyruq yetishmaydi"
           : (task.xatoIndeks + 1) + "-buyruq xato"));
-        host.append(note(task.ishora));
+        host.append(note(task.izoh || task.ishora));
       },
     });
   }

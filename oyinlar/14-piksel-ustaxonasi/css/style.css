@@ -63,7 +63,7 @@ button.pcell:active { transform: scale(0.92); }
 .ladder { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; animation: pop 0.3s; }
 .ladder .step { padding: 6px 12px; border-radius: 10px; background: #fff; box-shadow: 0 2px 0 var(--soya); font-size: 19px; font-weight: 900; }
 .ladder .step.new { background: var(--asosiy); color: #fff; }
-.ladder .arrow { font-size: 16px; font-weight: 800; color: #7A7266; }
+.ladder .arrow { font-size: 16px; font-weight: 800; color: var(--matn-3); }
 
 /* ---------- Qator va qisqa yozuv ---------- */
 .prow { display: flex; gap: 2px; padding: 4px; border-radius: 8px; background: #D9D2C3; }
@@ -78,7 +78,7 @@ button.pcell:active { transform: scale(0.92); }
 /* ---------- Taqqoslash ---------- */
 .cmp { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; }
 .cmp-card { padding: 12px 18px; border-radius: 14px; background: #fff; box-shadow: 0 3px 0 var(--soya); font-size: 28px; font-weight: 900; }
-.cmp-or { font-size: 18px; font-weight: 800; color: #7A7266; }
+.cmp-or { font-size: 18px; font-weight: 800; color: var(--matn-3); }
 
 /* ---------- Formula, hikoya, tabrik ---------- */
 .formula-box { display: flex; flex-direction: column; align-items: center; gap: 10px; max-width: 100%; text-align: center; }

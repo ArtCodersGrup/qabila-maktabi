@@ -74,19 +74,21 @@
       const lineNo = i + 1;
       let col = 0;
 
+      let tabAt = -1;
       while (col < line.length && (line[col] === " " || line[col] === "\t")) {
-        if (line[col] === "\t" && depth === 0) {
-          throw E.indentationError("tabs are not allowed in indentation", {
-            line: lineNo, col: col + 1,
-            hint: "Otstup uchun Tab emas, 4 boʻshliq ishlatiladi. Muharrirda Tab bosilsa, 4 boʻshliq qoʻyiladi.",
-          });
-        }
+        if (line[col] === "\t" && tabAt < 0) tabAt = col;
         col++;
       }
 
       const rest = line.slice(col);
       if (depth === 0) {
-        if (rest === "" || rest.startsWith("#")) continue; // bo'sh satr va izoh e'tiborga olinmaydi
+        if (rest === "" || rest.startsWith("#")) continue; // bo'sh satr va izoh e'tiborga olinmaydi (Tab'dan iborat bo'lsa ham)
+        if (tabAt >= 0) {
+          throw E.indentationError("tabs are not allowed in indentation", {
+            line: lineNo, col: tabAt + 1,
+            hint: "Otstup uchun Tab emas, 4 boʻshliq ishlatiladi. Muharrirda Tab bosilsa, 4 boʻshliq qoʻyiladi.",
+          });
+        }
         const width = col;
         const top = () => indents[indents.length - 1];
         if (width > top()) {

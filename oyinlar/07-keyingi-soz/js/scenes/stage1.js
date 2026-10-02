@@ -64,7 +64,7 @@
     await ui.say("elder", "Robotning bor bilgani — shu jadval.");
   }
 
-  // 4.4 va 5.5: "{so'z} dan keyin eng ko'p qaysi so'z kelgan?"
+  // 4.4: "{so'z} dan keyin eng ko'p qaysi so'z kelgan?" — 4 variant; matn har misolda bankdan yangidan olinadi
   function bestTask(task, sentences, mode) {
     const el = common.box(true);
     const table = words.table(sentences);
@@ -101,10 +101,11 @@
   async function stage1() {
     await showCorpus(words.BASE);
     await countDemo(words.BASE);
-    await ui.say("elder", "Endi oʻzing sana! 3 ta toʻgʻri javob kerak.");
+    await ui.say("elder", `Endi oʻzing sana! ${QK.practice.need()} ta toʻgʻri javob kerak.`);
+    await ui.say("elder", "Diqqat: har safar gaplar boshqacha boʻladi — qaytadan sanash kerak.");
     await practice.exercises({
-      next: (prev) => words.makeBestTask(words.BASE, prev),
-      run: (task) => bestTask(task, words.BASE, "corpus"),
+      next: (prev, correct, tier) => words.makeBestTask(null, prev, null, tier),
+      run: (task) => bestTask(task, task.sentences, "corpus"),
       praise: (task) => `«${task.word}» dan keyin «${task.options[task.answer]}» eng koʻp kelgan.`,
     });
   }

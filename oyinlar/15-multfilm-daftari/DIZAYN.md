@@ -91,3 +91,14 @@ Bosh ekran
 ## 8. Bu o'yinga kirmaydi
 
 Ovozni raqamlash tafsilotlari (faqat hikoyada bir gap), kodeklar nomlari, internet tezligi (Mbit/s), Tbayt (16-oʻyin).
+
+## 2026-10-02 qiyinlik yangilanishi
+
+Sabab: bolalar "oson" deyishdi — "qaysi katta?" va "qaysi video koʻproq siqiladi?" 2 variantli edi, sonlar kichik.
+
+- Uchala generator `tier` oladi; chegaralar `video.js` da jadval:
+  - 1-bosqich (`FRAME`): jami kadr ≤ 100 → ≤ 150 → **≤ 200**, soniya 2–9 → 3–12 → 4–15.
+  - 2-bosqich: 1 kadr hajmi (`FRAME_BYTES`) 2–12 → 4–16 → 6–20 bayt (javob ≤ 100 / 150 / 200); soniyali savol (`FPS_TASK`) ≤ 100 → ≤ 150 → ≤ 240 bayt. Maslahat endi "1 soniya"ning natijasini aytmaydi.
+  - 3-bosqich: oʻzgargan piksellar (`CHANGED`) 2–12 → 8–20 → **15–30** (36 dan ayirish).
+- **Taqqoslash — 4 variant:** uch karta (`g Gbayt`, `m Mbayt`, `n ta kino × s Gbayt`) — "qaysi biri eng katta?" yoki **"Uchalasi teng"**. Gbayt 1–5 → 2–9 → 6–20.
+- **"Qaysi video?" — 4 variant:** toʻrtta videodan "ENG KOʻP siqiladigani" (1 tinch + 3 harakatli); tier 1 dan boshlab teskarisi ham — "ENG KAM siqiladigani" (1 harakatli + 3 tinch).

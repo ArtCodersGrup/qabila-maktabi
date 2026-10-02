@@ -113,3 +113,16 @@ Bosh ekran
 ## 10. Bu o'yinga kirmaydi
 
 "Faqat bittasi" (XOR), amallardan sxema yigʻish va kompyuter qanday qoʻshishi (25-oʻyin), amallar tartibi (qavssiz ifodalar), uch va undan koʻp kirish, mantiqiy sxema belgilari (darvoza shakllari).
+
+## 11. 2026-10-02 qiyinlik yangilanishi
+
+Sabab: bolalar "oʻta oson" deyishdi — "yonadimi?", "ifoda = ?" va "Ha / Yoʻq" savollari 2 variantli edi, ikki urinish bilan yutqazib boʻlmasdi; maslahat toʻldirilgan jadval qatorini koʻrsatib, javobni aytib qoʻyardi.
+
+- **0/1 javobli savol qolmadi.** Oʻrniga — **jadvalni toʻldirish**: bola 4 qatorning (EMAS A da 2 qator) natijasini oʻzi bosib qoʻyadi (`?` → 1 → 0), keyin "Tekshir ✓". 16 kombinatsiya — taxmin bilan oʻtib boʻlmaydi.
+  - 1–2-bosqich: `fill` — amal jadvali. Tier 2 da amal nomi yozilmaydi, faqat sxema (ketma-ket — VA, parallel — YOKI): bola amalni sxemadan taniydi (3-maqsad).
+  - 3-bosqich: `fillExpr` — ifoda jadvali (tier 0: 1–2 amal, tier 1: 2 amal, tier 2: **3 amalli**, qavs ichida qavs: `EMAS (A VA (EMAS B))`, `(A YOKI B) VA (EMAS A)` …); tier 2 da `fillLife` — hayotiy qoida jadvali.
+- **Hayotiy qoida — ikki savol** (`life`): 1) holat uchun "Ha / Yoʻq", 2) "bu qoida qaysi ifodaga mos?" — **4 variant** (`lifeExprOptions`: 8 shakldan toʻgʻrisi + 3 tasi). Ikkalasi birga tekshiriladi, ikkalasi toʻgʻri boʻlsagina hisoblanadi; qaysi biri xatoligi aytilmaydi.
+- "B qanday boʻlsin?" (`need`, 4 variant) oʻzgarmadi.
+- **Maslahat javobni aytmaydi:** `need` da jadval **boʻsh** chiqadi (A = … boʻlgan ikki qator belgilangan, natijalar `?`); jadvalda — "N ta qator xato" (qaysiligi aytilmaydi) + qoida; ifodada — qaysi qavsdan boshlash.
+- Generator: `makeTask(stage, prev, rng, tier)`, tekshiruv: `checkTask(task, value)` — ikkalasi `logic.js` da, testlangan.
+- **Qoldirildi:** hisobotdagi "1-bosqich tier 2 da YOKI ham" — YOKI 1-bosqichda hali oʻrgatilmagan, shuning uchun 1-bosqichda faqat VA qoldi.

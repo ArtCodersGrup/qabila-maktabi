@@ -5,7 +5,7 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const C = require("../js/cpp/cpp-run.js");
 const V = require("../js/cpp/values.js");
-const { CORPUS, d } = require("./cpp-corpus.js");
+const { CORPUS, d, da } = require("./cpp-corpus.js");
 
 const ishga = (kod, kirish) => C.run(kod, { stdin: kirish || [] });
 const xato = (tana, kirish) => ishga(d(tana), kirish).error;
@@ -162,8 +162,9 @@ test("yopilmagan qo'shtirnoq — tushunarli xato", () => {
 
 // Yadroga qo'shilgan tayyor funksiyalar: olimpiada masalalari uchun shular yetadi
 test("sort, swap, max, min, abs — massiv bilan ishlaydi", () => {
-  assert.deepEqual(ishga(d('int a[5] = {7, 2, 9, 1, 5};\nsort(a, a + 5);\nfor (int i = 0; i < 5; i++) cout << a[i];')).output, ["12579"]);
-  assert.deepEqual(ishga(d('int a[4] = {4, 3, 2, 1};\nsort(a, a + 2);\nfor (int i = 0; i < 4; i++) cout << a[i];')).output, ["3421"]);
+  // sort — <algorithm> dan: da() shu kutubxonani ham ulaydi (usiz — kompilyatsiya xatosi, cpp-xatolar.test.js)
+  assert.deepEqual(ishga(da('int a[5] = {7, 2, 9, 1, 5};\nsort(a, a + 5);\nfor (int i = 0; i < 5; i++) cout << a[i];')).output, ["12579"]);
+  assert.deepEqual(ishga(da('int a[4] = {4, 3, 2, 1};\nsort(a, a + 2);\nfor (int i = 0; i < 4; i++) cout << a[i];')).output, ["3421"]);
   assert.deepEqual(ishga(d('cout << max(3, 8) << min(3, 8) << abs(-5);')).output, ["835"]);
   assert.deepEqual(ishga(d('int x = 1, y = 2;\nswap(x, y);\ncout << x << y;')).output, ["21"]);
   // C++ da max(double, int) kompilyatsiya bo'lmaydi — biz ham shunday qilamiz
@@ -171,7 +172,7 @@ test("sort, swap, max, min, abs — massiv bilan ishlaydi", () => {
   assert.match(e.cppMessage, /no matching function for call to 'max'/);
   assert.match(e.hint, /bir xil turda/);
   // sort faqat massiv uchun
-  assert.equal(xato("int x = 5;\nsort(x, x + 1);").kind, "yoq");
+  assert.equal(ishga(da("int x = 5;\nsort(x, x + 1);")).error.kind, "yoq");
 });
 
 test("while (cin >> x): kirish tugaguncha o'qiydi", () => {

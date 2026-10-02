@@ -47,15 +47,37 @@
     await ui.say("elder", "Gaplar har xil chiqdi! Chatbot ham keyingi soʻzni shunday — ehtimol bilan tanlaydi.");
   }
 
+  // 5.5: mashq — "Robot har safar eng ko'p uchragan so'zni tanlasa, qaysi gap chiqadi?" (4 ta gap).
+  // Jadvaldan bitta sonni o'qish yetmaydi: bola ikki qadam yuradi (boshlovchi so'z qatori → keyingi so'z qatori).
+  function greedyTask(task) {
+    const el = common.box(true);
+    const ptable = wordsUi.pairTable(el);
+    ptable.set(words.table(task.sentences), task.rows);
+    ui.bubble("elder", `Robot «${task.start}» dan boshlaydi va har safar eng koʻp uchragan soʻzni tanlaydi. Qaysi gap chiqadi?`);
+    return practice.tries({
+      setup: (submit) => wordsUi.sentenceButtons(task.options, submit),
+      check: (index) => index === task.answer,
+      hint: () => {
+        ptable.highlight(task.start);
+        ui.bubble("elder", `↻ Avval «${task.start}» qatoriga qara: eng katta son qaysi soʻzda? Keyin oʻsha soʻzning qatoriga oʻt.`);
+      },
+      solution: () => {
+        const good = task.options[task.answer];
+        ptable.highlight(good[1]);
+        el.append(common.answerLine(good.join(" → ")));
+      },
+    });
+  }
+
   async function stage2() {
     const table = words.table(words.BASE);
     await greedyDemo(table);
     await randomDemo(table);
-    await ui.say("elder", "Endi oʻzing ayt: robot qaysi soʻzni yozishi eng ehtimoli katta? 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing ayt: eng koʻpini tanlaydigan robot qaysi gapni yozadi? ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev) => words.makeBestTask(words.BASE, prev),
-      run: (task) => QK.scenes.bestTask(task, words.BASE, "table"),
-      praise: (task) => `«${task.word}» dan keyin koʻpincha «${task.options[task.answer]}» keladi.`,
+      next: (prev, correct, tier) => words.makeGreedyTask(null, prev, null, tier),
+      run: greedyTask,
+      praise: (task) => `Robot har safar eng koʻpini tanladi: «${task.options[task.answer].join(" ")}».`,
     });
   }
 

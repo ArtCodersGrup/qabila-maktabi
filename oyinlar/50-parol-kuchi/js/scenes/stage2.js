@@ -19,14 +19,14 @@
     await ui.say("elder", "Toʻppa-toʻgʻri. Shuning uchun uzunlik eng muhim narsa.");
   }
 
-  const keyingi = (prev, togri) => (togri % 2 === 0 ? L.vaqtTask(Math.random, prev) : L.qiyosTask(Math.random, prev));
+  const keyingi = (prev, togri, tier) => (togri % 2 === 0 ? L.vaqtTask(Math.random, prev, tier) : L.qiyosTask(Math.random, prev, tier));
 
   async function stage2() {
     await tezlik();
     await practice.exercises({
-      next: (prev, togri) => keyingi(prev, togri),
+      next: (prev, togri, tier) => keyingi(prev, togri, tier),
       run: (task) => (task.tur === "qiyos" ? common.qiyosExercise(task) : common.vaqtExercise(task)),
-      praise: (task) => (task.tur === "qiyos" ? "Uzunroq parol kuchliroq." : task.hisob),
+      praise: (task) => (task.tur === "qiyos" ? "Uzun va lugʻatda yoʻq parol — eng kuchlisi." : task.hisob),
     });
   }
 

@@ -40,7 +40,7 @@
     await ui.say("elder", "Sen hozir robotga algoritm yozding!");
     await tea();
     await definition();
-    await ui.say("elder", "Endi oʻzing yoz. 3 ta toʻgʻri javob — bosqich tugaydi!");
+    await ui.say("elder", `Endi oʻzing yoz. ${QK.practice.need()} ta toʻgʻri javob — bosqich tugaydi!`);
     await common.exercises(1);
   }
 

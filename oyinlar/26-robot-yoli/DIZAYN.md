@@ -133,3 +133,14 @@ Uch zona (asos.css). Ish maydonida: maydon (eni ≤ 340 px) va uning ostida dast
 ## 10. Bu oʻyinga kirmaydi
 
 Takrorlash (sikl) va funksiya — 27-oʻyin. Shart va sensor — 28-oʻyin. Tayyor dasturdagi xatoni topish — 29-oʻyin. Robotning oʻz nuqtai nazari (oldinga + burilish), oʻzgaruvchi, matnli kod yozish, diagonal yurish, bir nechta robot.
+
+## 2026-10-02 qiyinlik yangilanishi
+
+Sabab: bolalar "oson" deyishdi — yoʻl 2–6 qadam edi, ortiqcha qadam uchun hech narsa boʻlmasdi, bosqich ichida qiyinlik oʻsmasdi.
+
+- Maydon chegaralari endi bosqich **va** tier boʻyicha (`LIMITS[bosqich][tier]`; `STAGE` — tier 0, eski nom saqlangan):
+  - 1-bosqich (toshsiz): yoʻl 2–4 → 3–5 → **4–6**.
+  - 2-bosqich: 3 tosh, 3–6 → 4 tosh, 4–7 → **4 tosh, 5–8**.
+  - 3-bosqich: 2 tosh, 3–5 → 3 tosh, 4–6 → **4 tosh, 4–7**; oʻqiladigan dastur 3–5 → 4–6 → **5–7** buyruq.
+- **Eng qisqa yoʻl sharti** (tier 2, 1–2-bosqich): topshiriqda `shortest` (eng kam buyruqlar soni) bor, `checkTask` uzunroq dasturni qabul qilmaydi. Savolda son aytiladi ("ENG QISQA yoʻl — 6 ta buyruq"), yoʻlni bola oʻzi topadi. Uzun dastur bilan yetsa — maslahat: "robot yetdi, lekin 8 ta buyruq bilan; 6 ta yetadi" (`tooLong`).
+- `makeTask(stage, prev, rng, tier)`; 3-bosqich savollari oʻzgarmadi (katakni bosish — 25 variant, izdan tiklash).

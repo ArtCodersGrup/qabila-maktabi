@@ -24,7 +24,7 @@
   function lampRow(host, { count, states, values, bits, sum, onChange }) {
     let cur = Array(count).fill(0);
     let locked = false;
-    const wrap = ui.h("div", { class: "lamp-row" });
+    const wrap = ui.h("div", { class: "lamp-row" + (count >= 5 ? " many" : "") }); // 5 ta chiroq — ixchamroq (telefonga sig'sin)
     const buttons = [];
     const bitEls = [];
     for (let k = 0; k < count; k++) {
@@ -95,7 +95,8 @@
     };
   }
 
-  // Kod jadvali: 8 ta naqsh va ma'nosi (2 ustun); highlight(i) — i-qator yonadi
+  // Kod jadvali: 8 ta naqsh va ma'nosi (2 ustun); highlight(i yoki [i, j]) — shu qatorlar yonadi;
+  // show(false) — jadval yashiriladi (yoddan ishlash), show(true) — qaytadi
   function codeTable(host) {
     const el = ui.h("div", { class: "ctable4" });
     const rows = lamps.allPatterns(lamps.PLAIN, 3).map((p, i) => {
@@ -105,7 +106,11 @@
     });
     host.append(el);
     return {
-      highlight(i) { rows.forEach((r, k) => r.classList.toggle("hl", k === i)); },
+      highlight(i) {
+        const list = Array.isArray(i) ? i : [i];
+        rows.forEach((r, k) => r.classList.toggle("hl", list.includes(k)));
+      },
+      show(on) { el.hidden = !on; },
     };
   }
 

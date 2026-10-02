@@ -55,3 +55,9 @@ Yangi blok qoʻshish: `savollar/` ga yangi fayl qoʻying — generator uni oʻzi
 Dastlabki 100 ta savol — muallifning `testlar/test-yasa.py` fayli (2026-09-29), oʻyinlarning
 `DIZAYN.md` dagi «Oʻquv maqsadlari» roʻyxatidan tuzilgan. Qolganlari shu uslubda yozildi:
 Python kod savollarining javoblari `python3` da tekshirilgan.
+
+**Tahlil qatlami (2026-10-02).** 12–16 yosh bloklariga (python, algoritm, kombinatorika) 30 ta savol qoʻshildi —
+jami 194 → 224. Ular bitta amalni eslashni emas, **qadamlarni yurgizish** va **xatoni topish** ni soʻraydi:
+ikki oʻzgaruvchili kuzatuv, `b = a` (ikki nom — bitta roʻyxat), «qaysi satr aybdor?», ikkilik izlash va pufakcha
+saralashni qoʻlda bajarish, ikki qoida birga keladigan sanash masalalari. Kod javoblari `python3` da ham, saytning
+oʻz talqinchisida ham tekshirilgan. Hozirgi sonlar: `python3 oqituvchi/test-yasa.py --royxat`.

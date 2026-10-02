@@ -18,7 +18,7 @@
 .thing-mark { min-height: 22px; font-size: 17px; font-weight: 900; }
 .thing-mark.yes { color: var(--togri); }
 .thing-mark.no { color: #8A929A; }
-.thing-mark.miss::after { content: " ↻"; color: var(--yana); }
+.thing-mark.miss::after { content: " ↻"; color: var(--yana-matn); }
 
 /* ---------- Qoida yasagich ---------- */
 .rule-line {
@@ -29,10 +29,13 @@
 .rule-word { font-size: 19px; font-weight: 800; }
 .rule-line .key { min-width: 56px; padding: 0 10px; font-size: 20px; }
 .rule-line .key.wide { min-width: 116px; }
-.err-badge { font-size: 22px; font-weight: 900; color: var(--yana); min-height: 28px; }
+.err-badge { font-size: 22px; font-weight: 900; color: var(--yana-matn); min-height: 28px; }
 .err-badge.ok { color: var(--togri); }
 .count-line { font-size: 18px; font-weight: 800; text-align: center; }
 .answer { font-size: 19px; font-weight: 900; color: var(--togri); text-align: center; }
+/* Uzun matnli variantlar (2026-10-02): 4 ta qoida yoki 4 ta sabab ustun bo'lib turadi */
+.choice-col { display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 460px; }
+.choice-col .btn { width: 100%; justify-content: flex-start; text-align: left; padding: 8px 14px; font-size: 16px; line-height: 1.25; }
 .case-text {
   max-width: 420px; padding: 14px 16px; border-radius: 14px; background: #fff; box-shadow: 0 3px 0 var(--soya);
   font-size: 21px; font-weight: 800; text-align: center;

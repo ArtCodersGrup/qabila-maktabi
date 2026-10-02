@@ -31,7 +31,7 @@
     await korsat();
     await ui.say("elder", "Endi navbat senga: goh xossani topasan, goh kodni tuzatasan.");
     await practice.exercises({
-      next: (prev) => L.stage3Task(Math.random, prev),
+      next: (prev, correct, tier) => L.stage3Task(Math.random, prev, tier),
       run: (task) => common.stage3Exercise(task),
       praise: (task) => (task.tur === "tuzat" ? "Kod endi toʻgʻri ishlaydi." : "Xossani topding."),
     });

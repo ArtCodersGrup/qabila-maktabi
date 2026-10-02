@@ -59,7 +59,7 @@
     await placement();
     await common.drills(1);
     await definition();
-    await ui.say("elder", `Endi soʻzlar yoz. Aniqlik kamida ${T.PASS}% boʻlsin — 3 ta qator!`);
+    await ui.say("elder", `Endi soʻzlar yoz. Aniqlik kamida ${T.PASS}% boʻlsin — ${QK.practice.need()} ta qator!`);
     await common.lineExercises({ stage: 1, speed: false });
   }
 

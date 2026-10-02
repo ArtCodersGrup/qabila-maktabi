@@ -26,7 +26,12 @@
 .person-svg { width: 40px; height: 50px; }
 .people.small .person { min-width: 40px; }
 .people.small .person-svg { width: 28px; height: 35px; }
-.noname { font-size: 18px; font-weight: 900; color: var(--yana); }
+/* 30 dan ortiq odam (2026-10-02, 80 gacha): yana kichikroq — ekranga sig'sin */
+.people.tiny { gap: 4px; }
+.people.tiny .person { min-width: 24px; }
+.people.tiny .person-svg { width: 20px; height: 25px; }
+.people.tiny .noname, .people.tiny .hasname { font-size: 13px; }
+.noname { font-size: 18px; font-weight: 900; color: var(--yana-matn); }
 .hasname { font-size: 18px; font-weight: 900; color: var(--togri); }
 .people-info { text-align: center; font-weight: 800; }
 

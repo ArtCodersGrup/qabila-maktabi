@@ -50,7 +50,7 @@
     await slices();
     await definition();
     await practice.exercises({
-      next: (prev) => L.walkTask(Math.random, prev),
+      next: (prev, correct, tier) => L.walkTask(Math.random, prev, tier),
       run: (task) => common.resultExercise(task),
       praise: () => "Roʻyxatni toʻgʻri aylanib chiqding.",
     });

@@ -51,7 +51,7 @@
     await fixTogether();
     await ui.say("elder", "Endi navbat senga: goh xatoni tuzatasan, goh kodni oʻzing yozasan.");
     await practice.exercises({
-      next: (prev) => L.stage3Task(Math.random, prev),
+      next: (prev, correct, tier) => L.stage3Task(Math.random, prev, tier),
       run: (task) => common.stage3Exercise(task),
       praise: (task) => (task.type === "xato-top" ? "Xatoni topding." : "Kodni oʻzing yozding."),
     });

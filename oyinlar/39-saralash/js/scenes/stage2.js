@@ -21,7 +21,7 @@
     await korsat();
     await ui.say("elder", "Endi oʻzing ayt: bitta oʻtishdan keyin roʻyxat qanday boʻladi?");
     await practice.exercises({
-      next: (prev) => L.otishTask(Math.random, prev),
+      next: (prev, correct, tier) => L.otishTask(Math.random, prev, tier),
       run: (task) => common.otishExercise(task),
       praise: () => "Oʻtishni toʻgʻri hisoblading.",
     });

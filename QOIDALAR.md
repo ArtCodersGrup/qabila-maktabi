@@ -51,6 +51,9 @@ Har bir bosqich uch qismdan iborat va shu tartibda keladi:
 - Juda oson yoki chalg'ituvchi holatlar chiqarilmaydi (masalan, 1 ta harfli alifbo).
 - Bir xil misol **ketma-ket ikki marta** chiqmaydi.
 - Savolda javobni ikki xil tushunish mumkin bo'lmasligi kerak ("eng kamida", "aynan", "…gacha" kabi so'zlar aniq yoziladi).
+- **Qiyinlik zinasi (2026-10-02):** generator `next(prev, correct, tier)` oladi — `tier` 0 (birinchi javoblar), 1 (o'rta), 2 (oxirgi va qiyin rejim). Bosqich ichida sonlar chegarasi `tier` bilan o'sadi: bola 1-misolda "oson" desa, 5-misolda o'ylashi kerak.
+- **Variantli savolda kamida 4 variant.** 2 variantli savol (ha/yo'q, 0/1, A/B) ikki urinish bilan yutqazib bo'lmaydi — u faqat ikkinchi savol ("nega?", "qaysi joyda?") bilan juft bo'ladi va ikkalasi to'g'ri bo'lsagina hisoblanadi.
+- **Maslahat (1-xato) javobni aytmaydi** — asbobni yoki qadamni ko'rsatadi (bo'sh jadval, formula, rasm). Yordamchi jadval/qo'llanma 2-to'g'ri javobdan keyin yashiriladi, maslahat uni qaytaradi.
 
 **Istisno — masala banki** (Python bloki): olimpiada uslubidagi masalani generator yasay olmaydi, shuning uchun bunday masalalar **qo'lda** yoziladi va har biriga test holatlari (kirish → chiqish) beriladi. Test shuni tekshiradi: bankdagi har masalaning namunali yechimi barcha test holatlaridan o'tadi. Tasodifiylik oddiy mashq generatorlarida qoladi.
 
@@ -63,8 +66,11 @@ Bolaga faqat "Xato" deyilmaydi. Qizil rang va qo'rqituvchi ovoz ishlatilmaydi.
 **Kod yozadigan o'yinlarda** (Python bloki): sintaksis xatosi — qavs yopilmagani, otstup, harf xatosi — **urinish sanalmaydi**. Bu javob xatosi emas, terishdagi xato: talqinchi satr raqamini va izohni ko'rsatadi, bola tuzatib yana ishga tushiradi.
 
 ### 4.5. Bosqichdan o'tish
-- Mashqda **3 ta to'g'ri javob** — bosqich tugadi.
-- Tugagan bosqichlar brauzerda saqlanadi, sahifa yangilansa ham yo'qolmaydi.
+- Mashqda **4 / 5 / 6 ta to'g'ri javob** (1- / 2- / 3-bosqich) — bosqich tugadi (`QK.practice.need()`; matnda `${QK.practice.need()} ta` deb yoziladi, son qotirilmaydi).
+- **Yulduzlar:** xatosiz — ★★★, xato bo'ldi lekin yechim ko'rsatilmadi — ★★, yechim ko'rsatildi — ★. Eng yaxshi natija saqlanadi; bosqich tugaganda karta (raqam, nom, yulduzlar), o'yin tugaganda final kartasi ko'rsatiladi.
+- **Seriya:** ketma-ket 3 / 5 / 7 to'g'ri javobda 🔥 toast chiqadi.
+- **Qiyin rejim 🔥** (hamma bosqich tugagach ochiladi): 7 ta javob, bitta urinish (maslahat yo'q), `tier` doim 2. Natija alohida belgilanadi.
+- Tugagan bosqichlar, yulduzlar va qiyin rejim brauzerda saqlanadi, sahifa yangilansa ham yo'qolmaydi.
 - Keyingi bosqich oldingisi tugagandan keyin ochiladi.
 
 ### 4.6. Bilimni tekshirish
@@ -76,13 +82,16 @@ Shuning uchun har bir o'yinning `DIZAYN.md` faylida **"O'quv maqsadlari"** bo'li
 - Nutq pufagida bir vaqtda **ko'pi bilan 2 ta qisqa gap**.
 - Keyingi gapga bola o'zi o'tadi ("Davom" tugmasi yoki ekranni bosish). Matn o'z-o'zidan tez almashib ketmaydi.
 - Shrift o'lchami kamida **18 px**, sonlar va formulalar kattaroq.
+- **Matn dietasi:** intro ≤ 2 pufak, mashqgacha ≤ 6 pufak. Hikoya sahnalari mashqdan **keyin** keladi va "O'tkazib yuborish" bilan.
 
 ## 6. Vizual uslub
 
 - **2D, tekis (flat) uslub.** Barcha rasmlar **SVG**'da, kod bilan chiziladi.
 - Rasm ichiga **matn yoki son yozilmaydi**. O'zgaradigan hamma narsa (harflar, sonlar, tugmalar) alohida, kod bilan chiziladi.
-- Animatsiyalar qisqa: **0.2–0.6 soniya**. Qahramonlar "tirik" ko'rinadi (ko'z qisish, nafas olish), lekin bolani chalg'itmaydi.
-- To'g'ri/xato holat faqat rang bilan emas, **belgi bilan ham** ko'rsatiladi (✓, ↻).
+- Animatsiyalar qisqa: **0.2–0.6 soniya**. Qahramonlar "tirik" ko'rinadi (ko'z qisish, nafas olish), lekin bolani chalg'itmaydi. **Mukofot animatsiyasi** (konfeti, ✓ portlashi) — ≤ 1 soniya, ish zonasini to'smaydi, `prefers-reduced-motion` da o'chadi.
+- To'g'ri/xato holat faqat rang bilan emas, **belgi bilan ham** ko'rsatiladi (✓, ↻). Pufak matni `✓` bilan boshlansa yashil, `↻` bilan boshlansa to'q sariq holatga o'tadi (`ui.bubble` o'zi qo'yadi).
+- **Tokenlar** (`asos.css` `:root`): matn uchun to'q variantlar (`--asosiy-matn`, `--togri-matn`, `--yana-matn`, `--matn-2`, `--matn-3`), rangli qirra (`--*-qora`), och fonlar (`--*-och`), shkalalar (`--s1…s6`, `--r-s…r-xl`, `--t-1…t4`). Yangi CSS'da qattiq kulrang yozilmaydi — token ishlatiladi. To'q sariq fon ustida matn **qora** (`--matn`), oq emas.
+- Bosiladigan narsa holatlari: `:active` — pastga tushadi, `:focus-visible` — halqa, sichqoncha bor qurilmada `:hover` — yorishadi (faqat bezak), `:disabled` — xira emas, uzuq chiziqli/kulrang.
 
 ### Ranglar
 

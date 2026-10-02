@@ -10,7 +10,7 @@
 .pk-savol { font-size: 19px; font-weight: 800; text-align: center; line-height: 1.4; max-width: 560px; }
 .pk-formula { display: flex; align-items: baseline; justify-content: center; gap: 2px; font-family: var(--kod-shrift); font-size: 30px; font-weight: 900; }
 .pk-alifbo { color: var(--asosiy); }
-.pk-formula sup { font-size: 18px; color: var(--yana); }
+.pk-formula sup { font-size: 18px; color: var(--yana-matn); }
 
 /* ---------- Parol kartasi ---------- */
 .pk-karta {
@@ -66,3 +66,19 @@
   .pk-qator { grid-template-columns: 1fr auto; }
   .pk-son { display: none; }
 }
+
+/* ---------- 2026-10-02: 4 parol, 5 variantli baho, "oʻzing yasa" ---------- */
+.btn.pk-parol-btn { min-width: 46%; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 18px; overflow-wrap: anywhere; }
+.btn.pk-sabab-btn { width: min(100%, 420px); min-height: 46px; padding: 6px 12px; font-size: 17px; }
+.pk-yasa {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; width: min(100%, 520px); min-height: 56px;
+  padding: 8px 10px; border: 3px dashed var(--chiziq); border-radius: 14px; background: #fff;
+}
+.pk-yasa-bosh { font-size: 16px; font-weight: 800; color: #A59C8F; }
+.pk-soz { padding: 4px 10px; border-radius: 10px; background: #E7F0FF; font-size: 19px; font-weight: 900; }
+.pk-kartalar { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; width: 100%; margin-bottom: 8px; }
+.pk-soz-btn {
+  min-height: 46px; padding: 6px 14px; border: 3px solid var(--chiziq); border-radius: 12px; background: #fff;
+  box-shadow: 0 3px 0 var(--soya); font-size: 18px; font-weight: 800; color: var(--matn);
+}
+.pk-soz-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--soya); }

@@ -15,7 +15,7 @@
   async function stage2() {
     await kirish();
     await practice.exercises({
-      next: (prev) => L.tuzatTask(Math.random, prev),
+      next: (prev, correct, tier) => L.tuzatTask(Math.random, prev, tier),
       run: (task) => common.tuzatExercise(task),
       praise: () => "Dastur tuzatildi.",
     });

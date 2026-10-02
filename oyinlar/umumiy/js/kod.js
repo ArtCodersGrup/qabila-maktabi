@@ -12,7 +12,9 @@
 
   const TYPES = ["ter", "natija", "bosh-joy", "xato-top", "kod-yoz"];
   const BLANK = "___";
-  const LIMITS = { maxSteps: 200000, maxOutput: 2000 };
+  // Qadam chegarasi: 3 000 000 — n ≤ 100 000 bo'lgan to'g'ri O(n) dastur bemalol sig'adi (≈ 0.7 s),
+  // cheksiz sikl esa baribir to'xtatiladi. Masalalar bankida samaradorlik sinovi uchun masala o'z `qadam` ini beradi.
+  const LIMITS = { maxSteps: 3000000, maxOutput: 2000 };
 
   // Chiqishni solishtirishdan oldin tozalash: satr oxiridagi bo'shliqlar va oxirgi bo'sh satrlar hisobga olinmaydi
   function normalize(text) {
@@ -27,15 +29,16 @@
   };
 
   // Ikki matn qayerdan farq qilishini topadi (ter turida "shu yerda farq bor" deb ko'rsatiladi)
+  // Oxirgi bo'sh satrlar (bola kod oxirida Enter bosgani) farq hisoblanmaydi — normalize() orqali
   function firstDiff(expected, got) {
-    const a = String(expected).split("\n");
-    const b = String(got).split("\n");
+    const a = normalize(expected);
+    const b = normalize(got);
     for (let k = 0; k < Math.max(a.length, b.length); k++) {
-      const left = a[k] === undefined ? null : a[k].replace(/[ \t]+$/, "");
-      const right = b[k] === undefined ? null : b[k].replace(/[ \t]+$/, "");
+      const left = a[k] === undefined ? null : a[k];
+      const right = b[k] === undefined ? null : b[k];
       if (left === right) continue;
-      if (left === null) return { line: k + 1, col: 1, expected: "", got: b[k] };
-      if (right === null) return { line: k + 1, col: 1, expected: a[k], got: "" };
+      if (left === null) return { line: k + 1, col: 1, expected: "", got: right };
+      if (right === null) return { line: k + 1, col: 1, expected: left, got: "" };
       let col = 0;
       while (col < left.length && col < right.length && left[col] === right[col]) col++;
       return { line: k + 1, col: col + 1, expected: left, got: right };
@@ -43,7 +46,8 @@
     return null;
   }
 
-  const run = (code, testCase) => py.run(code, Object.assign({}, LIMITS, { stdin: (testCase && testCase.stdin) || [] }));
+  // limits — masalaga xos chegaralar (masalan, samaradorlik sinovi uchun { maxSteps: 200000 })
+  const run = (code, testCase, limits) => py.run(code, Object.assign({}, LIMITS, limits || {}, { stdin: (testCase && testCase.stdin) || [] }));
 
   // Funksiya yozish masalalarida bolaning kodidan keyin sinov satri qo'shiladi:
   //   task.tail = "print(juftmi(int(input())))"

@@ -36,7 +36,7 @@
       h("span", { class: "fx-izoh", text: m.izoh })))));
     await ui.say("elder", "Nuqtalarni sanamaysan. Zonadan oldingi nomni harfma-harf solishtirasan.");
     await ui.say("elder", "Nom toʻgʻri boʻlsa, oldidagi boʻlim — oʻsha tashkilotning oʻzi.");
-    await ui.say("elder", "Endi xatlarni oʻzing tekshir. Haqiqiymi yoki firibgarmi?");
+    await ui.say("elder", "Endi xatlarni oʻzing tekshir. Ikki savol: haqiqiymi yoki firibgarmi — va isboti qayerda?");
   }
 
   async function stage2() {
@@ -44,7 +44,8 @@
     await qoida();
     await practice.exercises({
       // Soxta va haqiqiy xatlar navbatlashadi — bola ikkisini ham koʻradi
-      next: (prev, togri) => L.xabarTask(Math.random, prev, togri % 2 === 0),
+      // tier 0 — qoʻlda yozilgan xatlar, tier 1 — ikki belgili, tier 2 — bitta belgili (eng nozik) xatlar
+      next: (prev, togri, tier) => L.xabarTask(Math.random, prev, togri % 2 === 0, tier),
       run: (task) => common.xabarExercise(task),
       praise: (task) => (task.xabar.soxta ? "Bu xat — qarmoq edi." : "Bu xat haqiqiy edi."),
     });

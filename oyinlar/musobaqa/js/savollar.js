@@ -1029,7 +1029,8 @@
           id: it.id,
           data: { zone: it.d.circle },
           text: `Bu qaysi doira haqida? «${it.d.text}»`,
-          input: choice(ZONES.filter((z) => z.id !== "plain").map((z) => z.name)),
+          // 2026-10-02: ta'riflar orasida "oddiy dastur" ham bor — to'rtala doira variant
+          input: choice(ZONES.map((z) => z.name)),
           answer: zoneName(it.d.circle),
           explain: `${zoneName(it.d.circle)}: ${ZONES.find((z) => z.id === it.d.circle).def}`,
         };

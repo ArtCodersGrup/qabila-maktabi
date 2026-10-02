@@ -30,7 +30,7 @@
     await manfiy();
     await ui.say("elder", "Endi oʻzing hisobla. Javobni klaviaturada yoz.");
     await practice.exercises({
-      next: (prev, correct) => L.bosqich2Task(prev, correct),
+      next: (prev, correct, tier) => L.bosqich2Task(prev, correct, tier),
       run: (task) => common.mashq(task),
       praise: () => "Tuzoqqa tushmading.",
     });

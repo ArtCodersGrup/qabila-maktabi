@@ -58,3 +58,36 @@ def savollar(q, M):
     q("ota", "%s boʻlgan dastur n = 10 da 300 qadam qilsa, n = 20 da taxminan nechta qadam qiladi?" % K("O(n²)"),
       ["600", "900", "1200", "300"], 2,
       "n ikki barobar → qadam toʻrt barobar: 300 × 4 = 1200")
+    # ── Tahlil (2026-10-02): algoritmni qoʻlda yurgizish va xatoni topish ──
+    # Sonli javoblar python3 da va saytning oʻz talqinchisida tekshirilgan.
+    q("ota", "Tartiblangan roʻyxat %s da ikkilik izlash 23 ni qidiradi. Nechta solishtirishdan keyin topadi?"
+      % K("[2, 5, 8, 12, 16, 23, 38, 56, 72, 91]"),
+      ["1", "2", "3", "4"], 2,
+      "Oʻrtalar: 16 (kichik) → 56 (katta) → 23 (topildi) — 3 ta solishtirish")
+    q("ota", "Pufakcha saralash %s roʻyxatida bitta toʻliq oʻtishni bajardi. Roʻyxat qanday boʻldi?" % K("[5, 1, 4, 2, 8]"),
+      [K("[1, 4, 2, 5, 8]"), K("[1, 2, 4, 5, 8]"), K("[5, 1, 4, 2, 8]"), K("[1, 5, 4, 2, 8]")], 0,
+      "Qoʻshnilar: 5↔1, 5↔4, 5↔2, 5·8 — eng kattasi oxiriga chiqdi, qolgani hali tartibsiz")
+    q("ota", "Dastur n = 1000 da 1 000 000 qadam, n = 2000 da 4 000 000 qadam qiladi. n = 8000 da taxminan nechta?",
+      ["16 000 000", "32 000 000", "64 000 000", "8 000 000"], 2,
+      "n ikki barobar → qadam toʻrt barobar (O(n²)). 2000 → 8000 — ikki marta ikkilanish: 4 000 000 × 4 × 4")
+    q("ota", "Tartiblangan roʻyxat %s da ikkilik izlash 6 ni qidiradi. U qaysi sonlarga ketma-ket qaraydi?"
+      % K("[3, 6, 9, 12, 15, 18, 21]"),
+      ["12, keyin 6", "3, keyin 6", "12, 9, keyin 6", "faqat 6"], 0,
+      "Avval oʻrtadagi 12 (katta) — oʻng yarmi tashlanadi; qolgan 3, 6, 9 ning oʻrtasi — 6")
+    q("ota", "Pufakcha saralash %s roʻyxatini toʻliq saralaguncha jami nechta almashtirish qiladi?" % K("[4, 3, 2, 1]"),
+      ["3", "4", "6", "12"], 2,
+      "Teskari roʻyxatda har juftlik notoʻgʻri turibdi: 3 + 2 + 1 = 6 ta almashtirish")
+    q("qiyin", "Chiziqli izlash %s roʻyxatida 4 ni nechanchi solishtirishda topadi?" % K("[7, 2, 9, 4, 5]"),
+      ["3-solishtirishda", "4-solishtirishda", "5-solishtirishda", "1-solishtirishda"], 1,
+      "Boshidan birma-bir: 7, 2, 9, 4 — toʻrtinchisida topildi")
+    q("ota", "Bu ikkilik izlash baʼzan hech qachon toʻxtamaydi. Qaysi satr aybdor? %s"
+      % K("while chap < ong:  ⏎      orta = (chap + ong) // 2  ⏎      if a[orta] < x:  ⏎          chap = orta  ⏎      else:  ⏎          ong = orta"),
+      [K("chap = orta"), K("ong = orta"), K("orta = (chap + ong) // 2"), K("while chap < ong")], 0,
+      "chap va ong qoʻshni boʻlganda orta = chap chiqadi: chap = orta oraliqni toraytirmaydi. chap = orta + 1 kerak")
+    q("ota", "Tanlash saralashi %s roʻyxatida birinchi oʻtishni bajardi (eng kichigini topib, boshiga qoʻydi). Roʻyxat qanday boʻldi?"
+      % K("[5, 1, 4, 2]"),
+      [K("[1, 5, 4, 2]"), K("[1, 4, 2, 5]"), K("[1, 2, 4, 5]"), K("[5, 1, 4, 2]")], 0,
+      "Eng kichigi (1) birinchi oʻrindagi 5 bilan joy almashadi; 4 va 2 joyida qoladi")
+    q("qiyin", "Bu sikl necha marta aylanadi? %s" % K("i = 1  ⏎  while i < 1000:  ⏎      i = i * 2"),
+      ["10 marta", "9 marta", "500 marta", "999 marta"], 0,
+      "i har safar ikkilanadi: 2¹⁰ = 1024 — oʻninchi aylanishdan keyin shart yolgʻon. Bu — logarifmik oʻsish")

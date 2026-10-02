@@ -83,12 +83,28 @@
       const natija = dvigatel(kod, { stdin: sinov.kirish || [] });
       if (natija.error) return { ok: false, kind: "xato", error: natija.error, sinov };
       const farq = solishtir(sinov.chiqish, natija.out);
-      if (!farq.ok) return { ok: false, kind: "chiqish", izoh: farq.izoh, sinov, olingan: natija.output };
+      if (!farq.ok) return { ok: false, kind: "chiqish", izoh: farq.izoh, satr: farq.satr, sinov, olingan: natija.output };
     }
     return { ok: true };
   }
 
-  const api = { BOSH, OXIR, dastur, chiqar, QISMLAR, JADVAL, KALIT, TUR, ICHKI, satrlar, solishtir, tekshir };
+  // Chiqish mos kelmaganda bolaga aytiladigan izoh: FARQ QILGAN satr ko'rsatiladi (doim 1-satr emas)
+  function farqIzohi(bad) {
+    const olingan = satrlar(bad.olingan || []);
+    if (!olingan.length) return "Dastur hech narsa chiqarmadi.";
+    const kutilgan = satrlar(bad.sinov ? bad.sinov.chiqish : []);
+    const k = (bad.satr || 1) - 1;
+    if (olingan[k] === undefined) {
+      return "Dasturing " + olingan.length + " ta satr chiqardi, kerak — " + kutilgan.length + " ta: "
+        + (k + 1) + "-satr («" + kutilgan[k] + "») yetishmayapti.";
+    }
+    if (kutilgan[k] === undefined) {
+      return "Dasturing ortiqcha satr chiqardi: " + olingan.length + " ta, kerak — " + kutilgan.length + " ta.";
+    }
+    return (k + 1) + "-satr boshqa: sening dasturing «" + olingan[k] + "» chiqardi, kerakli javob — «" + kutilgan[k] + "».";
+  }
+
+  const api = { BOSH, OXIR, dastur, chiqar, QISMLAR, JADVAL, KALIT, TUR, ICHKI, satrlar, solishtir, tekshir, farqIzohi };
   root.QK = root.QK || {};
   root.QK.cpp = Object.assign(root.QK.cpp || {}, api);
   if (typeof module !== "undefined" && module.exports) module.exports = api;

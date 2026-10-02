@@ -21,6 +21,19 @@
     { text: "Rasmda mushuk bor-yoʻqligini aytish", kind: "misol", why: "Mushuklar har xil: rang, holat, yorugʻlik." },
     { text: "Gapni boshqa tilga tarjima qilish", kind: "misol", why: "Til qoidalari juda koʻp va istisnoli — misollardan oʻrganiladi." },
     { text: "Rentgen rasmidan kasallikni topish", kind: "misol", why: "Belgilar mayin va har xil — shifokor misollari kerak." },
+    // 2026-10-02: bank 12 → 24 (qayta oʻynaganda boshqa holatlar chiqsin)
+    { text: "Lift: 3-qavat tugmasi bosilsa, 3-qavatga borish", kind: "qoida", why: "Tugma bosildimi — aniq shart, lift shunga qarab yuradi." },
+    { text: "Soʻzlarni alifbo tartibida saralash", kind: "qoida", why: "Harflar tartibi maʼlum — ular aniq qoida bilan solishtiriladi." },
+    { text: "Tugʻilgan yildan yoshni hisoblash", kind: "qoida", why: "Ayirish amali yetadi: joriy yil − tugʻilgan yil." },
+    { text: "Bankomat: hisobda pul yetarlimi — tekshirish", kind: "qoida", why: "Ikki sonni solishtirish — aniq shart." },
+    { text: "Oʻyinda 100 ochko yigʻilsa, keyingi darajani ochish", kind: "qoida", why: "Ochko 100 ga yetdimi — aniq chegara." },
+    { text: "Kir yuvish mashinasi: 40 daqiqadan keyin toʻxtash", kind: "qoida", why: "Daqiqalar sanaladi — vaqt tugadimi yoki yoʻqmi." },
+    { text: "Xatni «spam» yoki «kerakli» deb ajratish", kind: "misol", why: "Spam xatlar har xil yoziladi — bitta qoida hammasini tutolmaydi." },
+    { text: "Senga yoqadigan videoni tavsiya qilish", kind: "misol", why: "Did har kimda boshqa — avval nimalarni koʻrganingdan oʻrganiladi." },
+    { text: "Rasmdagi mevaning pishganini aniqlash", kind: "misol", why: "Rang, dogʻ va yorugʻlik har rasmda boshqacha." },
+    { text: "Qoʻshiqni bir parchasidan tanish", kind: "misol", why: "Ovoz balandligi, shovqin va tezlik har safar oʻzgaradi." },
+    { text: "Mashina yoʻlda piyodani koʻrishi", kind: "misol", why: "Odamlar har xil kiyimda va holatda — hammasini qoidaga yozib boʻlmaydi." },
+    { text: "Yozuvdan odam xafa yoki xursandligini bilish", kind: "misol", why: "Bir xil soʻz har xil maʼnoda keladi — misollardan oʻrganiladi." },
   ];
 
   const test = (rule, item) => (rule.op === ">" ? item[rule.feature] > rule.value : item[rule.feature] < rule.value);
@@ -65,11 +78,23 @@
 
   const key = (item) => `${item.size}:${item.dots}`;
 
-  // 1-bosqich: aniq qoida bilan yechiladigan to'plam
-  function makeRuleTask(prev, rng) {
+  const sameRule = (a, b) => !!a && !!b && a.feature === b.feature && a.op === b.op && a.value === b.value;
+  const tierOf = (tier) => Math.max(0, Math.min(2, tier || 0));
+  const shuffle = (arr, rng) => take(arr, arr.length, rng);
+
+  // Xatosiz ishlaydigan qoidalar soni: kam bo'lsa — chegarani aniq topish kerak
+  const zeroRules = (items) => allRules().filter((rule) => errorsOf(items, rule) === 0).length;
+
+  // 1-bosqich: aniq qoida bilan yechiladigan to'plam.
+  // Qiyinlik zinasi: tier 0 — 8 ta narsa, chegara 3..7 (mos qoidalar ko'p bo'lishi mumkin);
+  // tier 1 — chegara 2..8, xatosiz qoidalar ko'pi bilan 4 ta; tier 2 — 10 ta narsa, ko'pi bilan 2 ta (aniq chegara).
+  function makeRuleTask(prev, rng, tier) {
     rng = rng || Math.random;
+    const t = tierOf(tier);
+    const half = t >= 2 ? 5 : 4;
+    const maxZero = [99, 4, 2][t];
     for (;;) {
-      const rule = { feature: pick(FEATURES, rng), op: pick(OPS, rng), value: randInt(3, 7, rng) };
+      const rule = { feature: pick(FEATURES, rng), op: pick(OPS, rng), value: t === 0 ? randInt(3, 7, rng) : randInt(2, 8, rng) };
       const other = rule.feature === "size" ? "dots" : "size";
       const pool = [];
       for (let a = 1; a <= 9; a++) {
@@ -81,13 +106,14 @@
       }
       const yes = pool.filter((x) => x.yes);
       const no = pool.filter((x) => !x.yes);
-      if (yes.length < 4 || no.length < 4) continue;
-      const items = take(yes, 4, rng).concat(take(no, 4, rng));
-      if (new Set(items.map(key)).size !== 8) continue;
+      if (yes.length < half || no.length < half) continue;
+      const items = take(yes, half, rng).concat(take(no, half, rng));
+      if (new Set(items.map(key)).size !== half * 2) continue;
       if (bestRule(items).errors !== 0) continue;
+      if (zeroRules(items) > maxZero) continue;
       const last = prev && prev.type === "rule" ? prev.answer : null; // oldingi vazifa boshqa turdan boʻlishi mumkin
-      if (last && last.feature === rule.feature && last.op === rule.op && last.value === rule.value) continue;
-      return { type: "rule", items: take(items, items.length, rng), answer: rule, other };
+      if (sameRule(last, rule)) continue;
+      return { type: "rule", items: take(items, items.length, rng), answer: rule, other, tier: t };
     }
   }
 
@@ -117,28 +143,51 @@
     }
   }
 
-  // 2-bosqich mashqi: to'plamga qarab "qoida" yoki "misol"
-  function makeSetKindTask(k, prev, rng) {
-    rng = rng || Math.random;
-    const useRule = k === 0 ? true : k === 1 ? false : rng() < 0.5;
-    const task = useRule ? makeRuleTask(prev && prev.base, rng) : makeFuzzyTask(rng); // makeRuleTask tur nomini oʻzi tekshiradi
-    return { type: "setKind", items: task.items, answer: useRule ? "qoida" : "misol", base: task };
+  // Chalg'ituvchi qoidalar: shu to'plamda kamida 1 ta xato qiladiganlar.
+  // tier 0 — ochiq xato (≥ 3 xato), tier 1 — 1..3 xato, tier 2 — eng kam xatolilari ("deyarli to'g'ri").
+  function wrongRules(items, count, rng, tier) {
+    const scored = allRules().map((rule) => ({ rule, errors: errorsOf(items, rule) })).filter((x) => x.errors >= 1);
+    const t = tierOf(tier);
+    const minErr = Math.min.apply(null, scored.map((x) => x.errors));
+    const fits = t === 0 ? (x) => x.errors >= 3 : t === 1 ? (x) => x.errors <= Math.max(3, minErr) : (x) => x.errors <= minErr + 1;
+    const first = shuffle(scored.filter(fits), rng);
+    const rest = shuffle(scored.filter((x) => !fits(x)), rng);
+    return first.concat(rest).slice(0, count).map((x) => x.rule);
   }
 
-  // 3-bosqich mashqi: hayotdan misol
+  // 2-bosqich mashqi: "Qaysi qoida shu narsalarni xatosiz ajratadi?" — 3 ta qoida + "hech qaysi — misol kerak".
+  // Qoidali to'plamda bitta qoida xatosiz ishlaydi; chalkash to'plamda hech biri — javob oxirgi variant.
+  function makeSetKindTask(k, prev, rng, tier) {
+    rng = rng || Math.random;
+    const useRule = k === 0 ? true : k === 1 ? false : rng() < 0.5;
+    // To'plam hajmi ikkala turda ham 8 ta — sonidan javobni bilib bo'lmasin (tier 2 dagi 10 talik bu yerda ishlatilmaydi)
+    const task = useRule ? makeRuleTask(prev && prev.base, rng, Math.min(tierOf(tier), 1)) : makeFuzzyTask(rng);
+    const rules = useRule
+      ? shuffle([task.answer].concat(wrongRules(task.items, 2, rng, tier)), rng)
+      : shuffle(wrongRules(task.items, 3, rng, tier), rng);
+    const options = rules.map((rule) => ({ kind: "rule", rule })).concat([{ kind: "none" }]);
+    const answerIndex = useRule ? rules.indexOf(task.answer) : options.length - 1;
+    return { type: "setKind", items: task.items, answer: useRule ? "qoida" : "misol", base: task, options, answerIndex, tier: tierOf(tier) };
+  }
+
+  // 3-bosqich mashqi: hayotdan misol — ikki qadam: "qoida / misol" va "nega?" (4 sabab: to'g'risi,
+  // shu turdagi boshqa ishning sababi va ikkinchi turdagi ikki ishning sababi). Ikkalasi to'g'ri bo'lsagina hisoblanadi.
   function makeKindTask(prev, rng) {
     rng = rng || Math.random;
     for (;;) {
       const item = pick(CASES, rng);
       if (prev && prev.text === item.text) continue;
-      return { type: "kind", text: item.text, answer: item.kind, why: item.why };
+      const same = take(CASES.filter((c) => c.kind === item.kind && c.text !== item.text), 1, rng);
+      const others = take(CASES.filter((c) => c.kind !== item.kind), 2, rng);
+      const whyOptions = shuffle([item].concat(same, others).map((c) => c.why), rng);
+      return { type: "kind", text: item.text, answer: item.kind, why: item.why, whyOptions, whyIndex: whyOptions.indexOf(item.why) };
     }
   }
 
   const api = {
     FEATURES, OPS, FEATURE_NAMES, CASES,
     test, wrongOnes, errorsOf, allRules, bestRule, dist, nearest, nnErrors,
-    makeRuleTask, makeFuzzyTask, makeSetKindTask, makeKindTask,
+    sameRule, zeroRules, wrongRules, makeRuleTask, makeFuzzyTask, makeSetKindTask, makeKindTask,
   };
 
   if (typeof module !== "undefined" && module.exports) module.exports = api;

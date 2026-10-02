@@ -51,3 +51,15 @@ va `juftlar(n)`.
 
 - `js/logic.js` — jamoalar/tartiblar roʻyxati, `bolish()`, savollar, kod masalalari, `C` xossalari.
 - `tests/logic.test.js` — 12 test; eng muhimi `A = C × k!` ning roʻyxat ustidagi isboti.
+
+## 2026-10-02 qiyinlik yangilanishi
+
+Hisobot-5 bu oʻyinni «yaxshi» deb baholagan; qoʻshilgani — **ikki qoida birga** keladigan savol va ikki masala.
+
+- **2-bosqich (A mi, C mi):** oxirgi zinada **aralash jamoa** — «q ta qiz va o ta oʻgʻil; 2 qiz VA 1 oʻgʻildan jamoa»:
+  C(q, 2) × C(o, 1). Eng koʻp uchraydigan xato — hammadan birga tanlash C(q + o, 3). Javob testda jamoalar
+  roʻyxatini sanab tekshirilgan. Maslahat: «har guruhdan alohida tanla, keyin VA». Yana: k katta boʻlgan C
+  (9 tadan 7 tasi — simmetriya bilan oson), 4 oʻrinli A.
+- **3-bosqich (yozish 2 → 4):** `uchliklar(n)` (uch sikl, k > j > i — `k` ni `i + 1` dan boshlagan yechim yiqiladi)
+  va `jamoa(q, o)` (tartibli juftlik deb sanagan yechim yiqiladi).
+- Zina: 0 — eski savollar; 2 — aralash savol ustun. Testlar: 12 → 14.

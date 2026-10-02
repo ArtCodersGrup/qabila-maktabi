@@ -43,22 +43,57 @@ test("1-bosqich: / javobi uzun kasr bo'lmaydi", () => {
   }
 });
 
-test("1-bosqich: bo'luvchi 2–9, bo'linuvchi undan katta", () => {
-  for (const task of each(L.divisionTask, 40)) {
-    assert.ok(task.b >= 2 && task.b <= 9, task.code);
-    assert.ok(task.a > task.b && task.a <= 99, task.code);
+// 2026-10-02: bo'linuvchi zina bilan o'sadi — 99 → 299 → 999 (uch xonali sonlar)
+test("1-bosqich: bo'luvchi 2–9, bo'linuvchi zina chegarasida", () => {
+  for (const tier of [0, 1, 2]) {
+    const r = rngFrom(5 + tier);
+    let prev = null;
+    let katta = 0;
+    for (let k = 0; k < 60; k++) {
+      const task = L.divisionTask(r, prev, tier);
+      prev = task;
+      assert.ok(task.b >= 2 && task.b <= 9, task.code);
+      assert.ok(task.a > task.b && task.a <= L.BOLINUVCHI_ZINA[tier], task.code);
+      if (task.a > 99) katta++;
+    }
+    if (tier === 0) assert.equal(katta, 0, "birinchi zinada faqat ikki xonali sonlar");
+    else assert.ok(katta >= 10, "zina " + tier + ": uch xonali sonlar kam (" + katta + ")");
   }
 });
 
-test("2-bosqich: javob butun son va 0–200 oralig'ida", () => {
-  for (const task of each(L.orderTask, 60)) {
-    const out = py.run(task.code).output;
-    assert.equal(out.length, 1);
-    const value = Number(out[0]);
-    assert.ok(Number.isInteger(value), task.code + " → " + out[0]);
-    assert.ok(value >= 0 && value <= L.MAX, task.code + " → " + out[0]);
-    assert.equal(K.check(task, out[0]).ok, true);
+test("2-bosqich: javob butun son va zina chegarasida (200 → 350 → 500)", () => {
+  assert.deepEqual(L.MAX_ZINA, [200, 350, 500]);
+  assert.equal(L.MAX, 500);
+  for (const tier of [0, 1, 2]) {
+    const r = rngFrom(7 + tier);
+    let prev = null;
+    for (let k = 0; k < 60; k++) {
+      const task = L.orderTask(r, prev, tier);
+      prev = task;
+      const out = py.run(task.code).output;
+      assert.equal(out.length, 1);
+      const value = Number(out[0]);
+      assert.ok(Number.isInteger(value), task.code + " → " + out[0]);
+      assert.ok(Math.abs(value) <= L.MAX_ZINA[tier], task.code + " → " + out[0]);
+      // Manfiy javob faqat manfiy sonli shakllarda (oxirgi zina)
+      if (value < 0) assert.ok(task.manfiy && tier === 2, task.code + " → " + out[0]);
+      if (tier === 0) assert.ok(!task.code.includes("-") || / - /.test(task.code), "birinchi zinada manfiy son yo'q: " + task.code);
+      assert.equal(K.check(task, out[0]).ok, true);
+    }
   }
+});
+
+test("2-bosqich: oxirgi zinada to'rt amalli va manfiy sonli ifodalar chiqadi", () => {
+  const r = rngFrom(31);
+  let prev = null;
+  const kodlar = [];
+  for (let k = 0; k < 120; k++) { prev = L.orderTask(r, prev, 2); kodlar.push(prev.code); }
+  assert.ok(kodlar.some((c) => /^print\(-\d+ \/\/ \d+\)$/.test(c)), "manfiy // chiqmadi");
+  assert.ok(kodlar.some((c) => /^print\(-\d+ % \d+\)$/.test(c)), "manfiy % chiqmadi");
+  assert.ok(kodlar.some((c) => (c.match(/ (\+|-|\*\*?|\/\/|%) /g) || []).length >= 3), "to'rt amalli ifoda chiqmadi");
+  // Python qoidasi: // pastga yumalaydi, % manfiy bo'lmaydi
+  assert.deepEqual(py.run("print(-7 // 2)\nprint(-7 % 3)").output, ["-4", "2"]);
+  for (const c of kodlar.filter((x) => /^print\(-\d+ % \d+\)$/.test(x))) assert.ok(Number(py.run(c).output[0]) > 0, c);
 });
 
 test("2-bosqich: tartib muhim bo'lgan ifodalar chiqadi", () => {
@@ -81,11 +116,36 @@ test("3-bosqich: buzuq kod TypeError beradi, yechimi ishlaydi", () => {
   }
 });
 
-test("3-bosqich: kod yozish masalalari uch test holatidan o'tadi", () => {
+test("3-bosqich: kod yozish masalalari kamida uch test holatidan o'tadi", () => {
+  assert.ok(L.WRITE_KINDS.length >= 8, "masalalar: " + L.WRITE_KINDS.length);
   for (const kind of L.WRITE_KINDS) {
     const task = { type: "kod-yoz", solution: kind.solution, tests: kind.tests.map((stdin) => ({ stdin })) };
+    assert.ok(kind.tests.length >= 3, kind.id);
     assert.deepEqual(K.validate(task), [], kind.id);
     assert.equal(K.check(task, kind.solution).ok, true, kind.id);
+  }
+});
+
+// 2026-10-02: yangi masalalar — tipik xato yechimlar o'tmasligi kerak
+test("3-bosqich: yangi masalalar chekka holatlar bilan tekshiriladi", () => {
+  const vazifa = (id) => {
+    const kind = L.WRITE_KINDS.find((k) => k.id === id);
+    return { type: "kod-yoz", solution: kind.solution, tests: kind.tests.map((stdin) => ({ stdin })) };
+  };
+  // O'rta raqam: "n % 100 // 10" ham to'g'ri yo'l; "n // 10" esa noto'g'ri
+  assert.equal(K.check(vazifa("orta-raqam"), "n = int(input())\nprint(n % 100 // 10)").ok, true);
+  assert.equal(K.check(vazifa("orta-raqam"), "n = int(input())\nprint(n // 10)").ok, false);
+  // Sekund: daqiqani "n // 60" deb olgan yechim (soatni ayirmagan) o'tmaydi
+  assert.equal(K.check(vazifa("sekund"), "n = int(input())\nprint(n // 3600)\nprint(n // 60)\nprint(n % 60)").ok, false);
+  assert.deepEqual(K.expectedFor(vazifa("sekund"), { stdin: ["3725"] }), ["1", "2", "5"]);
+  // Tosh bo'lish: toshdan bola ko'p bo'lgan holat ham bor (3 tosh, 7 bola → 0 va 3)
+  assert.deepEqual(K.expectedFor(vazifa("tosh-bolish"), { stdin: ["3", "7"] }), ["0", "3"]);
+  // Zina: birinchi javoblarda faqat eski to'rt masala
+  const r = rngFrom(4);
+  let prev = null;
+  for (let k = 0; k < 30; k++) {
+    prev = L.writeTask(r, prev, 0);
+    assert.ok(["yoz:oxirgi-raqam", "yoz:soat-daqiqa", "yoz:bolinma-qoldiq", "yoz:kvadrat"].includes(prev.id), prev.id);
   }
 });
 

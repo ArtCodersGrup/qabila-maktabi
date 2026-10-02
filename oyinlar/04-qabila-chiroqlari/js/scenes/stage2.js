@@ -99,9 +99,10 @@
   async function stage2() {
     await makeFive();
     await explain();
-    await ui.say("elder", "Endi oʻzing! Oxirgi misolda chiroqlar 4 ta boʻladi: 8, 4, 2, 1.");
+    await ui.say("elder", `Endi oʻzing! ${QK.practice.need()} ta toʻgʻri javob kerak.`);
+    await ui.say("elder", "Chiroqlar koʻpayib boradi: avval 3 ta, keyin 4 ta (8, 4, 2, 1), oxirida 5 ta — 16 lik chiroq qoʻshiladi.");
     await practice.exercises({
-      next: (prev, correct) => lamps.makeBinaryTask(correct, prev),
+      next: (prev, correct, tier) => lamps.makeBinaryTask(correct, prev, null, tier),
       run: binaryTask,
       praise: (t) => `${lamps.patternKey(lamps.fromNumber(t.value, t.lamps))} — bu ${t.value}.`,
     });

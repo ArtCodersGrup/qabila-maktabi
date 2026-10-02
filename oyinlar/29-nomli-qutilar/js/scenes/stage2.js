@@ -62,9 +62,9 @@
     await together();
     await swap();
     await definition();
-    await ui.say("elder", "Endi jadvalni oʻzing toʻldirasan. 3 ta toʻgʻri javob kerak.");
+    await ui.say("elder", `Endi jadvalni oʻzing toʻldirasan. ${QK.practice.need()} ta toʻgʻri javob kerak.`);
     await practice.exercises({
-      next: (prev) => L.traceTask(Math.random, prev),
+      next: (prev, correct, tier) => L.traceTask(Math.random, prev, tier),
       run: (task) => common.tableExercise(task),
       praise: () => "Jadval toʻppa-toʻgʻri.",
     });

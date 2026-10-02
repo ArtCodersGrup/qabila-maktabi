@@ -74,6 +74,48 @@ const CORPUS = [
   { id: "string-uzunlik", kod: d('string s = "salom";\ncout << s.size() << " " << s[0] << s[4] << "\\n";'), kutilgan: ["5 sm"] },
   { id: "string-sikl", kod: d('string s = "abcba";\nint n = 0;\nfor (int i = 0; i < s.size(); i++) if (s[i] == \'a\') n++;\ncout << n << "\\n";'), kutilgan: ["2"] },
 
+  // s[i] — satrning HOZIRGI belgisi: o'zgartirilgandan keyin ham to'g'ri o'qiladi
+  { id: "string-indeks-oshir", kod: d('string s = "a";\ncout << ++s[0] << s << "\\n";'), kutilgan: ["bb"] },
+  { id: "string-indeks-tayin", kod: d('string s = "abc";\ncout << (s[0] = \'x\') << " " << s << "\\n";'), kutilgan: ["x xbc"] },
+  { id: "string-indeks-keyin", kod: d('string s = "abc";\ncout << s[1]++ << s[1] << " " << s << "\\n";\ns[2] += 1;\ncout << s << "\\n";'), kutilgan: ["bc acc", "acd"] },
+  { id: "string-massiv", kod: d('string s[3];\ncout << "[" << s[1] << "]" << s[0].size() << "\\n";\ns[2] = "uch";\ncout << s[2] + "!" << "\\n";'), kutilgan: ["[]0", "uch!"] },
+
+  { id: "string-ulash", kod: d('string s = "Salom";\ncout << s + " dunyo" << "!" + s << s + \'!\' << \'(\' + s << "\\n";'), kutilgan: ["Salom dunyo!SalomSalom!(Salom"] },
+  { id: "string-solishtir", kod: d('string s = "ha";\ncout << (s == "ha") << ("ha" == s) << (s < "hb") << (s != s) << "\\n";'), kutilgan: ["1110"] },
+  { id: "string-belgi-tayin", kod: d('string s;\ns = \'a\';\ns += \'b\';\ns += "cd";\ncout << s << s.size() << "\\n";'), kutilgan: ["abcd4"] },
+  { id: "string-son-tayin", kod: d('string s;\ns = 65;\ns += 66;\ncout << s << "\\n";'), kutilgan: ["AB"] },
+  { id: "string-max-min", kod: da('string a = "olma", b = "anor";\ncout << max(a, b) << min(a, b) << "\\n";'), kutilgan: ["olmaanor"] },
+  { id: "tur-aralash", kod: d("int a = 'A';\nchar c = 66;\ndouble d = 3;\nbool b = 5;\nlong long k = 2.9;\ncout << a << c << d << b << k << \"\\n\";"), kutilgan: ["65B312"] },
+  { id: "qoshma-aralash", kod: d('int x = 7;\nx += 2.5;\nx %= 4;\ndouble y = x;\ny /= 2;\ncout << x << " " << y << "\\n";'), kutilgan: ["1 0.5"] },
+  { id: "qavssiz-doira", kod: d('if (1 > 2) int x = 1;\nint x = 2;\ncout << x << "\\n";'), kutilgan: ["2"] },
+
+  // ---------- char — 8 bitli ishorali son ----------
+  { id: "char-qirqiladi", kod: d('char c = 300;\ncout << (int)c << c << "\\n";'), kutilgan: ["44,"] },
+  { id: "char-ishorali", kod: d('char c = 200;\nint n = c;\ncout << n << " " << (c < 0) << "\\n";'), kutilgan: ["-56 1"] },
+  { id: "char-toshadi", kod: d('char c = 127;\nc++;\ncout << (int)c << "\\n";\nc = -129;\ncout << (int)c << "\\n";'), kutilgan: ["-128", "127"] },
+  { id: "char-arifmetika", kod: d("char c = 'a';\nc += 2;\nchar k = c - 32;\nchar z = 65.7;\ncout << c << k << z << c - 'a' << \"\\n\";"), kutilgan: ["cCA2"] },
+
+  // ---------- const ----------
+  { id: "const", kod: d('const int N = 3;\nint const M = 4;\nconst string s = "ab";\nconst double pi = 3.14;\nint a[N];\nfor (int i = 0; i < N; i++) a[i] = i * M;\ncout << a[2] << s << pi << N + M << "\\n";'), kutilgan: ["8ab3.147"] },
+  { id: "const-ll", kod: d('const long long MOD = 1000000007;\nlong long x = 123456789;\ncout << x * x % MOD << "\\n";'), kutilgan: ["643499475"] },
+
+  // ---------- Sarlavhalar: using namespace std; o'rniga to'liq nom ----------
+  { id: "std-toliq-nom", kod: "#include <iostream>\n#include <string>\n#include <algorithm>\n\nint main() {\n    std::string s;\n    int a[3] = {3, 1, 2};\n    std::cin >> s;\n    std::sort(a, a + 3);\n    std::cout << s << a[0] << std::max(a[1], a[2]) << std::endl;\n    return 0;\n}\n", kirish: ["salom"], kutilgan: ["salom13"] },
+  { id: "bits-stdc", kod: "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int a[3] = {3, 1, 2};\n    sort(a, a + 3);\n    string s = \"ok\";\n    cout << s << a[0] << a[2] << \"\\n\";\n    return 0;\n}\n", kutilgan: ["ok13"], gppsiz: true },
+
+  // ---------- Son yozuvlari: eksponent va LL ----------
+  { id: "eksponent", kod: d('cout << 1e-5 << " " << 1e5 << " " << 2.5e3 << " " << 1E2 + 1 << " " << 2. << "\\n";'), kutilgan: ["1e-05 100000 2500 101 2"] },
+  { id: "ll-qoshimcha", kod: d('cout << 100000LL * 100000 << " " << 3000000000 << " " << 5L + 1 << "\\n";'), kutilgan: ["10000000000 3000000000 6"] },
+  { id: "eksponent-int", kod: d('int n = 1e9;\nlong long k = 1e18;\ncout << n + 7 << " " << k << "\\n";'), kutilgan: ["1000000007 1000000000000000000"] },
+
+  // cin son o'qiganda sonning BOSHINI oladi, qolgani navbatda qoladi
+  { id: "cin-butun-kasrdan", kod: d('int a;\ndouble b;\ncin >> a >> b;\ncout << a << " " << b << "\\n";'), kirish: ["3.7"], kutilgan: ["3 0.7"] },
+  { id: "cin-son-keyin-soz", kod: d('int a;\nstring s;\ncin >> a >> s;\ncout << a << " " << s << "\\n";'), kirish: ["12abc"], kutilgan: ["12 abc"] },
+  { id: "cin-ishorali", kod: d('int a, b;\ndouble c;\ncin >> a >> b >> c;\ncout << a + b << " " << c << "\\n";'), kirish: ["+5 -8", "-2.5e1"], kutilgan: ["-3 -25"] },
+  { id: "cin-oxirigacha-kasr", kod: d('int x;\nint n = 0;\nwhile (cin >> x) n += x;\ncout << n << "\\n";'), kirish: ["4 5.5 6"], kutilgan: ["9"] },
+
+  { id: "bir-amal-char", kod: d("char c = 'a';\nbool b = true;\ncout << -c << +c << !c << +b << -b << \"\\n\";"), kutilgan: ["-979701-1"] },
+
   // ---------- cin ----------
   { id: "cin-ikki", kod: d('int a, b;\ncin >> a >> b;\ncout << a + b << "\\n";'), kirish: ["12 30"], kutilgan: ["42"] },
   { id: "cin-n-ta", kod: d('int n;\ncin >> n;\nint s = 0;\nfor (int i = 0; i < n; i++) {\n    int x;\n    cin >> x;\n    s += x;\n}\ncout << s << "\\n";'), kirish: ["4", "10 20 30 40"], kutilgan: ["100"] },

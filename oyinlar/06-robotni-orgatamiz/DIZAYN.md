@@ -36,9 +36,9 @@ O'yindan keyin bola:
 ```
 Bosh ekran
    ├─► Kirish (robot keldi)
-   ├─► 1-bosqich: Misollardan o'rganish [6 ta misolni chaqish → eng yaqin misol → mashq 3]
-   ├─► 2-bosqich: Chegara chizig'i      [chiziqni surish, xato: N → robot o'zi o'rganadi → mashq 3]
-   └─► 3-bosqich: Sinov va ma'lumot     [sinov to'plami → nega xato? → yangi misol → mashq 3 → hikoya] → tabrik
+   ├─► 1-bosqich: Misollardan o'rganish [6 ta misolni chaqish → eng yaqin misol → mashq 4]
+   ├─► 2-bosqich: Chegara chizig'i      [chiziqni surish, xato: N → robot o'zi o'rganadi → mashq 5]
+   └─► 3-bosqich: Sinov va ma'lumot     [sinov to'plami → nega xato? → yangi misol → mashq 6 → hikoya] → tabrik
 ```
 
 **Kirish:** "Qabilaga robot keldi!" / (Shogird) "U yongʻoqlarni saralay oladimi?" / "Hozircha yoʻq — u hech narsa bilmaydi. Biz oʻrgatamiz."
@@ -48,21 +48,21 @@ Bosh ekran
 1. **Misollar yig'amiz:** 6 ta yong'oq birma-bir keladi. Bola yong'oqni bosadi — u chaqiladi: mag'iz bor (to'la) yoki yo'q (bo'sh). Natija maydonga nuqta bo'lib tushadi. "Bu — **oʻqitish maʼlumoti**. Robot shu 6 ta misolni yodda saqlaydi."
 2. **Eng yaqin misol:** yangi yong'oq keladi (hali chaqilmagan). "Robot qanday qaror qiladi? U eng oʻxshash misolni qidiradi." Maydonda yangi nuqtadan eng yaqin misolgacha chiziq tortiladi → javob. Keyin yong'oq chaqilib tekshiriladi.
 3. **Ta'rif:** "Robot qoidani yozmaydi — u koʻrgan misollariga qaraydi. Eng yaqin misol qanday boʻlsa, javob ham shunday."
-4. **Mashq** (3 ta to'g'ri): "Robot bu yongʻoqni nima deydi?" — bola javob tugmasini bosadi (ya'ni eng yaqin misol qoidasini o'zi qo'llaydi). 1-xato: eng yaqin 3 ta misolgacha chiziqlar chiziladi. 2-xato: eng yaqini yoritiladi va javob aytiladi.
+4. **Mashq** (4 / 5 / 6 ta to'g'ri — oxirdagi «qiyinlik yangilanishi»ga qara): "Robot bu yongʻoqni nima deydi?" — bola javob tugmasini bosadi (ya'ni eng yaqin misol qoidasini o'zi qo'llaydi). 1-xato: eng yaqin 3 ta misolgacha chiziqlar chiziladi. 2-xato: eng yaqini yoritiladi va javob aytiladi.
 
 ## 5. 2-bosqich: Chegara chizig'i (model va o'qitish)
 
 1. "Har safar hamma misolni koʻrib chiqish — sekin. Robot **chegara chizsa** boʻladi." Maydonda 10 ta misol va chiziq paydo bo'ladi (xato bilan).
 2. **Bola sozlaydi:** 4 ta tugma bilan chiziqni suradi/buradi, "Xato: 4 → 2 → 0". 0 xatoga yetganda: "Chiziq — robotning **modeli**."
 3. **Robot o'zi o'rganadi:** yangi ma'lumot va qiyshiq chiziq. "Endi robot oʻzi topadi." Animatsiya: har qadamda chiziq biroz suriladi, xato kamayadi (5 → 3 → 1 → 0). "Har xatodan keyin chiziqni biroz tuzatadi — bu **oʻqitish**."
-4. **Mashq** (3 ta to'g'ri): yangi misollar to'plami, bola chiziqni 0 xatoga keltirib "Tayyor"ni bosadi. Xato qolgan bo'lsa — 1-xato: xato qilingan nuqtalar yonadi ("Bu 2 tasi notoʻgʻri tomonda"). 2-xato: robot o'zi to'g'rilab ko'rsatadi, yangi misol beriladi.
+4. **Mashq** (4 / 5 / 6 ta to'g'ri — oxirdagi «qiyinlik yangilanishi»ga qara): yangi misollar to'plami, bola chiziqni 0 xatoga keltirib "Tayyor"ni bosadi. Xato qolgan bo'lsa — 1-xato: xato qilingan nuqtalar yonadi ("Bu 2 tasi notoʻgʻri tomonda"). 2-xato: robot o'zi to'g'rilab ko'rsatadi, yangi misol beriladi.
 
 ## 6. 3-bosqich: Sinov va ma'lumot sifati
 
 1. **Sinov:** "Robot oʻrgandi. Endi sinaymiz — u hali koʻrmagan yongʻoqlar bilan." 6 ta yangi nuqta chiqadi, robot modeli bo'yicha ajratadi, 2 tasi xato bo'ladi (✗ belgisi bilan).
 2. **Nega?** O'qitish misollari maydonning bir chekkasida turibdi, xato nuqtalar esa boshqa chekkada. "Robot faqat katta yongʻoqlarni koʻrgan edi."
 3. **Tuzatamiz:** bola 2 ta yangi misolni qo'shadi (xato bo'lgan hududdan) → robot qayta o'qiydi (chiziq suriladi) → sinovda xato 0. "Maʼlumot qanday boʻlsa, robot shunday oʻylaydi."
-4. **Mashq** (3 ta to'g'ri), ikki xil:
+4. **Mashq** (4 / 5 / 6 ta to'g'ri — oxirdagi «qiyinlik yangilanishi»ga qara), ikki xil:
    - **Bashorat:** "Robot bu yongʻoqni nima deydi?" — chiziqli model bo'yicha (nuqta chiziqning qaysi tomonida).
    - **Qaysi misol foydali?** 3 ta variantdan robotga hozir eng kerakli misol tanlanadi (xato qilayotgan hududdagi). 1-xato: xato hudud yoritiladi. 2-xato: to'g'ri variant ko'rsatiladi.
 5. **Hikoya** (rasm + 1–2 pufak):
@@ -93,3 +93,21 @@ Bosh sahifada yangi bo'lim: **Sunʼiy intellekt** — "Mashina qanday oʻrganadi
 ## 9. Bu o'yinga kirmaydi
 
 Neyron tarmoq tuzilishi va matematikasi (og'irliklar, gradient), k > 1 bo'lgan "eng yaqin k ta", regressiya, matn va rasm bilan ishlash (ular keyingi o'yinlarda: "Keyingi soʻz", "Sehrli qutilar").
+
+## 10. 2026-10-02 qiyinlik yangilanishi
+
+Bolalar "o'ta oson" deyishgan: 1- va 3-bosqich mashqi "Toʻla / Boʻsh" (2 variant, 2 urinish) edi — yutqazib bo'lmasdi. Yuqoridagi 4–6-bo'limlardagi mashq tavsiflari o'rniga endi shu amal qiladi (QOIDALAR §4.3, §4.5):
+
+- **To'g'ri javoblar soni:** 4 / 5 / 6 (1- / 2- / 3-bosqich), qiyin rejimda 7 — `QK.practice.need()`.
+- **1-bosqich mashqi — ikki qadam** (`common.twoStep`): avval bola **eng yaqin misolni maydonda bosadi** (6–8 nuqtadan bittasi), keyin "robot nima deydi?" (Toʻla / Boʻsh). Ikkalasi to'g'ri bo'lsagina hisoblanadi. 1-xato maslahati: uchta nomzodgacha chiziq (eng qisqasini bola o'zi tanlaydi) — javob aytilmaydi.
+- **3-bosqich mashqi:** "bashorat" (2 variant) o'rniga **"Robot qaysi yongʻoqda adashadi?"** — model chizig'i va 6–8 ta chaqilgan sinov yong'og'i, bittasi noto'g'ri tomonda; bola o'shani bosadi. Maslahat: bosilgan yong'oq "o'z joyida" deb belgilanadi (bitta variant chiqariladi). "Qaysi misol foydali?" endi **4 variant** (to'rtinchi shakl — olti burchak).
+- **Qiyinlik zinasi `tier`** (`learn.js`, generatorlarning uchinchi argumenti):
+
+| Generator | tier 0 | tier 1 | tier 2 |
+|---|---|---|---|
+| `makeNearestTask` | 6 misol, so'rov 2..8, boshqa sinf ≥ 1.5 uzoqroq | so'rov 1..9, farq 1.2..3.0 | 8 misol, farq 0.8..2.0, ikkinchi nomzod 0.5..1.5 yaqin |
+| `makeLineTask` | boshida 3–5 xato | 4–6 xato | 5–7 xato |
+| `makeMistakeTask` | 6 yong'oq, xato nuqta chiziqdan 1.0..3.0 | 0.8..2.0 | 8 yong'oq, 0.5..1.5 |
+| `makeUsefulTask` | 4 variant, misollar o'ngda, ustunlik ≥ 1.5 | misollar chap yoki o'ngda | ustunlik ≥ 1.0 |
+
+- **Testlar:** `tests/learn.test.js` (tier chegaralari, yagona javob, takrorlanmaslik), `tests/twostep.test.js` (ikki qadamli savolni taxmin bilan o'tib bo'lmasligi, qiyin rejimda bitta urinish).

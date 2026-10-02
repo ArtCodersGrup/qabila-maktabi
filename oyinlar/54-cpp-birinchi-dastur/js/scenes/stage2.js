@@ -41,7 +41,7 @@
     await ui.say("elder", "Endi kodni oʻzing yozasan: qolip tayyor, faqat oʻrtasini toʻldir.");
     await ui.say("elder", "Yozgach ▶︎ ni bos — dastur shu yerda ishga tushadi.");
     await practice.exercises({
-      next: (prev, correct) => L.bosqich2Task(prev, correct),
+      next: (prev, correct, tier) => L.bosqich2Task(prev, correct, tier),
       run: (task) => common.mashq(task),
       praise: (task) => (task.tur === "natija" ? "cin ni toʻgʻri oʻqiding."
         : task.tur === "yoz" ? "Dasturing ishladi!" : "Eʼlon shunday yoziladi."),

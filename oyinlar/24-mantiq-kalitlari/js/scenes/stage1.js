@@ -36,7 +36,7 @@
     await ui.say("elder", "Bu — VA amali. A VA B — ikkalasi ham 1 boʻlsa, 1.");
     await example();
     await definition();
-    await ui.say("elder", "Endi oʻzing oʻyla: chiroq yonadimi? 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing: jadvalni toʻldir va B ni top. ${QK.practice.need()} ta toʻgʻri javob!`);
     await common.exercises(1);
   }
 

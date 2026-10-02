@@ -66,7 +66,7 @@
     await outOfRange();
     await definition();
     await practice.exercises({
-      next: (prev) => L.listTask(Math.random, prev),
+      next: (prev, correct, tier) => L.listTask(Math.random, prev, tier),
       run: (task) => common.resultExercise(task),
       praise: () => "Indekslarni toʻgʻri sanading.",
     });

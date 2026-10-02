@@ -55,8 +55,17 @@ test("ko'paytirish savollari: javob ko'paytmaga teng", () => {
 });
 
 test("VA/YOKI savollari: to'g'ri javob qoidadan, xato javob — boshqa qoidadan", () => {
-  for (const t of each(L.qoidaTask, 40, 7)) {
-    assert.ok(t.qoida === "va" || t.qoida === "yoki", t.id);
+  for (const t of each(L.qoidaTask, 60, 7)) {
+    assert.ok(["va", "yoki", "aralash"].includes(t.qoida), t.id);
+    if (t.qoida === "aralash") {
+      // 2026-10-02: ikki qoida birga — (a + b) × c; xato javob — hammasini ko'paytirish
+      const [a, b, c] = t.qiymat.map(BigInt);
+      assert.equal(t.javob, (a + b) * c, t.matn);
+      assert.equal(t.xato, a * b * c, t.matn);
+      assert.ok(t.hisob.startsWith("(" + a + " + " + b + ") × " + c), t.hisob);
+      assert.notEqual(t.javob, t.xato, t.matn);
+      continue;
+    }
     const kopaytma = S.kopaytir(t.qiymat);
     const yigindi = S.qosh(t.qiymat);
     assert.equal(t.javob, t.qoida === "va" ? kopaytma : yigindi);
@@ -71,6 +80,59 @@ test("har ikki qoidadan ham savol chiqadi", () => {
   const list = each(L.qoidaTask, 40, 13);
   const turlar = new Set(list.map((t) => t.qoida));
   assert.ok(turlar.has("va") && turlar.has("yoki"), [...turlar].join(","));
+});
+
+// 2026-10-02: qiyinlik zinasi
+test("zina: aralash qoida va cheklangan tanlovlar faqat yuqori zinalarda", () => {
+  const r = rngFrom(15);
+  let prev = null;
+  for (let k = 0; k < 40; k++) {
+    prev = L.qoidaTask(r, prev, 0);
+    assert.notEqual(prev.qoida, "aralash", prev.matn);
+    assert.ok(!/har xil|oʻrinbosari|juft raqam|Tushlik/.test(L.vaTask(r, null, 0).matn), "birinchi zinada faqat eski savollar");
+  }
+  let aralash = 0;
+  for (let k = 0; k < 60; k++) { prev = L.qoidaTask(r, prev, 2); if (prev.qoida === "aralash") aralash++; }
+  assert.ok(aralash >= 20, "oxirgi zinada aralash savollar kam: " + aralash);
+  const matnlar = [];
+  for (let k = 0; k < 80; k++) { prev = L.vaTask(r, prev.tur === "va" ? prev : null, 2); matnlar.push(prev.matn); }
+  assert.ok(matnlar.some((m) => m.includes("har xil ikki xonali")), "cheklangan tanlovli savol chiqmadi");
+  assert.ok(matnlar.some((m) => m.includes("oʻrinbosari")), "sardor-oʻrinbosar savoli chiqmadi");
+  // Raqamlari har xil ikki xonali sonlar: 9 × 9 = 81 (sanab tekshiramiz)
+  let soni = 0;
+  for (let n = 10; n <= 99; n++) if (Math.floor(n / 10) !== n % 10) soni++;
+  assert.equal(soni, 81);
+});
+
+test("kod masalasi: uch qavat sikl va i != j sharti", () => {
+  const r = rngFrom(8);
+  let prev = null;
+  const idlar = new Set();
+  for (let k = 0; k < 60; k++) {
+    prev = L.kodTask(r, prev, 2);
+    idlar.add(prev.id.split(":")[1].includes("farqli") ? "farqli" : prev.qiymat.length === 3 ? "uch" : "ikki");
+    assert.deepEqual(K.expectedFor(prev), [String(prev.javob)], prev.id);
+    assert.equal(prev.javob, S.kopaytir(prev.qiymat));
+  }
+  assert.deepEqual([...idlar].sort(), ["farqli", "ikki", "uch"]);
+  for (let k = 0; k < 20; k++) assert.equal(L.kodTask(r, null, 0).qiymat.length, 2);
+});
+
+test("yangi kod yozish masalalari: farqli(n) va kamida_bitta(n, k)", () => {
+  const vazifa = (id) => {
+    const w = L.WRITE.find((x) => x.id === id);
+    return { type: "kod-yoz", solution: w.solution, tail: w.tail, tests: w.tests.map((stdin) => ({ stdin })) };
+  };
+  // farqli: n × n (o'zi bilan juftlikni ham sanagan) yechim yiqiladi; formula bilan — o'tadi
+  assert.equal(K.check(vazifa("farqli"), "def farqli(n):\n    return n * n").ok, false);
+  assert.equal(K.check(vazifa("farqli"), "def farqli(n):\n    return n * (n - 1)").ok, true);
+  // kamida bitta: 3 xonali, 10 belgi → 1000 − 729 = 271; sanab chiqadigan yechim ham to'g'ri
+  assert.deepEqual(K.expectedFor(vazifa("kamida-bitta"), { stdin: ["3", "10"] }), ["271"]);
+  let soni = 0;
+  for (let n = 0; n < 1000; n++) if (String(n).padStart(3, "0").includes("0")) soni++;
+  assert.equal(soni, 271, "formula sanoq bilan mos");
+  // "Aynan bitta" deb tushunilgan yechim yiqiladi
+  assert.equal(K.check(vazifa("kamida-bitta"), "def kamida_bitta(n, k):\n    return n * (k - 1) ** (n - 1)").ok, false);
 });
 
 test("kod masalasi: sikl natijasi ko'paytmaga teng", () => {

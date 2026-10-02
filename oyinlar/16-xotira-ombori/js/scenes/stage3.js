@@ -63,18 +63,24 @@
     const el = common.box(true);
     el.append(ui.h("div", { class: "facts" },
       ui.h("div", { text: `${task.device} — ${task.cap} ${task.capUnit}` }),
-      ui.h("div", { text: `1 ta ${task.file} — ${task.size} ${task.sizeUnit}` })));
-    ui.bubble("elder", `Nechta ${task.file} sigʻadi?`);
-    const capIn = task.type === "same" ? task.cap : task.cap * 1024;
+      ui.h("div", { text: `1 ta ${task.file} — ${task.size} ${task.sizeUnit}` }),
+      task.type === "left" ? ui.h("div", { text: `Yozilgan — ${task.used} ta ${task.file}` }) : null));
+    ui.bubble("elder", task.type === "left" ? `Yana nechta ${task.file} sigʻadi?` : `Nechta ${task.file} sigʻadi?`);
+    const capIn = task.type === "cross" ? task.cap * 1024 : task.cap;
     return practice.numberTries({
       answer: task.answer,
       hint: () => {
-        common.add(el, common.line(task.type === "same"
-          ? `${task.cap} : ${task.size} = ?`
-          : `${task.cap} ${task.capUnit} = ${capIn} ${task.sizeUnit}. ${capIn} : ${task.size} = ?`));
-        ui.bubble("elder", task.type === "same" ? "↻ Xotirani fayl hajmiga boʻl." : "↻ Avval bir xil birlikka aylantir, keyin boʻl.");
+        // Maslahat — usul: oraliq natija aytilmaydi
+        common.add(el, common.line(task.type === "same" ? `${task.cap} : ${task.size} = ?`
+          : task.type === "left" ? `Jami sigʻadi: ${task.cap} : ${task.size} = ? Undan ${task.used} tasi yozilgan`
+            : `1 ${task.capUnit} = 1024 ${task.sizeUnit}. Avval ${task.cap} ${task.capUnit}ni ${task.sizeUnit}ga aylantir`));
+        ui.bubble("elder", task.type === "same" ? "↻ Xotirani fayl hajmiga boʻl."
+          : task.type === "left" ? "↻ Avval jami nechta sigʻishini top, keyin yozilganlarini ayir."
+            : "↻ Avval bir xil birlikka aylantir, keyin boʻl.");
       },
-      solution: () => common.add(el, common.answerLine(`${capIn} : ${task.size} = ${task.answer} ta ${task.file}`)),
+      solution: () => common.add(el, common.answerLine(task.type === "left"
+        ? `${task.cap} : ${task.size} = ${task.cap / task.size}; ${task.cap / task.size} − ${task.used} = ${task.answer} ta ${task.file}`
+        : `${capIn} : ${task.size} = ${task.answer} ta ${task.file}`)),
     });
   }
 
@@ -91,11 +97,11 @@
     await fillFlash();
     await crossUnits();
     await definition();
-    await ui.say("elder", "Endi oʻzing hisobla: nechta sigʻadi? 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing hisobla: nechta sigʻadi? ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev) => units.makeFitTask(prev),
+      next: (prev, correct, tier) => units.makeFitTask(prev, undefined, tier),
       run: fitTask,
-      praise: (task) => `${task.answer} ta ${task.file} sigʻadi.`,
+      praise: (task) => (task.type === "left" ? `Yana ${task.answer} ta ${task.file} sigʻadi.` : `${task.answer} ta ${task.file} sigʻadi.`),
     });
     for (const scene of SCENES) await showScene(scene);
   }

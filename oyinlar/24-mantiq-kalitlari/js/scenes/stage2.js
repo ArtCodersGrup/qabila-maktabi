@@ -35,7 +35,7 @@
     await ui.say("elder", "Diqqat: gapda «choy yoki kompot» — bittasi degani. Mantiqda YOKI — ikkalasi ham boʻlsa ham rost.");
     await example();
     await definition();
-    await ui.say("elder", "Endi VA va YOKI aralash. 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi VA va YOKI aralash. ${QK.practice.need()} ta toʻgʻri javob!`);
     await common.exercises(2);
   }
 

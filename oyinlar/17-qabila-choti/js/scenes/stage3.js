@@ -70,6 +70,7 @@
       const list = S.places(task.base, task.k);
       return practice.numberTries({
         answer: task.answer,
+        maxLen: 4,
         hint: () => {
           common.add(el, common.line(`1, ${task.base}, … — har gal ${task.base} ga koʻpaytir`));
           ui.bubble("elder", "↻ Birlar xonasidan boshlab koʻpaytirib bor.");
@@ -94,25 +95,31 @@
         solution: () => common.add(el, common.answerLine(`${task.digit} — ${task.answer} lar xonasida`)),
       });
     }
-    el.append(ui.h("div", { class: "big-value", text: task.text }));
-    ui.bubble("elder", "Bu qaysi turdagi tizim?");
+    // Tizim turi: 4 yozuvdan bittasi boshqa turda — o'shani top (4 variant)
+    el.append(ui.h("div", { class: "count-line", text: "Toʻrtta yozuv" }));
+    ui.bubble("elder", task.ask === "nopoz"
+      ? "Bulardan qaysi biri NOPOZITSION tizimda yozilgan?"
+      : "Bulardan qaysi biri POZITSION tizimda yozilgan?");
     return practice.tries({
       setup: (submit) => {
         const row = ui.h("div", { class: "choice-row" });
-        row.append(ui.button("Pozitsion", () => submit("poz")), ui.button("Nopozitsion", () => submit("nopoz")));
+        task.options.forEach((text) => row.append(ui.button(text, () => submit(text))));
         ui.clearControl();
         ui.control().append(row);
       },
       check: (value) => value === task.answer,
-      hint: () => ui.bubble("elder", "↻ Raqam qiymati turgan joyiga bogʻliqmi?"),
-      solution: () => common.add(el, common.answerLine(`${task.why} — ${task.answer === "poz" ? "pozitsion" : "nopozitsion"}`)),
+      hint: () => {
+        common.add(el, common.line("Pozitsion: raqam qiymati turgan xonasiga bogʻliq. Nopozitsion: belgi har joyda bir xil"));
+        ui.bubble("elder", "↻ Har yozuvda soʻra: belgi boshqa joyga koʻchsa, qiymati oʻzgaradimi?");
+      },
+      solution: () => common.add(el, common.answerLine(`${task.answer} — ${task.why} — ${task.ask === "poz" ? "pozitsion" : "nopozitsion"}`)),
     });
   }
 
   function praise(task) {
     if (task.type === "place") return `${task.base}-likda ${task.k}-xona — ${task.answer}.`;
     if (task.type === "digitPlace") return `${task.digit} — ${task.answer} lar xonasida.`;
-    return task.answer === "poz" ? "Pozitsion: joyi muhim." : "Nopozitsion: belgi qiymati oʻzgarmaydi.";
+    return task.ask === "poz" ? `${task.answer} — pozitsion: joyi muhim.` : `${task.answer} — nopozitsion: belgi qiymati oʻzgarmaydi.`;
   }
 
   const SCENES = [
@@ -131,9 +138,9 @@
   async function stage3() {
     for (const run of BUILDS) await build(run);
     await definition();
-    await ui.say("elder", "Endi oʻzing top: xonalar va tizim turlari. 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing top: xonalar va tizim turlari. ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev) => tizim.makePlaceTask(prev),
+      next: (prev, correct, tier) => tizim.makePlaceTask(prev, undefined, tier),
       run: placeTask,
       praise,
     });

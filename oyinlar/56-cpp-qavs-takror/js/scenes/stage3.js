@@ -22,7 +22,7 @@
     await uchXato();
     await ui.say("elder", "Endi xatoni oʻzing topasan va oʻz dasturingni yozasan.");
     await practice.exercises({
-      next: (prev, correct) => L.bosqich3Task(prev, correct),
+      next: (prev, correct, tier) => L.bosqich3Task(prev, correct, tier),
       run: (task) => common.mashq(task),
       praise: (task) => (task.tur === "xato" ? "Xatoni topding." : "Dasturing ishladi!"),
     });

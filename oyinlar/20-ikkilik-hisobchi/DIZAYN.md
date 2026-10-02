@@ -79,3 +79,12 @@ Bosh ekran
 ## 8. Bu o'yinga kirmaydi
 
 Ikkilikda boʻlish, manfiy sonlar va "qoʻshimcha kod", 8 xonadan uzun sonlar.
+
+## 2026-10-02 qiyinlik yangilanishi
+
+Sabab: bolalar "oson" deyishdi — sonlar 31 dan oshmasdi, bosqich ichida qiyinlik oʻsmasdi. Savollar raqam terish bilan (2 variantli savol bu oʻyinda yoʻq).
+
+- Generatorlar `tier` oladi (`makeAddTask(prev, rng, tier)` va h.k.); chegaralar `amal2.js` da jadval:
+  - 1-bosqich (`ADD`): 3–31 → 16–63 → **32–127** (6–7 xonali qoʻshiluvchilar, natija ≤ 8 xona).
+  - 2-bosqich (`SUB`): 5–31 → 16–63 → **32–127**; tier 1 da qarz albatta bor, tier 2 da **kamida ikkita qarz**.
+  - 3-bosqich: surish (`SHIFT`) × 10₂…1000₂ → tier 2 da × 10000₂ gacha va ulushi 40% → 20%; koʻpaytuvchi (`MULT`) 11, 101, 110, 111 → + 1001, 1010 → **1001–1101** (4 xonali, uch qator qoʻshiladi).

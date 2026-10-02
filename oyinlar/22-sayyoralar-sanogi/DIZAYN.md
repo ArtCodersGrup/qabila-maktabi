@@ -81,3 +81,13 @@ Bosh ekran
 ## 8. Bu o'yinga kirmaydi
 
 10 dan katta asoslar (16-lik — 21-oʻyinda), boʻlish, kasr sonlar, 60-likda hisoblash (faqat hikoya).
+
+## 2026-10-02 qiyinlik yangilanishi
+
+Sabab: bolalar "oson" deyishdi — bosqich ichida sonlar oʻsmasdi, jumboq faqat bir xonali edi, koʻpaytirish maslahati har ustunning raqamini aytib qoʻyardi.
+
+- Generatorlar `tier` oladi (`makeAddTask(prev, rng, tier)` va h.k.):
+  - 1–2-bosqich: tier 0 — 2–3 xonali (≤ 200), 3–9-lik; tier 1 — faqat 3 xonali, koʻchish/qarz **albatta**; tier 2 — **3–4 xonali** (≤ 999), **12-likkacha** (A, B raqamlari), kamida **ikkita** koʻchish/qarz. Natija 4 xonadan oshmaydi.
+  - 3-bosqich, koʻpaytirish: tier 1 — koʻpaytuvchi ≥ 3, asos 5–9; tier 2 — **3 xonali** son × bir xonali.
+  - 3-bosqich, jumboq: tier 0 — `3 + 4 = 10`; tier 1+ — **ikki xonali** (`puzzle2`): "12 + 13 = 30 qaysi tizimda?" (birlar ustunida koʻchish; tier 2 da oʻnlar raqami 1–3). Test: javob yagona (2–16 asoslar ichida faqat bittasi mos).
+- **Maslahat javobni aytmaydi:** jumboqda faqat usul; koʻpaytirishda faqat oʻng ustunning oʻnlikdagi hisobi (avval har ustunning raqami va koʻchishi yozib berilardi).

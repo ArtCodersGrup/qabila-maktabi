@@ -47,9 +47,9 @@ O'zbek lotin alifbosi tartibida **29 ta harf**. `Oʻ`, `Gʻ`, `Sh`, `Ch`, `Ng` �
 ```
 Bosh ekran
    ├─► Kirish (xat keldi)
-   ├─► 1-bosqich: Xatni ochish       [g'ildirak → xat (kalit 3) → ta'rif → 2 ta so'z]
-   ├─► 2-bosqich: Javobni shifrlash  [3 ta so'z]
-   └─► 3-bosqich: Kalitsiz ochish va hikoya  [2 ta so'z → 6 ta sahna] → tabrik
+   ├─► 1-bosqich: Xatni ochish       [g'ildirak → xat (kalit 3) → ta'rif → 3 ta so'z]
+   ├─► 2-bosqich: Javobni shifrlash  [5 ta so'z]
+   └─► 3-bosqich: Kalitsiz ochish va hikoya  [4 ta so'z → 6 ta sahna] → tabrik
 ```
 
 Bosh ekran, bosqich kartalari, `?bosqich=N` — 1–2-o'yindagidek (`umumiy/js/app.js`).
@@ -61,7 +61,7 @@ Bosh ekran, bosqich kartalari, `?bosqich=N` — 1–2-o'yindagidek (`umumiy/js/a
 
 ## 5. 1-bosqich: Xatni ochish
 
-Tepada 3 ta doira: **xat** + **2 ta so'z**.
+Tepada mashq doiralari: **3 ta so'z** (xat — bosqichning birinchi javobi; 2026-10-02, 13-bo'limga qara).
 
 ### 5.1. Ko'rsatish: g'ildirak
 1. Ish maydonida katta g'ildirak (kalit 0). Oqsoqol: "Bu — Sezar gʻildiragi. Ichki halqani 3 ga buramiz."
@@ -175,3 +175,17 @@ Avtomatik testlar (`caesar.js`: alifbo, harflarga ajratish, aylana surish, shifr
 - Chastota tahlili bilan ochish (faqat hikoyada aytiladi)
 - Tinish belgilari va raqamlarni shifrlash
 - Erkin matn yozish
+
+## 13. 2026-10-02 qiyinlik yangilanishi
+
+Bolalar "o'ta oson" deyishgan: jadval kalkulyator edi (harfni pastki qatordan topib bosish — mexanik ish), banklar 8 / 4 / 4 so'z, kalit doim 1–6, 3-bosqichda atigi 2 ta so'z va u baholanmasdi. 5–7-bo'limlardagi mashq tavsiflari o'rniga endi shu amal qiladi (QOIDALAR §4.3, §4.5):
+
+- **Mashq sikli** umumiy `QK.practice` ga o'tdi (`scenes/common.js`): yulduzlar, seriya 🔥, qiyin rejim (bitta urinish) endi bu o'yinda ham ishlaydi. Tepada "xat + 2 ta so'z" doiralari o'rniga faqat mashq doiralari.
+- **To'g'ri javoblar:** 1-bosqich — xat + **3 ta so'z** (`need() − 1`), 2-bosqich — **5 ta so'z**, 3-bosqich — **4 ta so'z** kalitsiz (har birida 28 tagacha kalit sinaladi, 6 tasi ko'plik qiladi).
+- **Banklar:** `PRACTICE` 8 → 15, `REPLIES` 4 → 10, `CRACK` 4 → 10 so'z (test: kalitsiz ochish so'zlari boshqa kalitda bankdagi so'zga aylanmaydi).
+- **Kalit zinasi** (`makeExercise(list, prev, rng, tier, blind)`): tier 0 — 1–6 (3 siz), tier 1 — **7–14**, tier 2 — **15–28** (alifbo aylanadi).
+- **Yashirin qator ("yoddan surish")** — `blind`: jadvalning pastki qatori "?" bo'ladi, jadval oddiy alifbo klaviaturasiga aylanadi; bola har harfni o'zi suradi (kalit kichik: 1, 2, 4; tier 2 da 5 ham). 1-xato maslahati javobni aytmaydi — pastki qatorni ochadi. Reja `makePlanned`: 1-bosqich — kalit 1–6 → 7–14 → yashirin; 2-bosqich — XOʻP (3) → 1–6 → 7–14 → 15–28 → yashirin.
+- **3-bosqich** endi baholanadi: «Topdim!» ma'nosiz so'zda bosilsa — xato (1-marta maslahat, 2-marta kalit ko'rsatiladi va yangi so'z). Kalit borgan sari uzoqlashadi (`makeCrack` darajalari: 4–9, 10–15, 16–21, 22–27) — "«−» bilan orqaga yurish yaqinroq" ekanini bola o'zi topadi.
+- **Qilinmadi:** jadval o'rniga g'ildirakni ko'rsatish (hisobotdagi taklif) — 29 harfli g'ildirak ixcham ekranda o'qilmaydi; o'rniga yashirin qator rejimi qilindi.
+- **Testlar:** `tests/caesar.test.js` (kalit zinalari, banklar, reja, takrorlanmaslik), `tests/solve-word.test.js` (soxta DOM: ochiq/yashirin jadval, maslahat, yechim, qiyin rejim).
+

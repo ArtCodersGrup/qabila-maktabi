@@ -174,34 +174,51 @@
 
   // ---------- Python uchun tashqi funksiyalar ----------
   // Bitta satr bajarilganda: harakatlar shu yerda maydonni o'zgartiradi va yozuvga tushadi.
+  // Python xatolari (brauzerda python/errors.js jang.js dan oldin ulanadi)
+  const pyXato = () => (root.QK && root.QK.python && root.QK.python.errors)
+    || (typeof module !== "undefined" && module.exports ? require("./python/errors.js") : null);
+  const pyTuri = (v) => (typeof v === "string" ? "str" : typeof v === "boolean" ? "bool" : Array.isArray(v) ? "list"
+    : v === null || v === undefined ? "NoneType" : typeof v === "number" ? "float" : typeof v === "bigint" ? "int" : "object");
+
   function tashqiFunksiyalar(m, bolaId, chegara) {
     const t = () => m.tanklar.find((x) => x.id === bolaId);
     const holat = { soni: 0, chegaraOshdi: false };
-    const son = (args, nom) => {
-      const v = args.length ? Number(args[0]) : 0;
-      if (!Number.isFinite(v)) throw new Error(nom + "() ga son berish kerak");
+    const son = (args, nom, pos) => {
+      const a = args.length ? args[0] : 0;
+      // move("abc") — bolaning xatosi (TypeError), saytniki emas: Python uslubidagi xato tashlanadi
+      const sonmi = typeof a === "bigint" || typeof a === "boolean" || (typeof a === "number" && Number.isFinite(a));
+      if (!sonmi) {
+        const E = pyXato();
+        const matn = nom + "() argument must be a number, not '" + pyTuri(a) + "'";
+        if (!E) throw new Error(matn);
+        throw E.typeError(matn, Object.assign({}, pos || {}, {
+          hint: nom + "() ga son berish kerak: " + nom + (nom === "left" || nom === "right" ? "(90)." : "(50).")
+            + (typeof a === "string" ? " Qoʻshtirnoq ichidagi «" + a + "» — matn, son emas." : ""),
+        }));
+      }
+      const v = Number(a);
       // Chegara maydon o'lchamiga bog'liq: move(999999) sikl bo'lib qolmasin,
       // lekin maydonning bir chetidan ikkinchisiga yurish mumkin bo'lsin
       return Math.max(-EN, Math.min(EN, Math.round(v)));
     };
-    const harakat = (nom, fn) => (args) => {
+    const harakat = (nom, fn) => (args, ctx, pos) => {
       if (m.tugadi) return null;
       holat.soni += 1;
       if (holat.soni > (chegara || MAX_HARAKAT)) {
         holat.chegaraOshdi = true;
         return null;
       }
-      const natija = fn(args);
+      const natija = fn(args, pos);
       holatniTekshir(m);
       return natija;
     };
     return {
       holat,
       fn: {
-        move: harakat("move", (a) => { HARAKATLAR.move(m, t(), Math.abs(son(a, "move"))); return null; }),
-        back: harakat("back", (a) => { HARAKATLAR.back(m, t(), Math.abs(son(a, "back"))); return null; }),
-        left: harakat("left", (a) => { HARAKATLAR.left(m, t(), son(a, "left")); return null; }),
-        right: harakat("right", (a) => { HARAKATLAR.right(m, t(), son(a, "right")); return null; }),
+        move: harakat("move", (a, pos) => { HARAKATLAR.move(m, t(), Math.abs(son(a, "move", pos))); return null; }),
+        back: harakat("back", (a, pos) => { HARAKATLAR.back(m, t(), Math.abs(son(a, "back", pos))); return null; }),
+        left: harakat("left", (a, pos) => { HARAKATLAR.left(m, t(), son(a, "left", pos)); return null; }),
+        right: harakat("right", (a, pos) => { HARAKATLAR.right(m, t(), son(a, "right", pos)); return null; }),
         fire: harakat("fire", () => { HARAKATLAR.fire(m, t()); return null; }),
         reload: harakat("reload", () => { HARAKATLAR.reload(m, t()); return null; }),
         scan: () => BigInt(korish(m, t())),

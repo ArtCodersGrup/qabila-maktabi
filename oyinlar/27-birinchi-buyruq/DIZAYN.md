@@ -92,3 +92,16 @@ Uch zona (`asos.css`). Ish maydonida ustma-ust: yoʻl-yoʻriq satri, oʻqiladiga
 ├── js/scenes/final.js    bosqich tugashi va tabrik
 └── tests/logic.test.js   savollar chegarasi, takrorlanmasligi, yechimning to'g'riligi
 ```
+
+## 10. 2026-10-02 qiyinlik yangilanishi
+
+Sabab: hisobot-5 (C jadvali) — terish mashqi koʻchirish (osonlik 5), «kod yoz» 1–2 satrli `print`.
+
+- **1-bosqich (terish):** `need: 2` — ikki toʻgʻri javob yetadi. Qiyin rejimda ikki satr teriladi
+  (ikkinchisi — vergulli `print("a", "b")`).
+- **2-bosqich (natija):** ikki yangi tur — `uch` (uch `print`, biri `print(a, b)` sonlar bilan, biri `print(a * b, "soʻz")`)
+  va `qoshish` (`"a" + "b"` yopishadi, `"a", "b"` orasiga boʻshliq tushadi). Zina: 0 — ikki print, boʻsh `print()`,
+  vergul; 1 — + son va qoʻshtirnoqli son; 2 — yangi turlar ustun.
+- **3-bosqich:** «xatoni tuzat» da dastur 1 → 2 → 3 satr, xato faqat bittasida — bola xato xabaridagi satr raqamini
+  oʻqiydi (maslahat qaysi satrligini va xato turini aytadi). «Kodni oʻzing yoz» da 1–2 → 2–3 → 3–4 satr.
+- Testlar: 8 → 13.

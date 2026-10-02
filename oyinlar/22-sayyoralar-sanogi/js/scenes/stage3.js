@@ -19,7 +19,7 @@
     ui.bubble("elder", "Qaysi sayyorada 3 + 4 = 10 boʻladi?");
     await ui.settle((done) => {
       const row = ui.h("div", { class: "choice-row" });
-      [5, 7, 8].forEach((b) => row.append(ui.button(`${b}-lik`, () => {
+      [5, 6, 7, 8].forEach((b) => row.append(ui.button(`${b}-lik`, () => {
         if (b !== 7) {
           sound.play("retry");
           ui.pose("apprentice", "think", 900);
@@ -38,16 +38,22 @@
   // 6.3: mashq — ko'paytirish yoki jumboq
   function stage3Task(task) {
     const el = common.box(true);
-    if (task.type === "puzzle") {
-      el.append(ui.h("div", { class: "big-value", text: `${task.x} + ${task.y} = 1${task.c}` }));
+    if (task.type === "puzzle" || task.type === "puzzle2") {
+      const two = task.type === "puzzle2";
+      el.append(ui.h("div", { class: "big-value", text: two ? `${task.a} + ${task.b} = ${task.sum}` : `${task.x} + ${task.y} = 1${task.c}` }));
       ui.bubble("elder", "Qaysi sayyorada shunday? Asosini yoz.");
       return practice.numberTries({
         answer: task.answer,
         hint: () => {
-          common.add(el, common.line(`1${task.c} = asos + ${task.c}. ${task.x} + ${task.y} = ${task.x + task.y}`));
-          ui.bubble("elder", "↻ 10 — asos. Demak, yigʻindi = asos + oxirgi raqam.");
+          // Maslahat — usul: sonlarni bola o'zi qo'yadi
+          common.add(el, common.line(two
+            ? "Birlar ustuniga qara: yigʻindi asosdan oshdi — 1 koʻchdi"
+            : "10 — bu asos. Yigʻindi (oʻnlikda) = asos + oxirgi raqam"));
+          ui.bubble("elder", two
+            ? "↻ Oʻngdagi ikki raqamni oʻnlikda qoʻsh. Undan yozilgan raqamni ayirsang — asos chiqadi."
+            : "↻ Ikki sonni oʻnlikda qoʻsh. Undan oxirgi raqamni ayirsang — asos chiqadi.");
         },
-        solution: () => common.add(el, common.answerLine(`${task.x} + ${task.y} = ${task.x + task.y} = ${task.answer} + ${task.c} → ${task.answer}-lik`)),
+        solution: () => common.add(el, common.answerLine(`${two ? "Birlar: " : ""}${task.x} + ${task.y} = ${task.x + task.y} = ${task.answer} + ${task.c} → ${task.answer}-lik`)),
       });
     }
     el.append(ui.h("div", { class: "planet-tag", text: `${task.base}-lik sayyora` }));
@@ -60,8 +66,9 @@
       base: task.base,
       maxLen: 4,
       hint: () => {
-        steps.forEach((st) => common.add(el, common.line(`${st.say.replace(". Qaysi raqamni yozamiz?", "")} → ${st.hint}`, "small")));
-        ui.bubble("elder", `↻ Har ustunni oʻnlikda hisobladim. ${task.base} ga boʻlib, qoldiqni yoz.`);
+        // Maslahat — faqat o'ng ustunning o'nlikdagi hisobi; raqam va ko'chishni bola o'zi topadi
+        common.add(el, common.line(`Oʻng ustun: ${steps[0].say.replace(". Qaysi raqamni yozamiz?", "")}`, "small"));
+        ui.bubble("elder", `↻ Har ustunni oʻnlikda hisobla. ${task.base} ga boʻl: boʻlinma — koʻchadi, qoldiq — yoziladi.`);
       },
       solution: () => {
         S.mulDigit(task.a, task.d, task.base).cols.forEach((c, i) => { if (c.carryOut) board.setCarry(i + 1, String(c.carryOut)); });
@@ -73,6 +80,7 @@
 
   function praise(task) {
     if (task.type === "puzzle") return `${task.answer}-lik sayyorada ${task.x} + ${task.y} = 1${task.c}.`;
+    if (task.type === "puzzle2") return `${task.answer}-lik sayyorada ${task.a} + ${task.b} = ${task.sum}.`;
     return `${S.fmt(task.a, task.base)} × ${task.d} = ${S.fmt(task.answer, task.base)}.`;
   }
 
@@ -88,9 +96,9 @@
     await sayyoraScenes.guided("23", "4", "×", 5, S.stepsMul("23", 4, 5), "Ustunda koʻpaytiramiz: 23₅ × 4.");
     await ui.say("elder", "23₅ × 4 = 202₅. Tekshiramiz: 13 × 4 = 52 = 2·25 + 0·5 + 2 ✓");
     await puzzleDemo();
-    await ui.say("elder", "Endi oʻzing: koʻpaytirish va jumboqlar. 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing: koʻpaytirish va jumboqlar. ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev) => sayyora.makeStage3Task(prev),
+      next: (prev, correct, tier) => sayyora.makeStage3Task(prev, undefined, tier),
       run: stage3Task,
       praise,
     });

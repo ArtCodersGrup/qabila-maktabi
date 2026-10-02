@@ -94,3 +94,12 @@ Bosh ekran
 ## 8. Bu o'yinga kirmaydi
 
 Rasmiy KiB/MiB belgilari (faqat hikoyada "1000 va 1024"), Pbayt dan kattalari, internet tezligi, xotira turlari (RAM, SSD).
+
+## 2026-10-02 qiyinlik yangilanishi
+
+Sabab: bolalar "oson" deyishdi — "qaysi biri katta?" 2 variantli, zinapoya savollari faqat bir pogʻonali edi.
+
+- Uchala generator `tier` oladi (`makeLadderTask(prev, rng, tier)` va h.k.).
+- **1-bosqich:** hamma savol 4 variantli (son savolida `8 / 10 / 1000 / 1024`). Tier 1 dan — **ikki pogʻona**: `1 Gbayt = 1024 × 1024 ___`, "Kbaytdan ikki pogʻona keyin?"; tier 2 da — **pogʻonalar soni**: "bayt → Gbayt: necha marta × 1024?" (1 / 2 / 3 / 4).
+- **2-bosqich — 4 variant:** uch karta — `k Gbayt`, `m Mbayt` (1000 ≠ 1024 tuzogʻi), `a Gbayt + b Mbayt` (yigʻindi) — "qaysi biri eng katta?" yoki **"Uchalasi teng"** (2 Gbayt = 2048 Mbayt = 1 Gbayt + 1024 Mbayt). k: 1–3 → 2–6 → 4–9. Bir xil birlikdagi oson taqqoslash olib tashlandi.
+- **3-bosqich:** turli birlik (`CROSS_CAP`) 1–2 → 1–4 → 2–4, fayl 64–512; tier 1 dan yangi tur `left` — **"yana nechta sigʻadi?"** (ikki amal: xotira : fayl − yozilgani). Tier 2 da bir xil birlikdagi oddiy boʻlish chiqmaydi. Maslahat oraliq natijani aytmaydi.

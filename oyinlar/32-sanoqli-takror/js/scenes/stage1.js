@@ -51,7 +51,7 @@
     await bounds();
     await definition();
     await practice.exercises({
-      next: (prev) => L.rangeTask(Math.random, prev),
+      next: (prev, correct, tier) => L.rangeTask(Math.random, prev, tier),
       run: (task) => common.resultExercise(task),
       praise: () => "Sanoqni toʻgʻri topding.",
     });

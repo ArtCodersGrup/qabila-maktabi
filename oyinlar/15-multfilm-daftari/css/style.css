@@ -3,7 +3,7 @@
 .vbox { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
 .task-view { display: flex; justify-content: center; width: 100%; }
 .count-line { font-size: 19px; font-weight: 800; text-align: center; }
-.count-line.muted { font-size: 17px; color: #7A7266; }
+.count-line.muted { font-size: 17px; color: var(--matn-3); }
 .answer { font-size: 21px; font-weight: 900; color: var(--togri); text-align: center; }
 .facts { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 22px; font-weight: 900; }
 
@@ -29,7 +29,7 @@ button.fcell:active { transform: scale(0.9); }
 .strip-n { font-size: 15px; font-weight: 900; }
 .strip-q {
   display: grid; place-items: center; width: 70px; height: 70px; border: 2px dashed var(--yana);
-  border-radius: 6px; font-size: 26px; font-weight: 900; color: var(--yana);
+  border-radius: 6px; font-size: 26px; font-weight: 900; color: var(--yana-matn);
 }
 .strip-item .vframe.xs { width: 70px; height: 70px; }
 
@@ -53,17 +53,17 @@ button.fcell:active { transform: scale(0.9); }
 .icon-art svg { display: block; width: 100%; height: auto; }
 .icon-label { font-size: 15px; font-weight: 900; color: var(--asosiy); }
 .sec-box { display: flex; flex-direction: column; align-items: center; padding: 6px 10px; border-radius: 10px; background: #fff; box-shadow: 0 2px 0 var(--soya); animation: pop 0.25s; }
-.sec-name { font-size: 14px; font-weight: 800; color: #7A7266; }
+.sec-name { font-size: 14px; font-weight: 800; color: var(--matn-3); }
 .sec-n { font-size: 18px; font-weight: 900; color: var(--asosiy); }
 
 /* ---------- Zinapoya, taqqoslash, tanlov ---------- */
 .ladder { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; animation: pop 0.3s; }
 .ladder .step { padding: 6px 12px; border-radius: 10px; background: #fff; box-shadow: 0 2px 0 var(--soya); font-size: 19px; font-weight: 900; }
 .ladder .step.new { background: var(--asosiy); color: #fff; }
-.ladder .arrow { font-size: 16px; font-weight: 800; color: #7A7266; }
+.ladder .arrow { font-size: 16px; font-weight: 800; color: var(--matn-3); }
 .cmp { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; }
 .cmp-card { padding: 12px 18px; border-radius: 14px; background: #fff; box-shadow: 0 3px 0 var(--soya); font-size: 28px; font-weight: 900; }
-.cmp-or { font-size: 18px; font-weight: 800; color: #7A7266; }
+.cmp-or { font-size: 18px; font-weight: 800; color: var(--matn-3); }
 .choice-row.nums .btn { min-width: 64px; font-size: 24px; }
 .choice-row.wide { flex-direction: column; align-items: stretch; width: 100%; max-width: 440px; }
 .choice-row.wide .btn { font-size: 18px; }

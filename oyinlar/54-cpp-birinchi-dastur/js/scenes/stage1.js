@@ -64,9 +64,9 @@
     await birinchi();
     await qolip();
     await kompilyator();
-    await ui.say("elder", "Endi oʻzing javob ber. 3 ta toʻgʻri javob — bosqich tugaydi!");
+    await ui.say("elder", `Endi oʻzing javob ber. ${QK.practice.need()} ta toʻgʻri javob — bosqich tugaydi!`);
     await practice.exercises({
-      next: (prev, correct) => L.bosqich1Task(prev, correct),
+      next: (prev, correct, tier) => L.bosqich1Task(prev, correct, tier),
       run: (task) => common.mashq(task),
       praise: (task) => (task.tur === "natija" ? "Chiqish aynan shunday." : "Qolipni yaxshi oʻqiding."),
     });

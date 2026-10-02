@@ -37,9 +37,9 @@
   async function stage2() {
     await muammo();
     await qoida();
-    let k = 0;
     await practice.exercises({
-      next: () => L.daraja("agar", k++),
+      // Har safar yangi maydon (generator); tier bilan yoʻl uzayadi va toshlar koʻpayadi
+      next: (prev, correct, tier) => L.yasa("agar", prev, undefined, tier),
       run: (level) => common.qurExercise(level),
       praise: () => "Bitta dastur — ikkala maydonda ham ishladi.",
     });

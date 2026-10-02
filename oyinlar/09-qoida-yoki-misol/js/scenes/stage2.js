@@ -67,20 +67,33 @@
     await ui.say("elder", "Qoida yozib boʻlmasa — misol koʻrsatamiz. Buni mashinali oʻrganish deyishadi.");
   }
 
-  // 5.5: mashq — bu to'plamga qoida yetadimi?
+  // 5.5: mashq — "Qaysi qoida shu narsalarni xatosiz ajratadi?" 3 ta qoida + "hech qaysi — misol kerak" (4 variant).
+  // Bola har qoidani narsalarga qo'yib tekshiradi; "qoida / misol" deb taxmin qilib o'tib bo'lmaydi.
   function setKindTask(task) {
     const el = common.box(true);
-    rulesUi.board(el, task.items, { truth: true });
-    ui.bubble("elder", "Shu narsalar uchun qoida yetadimi yoki misol koʻrsatish kerakmi?");
-    const options = ["Qoida yozamiz", "Misol koʻrsatamiz"];
+    const view = rulesUi.board(el, task.items, { truth: true });
+    const badge = rulesUi.errorBadge(el);
+    ui.bubble("elder", "Qaysi qoida shu narsalarni xatosiz ajratadi? Hech biri boʻlmasa — misol kerak.");
+    const labels = task.options.map((o) => (o.kind === "rule" ? common.ruleText(o.rule) : "Hech qaysi qoida — misol kerak"));
     return practice.tries({
-      setup: (submit) => rulesUi.choiceButtons(options, submit),
-      check: (index) => options[index] === (task.answer === "qoida" ? "Qoida yozamiz" : "Misol koʻrsatamiz"),
-      hint: () => ui.bubble("elder", "↻ Bitta belgi (kattaligi yoki dogʻlari) boʻyicha aniq chegara bormi? Boʻlsa — qoida."),
+      setup: (submit) => rulesUi.choiceList(labels, submit),
+      check: (index) => index === task.answerIndex,
+      hint: (index) => {
+        const picked = task.options[index];
+        if (picked.kind === "rule") {
+          // Asbob: tanlangan qoida ishga tushiriladi — qayerda adashgani ko'rinadi, to'g'ri javob aytilmaydi
+          badge.set(view.run(picked.rule));
+          ui.bubble("elder", "↻ Shu qoidani ishga tushirdim: belgilangan narsalarda u adashdi. Qolganlarini oʻzing tekshir.");
+        } else {
+          ui.bubble("elder", "↻ Shoshma: har qoidani narsalarga qoʻyib koʻr. HA lar bir tomonda, YOʻQ lar boshqa tomonda qoladimi?");
+        }
+      },
       solution: () => {
         const best = rules.bestRule(task.items);
+        const right = task.answer === "qoida" ? task.options[task.answerIndex].rule : best.rule;
+        badge.set(view.run(right));
         el.append(common.answerLine(task.answer === "qoida"
-          ? `Qoida yetadi: ${rules.FEATURE_NAMES[best.rule.feature]} ${best.rule.op} ${best.rule.value}`
+          ? `Qoida yetadi: ${common.ruleText(right)}`
           : `Qoida yetmaydi: eng yaxshisi ham ${best.errors} ta xato qiladi`));
       },
     });
@@ -90,9 +103,9 @@
     const task = rules.makeFuzzyTask();
     await fuzzyTry(task);
     await withExamples(task);
-    await ui.say("elder", "Endi oʻzing ayt: qoida yetadimi yoki misol kerakmi? 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing tekshir: qaysi qoida yetadi yoki misol kerakmi? ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev, correct) => rules.makeSetKindTask(correct, prev),
+      next: (prev, correct, tier) => rules.makeSetKindTask(correct, prev, null, tier),
       run: setKindTask,
       praise: (task) => (task.answer === "qoida" ? "Aniq chegara bor — qoida yetadi." : "Chalkash — misol kerak."),
     });

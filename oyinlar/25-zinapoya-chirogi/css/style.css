@@ -22,7 +22,7 @@
 .in-label { font-size: 17px; transform: translate(-100%, -50%); }
 .out-label { font-size: 13px; }
 .g-label { position: absolute; transform: translate(-50%, -50%); font-size: 15px; font-weight: 900; }
-.g-label.unknown { color: var(--yana); font-size: 20px; }
+.g-label.unknown { color: var(--yana-matn); font-size: 20px; }
 /* Quti yozuvi — 17 birlik (quti 60 birlik): sxema kichraysa, yozuv ham kichrayadi va qutidan chiqmaydi */
 @supports (width: 1cqw) {
   .g-label { font-size: min(18px, calc(100cqw * 17 / var(--vw))); }
@@ -39,7 +39,7 @@
   background: #fff; box-shadow: inset 0 0 0 3px var(--chiziq); font-size: 30px;
 }
 .digit.v1 { background: #FFE9A8; box-shadow: inset 0 0 0 3px #E0B04A; }
-.digit-cap { font-size: 13px; font-weight: 800; color: #7A7266; }
+.digit-cap { font-size: 13px; font-weight: 800; color: var(--matn-3); }
 
 /* ---------- Qo'shish jadvali: belgilangan ustun ---------- */
 .add-table td.v1 { color: #fff; background: #E0A800; }
@@ -52,6 +52,14 @@
 .col-sign, .col-d { display: grid; place-items: center; width: 34px; height: 40px; font-size: 30px; font-weight: 900; }
 .col-line { width: 100%; height: 3px; border-radius: 2px; background: var(--matn); }
 .clicks { display: flex; flex-direction: column; gap: 8px; font-size: 21px; font-weight: 900; text-align: center; }
+
+/* ---------- To'ldiriladigan jadval (mashq) ---------- */
+.ttable.fill td.out.pick { min-width: 64px; cursor: pointer; box-shadow: inset 0 0 0 3px var(--chiziq); user-select: none; }
+.ttable.fill td.out.pick:focus-visible { outline: 3px solid var(--asosiy); outline-offset: -3px; }
+.ttable.fill td { padding-top: 9px; padding-bottom: 9px; }
+.ttable.fill.locked td.out.pick { cursor: default; box-shadow: none; }
+.ttable.fill td.out.fixed { box-shadow: inset 0 0 0 4px var(--yana); }
+.choice-row.four .btn { font-size: 18px; }
 
 /* ---------- Ta'rif, hikoya, tabrik ---------- */
 .formula-box { display: flex; flex-direction: column; align-items: center; gap: 8px; max-width: 100%; text-align: center; }

@@ -42,9 +42,9 @@
   async function stage2() {
     await sayyoraScenes.guided("42", "14", "−", 5, S.stepsSub("42", "14", 5), "Ustunda ayiramiz: 42₅ − 14₅.");
     await ui.say("elder", "42₅ − 14₅ = 23₅. Tekshiramiz: 22 − 9 = 13 = 2·5 + 3 ✓");
-    await ui.say("elder", "Qarz — asosga teng: bu sayyorada 5 ta. Endi oʻzing ayir. 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Qarz — asosga teng: bu sayyorada 5 ta. Endi oʻzing ayir. ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev) => sayyora.makeSubTask(prev),
+      next: (prev, correct, tier) => sayyora.makeSubTask(prev, undefined, tier),
       run: subTask,
       praise: (task) => `${S.fmt(task.a, task.base)} − ${S.fmt(task.b, task.base)} = ${S.fmt(task.answer, task.base)}.`,
     });

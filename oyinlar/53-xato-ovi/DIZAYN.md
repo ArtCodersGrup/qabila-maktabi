@@ -41,3 +41,14 @@ notoʻgʻri yoʻnalish, **ortiqcha qadamlar** (dastur ishlaydi, lekin uzun) va t
 - Maydon, dastur roʻyxati va buyruq tugmalari — umumiy `dastur.js` / `dastur-ui.js` dan.
 - `tests/logic.test.js` — 9 test: har xato dasturning yiqilishi, har tuzatishning oʻtishi,
   qisqalik talabi, maydonlarning yaroqliligi.
+
+## 2026-10-02 qiyinlik yangilanishi
+
+Sabab: jami 6 ta qotirilgan vazifa bor edi (3 "top" + 3 "tuzat") — bosqich ichida ham, qayta oʻynaganda ham aynan oʻshalar chiqardi.
+
+- **Vazifa generatori** (`logic.js`): `D.randomField` (tasodifiy maydon) → `D.solve` (eng qisqa yoʻl) → `buz` (bitta buyruqni buzish: `almashtir` — boshqa yoʻnalish, `qosh` — ortiqcha buyruq, `ochir` — oxirgi buyruq tushib qolgan). `D.solve` umumiy `dastur.js` da bor edi — umumiy kodga tegilmadi.
+- **"Xatoni top" (`yasaTop`)**: xato oʻrni **yagona** boʻlishi shart — `tuzatishJoylari` bitta tahrir (almashtirish, oʻchirish yoki oxiriga qoʻshish) bilan tuzatsa boʻladigan hamma oʻrinlarni sanaydi, generator faqat bitta oʻrinli vazifani beradi. Kamida 3 buyruq + "+" katagi = **kamida 4 variant**. Qoʻlda yozilgan 3 ta "top" vazifa endi mashqqa kirmaydi: birida xato oʻrni yagona emas (➡ ⬆ ➡ ➡ ni oxiriga ⬇ qoʻshib ham tuzatsa boʻladi), birida 3 variant.
+- **"Tuzat" (`yasaTuzat`)**: tier 0 — bitta xato (30% — qoʻlda yozilgan namunalar); tier 1 — bitta xato yoki **ortiqcha qadam** (borib-qaytish; "qisqaroq yoz"); tier 2 — **ikkita xato** (bitta tahrir bilan tuzatib boʻlmaydi) va eng qisqa dastur shart.
+- Maydon chegaralari tier boʻyicha (`MAYDON`): 1 tosh, yoʻl 3–4 → 2 tosh, 4–5 → **3 tosh, 5–7**.
+- **Maslahat javobni aytmaydi:** "Yurgizib koʻr va kuzat: robot qaysi buyruqdan boshlab yoʻldan chiqdi?" (buyruq raqami aytilmaydi); yechimda — aniq izoh ("3-buyruq xato: ⬆ emas, ➡ kerak").
+- `topTask(r, prev, tier)`, `tuzatTask(r, prev, tier)`; 3-bosqich ikkalasini navbatlaydi.

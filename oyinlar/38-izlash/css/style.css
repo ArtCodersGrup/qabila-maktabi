@@ -27,9 +27,9 @@
   padding: 6px 12px; border: 2px solid var(--chiziq); border-radius: 10px; background: #fff;
 }
 .iz-qator.topdi { border-color: var(--togri); background: #F2FAF6; }
-.iz-raqam { width: 1.6em; color: #8A8577; font-size: 15px; font-weight: 800; }
+.iz-raqam { width: 1.6em; color: var(--matn-3); font-size: 15px; font-weight: 800; }
 .iz-taxmin { font-family: var(--kod-shrift); font-size: 20px; font-weight: 800; min-width: 2.4em; }
-.iz-javob { font-size: 17px; font-weight: 700; color: var(--yana); }
+.iz-javob { font-size: 17px; font-weight: 700; color: var(--yana-matn); }
 .iz-qator.topdi .iz-javob { color: var(--togri); }
 
 /* ---------- Qadamlar jadvali (n bo'yicha) ---------- */

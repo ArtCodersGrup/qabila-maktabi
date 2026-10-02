@@ -68,7 +68,8 @@
     return practice.numberTries({
       answer: task.answer,
       hint: () => {
-        common.add(el, common.line(task.type === "bits" ? `Har piksel 1 bit. ${task.w} × ${task.h} = ?` : `${task.w} × ${task.h} = ${n} bit. ${n} : 8 = ?`));
+        // Maslahat oraliq natijani ham aytmaydi — faqat usul
+        common.add(el, common.line(task.type === "bits" ? `Har piksel 1 bit. ${task.w} × ${task.h} = ?` : `Har piksel 1 bit: ${task.w} × ${task.h} = ? bit. 1 bayt = 8 bit`));
         ui.bubble("elder", task.type === "bits" ? "↻ Kenglikni balandlikka koʻpaytir." : "↻ Avval bitlarni top, keyin 8 ga boʻl.");
       },
       solution: () => common.add(el, common.answerLine(task.type === "bits"
@@ -80,9 +81,9 @@
   async function stage1() {
     await draw();
     await definition();
-    await ui.say("elder", "Endi oʻzing hisobla: rasm necha bit yoki necha bayt? 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing hisobla: rasm necha bit yoki necha bayt? ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev) => pixels.makeBwTask(prev),
+      next: (prev, correct, tier) => pixels.makeBwTask(prev, undefined, tier),
       run: bwTask,
       praise: (task) => (task.type === "bits"
         ? `${task.w} × ${task.h} = ${task.answer} bit.`

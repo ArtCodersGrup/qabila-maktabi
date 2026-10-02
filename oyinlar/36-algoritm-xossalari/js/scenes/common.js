@@ -84,16 +84,43 @@
             U.codeBlock(yechim.kod, { numbers: false })));
         }
         host.append(juft);
-        ui.control().append(
-          ui.button(task.a.nom, () => submit("a"), "big"),
-          ui.button(task.b.nom, () => submit("b"), "big"));
+        // 2026-10-02: uch tanlov (teng ham bo'lishi mumkin) + juft savol (son) — ikkalasi to'g'ri bo'lsa hisoblanadi
+        let tanlov = null;
+        const variantlar = [["a", task.a.nom], ["b", task.b.nom], ["teng", "Ikkalasi teng"]];
+        const tugmalar = variantlar.map(([id, nom]) => ui.button(nom, () => {
+          tanlov = id;
+          tugmalar.forEach((b, k) => {
+            const yoniq = variantlar[k][0] === id;
+            b.className = "btn sm" + (yoniq ? "" : " secondary");
+            b.setAttribute("aria-pressed", String(yoniq));
+          });
+        }, "sm secondary"));
+        tugmalar.forEach((b) => b.setAttribute("aria-pressed", "false"));
+        host.append(h("div", { style: "display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:8px 0" }, ...tugmalar));
+        host.append(M.note("Koʻproq aylanadigan sikl necha marta aylanadi? (Teng boʻlsa — istalganiniki.)"));
+        const area = h("input", {
+          class: "kod-javob", type: "text", inputmode: "numeric", spellcheck: "false", autocomplete: "off",
+          "aria-label": "Sikl necha marta aylanadi",
+        });
+        const yubor = () => {
+          const son = area.value.trim();
+          // Toʻliq boʻlmagan javob xato urinish sanalmaydi
+          if (!tanlov || !/^\d+$/.test(son)) { ui.toast("Avval yechimni tanla va sonni yoz."); return; }
+          submit({ tanlov, son: Number(son) });
+        };
+        area.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); yubor(); } });
+        host.append(area);
+        ui.control().append(ui.button("Tekshir", yubor, "big"));
       },
-      check: (value) => value === task.javob,
-      hint() {
-        host.append(M.note("↻ Sikl nechta marta aylanishini sana. Formulada sikl bormi?"));
+      check: (value) => value.tanlov === task.javob && value.son === task.sekin,
+      hint(value) {
+        host.append(M.note(value.tanlov !== task.javob
+          ? "↻ Kodning uzunligiga emas, sikl necha marta aylanishiga qara. Formulada sikl bormi? break qachon ishlaydi?"
+          : "↻ Tanlov toʻgʻri. Endi siklni sana: range ning boshi, oxiri va qadamiga qara — oxirgi son kirmaydi."));
       },
       solution() {
-        host.append(M.answer("Oʻlchab koʻramiz:"), jadval(task));
+        const nom = task.javob === "teng" ? "ikkalasi teng" : task[task.javob].nom + " tejamli";
+        host.append(M.answer("Oʻlchab koʻramiz: " + nom + "; koʻproq aylanadigan sikl — " + task.sekin + " marta."), jadval(task));
       },
     });
   }

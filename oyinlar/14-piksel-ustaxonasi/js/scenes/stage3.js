@@ -70,10 +70,15 @@
     await ui.say("elder", "Telefon takrorlanuvchi ranglarni shunday qisqa yozadi — bu siqish.");
   }
 
+  // "Qaysi biri eng katta?" — uch karta va "Uchalasi teng" (4 variant)
+  const cmpLabels = (task) => ({
+    mb: `${task.mb} Mbayt`, kb: `${task.kb} Kbayt`, photos: `${task.n} ta surat × ${task.each} Mbayt`, teng: "Uchalasi teng",
+  });
+
   function compareButtons(task, submit) {
+    const labels = cmpLabels(task);
     const row = ui.h("div", { class: "choice-row" });
-    row.append(ui.button(`${task.mb} Mbayt`, () => submit("mb")));
-    row.append(ui.button(`${task.kb} Kbayt`, () => submit("kb")));
+    pixels.CMP_OPTIONS.forEach((k) => row.append(ui.button(labels[k], () => submit(k), k === "teng" ? "secondary" : "")));
     ui.clearControl();
     ui.control().append(row);
   }
@@ -110,27 +115,44 @@
         },
       });
     }
-    const inKb = task.mb * 1024;
+    if (task.type === "cbytes") {
+      pixelsUi.taskPicture(el, task, pixels.PALETTE16, `${task.colors} xil rang`);
+      const p = task.w * task.h;
+      ui.bubble("elder", `Bu rasmda ${task.colors} xil rang. U necha BAYT?`);
+      return practice.numberTries({
+        answer: task.answer,
+        hint: () => {
+          common.add(el, common.line(`${task.colors} rang — har piksel ${task.bpp} bit. Avval bitlar, keyin : 8`));
+          ui.bubble("elder", "↻ Kenglik × balandlik × bit — bu bitlar. 8 bit — 1 bayt.");
+        },
+        solution: () => common.add(el, common.answerLine(`${task.w} × ${task.h} × ${task.bpp} = ${p * task.bpp} bit; ${p * task.bpp} : 8 = ${task.answer} bayt`)),
+      });
+    }
+    const labels = cmpLabels(task);
+    const sizes = pixels.cmpSizes(task);
     el.append(ui.h("div", { class: "cmp" },
-      ui.h("div", { class: "cmp-card", text: `${task.mb} Mbayt` }),
-      ui.h("div", { class: "cmp-or", text: "yoki" }),
-      ui.h("div", { class: "cmp-card", text: `${task.kb} Kbayt` })));
-    ui.bubble("elder", "Qaysi biri katta?");
+      ui.h("div", { class: "cmp-card", text: labels.mb }),
+      ui.h("div", { class: "cmp-card", text: labels.kb }),
+      ui.h("div", { class: "cmp-card", text: labels.photos })));
+    ui.bubble("elder", "Qaysi biri eng katta? Uchalasi bir xil boʻlsa — «Uchalasi teng».");
     return practice.tries({
       setup: (submit) => compareButtons(task, submit),
       check: (value) => value === task.answer,
       hint: () => {
-        common.add(el, common.line(`${task.mb} Mbayt = ${task.mb} × 1024 = ${inKb} Kbayt`));
-        ui.bubble("elder", "↻ Ikkalasini Kbaytda solishtir.");
+        common.add(el, common.line("1 Mbayt = 1024 Kbayt"));
+        ui.bubble("elder", "↻ Uchalasini ham Kbaytga oʻtkaz, keyin solishtir.");
       },
-      solution: () => common.add(el, common.answerLine(`${inKb} Kbayt ${inKb > task.kb ? ">" : "<"} ${task.kb} Kbayt`)),
+      solution: () => common.add(el,
+        common.line(`${labels.mb} = ${sizes.mb} Kbayt; ${labels.photos} = ${task.n * task.each} Mbayt = ${sizes.photos} Kbayt`),
+        common.answerLine(task.answer === "teng" ? `Uchalasi ham ${sizes.mb} Kbayt — teng` : `Eng kattasi: ${labels[task.answer]} (${sizes[task.answer]} Kbayt)`)),
     });
   }
 
   function praise(task) {
     if (task.type === "rgb") return `${task.w * task.h} piksel × 3 = ${task.answer} bayt.`;
+    if (task.type === "cbytes") return `${task.w * task.h * task.bpp} bit = ${task.answer} bayt.`;
     if (task.type === "runs") return `${task.row.length} ta piksel — ${task.answer} ta yozuv.`;
-    return `${task.mb} Mbayt = ${task.mb * 1024} Kbayt.`;
+    return task.answer === "teng" ? `Uchalasi ham ${task.mb * 1024} Kbayt.` : `${task.mb} Mbayt = ${task.mb * 1024} Kbayt.`;
   }
 
   async function showScene(scene) {
@@ -146,9 +168,9 @@
     await mix();
     await megabyte();
     await squeeze();
-    await ui.say("elder", "Endi oʻzing hisobla: rangli rasm, siqish va megabayt. 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing hisobla: rangli rasm, siqish va megabayt. ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev) => pixels.makePhotoTask(prev),
+      next: (prev, correct, tier) => pixels.makePhotoTask(prev, undefined, tier),
       run: photoTask,
       praise,
     });

@@ -59,7 +59,11 @@
   // ---------- Zonalar ----------
   const work = () => $("zone-work");
   const control = () => $("zone-control");
-  const clearWork = () => { work().innerHTML = ""; };
+  // data-keep belgili elementlar (bosqich/final kartasi) sahna tozalaganda qoladi; clearKeep() ularni olib tashlaydi
+  const clearWork = () => {
+    for (const n of [...work().childNodes]) if (!(n.nodeType === 1 && n.hasAttribute("data-keep"))) n.remove();
+  };
+  const clearKeep = () => { work().querySelectorAll(":scope > [data-keep]").forEach((el) => el.remove()); };
   const clearControl = () => { control().innerHTML = ""; };
   const setCompact = (on) => $("play").classList.toggle("compact", !!on);
 
@@ -71,6 +75,32 @@
     if (!svg) return;
     svg.classList.add("pose-" + name);
     if (ms) setTimeout(() => svg.classList.remove("pose-" + name), ms);
+    if (name === "happy") celebrate(who === "elder");
+  }
+
+  // Tantana: konfeti (shogird — kichik, oqsoqol — katta + ✓). Ish zonasini to'smaydi (pointer-events: none),
+  // reduced-motion da avtomatik o'chadi. Hamma o'yin pose(x, "happy") ni chaqiradi — alohida ulash shart emas.
+  let lastParty = 0;
+  function celebrate(big) {
+    const host = $("play");
+    if (!host) return;
+    const now = Date.now();
+    if (!big && now - lastParty < 400) return; // bir vaqtda ikki chaqiruv — bitta konfeti
+    lastParty = now;
+    const box = h("div", { class: "tantana", "aria-hidden": "true" });
+    const colors = ["var(--c0)", "var(--c1)", "var(--c2)", "var(--c3)", "var(--sariq)"];
+    const n = big ? 22 : 10;
+    for (let k = 0; k < n; k++) {
+      const i = document.createElement("i");
+      const a = (k / n) * Math.PI * 2;
+      const r = 70 + Math.random() * 110;
+      i.style.cssText = "--dx:" + (Math.cos(a) * r).toFixed(0) + "px;--dy:" + (Math.sin(a) * r * 0.7 + 70).toFixed(0)
+        + "px;--c:" + colors[k % 5] + ";--d:" + (Math.random() * 0.12).toFixed(2) + "s";
+      box.append(i);
+    }
+    host.append(box);
+    if (big && !host.querySelector(".ok-belgi")) host.append(h("div", { class: "ok-belgi", "aria-hidden": "true", text: "✓" }));
+    setTimeout(() => { box.remove(); host.querySelectorAll(".ok-belgi").forEach((e) => e.remove()); }, 1000);
   }
 
   function resetPoses() {
@@ -98,7 +128,10 @@
   function bubble(who, content) {
     const b = $("bubble");
     b.hidden = false;
-    b.className = "bubble from-" + who;
+    // Matn ✓ bilan boshlansa — "to'g'ri" holati, ↻ bilan — "yana urin" (rang + belgi, QOIDALAR §6)
+    const text = typeof content === "string" ? content : (content && content.textContent) || "";
+    const holat = text.startsWith("✓") ? " ok" : text.startsWith("↻") ? " yana" : "";
+    b.className = "bubble from-" + who + holat;
     b.onclick = null;
     b.textContent = "";
     if (typeof content === "string") b.textContent = content;
@@ -393,9 +426,46 @@
     return true;
   }
 
+  // ---------- Yulduzlar va bosqich/final kartalari ----------
+  // ★★☆ — n ta yoniq, qolgani xira
+  function stars(n, cls) {
+    const el = h("span", { class: cls || "sc-stars", "aria-label": `${n} yulduz` });
+    for (let k = 0; k < 3; k++) el.append(h("span", { class: k < n ? "" : "off", text: "★" }));
+    return el;
+  }
+
+  // Bosqich tugadi kartasi — ish zonasida turadi, o'yinning stageDone pufagi uning ustida gapiradi.
+  // data-keep: stageDone ichidagi clearWork() uni o'chirmaydi; app.js stageDone tugagach clearKeep() qiladi.
+  function stageCard({ num, total, title, stars: n, hard }) {
+    clearWork();
+    const card = h("div", { class: "stage-card", "data-keep": true },
+      h("div", { class: "sc-num", text: String(num) }),
+      h("div", { class: "sc-title", text: title }),
+      stars(n),
+      h("div", { class: "sc-sub", text: hard ? "Qiyin rejim 🔥 — bosqich oʻtildi!" : `${total} bosqichdan ${num} tasi tugadi` }));
+    work().append(card);
+    return card;
+  }
+
+  // O'yin tugadi kartasi — congrats() dan oldin chiziladi, o'yin o'z xulosasini uning ostiga qo'shadi
+  function finalCard({ title, stageTitles, stars: list, hard }) {
+    clearWork();
+    const jami = list.reduce((a, b) => a + (b || 0), 0);
+    const ul = h("ul", { class: "sc-list" });
+    stageTitles.forEach((t, k) => ul.append(h("li", {}, h("span", { text: t }), stars(list[k] || 0, "li-stars"))));
+    const card = h("div", { class: "stage-card final", "data-keep": true },
+      h("div", { class: "sc-num", text: "🏆" }),
+      h("div", { class: "sc-title", text: title }),
+      h("div", { class: "sc-sub", text: hard ? "Qiyin rejim 🔥 toʻliq oʻtildi!" : `${jami} / ${stageTitles.length * 3} yulduz` }),
+      ul);
+    work().append(card);
+    return card;
+  }
+
   QK.ui = {
     newRun, onCleanup, settle, sleep, h, button,
-    work, control, clearWork, clearControl, setCompact,
+    work, control, clearWork, clearKeep, clearControl, setCompact,
+    celebrate, stars, stageCard, finalCard,
     pose, resetPoses, paper, raisePaper,
     bubble, say, tile, wordChip, lettersLine, toast, sup,
     buildWords, askNumber, counter, choice, setProgress, hideProgress,

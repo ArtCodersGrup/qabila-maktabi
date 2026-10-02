@@ -47,3 +47,19 @@ keyin shu turni ishlatib **kod yozadi**. Yozgan kodi katta sonlar bilan sinaladi
 - `js/logic.js` — chegaralar, toshish misollari, boʻlish tuzoqlari, 8 ta masala sharti, 3 ta yozish mashqi.
 - `tests/logic.test.js` — 11 test (har misol yadro bilan solishtiriladi).
 - Chiqishlar `umumiy/tests/cpp-parity.test.js` orqali haqiqiy `g++` bilan ham tekshiriladi.
+
+## 2026-10-02 qiyinlik yangilanishi
+
+Hisobot-5 bu oʻyinni «yaxshi» deb baholagan; qoʻshilgani — chegaraga yaqin hisoblar va yangi masalalar.
+
+- **1-bosqich (toshish):** manfiy tomonga toshish (`a - 2000000000`) va uch koʻpaytuvchi (`a * a * a`: a × a hali
+  sigʻadi, uchinchisi — yoʻq).
+- **2-bosqich (boʻlish):** boʻlish **qachon** bajarilishi — `a / b * b` (boshlangʻich son qaytmaydi),
+  `a / b * 1.0` (kasr allaqachon yoʻqolgan) va `1.0 * a / b` (kasr saqlanadi).
+- **3-bosqich (qaysi tur):** variantlar 3 → **4** (`string kerak` — QOIDALAR §4.3), vazifalar 8 → 15: bir kundagi
+  sekundlar (int yetadi) va 100 yildagi (3,15·10⁹ — yetmaydi), juftliklar soni, 2⁶⁰, 50 xonali son (string), foiz.
+  Izohlardagi sonlar testda BigInt bilan hisoblab tekshiriladi.
+- **Yozish 3 → 6:** `faktorial` (13! dan int toshadi), `ikki-daraja` (n ≤ 62), `kvadratlar` (n ≤ 50 000 — yigʻindi
+  `long long` boʻlsa ham, `int i` bilan `i * i` ning oʻzi toshadi). `int` bilan yozilgan yechim kichik sinovdan oʻtadi,
+  kattasida jim buziladi — testda aynan shu tekshiriladi.
+- Hamma yangi misol yadroda va `g++` da bir xil chiqadi. Testlar: 11 → 15.

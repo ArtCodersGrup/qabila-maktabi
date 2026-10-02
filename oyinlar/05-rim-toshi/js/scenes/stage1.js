@@ -128,9 +128,9 @@
     await symbols();
     await additionRule();
     await subtractionRule();
-    await ui.say("elder", "Endi toshdagi sonlarni oʻqiymiz va yozamiz. 3 ta toʻgʻri javob kerak!");
+    await ui.say("elder", `Endi toshdagi sonlarni oʻqiymiz va yozamiz. ${QK.practice.need()} ta toʻgʻri javob kerak!`);
     await practice.exercises({
-      next: (prev, correct) => roman.makeReadWriteTask(correct, prev),
+      next: (prev, correct, tier) => roman.makeReadWriteTask(correct, prev, null, tier),
       run: (task) => (task.type === "read" ? readTask(task) : writeTask(task)),
       praise: (task) => `${task.roman} = ${task.n}.`,
     });

@@ -80,17 +80,50 @@ test("saralash kodlari haqiqatan saralaydi", () => {
   assert.deepEqual(py.run(kod2).output, ["1 9"]);
 });
 
-test("1-bosqich: almashtirish savoli — javob chapdagisi kattaligiga bog'liq", () => {
-  for (const task of each(L.almashTask, 30)) {
-    assert.equal(task.javob, task.holat[task.i] > task.holat[task.i + 1], task.id);
-    assert.ok(task.i >= 0 && task.i < task.holat.length - 1, task.id);
+// 2026-10-02: "almashtiramizmi? ha/yo'q" o'rniga — bir o'tishdagi almashtirishlar SONI
+test("1-bosqich: javob — bitta to'liq o'tishdagi almashtirishlar soni", () => {
+  for (const task of each(L.almashTask, 40)) {
+    const a = task.holat.slice();
+    let soni = 0;
+    for (let i = 0; i < a.length - 1; i++) {
+      if (a[i] > a[i + 1]) { const t = a[i]; a[i] = a[i + 1]; a[i + 1] = t; soni++; }
+    }
+    assert.equal(typeof task.javob, "number", task.id);
+    assert.equal(task.javob, soni, task.id);
+    assert.equal(task.almashishlar.length, soni, task.id);
+    assert.deepEqual(task.natija, a, task.id);
     assert.equal(new Set(task.holat).size, task.holat.length, "sonlar takrorlanmaydi");
+    assert.deepEqual(L.birOtish(task.holat).natija, a);
   }
 });
 
-test("1-bosqich: ha va yo'q javoblari ham uchraydi", () => {
-  const javoblar = each(L.almashTask, 30).map((t) => t.javob);
-  assert.ok(javoblar.includes(true) && javoblar.includes(false));
+test("1-bosqich: javoblar xilma-xil — taxmin bilan topib bo'lmaydi", () => {
+  const javoblar = new Set(each(L.almashTask, 60).map((t) => t.javob));
+  assert.ok(javoblar.size >= 4, "kamida 4 xil javob: " + [...javoblar].join(","));
+});
+
+test("qiyinlik zinasi: ro'yxat uzunligi zina bilan o'sadi", () => {
+  const uzunlik = (make, tier) => {
+    const r = rngFrom(5);
+    let prev = null;
+    const out = [];
+    for (let k = 0; k < 30; k++) { prev = make(r, prev, tier); out.push(prev.holat.length); }
+    return out;
+  };
+  assert.ok(uzunlik(L.almashTask, 0).every((n) => n >= 4 && n <= 5));
+  assert.ok(uzunlik(L.almashTask, 2).every((n) => n >= 6 && n <= 7));
+  assert.ok(uzunlik(L.otishTask, 0).every((n) => n === 4));
+  assert.ok(uzunlik(L.otishTask, 2).every((n) => n >= 5 && n <= 6));
+  // Kod yozish: birinchi zinada faqat ikki asosiy usul, oxirgisida yangi masalalar ham chiqadi
+  const idlar = (tier) => {
+    const r = rngFrom(9);
+    let prev = null;
+    const out = new Set();
+    for (let k = 0; k < 40; k++) { prev = L.writeTask(r, prev, tier); out.add(prev.id); }
+    return out;
+  };
+  assert.deepEqual([...idlar(0)].sort(), ["yoz:pufak", "yoz:tanlash"]);
+  assert.ok(idlar(2).has("yoz:almashishlar") && idlar(2).has("yoz:kamayish"));
 });
 
 test("2-bosqich: bir o'tishdan keyingi ro'yxat to'g'ri hisoblanadi", () => {
@@ -114,6 +147,23 @@ test("3-bosqich: ikkala saralash yechimi ham testlardan o'tadi", () => {
     assert.ok(w.tests.some((t) => t[0].split(" ").length === 1), w.id + ": bitta elementli ro'yxat yo'q");
     assert.ok(w.tests.some((t) => t[0] === "1 2 3"), w.id + ": allaqachon saralangan ro'yxat yo'q");
   }
+});
+
+test("yangi masalalar: kamayish tartibi va almashtirishlar soni", () => {
+  const vazifa = (id) => {
+    const w = L.WRITE.find((x) => x.id === id);
+    return { type: "kod-yoz", solution: w.solution, tail: w.tail, tests: w.tests.map((stdin) => ({ stdin })) };
+  };
+  // O'sish tartibida saralaydigan yechim "kamayish" dan o'tmaydi
+  const pufak = L.WRITE.find((w) => w.id === "pufak");
+  assert.equal(K.check(vazifa("kamayish"), pufak.solution).ok, false);
+  assert.deepEqual(K.expectedFor(vazifa("kamayish"), { stdin: ["5 2 9 1"] }), ["9 5 2 1"]);
+  // Almashtirishlar soni: teskari ro'yxatda n(n−1)/2, tartiblanganida 0
+  assert.deepEqual(K.expectedFor(vazifa("almashishlar"), { stdin: ["9 8 7 6 5"] }), ["10"]);
+  assert.deepEqual(K.expectedFor(vazifa("almashishlar"), { stdin: ["1 2 3"] }), ["0"]);
+  // Tanlash usulidagi almashtirishlarni sanagan yechim o'tmaydi (qo'shni juftliklar emas)
+  const tanlab = "def almashishlar(a):\n    soni = 0\n    for boshi in range(len(a) - 1):\n        eng = boshi\n        for i in range(boshi + 1, len(a)):\n            if a[i] < a[eng]:\n                eng = i\n        if eng != boshi:\n            b = a[boshi]\n            a[boshi] = a[eng]\n            a[eng] = b\n            soni += 1\n    return soni";
+  assert.equal(K.check(vazifa("almashishlar"), tanlab).ok, false);
 });
 
 test("saralamaydigan yechim o'tmaydi", () => {

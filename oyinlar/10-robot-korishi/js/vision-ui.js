@@ -78,10 +78,10 @@
     };
   }
 
-  // Shakl tugmalari (kichik rasm bilan)
-  function shapeButtons(onPick) {
+  // Shakl tugmalari (kichik rasm bilan); names — ko'rsatiladigan shablonlar (berilmasa — hammasi)
+  function shapeButtons(onPick, names) {
     const row = ui.h("div", { class: "choice-row" });
-    vision.NAMES.forEach((name) => {
+    (names || vision.NAMES).forEach((name) => {
       const button = ui.h("button", { class: "btn secondary shape-btn", type: "button", "aria-label": name, onClick: () => { sound.play("tap"); onPick(name); } });
       const mini = grid(button, { size: "xs" });
       mini.set(vision.TEMPLATES[name]);

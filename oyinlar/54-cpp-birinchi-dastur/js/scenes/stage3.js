@@ -31,7 +31,7 @@
     await jadval();
     await ui.say("elder", "Oxirgi 3 ta savol — va oʻyin tugaydi!");
     await practice.exercises({
-      next: (prev, correct) => L.bosqich3Task(prev, correct),
+      next: (prev, correct, tier) => L.bosqich3Task(prev, correct, tier),
       run: (task) => common.mashq(task),
       praise: (task) => (task.tur === "juft" ? "Ikki tilni ajratyapsan." : "Aralashib ketgan satrni topding."),
     });

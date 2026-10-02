@@ -20,6 +20,9 @@
 button.guide-cell:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--soya); }
 .guide-cell.hl { outline: 3px solid var(--yana); outline-offset: -3px; }
 .guide-cell.new { animation: flash 0.4s 4; }
+/* Kodi yashirin harf (2026-10-02): joyi saqlanadi, kod ko'rinmaydi — bola yoddan ishlaydi yoki qarab oladi */
+.guide-cell.nocode .code { visibility: hidden; }
+.guide-cell.nocode { background: #F4EEDF; }
 /* Faqat ko'rish uchun qo'llanma (2-3-bosqich): harf va kodi bir qatorda, kichikroq katak */
 .guide.compact { grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 4px; }
 .guide.compact .guide-cell {
@@ -40,7 +43,7 @@ button.guide-cell:active { transform: translateY(3px); box-shadow: 0 1px 0 var(-
 .rslot.current { border-style: solid; border-color: var(--asosiy); }
 .rslot.wrong { border-style: solid; border-color: var(--yana); }
 .rslot.wrong.current { border-color: var(--asosiy); }
-.rslot.wrong:empty::after { content: "↻"; color: var(--yana); font-size: 22px; }
+.rslot.wrong:empty::after { content: "↻"; color: var(--yana-matn); font-size: 22px; }
 .rslot.solution { border-style: solid; border-color: var(--togri); color: var(--togri); }
 .msg-tools { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
 
@@ -54,7 +57,7 @@ button.guide-cell:active { transform: translateY(3px); box-shadow: 0 1px 0 var(-
 .typed-group { display: flex; flex-direction: column; align-items: center; gap: 6px; }
 .typed-group.wrong .sym { background: var(--yana); }
 .typed-letter { min-height: 26px; font-size: 20px; font-weight: 900; }
-.typed-group.wrong .typed-letter::after { content: " ↻"; color: var(--yana); }
+.typed-group.wrong .typed-letter::after { content: " ↻"; color: var(--yana-matn); }
 /* Harf oralig'i bosilgandan keyingi bo'sh joy — keyingi harf shu yerdan boshlanadi */
 .typed-slot { width: 28px; height: 28px; border: 2px dashed var(--chiziq); border-radius: 6px; }
 /* 2 qator: [ · | — | ⌫ ] va [ harf oraligʻi | Yuborish ] */
@@ -69,7 +72,7 @@ button.guide-cell:active { transform: translateY(3px); box-shadow: 0 1px 0 var(-
 .example { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-end; gap: 14px; }
 .example-letter { display: flex; flex-direction: column; align-items: center; gap: 8px; }
 .example-letter b { font-size: 26px; font-weight: 900; }
-.example-slash { padding: 0 4px; color: var(--yana); font-size: 32px; font-weight: 900; }
+.example-slash { padding: 0 4px; color: var(--yana-matn); font-size: 32px; font-weight: 900; }
 
 /* ---------- Baraban va hikoya ---------- */
 .drum-box { display: flex; justify-content: center; }

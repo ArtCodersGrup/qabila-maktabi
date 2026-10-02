@@ -151,20 +151,41 @@
     return el;
   }
 
-  // Tugagan bosqichlar soni; brauzer xotirasi o'qilmasa — 0 (sahifa baribir ishlaydi)
-  const doneCount = (game) => root.QK.storage.create(game.key, game.stages).load().done.filter(Boolean).length;
+  // O'yin holati (tugagan bosqichlar, yulduzlar); brauzer xotirasi o'qilmasa — bo'sh (sahifa baribir ishlaydi)
+  const holat = (game) => root.QK.storage.create(game.key, game.stages).load();
+  const doneCount = (game) => holat(game).done.filter(Boolean).length;
+  const tugaganmi = (game) => doneCount(game) === game.stages;
 
-  function card(game, toifa) {
-    const done = doneCount(game);
-    const dots = h("span", { class: "bosh-dots", "aria-label": `${done} bosqich tugagan` });
-    for (let k = 0; k < game.stages; k++) dots.append(h("span", { class: "dot" + (k < done ? " on" : "") }));
-    return h("a", { class: "bosh-card" + (done === game.stages ? " done" : ""), href: `oyinlar/${game.dir}/index.html` },
+  // Bo'lim ranglari — aylanma (c0..c3); karta ikonkasi foni va raqam nishoni shu rangda
+  const RANGLAR = [
+    { sec: "var(--c0)", och: "var(--asosiy-och)" },
+    { sec: "var(--c1)", och: "var(--yana-och)" },
+    { sec: "var(--c2)", och: "var(--togri-och)" },
+    { sec: "var(--c3)", och: "#EEE6F8" },
+  ];
+  const pcBelgi = () => h("span", { class: "bosh-pc", title: "Klaviatura kerak", "aria-label": "Klaviatura kerak", text: "💻" });
+
+  // davom — "Davom et" kartasi (ro'yxat tepasida, keyingi tugallanmagan o'yin)
+  function card(game, toifa, davom) {
+    const st = holat(game);
+    const done = st.done.filter(Boolean).length;
+    const full = done === game.stages;
+    const jami = st.stars.reduce((a, b) => a + b, 0);
+    let progress;
+    if (full) {
+      progress = h("span", { class: "bosh-state-row" },
+        h("span", { class: "bosh-stars", text: `★ ${jami}/${game.stages * 3}` + (st.hard.some(Boolean) ? " 🔥" : "") }),
+        h("span", { class: "bosh-ok", "aria-label": "tugagan", text: "✓" }));
+    } else {
+      progress = h("span", { class: "bosh-dots", "aria-label": `${done} bosqich tugagan` });
+      for (let k = 0; k < game.stages; k++) progress.append(h("span", { class: "dot" + (k < done ? " on" : "") }));
+    }
+    return h("a", { class: "bosh-card" + (full ? " done" : "") + (davom ? " davom" : ""), href: `oyinlar/${game.dir}/index.html` },
       h("span", { class: "bosh-icon", html: root.QK.boshArt.icon(game.icon) }),
       h("span", { class: "bosh-text" },
-        h("span", { class: "bosh-name", text: `${number(game, toifa)}. ${game.title}` }),
+        h("span", { class: "bosh-name" }, h("span", { class: "bosh-num", text: String(number(game, toifa)) }), h("span", { text: game.title })),
         h("span", { class: "bosh-desc", text: game.desc })),
-      h("span", { class: "bosh-state" }, dots, h("span", { class: "bosh-age", text: yoshYorligi(game) }),
-        game.pc ? h("span", { class: "bosh-pc", title: "Klaviatura kerak", "aria-label": "Klaviatura kerak", text: "💻" }) : null));
+      h("span", { class: "bosh-state" }, progress, h("span", { class: "bosh-age", text: yoshYorligi(game) }), game.pc ? pcBelgi() : null));
   }
 
   // Kirish ekrani: bola yoshini tanlaydi. Tanlov saqlanadi va keyin so'ralmaydi.
@@ -173,6 +194,8 @@
     if (bubble) bubble.textContent = "Salom! Avval yoshingni ayt — oʻyinlarni sening yoshingga qarab koʻrsataman.";
     const sub = root.document.querySelector(".bosh-sub");
     if (sub) sub.textContent = "Informatika oʻyinlari";
+    const top = root.document.querySelector(".bosh-top");
+    if (top) top.classList.remove("royxat");
     const tanlov = h("div", { class: "bosh-yosh" });
     for (const t of TOIFALAR) {
       const soni = oyinlar(t).length;
@@ -203,11 +226,32 @@
       });
       sub.append(almash);
     }
-    const section = h("section", { class: "bosh-section" },
-      h("h2", { class: "bosh-h2", text: "Musobaqalar" }),
+    const top = root.document.querySelector(".bosh-top");
+    if (top) top.classList.add("royxat");
+
+    // Tepada: umumiy progress va "Davom et" — keyingi tugallanmagan o'yin
+    const barcha = oyinlar(toifa);
+    const tugagan = barcha.filter(tugaganmi).length;
+    // "Davom et": avval boshlab qo'yilgan o'yin, bo'lmasa birinchi tugallanmagani.
+    // Barmoqli qurilmada (telefon) klaviatura kerak bo'lgan o'yin taklif qilinmaydi.
+    const barmoq = !!(root.matchMedia && root.matchMedia("(hover: none) and (pointer: coarse)").matches);
+    const mosQurilma = (g) => !(barmoq && g.pc);
+    const keyingi = barcha.find((g) => !tugaganmi(g) && doneCount(g) > 0 && mosQurilma(g))
+      || barcha.find((g) => !tugaganmi(g) && mosQurilma(g))
+      || barcha.find((g) => !tugaganmi(g));
+    const foiz = barcha.length ? Math.round((100 * tugagan) / barcha.length) : 0;
+    list.append(h("section", { class: "bosh-section first bosh-hero" },
+      h("div", { class: "bosh-progress", "aria-label": `${tugagan} ta oʻyin tugagan` },
+        h("div", { class: "bosh-progress-bar" }, h("span", { style: `width:${foiz}%` })),
+        h("span", { class: "bosh-progress-txt", text: `Tugagan: ${tugagan} / ${barcha.length}` })),
+      keyingi ? card(keyingi, toifa, true) : null));
+
+    // Musobaqalar — o'rganganini sinash: bolaga ro'yxat oxirida, o'qituvchiga ("hammasi") tepada
+    const musobaqalar = h("section", { class: "bosh-section" },
+      h("h2", { class: "bosh-h2" }, h("span", { text: "Musobaqalar" })),
       h("p", { class: "bosh-note", text: "Oʻrganganingni doʻsting bilan sinab koʻr" }));
     for (const mode of MODES) {
-      const cards = h("div", { class: "bosh-cards" });
+      const cards = h("div", { class: "bosh-row" });
       CONTESTS.filter((c) => c.mode === mode.id && mos(c, toifa)).forEach((c) => cards.append(
         h("a", { class: "bosh-card bosh-contest", href: `oyinlar/${c.dir}/index.html` },
           h("span", { class: "bosh-icon", html: root.QK.boshArt.icon(c.icon) }),
@@ -215,40 +259,46 @@
             h("span", { class: "bosh-name", text: c.title }),
             h("span", { class: "bosh-desc", text: c.desc })),
           h("span", { class: "bosh-state" }, h("span", { class: "bosh-age", text: c.badge || (mode.id === "online" ? "🌐 onlayn" : "2 kishi") }),
-            c.pc ? h("span", { class: "bosh-pc", title: "Klaviatura kerak", "aria-label": "Klaviatura kerak", text: "💻" }) : null))));
-      if (cards.children.length) section.append(h("h3", { class: "bosh-h3", text: `${mode.title} · ${mode.note}` }), cards);
+            c.pc ? pcBelgi() : null))));
+      if (cards.children.length) musobaqalar.append(h("h3", { class: "bosh-h3", text: `${mode.title} · ${mode.note}` }), cards);
     }
-    if (section.querySelector(".bosh-card")) list.append(section);
+    const musobaqaBor = !!musobaqalar.querySelector(".bosh-card");
+    if (musobaqaBor && toifa.id === "hammasi") list.append(musobaqalar);
+
+    // Bo'limlar — o'rganish yo'li, har biri o'z rangi va "tugagan/jami" hisobi bilan
+    SECTIONS.forEach((section, idx) => {
+      const games = GAMES.filter((g) => g.topic === section.id && mos(g, toifa));
+      if (!games.length) return; // bu toifada bo'sh bo'lim ko'rsatilmaydi
+      const rang = RANGLAR[idx % RANGLAR.length];
+      const tug = games.filter(tugaganmi).length;
+      const cards = h("div", { class: "bosh-cards" });
+      games.forEach((g) => cards.append(card(g, toifa)));
+      list.append(h("section", { class: "bosh-section", style: `--sec:${rang.sec};--sec-och:${rang.och}` },
+        h("h2", { class: "bosh-h2" },
+          h("span", { text: section.title }),
+          h("span", { class: "bosh-h2-soni" + (tug === games.length ? " done" : ""), text: `${tug}/${games.length}` })),
+        h("p", { class: "bosh-note", text: section.note }),
+        cards));
+    });
 
     const mashqlar = MASHQLAR.filter((m) => mos(m, toifa));
     if (mashqlar.length) {
       const mashq = h("section", { class: "bosh-section" },
-        h("h2", { class: "bosh-h2", text: "Mashqlar" }),
+        h("h2", { class: "bosh-h2" }, h("span", { text: "Mashqlar" })),
         h("p", { class: "bosh-note", text: "Masalalar va qoʻllanma — oʻzing tanlaysan" }));
-      const mashqCards = h("div", { class: "bosh-cards" });
+      const mashqCards = h("div", { class: "bosh-row" });
       mashqlar.forEach((m) => mashqCards.append(
         h("a", { class: "bosh-card bosh-contest", href: `oyinlar/${m.dir}/index.html` },
           h("span", { class: "bosh-icon", html: root.QK.boshArt.icon(m.icon) }),
           h("span", { class: "bosh-text" },
             h("span", { class: "bosh-name", text: m.title }),
             h("span", { class: "bosh-desc", text: m.desc })),
-          h("span", { class: "bosh-state" },
-            h("span", { class: "bosh-age", text: yoshYorligi(m) }),
-            m.pc ? h("span", { class: "bosh-pc", title: "Klaviatura kerak", "aria-label": "Klaviatura kerak", text: "💻" }) : null))));
+          h("span", { class: "bosh-state" }, h("span", { class: "bosh-age", text: yoshYorligi(m) }), m.pc ? pcBelgi() : null))));
       mashq.append(mashqCards);
       list.append(mashq);
     }
 
-    for (const section of SECTIONS) {
-      const games = GAMES.filter((g) => g.topic === section.id && mos(g, toifa));
-      if (!games.length) continue; // bu toifada bo'sh bo'lim ko'rsatilmaydi
-      const cards = h("div", { class: "bosh-cards" });
-      games.forEach((g) => cards.append(card(g, toifa)));
-      list.append(h("section", { class: "bosh-section" },
-        h("h2", { class: "bosh-h2", text: section.title }),
-        h("p", { class: "bosh-note", text: section.note }),
-        cards));
-    }
+    if (musobaqaBor && toifa.id !== "hammasi") list.append(musobaqalar);
   }
 
   function render() {

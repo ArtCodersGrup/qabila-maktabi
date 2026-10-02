@@ -54,3 +54,34 @@ def savollar(q, M):
       ["tasodifan", "7 tani tanlash — 3 tasini qoldirish bilan bir xil",
        "ikkalasi ham 1 ga teng", "teng emas"], 1,
       "C(n,k) = C(n,n−k): tanlangan va qolgan toʻplam bir-birini belgilaydi")
+    # ── Tahlil (2026-10-02): ikki qoida birga, «kamida bitta», cheklovli terish, xatoni topish ──
+    # Sonli javoblar python3 da sanab tekshirilgan.
+    q("ota", "4 xonali kod: raqamlar takrorlanmaydi va 0 bilan boshlanmaydi. Nechta kod bor?",
+      ["4536", "5040", "9000", "10000"], 0,
+      "1-xona 9 xil (0 siz), 2-xona 9 xil (0 ham mumkin, lekin birinchisi emas), keyin 8 va 7: 9 × 9 × 8 × 7")
+    q("ota", "Toʻrdagi (0, 0) nuqtadan (3, 4) nuqtaga faqat oʻngga yoki yuqoriga bir katak yurib boriladi. Nechta yoʻl bor?",
+      ["35", "12", "21", "7"], 0,
+      "7 qadamdan 3 tasi «oʻngga» — qaysilari? C(7, 3) = 35")
+    q("ota", "10 ta har xil butun son berilgan. Ularning orasida ayirmasi 9 ga boʻlinadigan ikkita son albatta topiladimi?",
+      ["ha — qoldiq 9 xil, son esa 10 ta", "yoʻq — bu sonlarga bogʻliq",
+       "faqat sonlar ketma-ket kelsa", "faqat ichida 9 ga boʻlinadigan son boʻlsa"], 0,
+      "Dirixle: 9 ga boʻlgandagi qoldiq 9 xil, son 10 ta — ikkitasining qoldigʻi bir xil, ayirmasi 9 ga boʻlinadi")
+    q("ota", "5 ta bola qatorga turadi, lekin Anvar va Dilnoza doim yonma-yon turishi shart. Nechta tartib bor?",
+      ["48", "24", "120", "60"], 0,
+      "Ikkalasini bitta «juft» deb olamiz: 4 ta narsa — 4! = 24 tartib; juft ichida ikki xil turish: 24 × 2 = 48")
+    q("ota", "3 xonali kodlarning (har xonada 0 dan 9 gacha) nechtasida kamida bitta 7 raqami bor?",
+      ["271", "300", "729", "100"], 0,
+      "Hammasi 1000 ta; ichida 7 umuman yoʻqlari 9 × 9 × 9 = 729 ta. 1000 − 729 = 271")
+    q("qiyin", "Toʻgarakda 4 ta qiz va 3 ta oʻgʻil bor. 2 ta qiz va 1 ta oʻgʻildan iborat jamoa nechta xil tuziladi?",
+      ["18", "35", "12", "9"], 0,
+      "Qizlar: C(4, 2) = 6; oʻgʻil: 3 xil. Ikkalasi ham kerak (VA): 6 × 3 = 18")
+    q("ota", "Oʻquvchi «6 boladan 2 kishilik jamoa nechta?» masalasini 6 × 5 = 30 deb yechdi. Xatosi nimada?",
+      ["har jamoani ikki marta sanadi — tartib muhim emas", "6 × 6 deb koʻpaytirishi kerak edi",
+       "qoʻshishi kerak edi: 6 + 5", "xato yoʻq, javob 30"], 0,
+      "Anvar–Dilnoza va Dilnoza–Anvar — bitta jamoa: 30 ÷ 2 = 15")
+    q("ota", "%s nima chiqaradi?" % K("soni = 0  ⏎  for i in range(5):  ⏎      for j in range(i + 1, 5):  ⏎          soni += 1  ⏎  print(soni)"),
+      ["10", "20", "25", "15"], 0,
+      "j har doim i dan katta — har juftlik bir marta sanaladi: C(5, 2) = 10")
+    q("qiyin", "Paskal uchburchagining 6-qatori: 1, 6, 15, 20, 15, 6, 1. 7-qatorning uchinchi soni nechaga teng?",
+      ["21", "35", "20", "30"], 0,
+      "Har son — tepasidagi ikkitaning yigʻindisi: 6 + 15 = 21 (bu C(7, 2))")

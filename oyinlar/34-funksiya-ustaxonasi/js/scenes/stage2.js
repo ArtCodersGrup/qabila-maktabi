@@ -49,7 +49,7 @@
     await local();
     await definition();
     await practice.exercises({
-      next: (prev) => L.returnTask(Math.random, prev),
+      next: (prev, correct, tier) => L.returnTask(Math.random, prev, tier),
       run: (task) => common.resultExercise(task),
       praise: () => "return va print farqini ushlading.",
     });

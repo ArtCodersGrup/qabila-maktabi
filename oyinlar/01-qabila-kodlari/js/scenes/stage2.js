@@ -89,7 +89,7 @@
     await pauseScene();
     await formulaUpTo(3, 3);
 
-    await ui.say("elder", "Endi oʻzing hisobla! 3 ta toʻgʻri javob — bosqich tugaydi.");
+    await ui.say("elder", `Endi oʻzing hisobla! ${QK.practice.need()} ta toʻgʻri javob — bosqich tugaydi.`);
     await common.exercises(2, common.stage12Spec("upto"));
   }
 

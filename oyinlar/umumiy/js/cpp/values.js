@@ -37,11 +37,27 @@
   const sonmi = (q) => butunmi(q) || q.t === "double";
 
   // Butun songa aylantirish (bool → 0/1, char → kodi)
-  const butun = (q) => {
+  const TUR_NOMI = { int: "int", ll: "long long", double: "double", bool: "bool", char: "char", string: "string" };
+  const CHEGARA = { int: [-(1n << 31n), (1n << 31n) - 1n], ll: [-(1n << 63n), (1n << 63n) - 1n] };
+
+  // tur berilsa (int/ll) — kasr son shu turga sig'ishi ham tekshiriladi
+  const butun = (q, pos, tur) => {
     if (q.t === "int" || q.t === "ll") return q.v;
     if (q.t === "bool") return q.v ? 1n : 0n;
-    if (q.t === "char") return BigInt(q.v.charCodeAt(0));
-    if (q.t === "double") return BigInt(Math.trunc(q.v));
+    if (q.t === "char") {
+      // char — 8 bitli ISHORALI son (-128…127): 200 kodli belgi (int) da -56 bo'ladi.
+      // (Lotin bo'lmagan harf C++ da bir necha bayt; bizda u bitta belgi — kodi o'zicha qoladi.)
+      const kod = BigInt(q.v.charCodeAt(0));
+      return kod <= 255n ? qirq(kod, 8n) : kod;
+    }
+    if (q.t === "double") {
+      // inf/nan ni BigInt ga aylantirib bo'lmaydi; C++ da esa bu aniqlanmagan xatti-harakat
+      if (!Number.isFinite(q.v)) throw E.butungaSigmaydi(yozDouble(q.v), TUR_NOMI[tur] || "int", pos);
+      const x = BigInt(Math.trunc(q.v));
+      const ch = CHEGARA[tur];
+      if (ch && (x < ch[0] || x > ch[1])) throw E.butungaSigmaydi(yozDouble(q.v), TUR_NOMI[tur], pos);
+      return x;
+    }
     return 0n;
   };
   const kasr = (q) => (q.t === "double" ? q.v : Number(butun(q)));
@@ -153,17 +169,21 @@
     if (t === "string") {
       if (q.t === "string") return matn(q.v);
       if (q.t === "char") return matn(q.v);
+      // s = 65; — C++ da ishlaydi: son bitta belgiga aylanadi ("A"). Boshlang'ich qiymat sifatida
+      // (string s = 65;) esa xato — buni semantika.js ishdan oldin ushlaydi.
+      if (sonmi(q)) return matn(turga("char", q, pos).v);
       throw E.turMos("string", q.t, pos);
     }
     if (t === "char") {
       if (q.t === "char") return belgi(q.v);
-      if (butunmi(q)) return belgi(String.fromCharCode(Number(butun(q))));
+      // char 8 bitga qirqiladi: char c = 300; → 44 (300 − 256), xuddi int ning toshishi kabi
+      if (sonmi(q)) return belgi(String.fromCharCode(Number(butun(q, pos, "int") & 0xffn)));
       throw E.turMos("char", q.t, pos);
     }
     if (q.t === "string") throw E.turMos(t, "string", pos);
     if (t === "double") return dbl(kasr(q));
     if (t === "bool") return bool(rostmi(q));
-    return son(t, butun(q)); // int yoki ll — kasr qismi tashlanadi
+    return son(t, butun(q, pos, t)); // int yoki ll — kasr qismi tashlanadi
   }
 
   const boshlangich = (t) => (t === "double" ? dbl(0) : t === "string" ? matn("") : t === "bool" ? bool(false)

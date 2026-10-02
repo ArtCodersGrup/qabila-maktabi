@@ -29,8 +29,13 @@
     return E.ichki((e && e.message) || e);
   }
 
-  // Parse + nomlarni tekshirish: xato dastur ishga tushmaydi (g++ dagidek)
+  // Parse + nomlar va turlarni tekshirish: xato dastur ishga tushmaydi (g++ dagidek)
   const parse = (kod) => S.tekshir(P.parse(T.tokenize(kod)));
+
+  // Kompilyatsiya xatosi bo'lgan dastur UMUMAN ishlamaydi — g++ hech narsa chiqarmaydi.
+  // Deyarli hamma shunday xato ishdan oldin topiladi (semantika.js); mabodo biror tur xatosi
+  // faqat ish paytida sezilsa ham, "kompilyatsiya xatosi" yonida chiqish ko'rsatilmaydi.
+  const ishlamaydi = (error) => !!error && (error.kind === "compile" || error.kind === "yoq");
 
   function check(kod) {
     try {
@@ -50,6 +55,7 @@
     } catch (e) {
       error = E.describe(asCppError(e));
     }
+    if (ishlamaydi(error)) return { out: "", output: [], error, steps: 0, vars: {} };
     return { out: ctx.out, output: satrlar(ctx.out), error, steps: ctx.steps, vars: I.snapshot(env) };
   }
 
@@ -69,6 +75,7 @@
     } catch (e) {
       error = E.describe(asCppError(e));
     }
+    if (ishlamaydi(error)) return { states: [], cut: false, output: [], out: "", error, steps: 0, vars: {} };
     return { states, cut, output: satrlar(ctx.out), out: ctx.out, error, steps: ctx.steps, vars: I.snapshot(env) };
   }
 

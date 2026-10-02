@@ -27,7 +27,7 @@ const YECHIMLAR = [
   { id: "juftlar-soni", kod: d('int x;\nint k = 0;\nwhile (cin >> x) {\n    if (x % 2 == 0) k++;\n}\ncout << k << "\\n";') },
   { id: "ikkinchi-katta", kod: d('int a[1000];\nint n = 0;\nwhile (cin >> a[n]) n++;\nsort(a, a + n);\ncout << a[n - 2] << "\\n";') },
   { id: "har-xil", kod: d('int a[1000];\nint n = 0;\nwhile (cin >> a[n]) n++;\nsort(a, a + n);\nint k = 0;\nfor (int i = 0; i < n; i++) {\n    if (i == 0 || a[i] != a[i - 1]) k++;\n}\ncout << k << "\\n";') },
-  { id: "k-kichik", kod: d('int n;\ncin >> n;\nint a[1000];\nfor (int i = 0; i < n; i++) cin >> a[i];\nint k;\ncin >> k;\nsort(a, a + n);\ncout << a[k - 1] << "\\n";') },
+  { id: "k-kichik", kod: d('int n;\ncin >> n;\nint a[1000];\nfor (int i = 0; i < n; i++) cin >> a[i];\nint k;\ncin >> k;\nsort(a, a + n);\nint soni = 0;\nint javob = -1;\nfor (int i = 0; i < n; i++) {\n    if (i == 0 || a[i] != a[i - 1]) {\n        soni++;\n        if (soni == k) javob = a[i];\n    }\n}\ncout << javob << "\\n";') },
   { id: "ikkilik", kod: d('long long n;\ncin >> n;\nint bit[64];\nint k = 0;\nwhile (n > 0) {\n    bit[k] = n % 2;\n    k++;\n    n /= 2;\n}\nfor (int i = k - 1; i >= 0; i--) cout << bit[i];\ncout << "\\n";') },
   { id: "ekub", kod: d('long long a, b;\ncin >> a >> b;\nwhile (b > 0) {\n    long long c = a % b;\n    a = b;\n    b = c;\n}\ncout << a << "\\n";') },
   { id: "faktorial", kod: d('int n;\ncin >> n;\nlong long f = 1;\nfor (int i = 2; i <= n; i++) f *= i;\ncout << f << "\\n";') },
@@ -35,6 +35,15 @@ const YECHIMLAR = [
   { id: "cf-har-xil-harf", kod: d('string s;\ncin >> s;\nchar c[200];\nint n = s.size();\nfor (int i = 0; i < n; i++) c[i] = s[i];\nsort(c, c + n);\nint k = 0;\nfor (int i = 0; i < n; i++) {\n    if (i == 0 || c[i] != c[i - 1]) k++;\n}\nif (k % 2 == 0) cout << "juft\\n";\nelse cout << "toq\\n";') },
   { id: "harf-sanash", kod: d('string s;\ncin >> s;\nstring h;\ncin >> h;\nint k = 0;\nfor (int i = 0; i < s.size(); i++) {\n    if (s[i] == h[0]) k++;\n}\ncout << k << "\\n";') },
   { id: "ortachadan-katta", kod: d('int n;\ncin >> n;\nint a[1000];\nlong long s = 0;\nfor (int i = 0; i < n; i++) {\n    cin >> a[i];\n    s += a[i];\n}\nint k = 0;\nfor (int i = 0; i < n; i++) {\n    if ((long long)a[i] * n > s) k++;\n}\ncout << k << "\\n";') },
+  // Qadam chegarasi (`qadam: 200000`) bor masalalar: samarali C++ yechim ham shu chegaraga sig'ishi shart —
+  // aks holda masalani C++ da yechib bo'lmay qolardi (baho.js chegarani ikkala dvigatelga ham beradi).
+  { id: "oraliq-sorovlar", kod: d('int n;\ncin >> n;\nlong long pre[1001];\npre[0] = 0;\nfor (int i = 1; i <= n; i++) {\n    long long x;\n    cin >> x;\n    pre[i] = pre[i - 1] + x;\n}\nint q;\ncin >> q;\nfor (int i = 0; i < q; i++) {\n    int l, r;\n    cin >> l >> r;\n    cout << pre[r] - pre[l - 1] << "\\n";\n}') },
+  { id: "ichimlik", kod: d('int n;\ncin >> n;\nint a[1000];\nfor (int i = 0; i < n; i++) cin >> a[i];\nsort(a, a + n);\nint q;\ncin >> q;\nfor (int i = 0; i < q; i++) {\n    int m;\n    cin >> m;\n    int chap = 0, ong = n;\n    while (chap < ong) {\n        int orta = (chap + ong) / 2;\n        if (a[orta] <= m) chap = orta + 1;\n        else ong = orta;\n    }\n    cout << chap << "\\n";\n}') },
+  { id: "balans-nuqtasi", kod: d('int n;\ncin >> n;\nint a[1000];\nlong long jami = 0;\nfor (int i = 0; i < n; i++) {\n    cin >> a[i];\n    jami += a[i];\n}\nlong long chap = 0;\nint javob = -1;\nfor (int i = 0; i < n; i++) {\n    if (chap == jami - chap - a[i] && javob == -1) javob = i + 1;\n    chap += a[i];\n}\ncout << javob << "\\n";') },
+  // o'ng chegara 10⁹: (10⁹)² = 10¹⁸ long long ga sig'adi; n ning o'zidan boshlansa, orta * orta toshib ketardi
+  { id: "kvadrat-ildiz", kod: d('long long n;\ncin >> n;\nlong long chap = 0, ong = 1000000000;\nwhile (chap < ong) {\n    long long orta = (chap + ong + 1) / 2;\n    if (orta * orta <= n) chap = orta;\n    else ong = orta - 1;\n}\ncout << chap << "\\n";') },
+  { id: "juft-toq-orin", kod: d('long long n, k;\ncin >> n >> k;\nlong long toq = (n + 1) / 2;\nif (k <= toq) cout << 2 * k - 1 << "\\n";\nelse cout << 2 * (k - toq) << "\\n";') },
+  { id: "cf-qurtlar", kod: d('int n;\ncin >> n;\nint yig[1000];\nint jami = 0;\nfor (int i = 0; i < n; i++) {\n    int x;\n    cin >> x;\n    jami += x;\n    yig[i] = jami;\n}\nint m;\ncin >> m;\nfor (int j = 0; j < m; j++) {\n    int q;\n    cin >> q;\n    int chap = 0, ong = n - 1, javob = 0;\n    while (chap <= ong) {\n        int orta = (chap + ong) / 2;\n        if (yig[orta] >= q) {\n            javob = orta + 1;\n            ong = orta - 1;\n        } else chap = orta + 1;\n    }\n    cout << javob << "\\n";\n}') },
 ];
 
 module.exports = { YECHIMLAR, d };

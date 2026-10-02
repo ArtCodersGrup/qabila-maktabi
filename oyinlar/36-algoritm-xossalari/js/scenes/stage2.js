@@ -35,7 +35,7 @@
     await definition();
     await ui.say("elder", "Endi oʻzing top: qaysi xossa buzilgan?");
     await practice.exercises({
-      next: (prev) => L.xossaTask(Math.random, prev),
+      next: (prev, correct, tier) => L.xossaTask(Math.random, prev, tier),
       run: (task) => common.xossaExercise(task),
       praise: (task) => L.xossaById(task.xossa).nom + " — toʻgʻri.",
     });

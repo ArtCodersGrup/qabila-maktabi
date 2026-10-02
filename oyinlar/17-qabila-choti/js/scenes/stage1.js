@@ -68,7 +68,7 @@
   // 4.5: mashq — cho'tdagi son / yana 1 qo'shilsa
   function chotiTask(task) {
     const el = common.box(true);
-    const abacus = sanoqUi.choti(el, { base: task.base, rods: 3, value: task.value, hideDigits: true });
+    const abacus = sanoqUi.choti(el, { base: task.base, rods: task.rods, value: task.value, hideDigits: true });
     el.append(common.line(`${task.base}-lik choʻt`));
     ui.bubble("elder", task.type === "read" ? "Choʻtdagi sonni yoz." : "Yana 1 qoʻshsak, qanday yoziladi?");
     return sanoqUi.digitTries({
@@ -76,10 +76,10 @@
       base: task.base,
       maxLen: 4,
       hint: () => {
-        if (task.type === "read") abacus.showDigits();
+        // Maslahat javobni aytmaydi: raqamlar ochilmaydi, faqat usul eslatiladi
         common.add(el, common.line(task.type === "read"
-          ? "Har sim ostida — munchoqlar soni. Chapdan oʻngga oʻqi"
-          : `Oxirgi simda ${task.base} ta boʻladi — u boʻshab, chapdagiga 1 oʻtadi`));
+          ? "Har sim — bitta raqam: munchoqlarini sana. Boʻsh sim — 0. Chapdan oʻngga yoz"
+          : `Simda ${task.base} ta boʻlsa — u boʻshab, chapdagiga 1 oʻtadi`));
         ui.bubble("elder", task.type === "read" ? "↻ Munchoqlarni sana: har sim — bitta raqam." : "↻ Koʻchishni unutma!");
       },
       solution: () => {
@@ -93,9 +93,9 @@
   async function stage1() {
     for (const run of RUNS) await countOn(run);
     await definition();
-    await ui.say("elder", "Endi oʻzing: choʻtdagi sonni oʻqi. 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing: choʻtdagi sonni oʻqi. ${QK.practice.need()} ta toʻgʻri javob!`);
     await QK.practice.exercises({
-      next: (prev) => tizim.makeChotiTask(prev),
+      next: (prev, correct, tier) => tizim.makeChotiTask(prev, undefined, tier),
       run: chotiTask,
       praise: (task) => `${S.fmt(task.answer, task.base)}.`,
     });

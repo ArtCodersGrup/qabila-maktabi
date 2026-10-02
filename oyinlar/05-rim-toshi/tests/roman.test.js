@@ -101,6 +101,36 @@ test("makeReadWriteTask: oʻqish/yozish, 3–100, ketma-ket takrorlanmaydi", () 
   }
 });
 
+test("makeReadWriteTask: zina bilan sonlar kattalashadi — 3..39, 40..100, 101..399", () => {
+  assert.deepEqual(R.READ_RANGES, [[3, 39], [40, 100], [101, 399]]);
+  for (const tier of [0, 1, 2]) {
+    const [lo, hi] = R.READ_RANGES[tier];
+    let prev = null;
+    let max = 0;
+    for (let i = 0; i < 600; i++) {
+      const t = R.makeReadWriteTask(i % 4, prev, Math.random, tier);
+      assert.ok(t.n >= lo && t.n <= hi, `tier ${tier}: ${t.n}`);
+      assert.equal(t.roman, R.toRoman(t.n));
+      assert.equal(R.fromRoman(t.roman), t.n);
+      assert.ok(t.roman.length <= R.MAX_SYMBOLS, `${t.roman} klaviaturaga sig'maydi`);
+      assert.ok(/^[IVXLC]+$/.test(t.roman), `${t.roman}: klaviaturada yo'q belgi`);
+      if (prev) assert.notEqual(t.n, prev.n);
+      max = Math.max(max, t.n);
+      prev = t;
+    }
+    assert.ok(max > (lo + hi) / 2, `tier ${tier}: katta sonlar chiqmadi (${max})`);
+  }
+  // Zina berilmasa, to'g'ri javoblar sonidan olinadi
+  assert.ok(R.makeReadWriteTask(5, null).n >= 101);
+});
+
+test("tidySteps: laganni tartibga solish uchun nechta qoida kerak", () => {
+  assert.equal(R.tidySteps("XII"), 0);
+  assert.equal(R.tidySteps(R.merge("XII", "VIII")), 2); // IIIII → V, VV → X
+  assert.equal(R.tidySteps("LL"), 1);
+  for (const str of ["XVIIIII", "LXXXXXVV", "LLXXX"]) assert.equal(R.canTidy(str), R.tidySteps(str) > 0);
+});
+
 test("makeTidyTask: 4 va 9 raqamisiz, yigʻindi ≤ 80, qoida kerak", () => {
   let prev = null;
   for (let i = 0; i < 300; i++) {
@@ -111,7 +141,28 @@ test("makeTidyTask: 4 va 9 raqamisiz, yigʻindi ≤ 80, qoida kerak", () => {
     assert.ok(t.answer <= 80, String(t.answer));
     for (const n of [t.a, t.b, t.answer]) assert.ok(R.hasNo49(n), String(n));
     assert.ok(R.canTidy(R.merge(R.toRoman(t.a), R.toRoman(t.b))));
+    if (prev) assert.ok(t.a !== prev.a || t.b !== prev.b);
     prev = t;
+  }
+});
+
+test("makeTidyTask: zina bilan — yigʻindi 100 / 150 gacha, 2 / 3 ta qoida; lagan natijasi standart yozuv", () => {
+  const limits = [{ sum: 80, steps: 1 }, { sum: 100, steps: 2 }, { sum: 150, steps: 3 }];
+  for (const tier of [0, 1, 2]) {
+    let prev = null;
+    let max = 0;
+    for (let i = 0; i < 300; i++) {
+      const t = R.makeTidyTask(prev, Math.random, tier);
+      const tray = R.merge(R.toRoman(t.a), R.toRoman(t.b));
+      assert.ok(t.answer <= limits[tier].sum, `tier ${tier}: ${t.answer}`);
+      assert.ok(R.tidySteps(tray) >= limits[tier].steps, `tier ${tier}: qoidalar kam`);
+      assert.ok(tray.length <= R.MAX_TRAY, `lagan to'lib ketdi: ${tray}`);
+      for (const n of [t.a, t.b, t.answer]) assert.ok(R.hasNo49(n), String(n));
+      assert.equal(R.tidy(tray), R.toRoman(t.answer), "tartibga solingan lagan — standart Rim yozuvi");
+      max = Math.max(max, t.answer);
+      prev = t;
+    }
+    if (tier === 2) assert.ok(max > 100, "tier 2 da yuzdan katta yigʻindi (LL → C) chiqishi kerak");
   }
 });
 
@@ -136,9 +187,35 @@ test("makeArithTask: qoʻshishda ≤ 100, ayirishda natija ≥ 1", () => {
   assert.ok(plus > 0 && plus < 300);
 });
 
-test("makeCalcTask: avval lagan, keyin aylantirish", () => {
+test("makeArithTask: zina bilan — 100, 200, 399 gacha; hamma son klaviaturada yoziladi", () => {
+  const top = [100, 200, 399];
+  const maxSeen = [];
+  for (const tier of [0, 1, 2]) {
+    let prev = null;
+    let max = 0;
+    for (let i = 0; i < 400; i++) {
+      const t = R.makeArithTask(prev, Math.random, tier);
+      assert.equal(t.answer, t.op === "+" ? t.a + t.b : t.a - t.b);
+      assert.ok(t.answer >= 1 && Math.max(t.a, t.answer) <= top[tier], `tier ${tier}: ${t.a} ${t.op} ${t.b}`);
+      for (const n of [t.a, t.b, t.answer]) {
+        assert.ok(R.toRoman(n).length <= R.MAX_SYMBOLS, `${n} = ${R.toRoman(n)} sig'maydi`);
+        assert.ok(/^[IVXLC]+$/.test(R.toRoman(n)));
+      }
+      if (prev) assert.ok(t.op !== prev.op || t.a !== prev.a || t.b !== prev.b);
+      max = Math.max(max, t.a, t.answer);
+      prev = t;
+    }
+    maxSeen.push(max);
+  }
+  assert.ok(maxSeen[0] < maxSeen[1] && maxSeen[1] < maxSeen[2], String(maxSeen));
+  assert.ok(maxSeen[2] > 250);
+});
+
+test("makeCalcTask: avval lagan, keyin aylantirish; zina uzatiladi", () => {
   assert.equal(R.makeCalcTask(0, null).type, "tidy");
   assert.equal(R.makeCalcTask(1, null).type, "arith");
+  assert.equal(R.makeCalcTask(0, null, Math.random, 2).tier, 2);
+  assert.equal(R.makeCalcTask(5, null).tier, 2);
 });
 
 test("makePlaceTask: raqamlar har xil va nolsiz; javob — xonadagi qiymat", () => {
@@ -154,4 +231,105 @@ test("makePlaceTask: raqamlar har xil va nolsiz; javob — xonadagi qiymat", () 
     if (prev) assert.notEqual(t.number, prev.number);
     prev = t;
   }
+});
+
+test("makePlaceTask: zina bilan — 4 xonali va ichida 0 bor; soʻralgan raqam noldan farqli", () => {
+  for (const tier of [1, 2]) {
+    let prev = null;
+    let zeros = 0;
+    let four = 0;
+    for (let i = 0; i < 400; i++) {
+      const t = R.makePlaceTask(prev, Math.random, tier);
+      const s = String(t.number);
+      assert.ok(tier === 2 ? s.length === 4 : s.length === 3 || s.length === 4, s);
+      assert.equal(new Set(s).size, s.length, s);
+      assert.notEqual(t.digit, 0);
+      assert.equal(s[t.index], String(t.digit));
+      assert.equal(t.answer, t.digit * Math.pow(10, t.place));
+      assert.equal(t.place, s.length - 1 - t.index);
+      if (s.includes("0")) zeros++;
+      if (s.length === 4) four++;
+      if (prev) assert.notEqual(t.number, prev.number);
+      prev = t;
+    }
+    if (tier === 2) assert.equal(zeros, 400, "tier 2 da har bir sonda 0 bor");
+    else assert.ok(zeros > 100 && zeros < 300 && four > 100, `tier 1: nol ${zeros}, 4 xonali ${four}`);
+  }
+});
+
+test("makeZeroTask: sonda aynan bitta 0 (boshida emas); javob — nolsiz son", () => {
+  for (const tier of [0, 1, 2]) {
+    let prev = null;
+    for (let i = 0; i < 300; i++) {
+      const t = R.makeZeroTask(prev, Math.random, tier);
+      const s = String(t.number);
+      assert.equal(s.length, tier === 2 ? 4 : 3);
+      assert.equal([...s].filter((ch) => ch === "0").length, 1, s);
+      assert.equal(s[t.index], "0");
+      assert.notEqual(t.index, 0);
+      assert.equal(String(t.answer), s.replace("0", ""));
+      assert.ok(t.answer < t.number);
+      if (prev) assert.notEqual(t.number, prev.number);
+      prev = t;
+    }
+  }
+});
+
+test("makeSwapTask: ikki raqam joy almashadi; javob — raqamning yangi xonadagi qiymati", () => {
+  for (const tier of [0, 1, 2]) {
+    let prev = null;
+    for (let i = 0; i < 300; i++) {
+      const t = R.makeSwapTask(prev, Math.random, tier);
+      const a = String(t.number);
+      const b = String(t.swapped);
+      assert.equal(a.length, tier === 2 ? 4 : 3);
+      assert.ok(!a.includes("0") && new Set(a).size === a.length, a);
+      assert.notEqual(t.number, t.swapped);
+      const moved = [...a].filter((ch, k) => ch !== b[k]);
+      assert.deepEqual(moved.sort(), [String(t.digit), String(t.other)].sort(), "aynan shu ikki raqam almashgan");
+      assert.equal(b[t.index], String(t.digit));
+      assert.equal(t.answer, t.digit * Math.pow(10, b.length - 1 - t.index));
+      assert.equal(t.before, t.digit * Math.pow(10, a.length - 1 - a.indexOf(String(t.digit))));
+      assert.notEqual(t.answer, t.before, "qiymat oʻzgarishi kerak");
+      if (prev) assert.notEqual(t.number, prev.number);
+      prev = t;
+    }
+  }
+});
+
+test("makeMixedTask: Rim soni + oddiy son; javob oddiy sonda", () => {
+  for (const tier of [0, 2]) {
+    let prev = null;
+    for (let i = 0; i < 300; i++) {
+      const t = R.makeMixedTask(prev, Math.random, tier);
+      assert.equal(t.roman, R.toRoman(t.n));
+      assert.equal(t.answer, t.n + t.b);
+      assert.ok(t.n >= (tier === 2 ? 14 : 4) && t.n <= (tier === 2 ? 89 : 39), String(t.n));
+      assert.ok(t.b >= 11 && t.b <= (tier === 2 ? 60 : 40));
+      assert.ok(t.answer <= 149);
+      if (prev) assert.ok(t.n !== prev.n || t.b !== prev.b);
+      prev = t;
+    }
+  }
+});
+
+test("makeStage3Task: tartib — xona qiymati → nol / almashish → toʻrt tur aylanib keladi", () => {
+  // Oddiy rejim: 6 ta javob, zina 0, 0, 1, 1, 2, 2
+  const tiers = [0, 0, 1, 1, 2, 2];
+  let prev = null;
+  const types = [];
+  for (let k = 0; k < 6; k++) {
+    prev = R.makeStage3Task(k, prev, Math.random, tiers[k]);
+    types.push(prev.type);
+  }
+  assert.deepEqual(types, ["place", "place", "zero", "swap", "mixed", "place"]);
+  assert.equal(String(prev.number).length, 4, "oxirgi savol — 4 xonali son");
+  // Qiyin rejim: doim tier 2, toʻrt tur navbat bilan
+  const hard = [0, 1, 2, 3, 4, 5, 6].map((k) => R.makeStage3Task(k, null, Math.random, 2).type);
+  assert.deepEqual(hard, ["mixed", "place", "zero", "swap", "mixed", "place", "zero"]);
+  // Zina berilmasa — toʻgʻri javoblar sonidan
+  assert.equal(R.makeStage3Task(0, null).type, "place");
+  assert.equal(R.makeStage3Task(2, null).type, "zero");
+  // Javob raqam klaviaturasiga sigʻadi (4 xona)
+  for (let i = 0; i < 300; i++) assert.ok(R.makeStage3Task(i, null, Math.random, 2).answer <= 9999);
 });

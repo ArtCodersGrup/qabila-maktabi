@@ -79,3 +79,17 @@ Bosh ekran
 ├── js/scenes/…     kirish, uch bosqich, tabrik
 └── tests/logic.test.js
 ```
+
+## 10. 2026-10-02 qiyinlik yangilanishi
+
+Sabab: hisobot-5 (C jadvali) — oʻqish savollari bitta chaqiruv darajasida, yozish 5 ta qotirilgan funksiya edi.
+
+- **1-bosqich:** argumentlar tartibi (`ayir(y, x)` va `ayir(x, y)`), siklda chaqirish, funksiya ichidan funksiya
+  (chiqish tartibi: «boshi», ichki funksiya, «oxiri»), ikki parametrli `jadval(n, marta)`.
+- **2-bosqich (`RETURNS` 5 → 11):** ichma-ich chaqiruv, funksiya boshqa funksiyadan foydalanadi, **rekursiv `fakt(n)`**
+  (chuqurlik ≤ 5), **roʻyxat parametr orqali oʻzgaradi** (`r.append` — son qutisidan farqli), erta `return` sikl ichida,
+  rekursiv sanash. Talqinchi rekursiyani qoʻllaydi (testda tekshirilgan).
+- **3-bosqich (yozish 5 → 10):** `palindrom(s)`, `tub(n)` (0, 1, 25, 49 testda — `d * d < n` yiqiladi), `ekub(a, b)`,
+  `nechta_tub(a)` (funksiya ichida funksiya), `daraja(a, n)` (sikl yoki rekursiya; manfiy asos va n = 0).
+  Sodda, lekin toʻgʻri yechimlar (boʻluvchilarni sanab chiqish) ham qabul qilinadi.
+- Zina: 0 — eski savollar; 1–2 — yangilari ustun. Testlar: 9 → 12.

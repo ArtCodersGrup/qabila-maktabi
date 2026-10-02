@@ -39,23 +39,51 @@
     await ui.say("elder", "2-qatlam ulardan shakl yasaydi. Qatlam koʻp boʻlsa — tarmoq chuqur boʻladi.");
   }
 
-  // 5.4: mashq
-  function stageTask(task) {
+  const HIDDEN_HINT = "↻ Tik neyron oʻrta ustun toʻliq boʻlsa yonadi, yotiq — oʻrta qator toʻliq boʻlsa.";
+  const OUTPUT_HINT = "↻ Ikkalasi yonsa — krest, bittasi — chiziq, hech biri — boshqa.";
+
+  // 5.4: mashq — 1-qatlam (4 variant)
+  function hiddenTask(task) {
     const el = common.box(true);
-    const view = neuralUi.layerView(el, { showHidden: task.type !== "hidden", showOutput: false });
+    const view = neuralUi.layerView(el, { showHidden: false, showOutput: false });
     view.set(task.image);
-    const labels = task.options;
-    ui.bubble("elder", task.type === "hidden" ? "1-qatlamda qaysi neyronlar yonadi?" : "Tarmoq bu rasmni nima deydi?");
+    ui.bubble("elder", "1-qatlamda qaysi neyronlar yonadi?");
     return practice.tries({
-      setup: (submit) => neuralUi.choiceButtons(labels, submit),
-      check: (index) => labels[index] === task.answer,
-      hint: () => ui.bubble("elder", task.type === "hidden"
-        ? "↻ Tik neyron oʻrta ustun toʻliq boʻlsa yonadi, yotiq — oʻrta qator toʻliq boʻlsa."
-        : "↻ Ikkalasi yonsa — krest, bittasi — chiziq, hech biri — boshqa."),
+      setup: (submit) => neuralUi.choiceButtons(task.options, submit),
+      check: (index) => task.options[index] === task.answer,
+      hint: () => ui.bubble("elder", HIDDEN_HINT),
+      solution: () => {
+        view.reveal("hidden");
+        el.append(common.answerLine(`Javob: ${task.answer}`));
+      },
+    });
+  }
+
+  // 5.4: mashq — ikki qadam: 1-qatlam (4 variant), keyin tarmoqning javobi (3 variant).
+  // Chiqish qatlamida faqat 3 ta neyron bor, shuning uchun bu savol yolg'iz kelmaydi (QOIDALAR 4.3).
+  function bothTask(task) {
+    const el = common.box(true);
+    const view = neuralUi.layerView(el, { showHidden: false, showOutput: false });
+    view.set(task.image);
+    ui.bubble("elder", "Avval 1-qatlam: qaysi neyronlar yonadi?");
+    return common.twoStep({
+      first: {
+        setup: (submit) => neuralUi.choiceButtons(task.hiddenOptions, submit),
+        check: (index) => task.hiddenOptions[index] === task.hidden,
+      },
+      second: {
+        setup: (submit) => {
+          view.reveal("hidden");
+          ui.bubble("elder", "Toʻgʻri! Endi 2-qatlam: tarmoq bu rasmni nima deydi?");
+          neuralUi.choiceButtons(task.options, submit);
+        },
+        check: (index) => task.options[index] === task.answer,
+      },
+      hint: (step) => ui.bubble("elder", step === 1 ? HIDDEN_HINT : OUTPUT_HINT),
       solution: () => {
         view.reveal("hidden");
         view.reveal("output");
-        el.append(common.answerLine(`Javob: ${task.answer}`));
+        el.append(common.answerLine(`1-qatlam: ${task.hidden} → javob: ${task.answer}`));
       },
     });
   }
@@ -63,11 +91,11 @@
   async function stage2() {
     await layersDemo();
     await explain();
-    await ui.say("elder", "Endi oʻzing ayt! 3 ta toʻgʻri javob kerak.");
+    await ui.say("elder", `Endi oʻzing ayt! ${QK.practice.need()} ta toʻgʻri javob kerak.`);
     await practice.exercises({
-      next: (prev, correct) => neural.makeStage2Task(correct, prev),
-      run: stageTask,
-      praise: (task) => `Javob: ${task.answer}.`,
+      next: (prev, correct, tier) => neural.makeStage2Task(correct, prev, null, tier),
+      run: (task) => (task.type === "hidden" ? hiddenTask(task) : bothTask(task)),
+      praise: (task) => (task.type === "hidden" ? `Javob: ${task.answer}.` : `1-qatlam: ${task.hidden} → ${task.answer}.`),
     });
   }
 

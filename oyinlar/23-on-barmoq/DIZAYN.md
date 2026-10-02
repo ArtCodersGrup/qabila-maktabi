@@ -147,3 +147,14 @@ Poyga — `oyinlar/poyga/js/race.js` (23-oʻyinning `typing.js`, `game-art.js`, 
 ## 12. Bu oʻyinga kirmaydi
 
 Raqamlar qatori va belgilar (`- = ! ?`), Backspace, Enter, Tab va boshqa tugmalarning vazifasi (keyingi oʻyin — klaviatura xaritasi), tezkor tugmalar (Ctrl + …), kirill yozuvi, xatoni Backspace bilan tuzatish.
+
+## 2026-10-02 qiyinlik yangilanishi
+
+Sabab: bolalar "oson" deyishdi — tezlik talab qilinmasdi (3 ta qatorni sekin yozsa ham bosqich tugardi), qatorlar bosqich ichida uzaymasdi, 3-bosqichda sharpa (soya) faqat poygada bor edi.
+
+- **Eng kam tezlik** (`T.minCpm(bosqich, qiyin)`): 1-bosqich — talab yoʻq (0), 2-bosqich — **60**, 3-bosqich — **90** belgi/daqiqa; qiyin rejimda + 30. Qator hisoblanadi, agar aniqlik ≥ 90% **va** tezlik ≥ eng kam tezlik boʻlsa (`T.lineResult(stats, min)` → `{ ok, reason }`; avval aniqlik tekshiriladi). Maslahat sababga qarab: "shoshilma" (aniqlik) yoki "tezroq yoz" (tezlik) — shu qator yana beriladi.
+- **Qatorlar soni** — `QK.practice.need()` (4 / 5 / 6; qiyin rejimda 7). Urinishlar `practice.tries` orqali — yulduzlar va seriya umumiy hisobga tushadi (`index.html` ga `practice.js` ulangan).
+- **Qiyinlik zinasi** (`T.makeLine(bosqich, prev, rng, tier)`): 1–2-bosqichda qator 4 → 5 → **6 ta soʻz** (`LINE_WORDS`, ≤ 52 belgi); 3-bosqichda maqollar qisqa (≤ 28 belgi) → har xil → **uzun** (`proverbPool`). `tier` berilmasa — avvalgidek (poyga va musobaqa shunday chaqiradi).
+- **3-bosqich: sharpa = oʻz rekordi.** Yoʻlakda soya rekord tezligida (rekord boʻlmasa — 90) bir tekis yuguradi (`T.ghostTimes(uzunlik, cpm)`); bola birinchi tugmani bosganda yoʻlga chiqadi. Sharpadan oʻzgan — rekordni yangilagan boʻladi ("Yangi rekord!"). Sharpa faqat koʻrgazma: oʻtish sharti — aniqlik va 90 belgi/daqiqa.
+- `typing-play.js` `typeLine`: `start` berilmasa sharpa vaqti sessiya boshidan olinadi, `ghostSide` berilmasa — "right". Poyga (`oyinlar/poyga/`) va «Yozuv poygasi» chaqiruvlari oʻzgarmadi.
+- Testlar: `tier` boʻyicha soʻzlar soni va qator uzunligi, `minCpm`, `lineResult` (chegara qiymatlari va haqiqiy sessiya), `ghostTimes` + `ghostAt`.

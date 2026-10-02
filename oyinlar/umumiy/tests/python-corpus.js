@@ -46,6 +46,17 @@ const PROGRAMS = [
   { name: "Fibonachchi", code: "a = 0\nb = 1\nfor i in range(15):\n    print(a)\n    a, b = b, a + b" },
   { name: "bool son sifatida", code: "print(True + True, False * 5, int(True))" },
   { name: "bo'sh ro'yxat va shart", code: "a = []\nif a:\n    print('bor')\nelse:\n    print('bo\\'sh')\nprint(len(a))" },
+  { name: "list(map) bilan kirish", code: "a = list(map(int, input().split()))\nprint(a, sum(a), len(a), max(a))", stdin: ["3 1 4 1 5"] },
+  { name: "map bilan ikki son", code: "a, b = map(int, input().split())\nprint(a + b, a * b)", stdin: ["12 30"] },
+  { name: "map ustida yurish", code: "s = 0\nfor x in map(int, ['1', '2', '3']):\n    s += x\nprint(s, sum(map(int, '123')), max(map(len, ['a', 'bbb'])))" },
+  { name: "map o'z funksiyasi bilan", code: "def kv(x):\n    return x * x\nprint(list(map(kv, [1, 2, 3])), sorted(map(abs, [-3, 1, -2])), list(map(str, [1, 2])))" },
+  { name: "list()", code: "print(list('abc'), list(range(4)), list([1, 2]), list())\na = [1, 2]\nb = list(a)\nb.append(3)\nprint(a, b)" },
+  { name: "print end va sep", code: "for i in range(3):\n    print(i, end=' ')\nprint()\nprint(1, 2, 3, sep='-')\nprint('a', 'b', sep='', end='!\\n')\nprint('x', end='')\nprint('y')" },
+  { name: "ord va chr", code: "print(ord('a'), chr(98), chr(ord('a') + 2), ord('A') - ord('a'))" },
+  { name: "join", code: "a = ['1', '2', '3']\nprint(' '.join(a), '-'.join('abc'), ''.join([]), ' '.join(map(str, [4, 5, 6])))" },
+  { name: "in range", code: "print(5 in range(10), 10 in range(10), 4 in range(0, 10, 2), 7 in range(10, 0, -3), -1 in range(5))" },
+  { name: "katta sikl", code: "s = 0\nfor i in range(100000):\n    s += i\nprint(s)" },
+  { name: "oxirida Tab'li bo'sh satr", code: "x = 1\n\t\nprint(x)" },
 ];
 
 // Xato bilan tugaydigan dasturlar: xato turi python3 dagi bilan bir xil bo'lishi kerak
@@ -68,6 +79,12 @@ const ERRORS = [
   { name: "funksiyaga kam qiymat", code: "def f(a, b):\n    return a\nprint(f(1))", type: "TypeError" },
   { name: "chaqirib bo'lmaydi", code: "x = 5\nprint(x(3))", type: "TypeError" },
   { name: "satrni o'zgartirish", code: 's = "ab"\ns[0] = "c"', type: "TypeError" },
+  { name: "map indeksi", code: "m = map(int, ['1'])\nprint(m[0])", type: "TypeError" },
+  { name: "len(map)", code: "print(len(map(int, ['1'])))", type: "TypeError" },
+  { name: "join son bilan", code: "print(' '.join([1, 2]))", type: "TypeError" },
+  { name: "ord uzun satr", code: "print(ord('ab'))", type: "TypeError" },
+  { name: "sep son", code: "print(1, 2, sep=3)", type: "TypeError" },
+  { name: "funksiya ichida break", code: "def f():\n    break\nfor i in range(3):\n    f()", type: "SyntaxError" },
 ];
 
 module.exports = { PROGRAMS, ERRORS };

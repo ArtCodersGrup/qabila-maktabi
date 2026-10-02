@@ -35,9 +35,14 @@
   const clearGuide = () => ui.closeGuide();
 
   // letters — ko'rsatiladigan harflar; onPick bo'lsa kataklar tugma (1-bosqich klaviaturasi);
-  // fresh — yangi ochilgan harflar (qisqa miltillaydi)
+  // fresh — yangi ochilgan harflar (qisqa miltillaydi);
+  // hidden — kodi yashirin harflar (massiv): harf ko'rinadi, kodi yo'q — bola yoddan ishlaydi.
+  // showCodes() — hammasini butunlay ochadi; peek(ms) — qisqa vaqtga ochib, yana yashiradi.
   function guide(letters, opts) {
     opts = opts || {};
+    const hiddenSet = new Set(opts.hidden || []);
+    let revealed = false; // showCodes() dan keyin qaytib yashirilmaydi
+    let peekTimer = null;
     const zone = ui.openGuide(); // bosh ekranga qaytganda o'zi yopiladi
     // onPick yo'q — faqat ko'rish uchun (2-3-bosqich): ixcham katak (harf va kodi bir qatorda)
     const grid = ui.h("div", { class: "guide" + (opts.onPick ? "" : " compact") });
@@ -54,7 +59,24 @@
       grid.append(cell);
     }
     zone.append(grid);
+    const setHidden = (on) => {
+      for (const [l, c] of Object.entries(cells)) c.classList.toggle("nocode", on && hiddenSet.has(l));
+    };
+    setHidden(true);
+    ui.onCleanup(() => clearTimeout(peekTimer));
     return {
+      hasHidden: () => hiddenSet.size > 0 && !revealed,
+      showCodes() {
+        revealed = true;
+        clearTimeout(peekTimer);
+        setHidden(false);
+      },
+      peek(ms) {
+        if (revealed) return;
+        clearTimeout(peekTimer);
+        setHidden(false);
+        peekTimer = setTimeout(() => { if (!revealed) setHidden(true); }, ms);
+      },
       // Maslahat: berilgan harflar kataklari to'q sariq ramka bilan belgilanadi
       highlight(set) {
         for (const [l, c] of Object.entries(cells)) c.classList.toggle("hl", set.has(l));
@@ -155,9 +177,10 @@
   // Xabarni signal bilan chalish; chalinayotgan harf kodi yonadi.
   // onLight(on) — har bir signal boshida (true) va oxirida (false): mayoq chirog'i uchun.
   // Ovoz o'chiq bo'lsa ham kodlar yonadi.
-  function play(codes, groupEls, onLight) {
+  // unit — bitta nuqta davomiyligi (ms); berilmasa — odatdagi tezlik
+  function play(codes, groupEls, onLight, unit) {
     stopPlaying();
-    const plan = morse.beepPlan(codes);
+    const plan = morse.beepPlan(codes, unit);
     sound.beeps(plan);
     let t = 0;
     plan.forEach((b) => {

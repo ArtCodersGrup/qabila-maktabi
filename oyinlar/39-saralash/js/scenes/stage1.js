@@ -50,16 +50,16 @@
       ui.h("div", { class: "formula-row", text: "Qoʻshni ikkitasini solishtir" }),
       ui.h("div", { class: "formula-row", text: "Chapdagisi katta boʻlsa — almashtir" }),
       ui.h("div", { class: "formula-row", text: "Har oʻtishda bitta son oʻz joyiga tushadi" })));
-    await ui.say("elder", "Endi oʻzing ayt: almashtirish kerakmi yoki yoʻq?");
+    await ui.say("elder", "Endi oʻzing sana: bitta oʻtishda nechta almashtirish boʻladi?");
   }
 
   async function stage1() {
     await otish();
     await definition();
     await practice.exercises({
-      next: (prev) => L.almashTask(Math.random, prev),
+      next: (prev, correct, tier) => L.almashTask(Math.random, prev, tier),
       run: (task) => common.almashExercise(task),
-      praise: () => "Qiyoslashni toʻgʻri qilding.",
+      praise: (task) => "Bir oʻtishda " + task.javob + " ta almashtirish.",
     });
   }
 

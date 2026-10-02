@@ -180,6 +180,8 @@ Bu bosqichda formula emas, **qoida**:
 
 ## 7. Tasodifiy misollar qoidalari
 
+> **2026-10-02:** quyidagi chegaralar — eng oson zina (tier 0). Qiyinlik zinasi bilan kengaygan chegaralar 14-bo'limda.
+
 **Harflar to'plami:** `A U F K M S T R` — har bir misol uchun kerakli sondagi har xil harflar tasodifiy tanlanadi.
 (`O` harfi ishlatilmaydi — finaldagi `0` bilan chalkashmasligi uchun.)
 
@@ -199,7 +201,7 @@ Bu usul javob doim **bitta va aniq** bo'lishini kafolatlaydi.
 
 **Umumiy:**
 - Oldingi misol bilan bir xil misol (bir xil a, i, tur va P) ketma-ket chiqmaydi.
-- Har bir mashqda 3 ta to'g'ri javob kerak. Ekranda 3 ta doira — to'g'ri javobda biri to'ladi.
+- Har bir mashqda 4 / 5 / 6 ta to'g'ri javob kerak (1- / 2- / 3-bosqich; `QK.practice.need()`). Ekranda shuncha doira — to'g'ri javobda biri to'ladi.
 
 ---
 
@@ -283,3 +285,21 @@ Hammasi `oyinlar/01-qabila-kodlari/` ichida:
 - Boshqa tillar
 - Shifrlash (alohida o'yin)
 - Saytga yig'ish (keyinroq)
+
+## 14. 2026-10-02 qiyinlik yangilanishi
+
+Bolalar "o'ta oson" deyishgan: mashq to'plami 8 ta juftlik edi, 3-bosqich javobi doim 2–4, maslahat esa javobni yozib berardi ("Hammaga yetdi ✓"). Yuqoridagi mashq tavsiflariga qo'shimcha (QOIDALAR §4.3, §4.5):
+
+- **Mashq sikli** endi umumiy `QK.practice.exercises` + `numberTries` orqali ishlaydi (`scenes/common.js` → `exercises`): 4 / 5 / 6 ta to'g'ri javob, yulduzlar, seriya 🔥, qiyin rejim (7 ta javob, bitta urinish).
+- **1- va 2-bosqich:** `STAGE_PAIRS` 8 → **12 juftlik**, zina bo'yicha to'rttadan (`logic.pairsFor(tier)`):
+
+| tier | juftliklar (a, i) | aⁱ eng kattasi | yig'indi eng kattasi |
+|---|---|---|---|
+| 0 | (2,2) (2,3) (3,2) (2,4) | 16 | 30 |
+| 1 | (3,3) (4,2) (2,5) (5,2) | 32 | 62 |
+| 2 | (3,4) (6,2) (2,6) (4,3) | 81 | 126 |
+
+- **3-bosqich** (`logic.STAGE3`): tier 0 — javob 2..4, uzunlik 2..3, 30 kishigacha; tier 1 — javob 3..5, 50 kishigacha; tier 2 — javob **3..6**, uzunlik 2..4, **80 kishigacha** (`MAX_PEOPLE` 30 → 80). 30 dan ortiq odam ekranda kichraytirib chiziladi (`.people.tiny`).
+- **Maslahat javobni aytmaydi:** 3-bosqich maslahatida hisoblagich va odamlar qoladi, "N ta harf → M ta ism. Hammaga yetdi ✓" yozuvi olib tashlandi — bola kimda ism yo'qligini o'zi ko'radi. Hisoblagich 6 gacha.
+- **Testlar:** `tests/logic.test.js` (zina chegaralari, javobning yagonaligi, takrorlanmaslik), `tests/exercises.test.js` (4/5/6 ta javob, tier 0→1→2, xato misol hisoblanmasligi, qiyin rejim).
+

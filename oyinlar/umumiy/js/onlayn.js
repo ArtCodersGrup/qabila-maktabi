@@ -23,19 +23,24 @@
   const channelName = (kind, code) => `xona:${kind}:${code}`;
 
   // Oddiy qiymat: son, mantiq yoki qisqa kalit so'z. Erkin matn (gap, ism, chat) hech qachon o'tmaydi.
-  const oddiy = (v) => typeof v === "number" || typeof v === "boolean" || (typeof v === "string" && /^[a-z0-9:_-]{0,32}$/i.test(v));
+  // Son — chekli va aqlga sig'adigan (vaqt ms, pog'ona, foiz); Infinity/NaN/1e308 o'tmaydi
+  const son = (v) => typeof v === "number" && Number.isFinite(v) && Math.abs(v) <= 1e13;
+  const oddiy = (v) => son(v) || typeof v === "boolean" || (typeof v === "string" && /^[a-z0-9:_-]{0,32}$/i.test(v));
   // Ro'yxat ham bo'ladi: 12 o'yinchining pog'onasi kabi (har qiymati baribir oddiy)
   const qiymat = (v) => oddiy(v) || (Array.isArray(v) && v.length <= 32 && v.every(oddiy));
   const kimlik = (v) => typeof v === "string" && /^[a-z0-9:_-]{1,32}$/i.test(v);
+  const MAX_KALIT = 32; // data obyektida ko'pi bilan shuncha maydon (ulkan payload o'tmasin)
 
   // O'yin xabari: { type, data, t, from }. types — shu o'yinda ruxsat etilgan turlar; boshqasi tashlab yuboriladi
   function validMessage(msg, types) {
     if (!msg || typeof msg !== "object") return false;
     if (!types.includes(msg.type)) return false;
-    if (!kimlik(msg.from) || typeof msg.t !== "number") return false;
+    if (!kimlik(msg.from) || !son(msg.t)) return false;
     // Ma'lumot — kichik obyekt: sonlar, mantiq, qisqa kalit so'zlar va ularning ro'yxatlari
     const data = msg.data == null ? {} : msg.data;
     if (typeof data !== "object" || Array.isArray(data)) return false;
+    const keys = Object.keys(data);
+    if (keys.length > MAX_KALIT || !keys.every(kimlik)) return false;
     return Object.values(data).every(qiymat);
   }
 

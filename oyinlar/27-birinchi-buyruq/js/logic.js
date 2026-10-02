@@ -22,23 +22,41 @@
     return make(r);
   }
 
+  // Qiyinlik zinasi (QOIDALAR 4.3): 0 — birinchi javoblar, 1 — o'rta, 2 — oxirgi va qiyin rejim.
+  // Zina berilmasa (testlar) — eng qiyini.
+  const zina = (tier) => (tier == null ? 2 : Math.max(0, Math.min(2, tier)));
+
   // ---------- 1-bosqich: berilgan matnni chiqaradigan kodni terish ----------
-  function typeTask(r, prev) {
+  // Terish — ko'chirish mashqi: sahna 2 ta to'g'ri javob so'raydi (need: 2). Qiyin rejimda — ikki satr.
+  function typeTask(r, prev, tier) {
+    const t = tier == null ? 0 : zina(tier);
     return pickNew((rr) => {
       const text = pick(TEXTS.concat(NAMES.map((n) => "Salom, " + n + "!")), rr);
-      const code = 'print("' + text + '")';
-      return { id: "ter:" + text, type: "ter", text, code };
+      let code = 'print("' + text + '")';
+      if (t === 2) code += '\nprint("' + pick(WORDS, rr) + '", "' + pick(WORDS, rr) + '")';
+      return { id: "ter:" + code, type: "ter", text, code };
     }, prev, r || Math.random);
   }
 
   // ---------- 2-bosqich: kod berilgan — chiqishini ayt ----------
-  const RESULT_KINDS = ["ikki", "bosh", "son", "vergul", "tirnoq"];
+  // 2026-10-02: ikki yangi tur — "uch" (uch print, biri vergul bilan sonlarni chiqaradi)
+  // va "qoshish" ("a" + "b" yopishadi, "a", "b" orasiga bo'shliq tushadi). Ular oxirgi zinada keladi.
+  const RESULT_KINDS = ["ikki", "bosh", "son", "vergul", "tirnoq", "uch", "qoshish"];
+  const RESULT_ZINA = [["ikki", "bosh", "vergul"], ["ikki", "bosh", "vergul", "son", "tirnoq"], ["son", "tirnoq", "uch", "qoshish", "uch", "qoshish"]];
 
-  function resultTask(r, prev) {
+  function resultTask(r, prev, tier) {
     return pickNew((rr) => {
-      const kind = pick(RESULT_KINDS, rr);
+      const kind = pick(tier == null ? RESULT_KINDS : RESULT_ZINA[zina(tier)], rr);
       let code;
-      if (kind === "ikki") {
+      if (kind === "uch") {
+        const a = 2 + Math.floor(rr() * 8);
+        const b = 2 + Math.floor(rr() * 8);
+        code = 'print("' + pick(WORDS, rr) + '")\nprint(' + a + ", " + b + ")\nprint(" + a + " * " + b + ', "' + pick(WORDS, rr) + '")';
+      } else if (kind === "qoshish") {
+        const a = pick(WORDS, rr);
+        const b = pick(WORDS, rr);
+        code = 'print("' + a + '" + "' + b + '")\nprint("' + a + '", "' + b + '")';
+      } else if (kind === "ikki") {
         const a = pick(TEXTS, rr);
         const b = pick(NAMES, rr);
         code = 'print("' + a + '")\nprint("' + b + '")';
@@ -69,22 +87,37 @@
     { kind: "tirnoqsiz", break: (code) => code.replace(/"/g, ""), why: "matn qoʻshtirnoqsiz yozilgan" },
   ];
 
-  function fixTask(r, prev) {
+  // 2026-10-02: zina bilan dastur uzayadi (1 → 2 → 3 satr) va xato ULARNING BITTASIDA bo'ladi —
+  // bola xato xabaridagi satr raqamini o'qib, aynan o'sha satrni tuzatishi kerak.
+  function fixTask(r, prev, tier) {
+    const satrlar = [1, 2, 3][zina(tier)];
     return pickNew((rr) => {
-      const text = pick(WORDS.concat(NAMES), rr);
-      const solution = 'print("' + text + '")';
+      const texts = [];
+      while (texts.length < satrlar) {
+        const text = pick(WORDS.concat(NAMES), rr);
+        if (!texts.includes(text)) texts.push(text);
+      }
+      const good = texts.map((text) => 'print("' + text + '")');
       const broken = pick(BROKEN, rr);
+      const line = Math.floor(rr() * satrlar); // buziladigan satr
+      const bad = good.slice();
+      bad[line] = broken.break(good[line]);
       return {
-        id: "xato:" + broken.kind + ":" + text,
-        type: "xato-top", kind: broken.kind, why: broken.why,
-        code: broken.break(solution), solution,
+        id: "xato:" + broken.kind + ":" + texts.join("|") + ":" + line,
+        type: "xato-top", kind: broken.kind, line: line + 1,
+        why: (satrlar > 1 ? (line + 1) + "-satrda " : "") + broken.why,
+        code: bad.join("\n"), solution: good.join("\n"),
       };
     }, prev, r || Math.random);
   }
 
-  function writeTask(r, prev) {
+  // 2026-10-02: satrlar soni zina bilan o'sadi: 1–2 → 2–3 → 3–4 (oldin doim 1–2 edi)
+  const WRITE_LINES = [[1, 2], [2, 3], [3, 4]];
+
+  function writeTask(r, prev, tier) {
+    const [kam, kop] = WRITE_LINES[zina(tier)];
     return pickNew((rr) => {
-      const count = 1 + Math.floor(rr() * 2); // 1 yoki 2 satr
+      const count = kam + Math.floor(rr() * (kop - kam + 1));
       const lines = [];
       while (lines.length < count) {
         const line = rr() < 0.5 ? pick(NAMES, rr) : pick(WORDS, rr);
@@ -100,13 +133,13 @@
   }
 
   // 3-bosqichda ikki xil savol navbat bilan keladi
-  function stage3Task(r, prev) {
+  function stage3Task(r, prev, tier) {
     const rr = r || Math.random;
     const wantFix = prev ? prev.type !== "xato-top" : rr() < 0.5;
-    return wantFix ? fixTask(rr, prev) : writeTask(rr, prev);
+    return wantFix ? fixTask(rr, prev, tier) : writeTask(rr, prev, tier);
   }
 
-  const api = { TEXTS, NAMES, WORDS, BROKEN, typeTask, resultTask, fixTask, writeTask, stage3Task, pickNew };
+  const api = { TEXTS, NAMES, WORDS, BROKEN, RESULT_KINDS, typeTask, resultTask, fixTask, writeTask, stage3Task, pickNew };
 
   root.QK = root.QK || {};
   root.QK.logic = api;

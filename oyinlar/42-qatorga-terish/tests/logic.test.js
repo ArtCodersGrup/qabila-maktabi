@@ -54,7 +54,14 @@ test("n! savollari: javob va hisob mos", () => {
 });
 
 test("A(n,k) savollari: javob A ga teng, k = n bo'lsa n! ga aylanadi", () => {
-  for (const t of each(L.orinTask, 40, 7)) {
+  for (const t of each(L.orinTask, 80, 7)) {
+    if (t.cheklov) {
+      // 2026-10-02: cheklovli terish — javob koʻpaytuvchilar koʻpaytmasi (A formulasi emas)
+      assert.equal(t.javob, S.kopaytir(t.kopaytuvchilar), t.matn);
+      assert.equal(t.hisob, t.kopaytuvchilar.join(" × ") + " = " + t.javob);
+      assert.ok(t.nega.length > 30, t.matn);
+      continue;
+    }
     assert.equal(t.javob, S.A(t.n, t.k), t.matn);
     assert.ok(t.k >= 1 && t.k <= t.n, t.matn);
     if (t.k === t.n) assert.equal(t.javob, S.fakt(t.n), t.matn);
@@ -62,6 +69,73 @@ test("A(n,k) savollari: javob A ga teng, k = n bo'lsa n! ga aylanadi", () => {
     assert.equal(kopaytuvchilar.length, t.k, t.hisob);
     assert.equal(kopaytuvchilar[0], t.n, t.hisob);
   }
+});
+
+// 2026-10-02: cheklovli savollarning javobi sanab tekshiriladi (formula emas — roʻyxat)
+test("cheklovli terish: javoblar toʻgʻridan-toʻgʻri sanash bilan mos", () => {
+  const harXil = (dan, gacha) => {
+    let soni = 0;
+    for (let n = dan; n <= gacha; n++) if (new Set(String(n)).size === String(n).length) soni++;
+    return soni;
+  };
+  assert.equal(harXil(10, 99), 81);
+  assert.equal(harXil(100, 999), 648);
+  assert.equal(harXil(1000, 9999), 4536);
+  const topildi = new Map();
+  const r = rngFrom(12);
+  let prev = null;
+  for (let k = 0; k < 200; k++) { prev = L.orinTask(r, prev, 2); if (prev.cheklov) topildi.set(prev.matn, prev); }
+  const javoblar = [...topildi.values()].map((t) => Number(t.javob));
+  for (const kutilgan of [81, 648, 4536]) assert.ok(javoblar.includes(kutilgan), kutilgan + " javobli savol chiqmadi");
+  // «Anvar oltin olmagan»: hamma natijalardan Anvar oltin olganlari ayiriladi: A(n,3) − A(n−1,2)
+  for (const t of topildi.values()) {
+    const m = /^(\d+) ta yuguruvchidan/.exec(t.matn);
+    if (m) assert.equal(t.javob, S.A(Number(m[1]), 3) - S.A(Number(m[1]) - 1, 2), t.matn);
+  }
+  // Birinchi zinada cheklovli savol yoʻq
+  prev = null;
+  for (let k = 0; k < 40; k++) { prev = L.orinTask(r, prev, 0); assert.ok(!prev.cheklov, prev.matn); }
+});
+
+test("n! savollari: bitta oʻrin band boʻlsa, qolganlari teriladi", () => {
+  const r = rngFrom(9);
+  let prev = null;
+  let band = 0;
+  for (let k = 0; k < 60; k++) {
+    prev = L.faktTask(r, prev, 2);
+    const m = /^(\d+) ta (bola|kitob)/.exec(prev.matn);
+    if (/doim/.test(prev.matn)) {
+      band++;
+      const bandlar = (prev.matn.match(/doim/g) || []).length;
+      assert.equal(prev.n, Number(m[1]) - bandlar, prev.matn);
+      assert.equal(prev.javob, S.fakt(Number(m[1]) - bandlar), prev.matn);
+    }
+  }
+  assert.ok(band >= 15, "band oʻrinli savollar kam: " + band);
+  prev = null;
+  for (let k = 0; k < 30; k++) { prev = L.faktTask(r, prev, 0); assert.ok(!/doim/.test(prev.matn), prev.matn); }
+});
+
+test("yangi kod masalalari: takrorli(n, k) va harxil(k)", () => {
+  const vazifa = (id) => {
+    const w = L.WRITE.find((x) => x.id === id);
+    return { type: "kod-yoz", solution: w.solution, tail: w.tail, tests: w.tests.map((stdin) => ({ stdin })) };
+  };
+  // n! ÷ k!: «OLMA» emas, «BOBO»ga oʻxshash emas — bitta harf k marta. 4 harf, bittasi 2 marta: 12
+  assert.deepEqual(K.expectedFor(vazifa("takrorli"), { stdin: ["4", "2"] }), ["12"]);
+  // Sanab tekshirish: "AABC" ning har xil yozuvlari
+  const yozuvlar = new Set(S.tartiblar(["A", "A", "B", "C"]).map((t) => t.join("")));
+  assert.equal(yozuvlar.size, 12);
+  // Toʻgʻridan-toʻgʻri n! // k! deb yozilgan yechim ham oʻtadi; boʻlishni unutgan — yoʻq
+  assert.equal(K.check(vazifa("takrorli"), "def fakt(n):\n    k = 1\n    for i in range(1, n + 1):\n        k = k * i\n    return k\n\ndef takrorli(n, k):\n    return fakt(n) // fakt(k)").ok, true);
+  assert.equal(K.check(vazifa("takrorli"), "def takrorli(n, k):\n    f = 1\n    for i in range(1, n + 1):\n        f = f * i\n    return f").ok, false);
+  // harxil: 1 → 9, 2 → 81, 3 → 648, 4 → 4536, 10 → 3265920
+  assert.deepEqual(["1", "2", "3", "4", "10"].map((k) => K.expectedFor(vazifa("harxil-sonlar"), { stdin: [k] })[0]),
+    ["9", "81", "648", "4536", "3265920"]);
+  // 0 ni hisobga olmagan (9 × 8 × 7 …) yechim yiqiladi
+  assert.equal(K.check(vazifa("harxil-sonlar"), "def harxil(k):\n    natija = 1\n    for i in range(k):\n        natija = natija * (9 - i)\n    return natija").ok, false);
+  // Kod oʻqish: raqamlari har xil sonlarni sanaydigan sikl
+  assert.deepEqual(K.expectedFor({ type: "natija", code: L.harXilKod(10), solution: L.harXilKod(10) }), ["81"]);
 });
 
 test("kod masalalari: dastur javobi formulaga teng", () => {

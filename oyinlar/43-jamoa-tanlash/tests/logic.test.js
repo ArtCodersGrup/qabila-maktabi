@@ -55,7 +55,15 @@ test("bolish: A, k! va C bir-biriga mos", () => {
 });
 
 test("tartib savollari: javob qoidaga mos, xato javob — boshqa qoidadan", () => {
-  for (const t of each(L.tartibTask, 40, 5)) {
+  for (const t of each(L.tartibTask, 80, 5)) {
+    if (t.qoida === "aralash") {
+      // 2026-10-02: ikki guruhdan alohida tanlash — C × C; xato javob — hammadan birga tanlash
+      assert.equal(t.javob, S.C(t.q, t.qiz) * S.C(t.o, t.ogil), t.matn);
+      assert.equal(t.xato, S.C(t.q + t.o, t.qiz + t.ogil), t.matn);
+      assert.notEqual(t.javob, t.xato, t.matn);
+      assert.ok(t.hisob.endsWith("= " + t.javob), t.hisob);
+      continue;
+    }
     const c = S.C(t.n, t.k);
     const a = S.A(t.n, t.k);
     assert.equal(t.javob, t.qoida === "c" ? c : a, t.matn);
@@ -64,6 +72,41 @@ test("tartib savollari: javob qoidaga mos, xato javob — boshqa qoidadan", () =
     assert.ok(t.javob > 0n, t.matn);
     assert.ok(t.nega.length > 20, t.id);
   }
+});
+
+// 2026-10-02: aralash savolning javobi roʻyxatni sanab tekshiriladi
+test("aralash jamoa: C × C haqiqatan jamoalar soniga teng (sanab tekshirish)", () => {
+  for (const h of L.ARALASH) {
+    for (const [q, o] of h.soni) {
+      const odamlar = Array.from({ length: q }, (_, i) => "Q" + i).concat(Array.from({ length: o }, (_, i) => "O" + i));
+      const mos = S.tanlovlar(odamlar, h.qiz + h.ogil)
+        .filter((j) => j.filter((x) => x[0] === "Q").length === h.qiz);
+      assert.equal(BigInt(mos.length), S.C(q, h.qiz) * S.C(o, h.ogil), `${q} qiz, ${o} oʻgʻil`);
+    }
+  }
+  // Aralash savol faqat oxirgi zinada; birinchi zinada — faqat eski savollar
+  const r = rngFrom(13);
+  let prev = null;
+  for (let k = 0; k < 60; k++) { prev = L.tartibTask(r, prev, 0); assert.notEqual(prev.qoida, "aralash"); assert.ok(prev.n <= 10); }
+  let aralash = 0;
+  for (let k = 0; k < 60; k++) { prev = L.tartibTask(r, prev, 2); if (prev.qoida === "aralash") aralash++; }
+  assert.ok(aralash >= 20, "oxirgi zinada aralash savollar kam: " + aralash);
+});
+
+test("yangi kod masalalari: uchliklar(n) va jamoa(q, o)", () => {
+  const vazifa = (id) => {
+    const w = L.WRITE.find((x) => x.id === id);
+    return { type: "kod-yoz", solution: w.solution, tail: w.tail, tests: w.tests.map((stdin) => ({ stdin })) };
+  };
+  assert.deepEqual(K.expectedFor(vazifa("uchliklar"), { stdin: ["10"] }), [String(S.C(10, 3))]);
+  // k ni j dan emas, i dan boshlagan yechim yiqiladi
+  assert.equal(K.check(vazifa("uchliklar"), "def uchliklar(n):\n    soni = 0\n    for i in range(n):\n        for j in range(i + 1, n):\n            for k in range(i + 1, n):\n                soni += 1\n    return soni").ok, false);
+  // Formula bilan yozilgani ham toʻgʻri
+  assert.equal(K.check(vazifa("uchliklar"), "def uchliklar(n):\n    return n * (n - 1) * (n - 2) // 6").ok, true);
+  // jamoa: tartibli juftlik (q × (q − 1)) deb sanagan yechim yiqiladi; bitta qiz boʻlsa — 0
+  assert.equal(K.check(vazifa("aralash-jamoa"), "def jamoa(q, o):\n    return q * (q - 1) * o").ok, false);
+  assert.deepEqual(K.expectedFor(vazifa("aralash-jamoa"), { stdin: ["1", "5"] }), ["0"]);
+  assert.deepEqual(K.expectedFor(vazifa("aralash-jamoa"), { stdin: ["4", "3"] }), [String(S.C(4, 2) * 3n)]);
 });
 
 test("har ikki qoidadan ham savol chiqadi", () => {

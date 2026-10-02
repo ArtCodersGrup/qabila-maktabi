@@ -66,7 +66,7 @@
       return sanoqUi.digitTries({
         answer: task.answer,
         base: 16,
-        maxLen: 2,
+        maxLen: 3,
         hint: () => {
           common.add(el, common.line(`4 tadan: ${g.join(" | ")}`), amal16Ui.tetradTable());
           ui.bubble("elder", "↻ Har guruhni jadvaldan top.");
@@ -80,9 +80,10 @@
       return sanoqUi.digitTries({
         answer: task.answer,
         base: 2,
-        maxLen: 8,
+        maxLen: 12,
         hint: () => {
-          common.add(el, amal16Ui.tetradTable([...task.hex]));
+          // Jadval — asbob: kerakli qatorlar belgilanmaydi, bola o'zi topadi
+          common.add(el, amal16Ui.tetradTable());
           ui.bubble("elder", "↻ Har raqam — 4 ta bit. Jadvaldan top.");
         },
         solution: () => common.add(el, common.answerLine([...task.hex].map((ch) => `${ch} → ${S.toBase(S.digitValue(ch), 2).padStart(4, "0")}`).join(", "))),
@@ -103,7 +104,7 @@
       check: (value) => value === task.answer,
       hint: () => {
         common.add(el, amal16Ui.swatch(task.code).querySelector(".sw-info"));
-        ui.bubble("elder", "↻ Qaysi chiroq FF — toʻliq yoniq, qaysi biri 00 — oʻchiq?");
+        ui.bubble("elder", "↻ Qaysi chiroq FF — toʻliq yoniq, qaysi biri 88 — yarim, qaysi biri 00 — oʻchiq?");
       },
       solution: () => common.add(el, common.answerLine(`${task.code} — ${task.options[task.answer].name}`)),
     });
@@ -120,9 +121,9 @@
     await binToHex();
     await hexToBin();
     await colors();
-    await ui.say("elder", "Endi oʻzing: 2 ↔ 16 va ranglar. 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing: 2 ↔ 16 va ranglar. ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev) => amal16.makeConvTask(prev),
+      next: (prev, correct, tier) => amal16.makeConvTask(prev, undefined, tier),
       run: convTask,
       praise,
     });

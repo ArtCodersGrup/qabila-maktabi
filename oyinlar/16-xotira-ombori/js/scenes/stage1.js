@@ -67,13 +67,20 @@
   }
 
   // To'liq javob: "1 Mbayt = 1024 Kbayt" yoki "Kbayt → Mbayt"
-  const statement = (t) => (t.type === "next" ? `${U[t.i]} → ${t.answer}` : `1 ${U[t.i]} = ${units.factor(t.i - 1)} ${U[t.i - 1]}`);
+  function statement(t) {
+    if (t.type === "next") return `${U[t.i]} → ${t.answer}`;
+    if (t.type === "next2") return `${U[t.i]} → ${U[t.i + 1]} → ${t.answer}`;
+    if (t.type === "unit2") return `1 ${U[t.i]} = ${units.factor(t.i - 1)} ${U[t.i - 1]} = ${units.factor(t.i - 1)} × ${units.factor(t.i - 2)} ${U[t.i - 2]}`;
+    if (t.type === "steps") return `${U.slice(t.i, t.j + 1).join(" → ")}: ${t.answer} marta × 1024`;
+    return `1 ${U[t.i]} = ${units.factor(t.i - 1)} ${U[t.i - 1]}`;
+  }
+  const asksUnit = (t) => t.type === "next" || t.type === "next2";
 
   // 4.4: mashq — bo'sh joyni to'ldirish
   function ladderTask(task) {
     const el = common.box(true);
-    el.append(ui.h("div", { class: "big-value", text: task.type === "next" ? `Zinapoyada ${task.text}` : task.text }));
-    ui.bubble("elder", task.type === "next" ? "Qaysi birlik keladi?" : "Boʻsh joyga nima keladi?");
+    el.append(ui.h("div", { class: "big-value", text: asksUnit(task) ? `Zinapoyada ${task.text}` : task.text }));
+    ui.bubble("elder", asksUnit(task) ? "Qaysi birlik keladi?" : task.type === "steps" ? "Zinapoyada nechta pogʻona koʻtarilamiz?" : "Boʻsh joyga nima keladi?");
     let steps = null;
     return practice.tries({
       setup: (submit) => {
@@ -91,7 +98,7 @@
       solution: () => {
         if (!steps) steps = unitsUi.ladder(el, U.length);
         // Javob bo'lgan pog'ona: keyingisi, pastdagi birlik yoki (son savolida) yuqoridagisi
-        steps.light(task.type === "next" ? task.i + 1 : task.type === "unit" ? task.i - 1 : task.i);
+        steps.light({ next: task.i + 1, next2: task.i + 2, unit: task.i - 1, unit2: task.i - 2, steps: task.j }[task.type] ?? task.i);
         common.add(el, common.answerLine(statement(task)));
       },
     });
@@ -100,9 +107,9 @@
   async function stage1() {
     await build();
     await definition();
-    await ui.say("elder", "Endi oʻzing top: zinapoyadagi boʻsh joylar. 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing top: zinapoyadagi boʻsh joylar. ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev) => units.makeLadderTask(prev),
+      next: (prev, correct, tier) => units.makeLadderTask(prev, undefined, tier),
       run: ladderTask,
       praise: (task) => `${statement(task)}.`,
     });

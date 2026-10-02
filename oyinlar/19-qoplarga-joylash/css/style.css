@@ -22,7 +22,7 @@
 .dtable { position: relative; display: flex; flex-direction: column; gap: 4px; padding: 6px 44px 6px 12px; border-radius: 14px; background: #fff; box-shadow: 0 3px 0 var(--soya); }
 .drow { display: flex; align-items: center; gap: 10px; animation: pop 0.25s; }
 .dcalc { min-width: 120px; font-size: 21px; font-weight: 800; font-variant-numeric: tabular-nums; }
-.dlabel { font-size: 15px; font-weight: 800; color: #7A7266; }
+.dlabel { font-size: 15px; font-weight: 800; color: var(--matn-3); }
 .drem {
   min-width: 48px; height: 40px; padding: 0 8px; border: none; border-radius: 10px;
   background: #FFF1D6; color: var(--matn); font-size: 21px; font-weight: 900; box-shadow: inset 0 0 0 2px var(--yana);
@@ -33,7 +33,7 @@
 .dtable.arrow::after {
   content: "↑"; position: absolute; right: 10px; top: 6px; bottom: 6px; width: 24px;
   display: grid; place-items: center; border-radius: 8px; background: rgba(240, 138, 36, 0.15);
-  color: var(--yana); font-size: 26px; font-weight: 900;
+  color: var(--yana-matn); font-size: 26px; font-weight: 900;
 }
 
 /* ---------- Formula, hikoya, tabrik ---------- */

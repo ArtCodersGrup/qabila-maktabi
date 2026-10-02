@@ -64,7 +64,7 @@
     await uchta();
     await nomlash();
     await practice.exercises({
-      next: (prev) => L.faktTask(Math.random, prev),
+      next: (prev, correct, tier) => L.faktTask(Math.random, prev, tier),
       run: (task) => common.faktExercise(task),
       praise: (task) => task.hisob,
     });

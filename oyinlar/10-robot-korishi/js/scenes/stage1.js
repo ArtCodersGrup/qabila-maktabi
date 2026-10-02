@@ -51,8 +51,8 @@
       setup: (submit) => visionUi.optionGrids(task.options, submit),
       check: (index) => index === task.answer,
       hint: () => {
-        el.append(common.line("Birinchi qatorni solishtir: 0 — boʻsh, 1 — boʻyalgan"));
-        ui.bubble("elder", "↻ Birinchi qatorni sana: qaysi rasmda xuddi shunday?");
+        el.append(common.line("Qatorma-qator solishtir: 0 — boʻsh, 1 — boʻyalgan"));
+        ui.bubble("elder", "↻ Birinchi qatorni sana: qaysi rasmlarda xuddi shunday? Keyin ikkinchi qatorga oʻt.");
       },
       solution: () => {
         const right = visionUi.grid(el, { size: "sm" });
@@ -64,9 +64,9 @@
 
   async function stage1() {
     await draw();
-    await ui.say("elder", "Endi oʻzing top: sonlar qaysi rasmga tegishli? 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing top: sonlar qaysi rasmga tegishli? ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev) => vision.makeReadTask(prev),
+      next: (prev, correct, tier) => vision.makeReadTask(prev, null, tier),
       run: readTask,
       praise: () => "Sonlar va rasm — bir narsa.",
     });

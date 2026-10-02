@@ -136,5 +136,13 @@
     ui.control().append(row);
   }
 
-  QK.rulesUi = { OP_NAMES, thingCard, board, ruleBuilder, errorBadge, choiceButtons };
+  // Uzun matnli variantlar (qoida yoki sabab): ustun bo'lib turadi, har biri alohida qatorda
+  function choiceList(options, onPick) {
+    const col = ui.h("div", { class: "choice-col" });
+    options.forEach((label, i) => col.append(ui.button(label, () => onPick(i), "secondary sm")));
+    ui.clearControl();
+    ui.control().append(col);
+  }
+
+  QK.rulesUi = { OP_NAMES, thingCard, board, ruleBuilder, errorBadge, choiceButtons, choiceList };
 })(window);

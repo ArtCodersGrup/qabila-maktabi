@@ -7,3 +7,9 @@ oqituvchi/test*.html
 oqituvchi/.sinov*.html
 __pycache__/
 *.pyc
+
+# Muallifning chop etiladigan testlari (javoblar kaliti bilan) — saytga chiqmaydi
+testlar/
+
+# Tahlil hisobotlari (xavfsizlik topilmalari bor) — faqat muallif kompyuterida, saytga chiqmaydi
+hisobotlar/

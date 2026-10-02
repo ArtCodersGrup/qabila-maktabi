@@ -102,104 +102,159 @@
 
   // ---------- Mashq savollari ----------
   const opName = (op) => L.OPS[op].name;
-  const outText = (op, a, b) => `A ${opName(op)} B = ${a} ${opName(op)} ${b} = ${L.apply(op, a, b)}`;
-
-  function options(task) {
-    if (task.type === "out") return [{ label: "Ha, yonadi", value: 1 }, { label: "Yoʻq, oʻchiq", value: 0 }];
-    if (task.type === "need") return L.NEED_ORDER.map((k) => ({ label: L.NEED_LABELS[k], value: k }));
-    if (task.type === "expr") return [{ label: "1", value: 1 }, { label: "0", value: 0 }];
-    return [{ label: "Ha", value: 1 }, { label: "Yoʻq", value: 0 }];
-  }
+  const RULES = { and: "VA — ikkalasi ham 1 boʻlsa, 1", or: "YOKI — kamida bittasi 1 boʻlsa, 1" };
+  const yesNo = () => [{ label: "Ha", value: 1 }, { label: "Yoʻq", value: 0 }];
 
   // "B qanday bo'lsin?" — ikkala B uchun natija
   const needLines = (t) => [0, 1].map((b) => `B = ${b} → A ${opName(t.op)} B = ${L.apply(t.op, t.a, b)}`);
 
   function praise(task) {
-    if (task.type === "out") return `A ${opName(task.op)} B = ${task.answer}.`;
+    if (task.type === "fill") return `${RULES[task.op]}.`;
     if (task.type === "need") {
       if (task.answer === "any") return "B har qanday boʻlsa ham natija bir xil.";
       if (task.answer === "none") return `A = ${task.a} boʻlsa, bunday natija chiqmaydi.`;
       return `B = ${task.answer} boʻlsin.`;
     }
-    if (task.type === "expr") return `${task.expr.text} = ${task.answer}.`;
-    return `${task.answer ? task.life.yes : task.life.no}.`;
+    if (task.type === "fillExpr") return `${task.expr.text} jadvali toʻgʻri.`;
+    if (task.type === "fillLife") return `${task.life.expr} — jadval toʻgʻri.`;
+    return `${task.life.expr} — ${task.answer.out ? task.life.yes : task.life.no}.`;
+  }
+
+  // Jadval sarlavhalari
+  function fillHeads(task) {
+    if (task.type === "fill") return ["A", "B", task.named ? `A ${opName(task.op)} B` : "Chiroq"];
+    if (task.type === "fillExpr") return task.rows[0].length === 1 ? ["A", task.expr.text] : ["A", "B", task.expr.text];
+    return [task.life.a.name, task.life.b.name, task.life.q.replace("?", "")];
   }
 
   function runTask(task) {
     const el = box(true);
-    let cv = null;
-    if (task.type === "out" || task.type === "need") {
+    let ft = null; // to'ldiriladigan jadval
+    let lifeHost = null; // jadval joyi; hayotiy savolda — qadam yozuvi ("1-savol: …")
+
+    if (task.type === "need") {
       el.append(ui.h("div", { class: "op-tag", text: `A ${opName(task.op)} B` }));
-      cv = logicUi.circuitView(el, L.OPS[task.op].circuit);
-      if (task.type === "out") {
-        cv.set({ a: task.a, b: task.b, lamp: "unknown" });
-        ui.bubble("elder", `A = ${task.a}, B = ${task.b}. Chiroq yonadimi?`);
-      } else {
-        cv.set({ a: task.a, b: null, lamp: task.want ? "on" : "off", wires: false });
-        ui.bubble("elder", `A = ${task.a}. Chiroq ${task.want ? "yonsin" : "oʻchiq boʻlsin"}. B qanday boʻlsin?`);
-      }
-    } else if (task.type === "expr") {
-      const values = task.expr.id === "notA" ? { A: task.a } : { A: task.a, B: task.b };
-      logicUi.exprView(el, task.expr.text, values);
-      ui.bubble("elder", "Ifodani hisobla: natija 1 mi yoki 0?");
+      const cv = logicUi.circuitView(el, L.OPS[task.op].circuit);
+      cv.set({ a: task.a, b: null, lamp: task.want ? "on" : "off", wires: false });
+      ui.bubble("elder", `A = ${task.a}. Chiroq ${task.want ? "yonsin" : "oʻchiq boʻlsin"}. B qanday boʻlsin?`);
+    } else if (task.type === "fill") {
+      const row = pair(el);
+      if (task.named) el.prepend(ui.h("div", { class: "op-tag", text: `A ${opName(task.op)} B` }));
+      logicUi.circuitView(row, L.OPS[task.op].circuit, { small: task.named }).set({ a: 0, b: 0, lamp: "unknown", wires: false });
+      lifeHost = row;
+      ui.bubble("elder", task.named
+        ? `A ${opName(task.op)} B jadvalini toʻldir: har qatorda natijani bos (1 yoki 0).`
+        : "Sxemaga qara. Chiroq qaysi qatorlarda yonadi? Jadvalni toʻldir.");
+    } else if (task.type === "fillExpr") {
+      el.append(ui.h("div", { class: "op-tag", text: task.expr.text }));
+      lifeHost = el;
+      ui.bubble("elder", "Ifoda jadvalini toʻldir: har qatorda natijani bos (1 yoki 0).");
+    } else if (task.type === "fillLife") {
+      logicUi.ruleCard(el, task.life);
+      lifeHost = el;
+      ui.bubble("elder", "Qoida jadvalini toʻldir: 1 — ha, 0 — yoʻq.");
     } else {
       logicUi.ruleCard(el, task.life);
       logicUi.lifeFacts(el, task.life, task.a, task.b);
-      ui.bubble("elder", task.life.q);
+      lifeHost = ui.h("div", { class: "step-tag" });
+      el.append(lifeHost);
+      ui.bubble("elder", "Ikki savol: avval javob, keyin ifoda. Ikkalasi ham toʻgʻri boʻlsin!");
+    }
+
+    // Hayotiy savol — ikki qadam: 1) holat uchun javob (Ha / Yo'q), 2) qoidaga mos ifoda (4 variant).
+    // Ikkalasi birga yuboriladi va ikkalasi to'g'ri bo'lsagina hisoblanadi; qaysi biri xatoligi aytilmaydi —
+    // shuning uchun ikkinchi urinishda ham o'ylash kerak (2 variantli savolni taxmin bilan o'tib bo'lmaydi).
+    function lifeSteps(submit) {
+      let over = false;
+      const send = (value) => {
+        submit(value);
+        if (L.checkTask(task, value)) over = true;
+        else step1(); // 2-xatodan keyin solution() over = true qiladi — qayta chizilmaydi
+      };
+      function step1() {
+        if (over || lifeHost.dataset.done) return;
+        ui.clearControl();
+        lifeHost.textContent = `1-savol: ${task.life.q}`;
+        const row = ui.h("div", { class: "choice-row" });
+        yesNo().forEach((o) => row.append(ui.button(o.label, () => step2(o.value))));
+        ui.control().append(row);
+      }
+      function step2(out) {
+        ui.clearControl();
+        lifeHost.textContent = "2-savol: bu qoida qaysi ifodaga mos?";
+        const list = ui.h("div", { class: "expr-opts" });
+        task.options.forEach((text) => list.append(ui.button(text, () => send({ expr: text, out }))));
+        ui.control().append(list);
+      }
+      step1();
     }
 
     return practice.tries({
       setup: (submit) => {
-        const row = ui.h("div", { class: "choice-row" });
-        options(task).forEach((o) => row.append(ui.button(o.label, () => submit(o.value))));
-        ui.control().append(row);
+        if (task.type === "need") {
+          const row = ui.h("div", { class: "choice-row" });
+          L.NEED_ORDER.forEach((k) => row.append(ui.button(L.NEED_LABELS[k], () => submit(k))));
+          ui.control().append(row);
+        } else if (task.type === "life") {
+          lifeSteps(submit);
+        } else {
+          const btn = ui.button("Tekshir ✓", () => submit(ft.values()));
+          btn.disabled = true;
+          ft = logicUi.fillTable(lifeHost, { heads: fillHeads(task), rows: task.rows, onChange: () => { btn.disabled = !ft.complete(); } });
+          ui.control().append(ui.h("div", { class: "choice-row" }, btn));
+        }
       },
-      check: (v) => v === task.answer,
-      hint: () => {
-        if (task.type === "out") {
-          const t = logicUi.opTable(el, task.op, { filled: true });
-          t.mark([L.rowIndex(task.a, task.b)]);
-          add(el, t.el);
-          ui.bubble("elder", `↻ Jadvalga qara: A = ${task.a}, B = ${task.b} qatori.`);
-        } else if (task.type === "need") {
-          const t = logicUi.opTable(el, task.op, { filled: true });
+      check: (v) => L.checkTask(task, v),
+      hint: (v) => {
+        if (task.type === "need") {
+          // Bo'sh jadval: bola A = … bo'lgan ikki qatorni o'zi hisoblaydi (javob ko'rsatilmaydi)
+          const t = logicUi.opTable(el, task.op);
           t.mark([L.rowIndex(task.a, 0), L.rowIndex(task.a, 1)]);
           add(el, t.el);
-          ui.bubble("elder", `↻ Jadvalda A = ${task.a} boʻlgan ikki qatorni qara.`);
-        } else if (task.type === "expr") {
-          const steps = L.exprSteps(task.expr, task.a, task.b);
-          if (steps.length > 1) add(el, note(steps.slice(0, -1).join("; ")));
-          ui.bubble("elder", steps.length > 1 ? "↻ Avval qavs ichini hisobladim. Endi oxirgisini oʻzing hisobla." : "↻ EMAS — teskarisi: 1 → 0, 0 → 1.");
+          ui.bubble("elder", `↻ Jadvalda A = ${task.a} boʻlgan ikki qator. Ularni oʻzing hisobla: chiroq qaysi birida ${task.want ? "yonadi" : "oʻchiq"}?`);
+        } else if (task.type === "life") {
+          add(el, note("«boʻlsa» — oʻzi, «boʻlmasa» — EMAS; «VA» — ikkalasi ham, «YOKI» — kamida bittasi"));
+          ui.bubble("elder", "↻ Ikki javobdan kamida bittasi xato. Qoidani qayta oʻqi va ikkala savolga yana javob ber.");
         } else {
-          add(el, note(`${task.life.expr}: ${task.life.a.name} = ${task.a}, ${task.life.b.name} = ${task.b}`));
-          ui.bubble("elder", "↻ Qoidani ifoda qilib yozdim. Qiymatlarni qoʻyib hisobla.");
+          const n = L.wrongRows(task.answer, v);
+          const tip = task.type === "fill"
+            ? (task.named ? `Qoida: ${RULES[task.op]}.` : "Kalitlar ketma-ketmi (VA) yoki parallelmi (YOKI)? Tok yoʻlini kuzat.")
+            : task.type === "fillExpr" ? task.expr.hint : `Ifodasi: ${task.life.expr}. Har qatorga qiymatlarni qoʻy.`;
+          ui.bubble("elder", `↻ ${n} ta qator xato — qaysiligini oʻzing top. ${tip}`);
         }
       },
       solution: () => {
-        if (task.type === "out") {
-          cv.set({ a: task.a, b: task.b, lamp: task.answer ? "on" : "off" });
-          add(el, answerLine(outText(task.op, task.a, task.b)));
-        } else if (task.type === "need") {
+        if (task.type === "need") {
           add(el, note(needLines(task).join("; ")), answerLine(`Javob: ${L.NEED_LABELS[task.answer]}`));
-        } else if (task.type === "expr") {
-          add(el, answerLine(L.exprSteps(task.expr, task.a, task.b).join("; ")));
+        } else if (task.type === "life") {
+          lifeHost.dataset.done = "1";
+          lifeHost.textContent = task.life.expr;
+          add(el, answerLine(`${L.lifeSteps(task.life, task.a, task.b)[0]} — ${task.answer.out ? task.life.yes : task.life.no}`));
         } else {
-          add(el, answerLine(`${L.lifeSteps(task.life, task.a, task.b)[0]} — ${task.answer ? task.life.yes : task.life.no}`));
+          ft.reveal(task.answer);
+          // To'g'ri jadval ekranda (bola xato qo'ygan kataklar hoshiyali); ostida — qoida
+          const text = task.type === "fill" ? RULES[task.op] : task.type === "fillExpr" ? task.expr.hint : task.life.expr;
+          add(el, answerLine(text));
         }
       },
+    }).then((ok) => {
+      if (ft) ft.lock();
+      if (lifeHost) lifeHost.dataset.done = "1";
+      return ok;
     });
   }
 
   function exercises(stage) {
     return practice.exercises({
-      next: (prev) => L.makeTask(stage, prev),
+      next: (prev, correct, tier) => L.makeTask(stage, prev, undefined, tier),
       run: runTask,
       praise,
     });
   }
 
-  // Tekshirish uchun: to'g'ri javob tugmasining yozuvi
-  QK.answerLabel = (task) => options(task).find((o) => o.value === task.answer).label;
+  // Tekshirish uchun: to'g'ri javob (tugma yozuvi yoki jadval natijalari)
+  QK.answerLabel = (task) => (task.type === "need" ? L.NEED_LABELS[task.answer]
+    : task.type === "life" ? `${task.answer.expr} → ${task.answer.out ? "Ha" : "Yoʻq"}` : task.answer.join(" "));
 
   QK.common = { box, add, formula, answerLine, note, pair, explore, runTask, exercises };
 })(window);

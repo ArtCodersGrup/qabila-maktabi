@@ -101,22 +101,24 @@
     const el = common.box(true);
     const view = ui.h("div", { class: "task-view" });
     el.append(view);
+    // Katta sonlarda (tier 1–2) rasm ekranga sigʻmaydi — son yoziladi
     if (task.type === "toBits") {
-      view.append(bytesUi.chests(task.bytes));
+      view.append(task.bytes <= 9 ? bytesUi.chests(task.bytes) : ui.h("div", { class: "big-value", text: `${task.bytes} bayt` }));
       ui.bubble("elder", `Mana ${task.bytes} ta sandiq — ${task.bytes} bayt. Unda necha bit bor?`);
     } else {
-      view.append(bytesUi.bitDots(task.bits));
+      view.append(task.bits <= 72 ? bytesUi.bitDots(task.bits) : ui.h("div", { class: "big-value", text: `${task.bits} bit` }));
       ui.bubble("elder", `Mana ${task.bits} ta bit. Necha bayt boʻladi?`);
     }
     return practice.numberTries({
       answer: task.answer,
       hint: () => {
+        // Maslahat javobni aytmaydi: usulni eslatadi
         if (task.type === "toBits") {
-          common.add(el, common.line(Array(task.bytes).fill("8").join(" + ") + " = ?"));
+          common.add(el, common.line(task.bytes <= 9 ? Array(task.bytes).fill("8").join(" + ") + " = ?" : `${task.bytes} × 8 = ?`));
           ui.bubble("elder", "↻ Har sandiqda 8 bit. Hammasini qoʻsh.");
         } else {
-          view.replaceChildren(bytesUi.chests(task.bytes));
-          ui.bubble("elder", "↻ Bitlarni 8 tadan sandiqqa joyladim. Nechta sandiq boʻldi?");
+          common.add(el, common.line(`${task.bits} : 8 = ?   (8, 16, 24, 32, 40 …)`));
+          ui.bubble("elder", "↻ Bitlarni 8 tadan sandiqqa joyla. 8 lab sanab chiq: nechta sandiq kerak?");
         }
       },
       solution: () => {
@@ -130,9 +132,9 @@
   async function stage1() {
     await countSets();
     await definition();
-    await ui.say("elder", "Endi oʻzing hisobla: bayt va bit. 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing hisobla: bayt va bit. ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev) => bytes.makeBitTask(prev),
+      next: (prev, correct, tier) => bytes.makeBitTask(prev, undefined, tier),
       run: bitTask,
       praise: (task) => `${task.bytes} bayt = ${task.bits} bit.`,
     });

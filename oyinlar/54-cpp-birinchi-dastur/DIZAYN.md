@@ -66,3 +66,17 @@ Mashqlar: Python satriga mos C++ satri; C++ dasturga kirib qolgan Python satrini
 - `js/logic.js` — misollar va ularning chiqishi, mashq savollari.
 - `js/scenes/*.js` — sahnalar; umumiy ekran qismlari `umumiy/js/cpp-ui.js` da.
 - `tests/logic.test.js` — 14 test; `umumiy/tests/cpp-parity.test.js` — `g++` bilan solishtirish.
+
+## 2026-10-02 qiyinlik yangilanishi
+
+Sabab: hisobot-5 (C jadvali) — yozish mashqlari 4 ta qotirilgan, oʻqish misollari bir-ikki satrli edi.
+
+- **1-bosqich (natija):** ikki yangi tur — `yopishgan` (`cout << a << b;` — sonlar orasida boʻshliq yoʻq; boʻshliqni
+  oʻzing yozasan) va `qayta` (oʻzgaruvchi qayta tayinlanadi, satrlar yuqoridan pastga). Zina 1–2 da chiqadi.
+- **2-bosqich (kirish):** `uch-satr` (kirish ikki satrda — `cin` boʻshliq va yangi satrni bir xil koʻradi) va
+  `ism-yosh` (bitta `cin` bilan `string` va `int`).
+- **Yozish (`YOZISHLAR` 4 → 8):** `tortburchak` (perimetr va yuz), `almashtir` (teskari tartib, boʻshliq bilan),
+  `ism-yosh` (matn ichida hisob), `uch-son` (yigʻindi va oʻrtacha — `int` bilan yozilsa kasr yoʻqoladi va sinovdan
+  oʻtmaydi). Har birida 2–3 sinov.
+- **Halollik:** yangi oʻqish misollari yadroda ham (yangi test), haqiqiy `g++` da ham (`cpp-parity.test.js`) aynan
+  shunday chiqadi; `namunalar()` da yasalgan misollar endi yechimlardan tashqari sanaladi. Testlar: 15 → 18.

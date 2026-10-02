@@ -46,3 +46,14 @@ qisqa dastur bilan yechiladi va dastur **maydonni oldindan bilmasa ham** ishlayd
 - Maydon va robot chizigʻi — umumiy `dastur.js` / `dastur-ui.js` dan (26-oʻyin bilan bir xil).
 - `tests/logic.test.js` — 9 test: cheksiz takrorning toʻxtatilishi, `agar` ning ikki yoʻli,
   har darajaning namunali yechimi, **shartsiz dasturning ikki maydonda oʻtmasligi**.
+
+## 2026-10-02 qiyinlik yangilanishi
+
+Sabab: har bosqichda 2–3 ta qotirilgan daraja bor edi (jami 7) — 3-javobda oʻsha daraja qaytib kelardi, qayta oʻynaganda ham aynan shu; AGAR darajalarida "doim aylanib oʻt" degan shartsiz dastur ham oʻtib ketardi.
+
+- **Daraja generatori** `yasa(bosqich, prev, rng, tier)` (`logic.js`) — har safar yangi maydon; qotirilgan `TAKROR / AGAR / BIRGA` faqat koʻrsatuv sahnalari uchun qoldi.
+  - **Takror:** tier 0 — yoʻlak (4–5 qadam, 4 yoʻnalish) va burchak (ikki takror); tier 1 — burchak, zinapoya (takror ichida 2 buyruq); tier 2 — uzun zinapoya (3–4 marta) va "keng zina" (takror ichida 3 buyruq). `maxBlok` shunday tanlanganki, **takrorsiz yozib boʻlmaydi** (test: eng qisqa yoʻl > maxBlok).
+  - **Agar:** ikki qatorli yoʻlak — bir maydonda yoʻlda tosh, ikkinchisida **aylanma yoʻl yopiq**. Shuning uchun shartsiz dastur ikkalasidan oʻtolmaydi (test: `shartsizYolYoq`). Tier 1–2 da `agar` dan oldin 1–2 qadam bor, tier 2 da toshdan keyingi yoʻl 2–3 qadam.
+  - **Birga:** yoʻlak 5 → 6 katak, har maydonda 1–2 tosh (tier 2 da jami ≥ 3), aylanma qatorda ham tosh — "boshidan oxirigacha aylanma qatordan yur" oʻtmaydi. Yechim: `takror N [ agar → : → | aks: ↑ → → ↓ ]`.
+- Hamma yoʻnalish (oʻng, chap, yuqori, past) tasodifiy — bola yechimni yodlab ololmaydi.
+- Testlar: har bosqich × tier da 200 daraja — namunali yechim hamma maydonda ishlaydi, maydon ≤ 6×5, ketma-ket takror yoʻq.

@@ -32,7 +32,7 @@
     await topilmasa();
     await ui.say("elder", "Endi oʻzing ayt: kod nima chiqaradi?");
     await practice.exercises({
-      next: (prev) => L.oqishTask(Math.random, prev),
+      next: (prev, correct, tier) => L.oqishTask(Math.random, prev, tier),
       run: (task) => common.oqishExercise(task),
       praise: () => "Indeksni toʻgʻri topding.",
     });

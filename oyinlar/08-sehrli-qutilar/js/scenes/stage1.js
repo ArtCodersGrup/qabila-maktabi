@@ -55,27 +55,28 @@
     await ui.say("elder", "Demak munchoqlarni oʻzgartirsak — robotning xulqi ham oʻzgaradi.");
   }
 
-  // 5.4: mashq
+  // 5.4: mashq — hamma savolda 4 variant; toshlar soni savol matnida aytilmaydi (bola o'zi sanaydi)
   function stageTask(task) {
     const el = common.box(true);
+    boxesUi.stones(el, task.n);
     if (task.type === "box") {
-      boxesUi.stones(el, task.n);
-      ui.bubble("elder", `Hozir ${task.n} ta tosh qoldi. Robot qaysi qutini ochadi?`);
+      ui.bubble("elder", "Stolga qara: robot qaysi qutini ochadi?");
       return practice.tries({
-        setup: (submit) => boxesUi.optionButtons(task.options, submit, (n) => `${n} tosh`),
+        setup: (submit) => boxesUi.optionButtons(task.options, submit, (n) => `${n} li quti`),
         check: (index) => index === task.answer,
-        hint: () => ui.bubble("elder", "↻ Toshlarni sana: quti nomi — qolgan toshlar soni."),
-        solution: () => el.append(common.answerLine(`${task.n} li quti`)),
+        hint: () => ui.bubble("elder", "↻ Toshlarni birma-bir sana: quti nomi — stolda qolgan toshlar soni."),
+        solution: () => el.append(common.answerLine(`${task.n} ta tosh — ${task.n} li quti`)),
       });
     }
-    const chip = boxesUi.beadChip(task.answer);
-    el.append(ui.h("div", { class: "bead-show" }, chip));
-    ui.bubble("elder", `Robot ${boxesUi.COLOR_NAME[task.color]} munchoq tortdi. Nechta tosh oladi?`);
+    // "left": rang → nechta oladi → stolda nechta qoladi (ikki qadam bitta savolda)
+    el.append(ui.h("div", { class: "bead-show" }, boxesUi.beadChip(task.move)));
+    ui.bubble("elder", `Robot ${boxesUi.COLOR_NAME[task.color]} munchoq tortdi. Shundan keyin stolda nechta tosh qoladi?`);
     return practice.tries({
       setup: (submit) => boxesUi.optionButtons(task.options, submit, (m) => `${m} ta`),
-      check: (index) => task.options[index] === task.answer,
-      hint: () => ui.bubble("elder", "↻ Koʻk — 1 ta ol, sariq — 2 ta ol."),
-      solution: () => el.append(common.answerLine(`${boxesUi.COLOR_NAME[task.color]} — ${task.answer} ta`)),
+      check: (index) => index === task.answer,
+      hint: () => ui.bubble("elder", "↻ Koʻk — 1 ta ol, sariq — 2 ta ol. Avval toshlarni sana, keyin olinganini ayir."),
+      solution: () => el.append(common.answerLine(
+        `${boxesUi.COLOR_NAME[task.color]} — ${task.move} ta oladi: ${task.n} − ${task.move} = ${task.left}`)),
     });
   }
 
@@ -86,11 +87,13 @@
     await showBoxes(state);
     await firstGame(state);
     await explain();
-    await ui.say("elder", "Endi savollar. 3 ta toʻgʻri javob kerak!");
+    await ui.say("elder", `Endi savollar. ${QK.practice.need()} ta toʻgʻri javob kerak!`);
     await practice.exercises({
-      next: (prev, correct) => boxes.makeStage1Task(correct, prev),
+      next: (prev, correct, tier) => boxes.makeStage1Task(correct, prev, null, tier),
       run: stageTask,
-      praise: (task) => (task.type === "box" ? `${task.n} li quti.` : `${boxesUi.COLOR_NAME[task.color]} — ${task.answer} ta.`),
+      praise: (task) => (task.type === "box"
+        ? `${task.n} li quti.`
+        : `${boxesUi.COLOR_NAME[task.color]} — ${task.move} ta: ${task.n} − ${task.move} = ${task.left}.`),
     });
   }
 

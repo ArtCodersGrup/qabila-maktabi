@@ -10,7 +10,7 @@
 .sw-btn.on { border-color: #E0B04A; background: #FFF4CC; }
 .sw-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--soya); }
 .sw-main { font-size: 21px; font-weight: 900; }
-.sw-sub { font-size: 15px; font-weight: 700; color: #7A7266; }
+.sw-sub { font-size: 15px; font-weight: 700; color: var(--matn-3); }
 .switches.locked .sw-btn { opacity: 0.6; }
 
 /* ---------- Rostlik jadvali ---------- */
@@ -18,7 +18,7 @@
 .ttable th { padding: 6px 12px; background: var(--asosiy); color: #fff; font-size: 16px; font-weight: 800; }
 .ttable td { padding: 5px 14px; border-top: 2px solid #EFE8DA; }
 .ttable td.out { color: #A59C8F; background: #FBF8F2; }
-.ttable td.out.v1 { color: #fff; background: #E0A800; }
+.ttable td.out.v1 { color: var(--matn); background: var(--sariq); }
 .ttable td.out.v0 { color: var(--matn); background: #E8E3DA; }
 .ttable td.out.fresh { animation: pop 0.3s; }
 .ttable tr.cur td { box-shadow: inset 0 0 0 9999px rgba(47, 111, 222, 0.12); }

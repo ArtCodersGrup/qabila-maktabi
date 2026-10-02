@@ -56,7 +56,7 @@
     await uchQadam();
     await ui.say("elder", "Endi oʻzing hisobla.");
     await practice.exercises({
-      next: (prev) => L.vaTask(Math.random, prev),
+      next: (prev, correct, tier) => L.vaTask(Math.random, prev, tier),
       run: (task) => common.vaExercise(task),
       praise: (task) => task.hisob,
     });

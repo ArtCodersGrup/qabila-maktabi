@@ -49,7 +49,7 @@
     await nomlar();
     await qoida();
     await practice.exercises({
-      next: (prev) => L.sinfTask(Math.random, prev),
+      next: (prev, correct, tier) => L.sinfTask(Math.random, prev, tier),
       run: (task) => common.sinfExercise(task),
       praise: (task) => L.sinfById(task.javob).nom + " — shunday.",
     });

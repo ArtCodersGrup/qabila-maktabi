@@ -73,7 +73,7 @@
     return sanoqUi.digitTries({
       answer: task.answer,
       base: 2,
-      maxLen: 7,
+      maxLen: 8,
       hint: () => {
         const coins = qop.greedySteps(task.n).map((s) => ({ coin: s.coin }));
         common.add(el, ui.h("div", { class: "hint-coins" }, ...coins.map((c) => ui.h("span", { class: "qcoin", text: String(c.coin) }))));
@@ -89,9 +89,9 @@
   async function stage1() {
     await greedy();
     await definition();
-    await ui.say("elder", "Endi oʻzing: oʻnlikdan ikkilikka. 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing: oʻnlikdan ikkilikka. ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev) => qop.makeGreedyTask(prev),
+      next: (prev, correct, tier) => qop.makeGreedyTask(prev, undefined, tier),
       run: greedyTask,
       praise: (task) => `${task.n} = ${S.fmt(task.answer, 2)}.`,
     });

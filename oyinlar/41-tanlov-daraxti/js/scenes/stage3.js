@@ -26,15 +26,15 @@
   }
 
   // Mashqda ikki tur aralashadi: kodni o'qish va kod yozish
-  function keyingi(prev, togri) {
-    return togri % 2 === 0 ? L.kodTask(Math.random, prev) : L.writeTask(Math.random, prev);
+  function keyingi(prev, togri, tier) {
+    return togri % 2 === 0 ? L.kodTask(Math.random, prev, tier) : L.writeTask(Math.random, prev, tier);
   }
 
   async function stage3() {
     await kodKorsat();
     await ui.say("elder", "Endi oʻzing: avval kodni oʻqiysan, keyin yozasan.");
     await practice.exercises({
-      next: (prev, togri) => keyingi(prev, togri),
+      next: (prev, togri, tier) => keyingi(prev, togri, tier),
       run: (task) => (task.tur === "yoz" ? common.yozishExercise(task) : common.kodExercise(task)),
       praise: (task) => (task.tur === "yoz" ? "Sikl toʻgʻri sanadi." : task.qiymat.join(" × ") + " = " + task.javob),
     });

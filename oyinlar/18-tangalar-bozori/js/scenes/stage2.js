@@ -31,6 +31,7 @@
     ui.bubble("elder", "Bu son oʻnlikda nechaga teng?");
     return practice.numberTries({
       answer: task.answer,
+      maxLen: 4,
       hint: () => {
         common.add(el, bozorUi.placed(task.number, task.base));
         ui.bubble("elder", "↻ Har raqamni ustidagi xona qiymatiga koʻpaytir va qoʻsh.");
@@ -42,9 +43,9 @@
   async function stage2() {
     await coins();
     await definition();
-    await ui.say("elder", "Endi oʻzing: turli tizimlardan oʻnlikka. 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing: turli tizimlardan oʻnlikka. ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev) => bozor.makeMidTask(prev),
+      next: (prev, correct, tier) => bozor.makeMidTask(prev, undefined, tier),
       run: midTask,
       praise: (task) => `${S.fmt(task.number, task.base)} = ${task.answer}.`,
     });

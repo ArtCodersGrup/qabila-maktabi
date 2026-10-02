@@ -32,6 +32,32 @@
       "..##..",
       "..##..",
     ],
+    // 2026-10-02: yana uchta shablon. Bo'yalgan kataklar soni hammasida har xil (32, 24, 20, 16, 12, 8) —
+    // "belgi" usuli (kataklar soni) shunga tayanadi.
+    T: [
+      "######",
+      "..##..",
+      "..##..",
+      "..##..",
+      "..##..",
+      "..##..",
+    ],
+    doira: [
+      "..##..",
+      ".#..#.",
+      "#....#",
+      "#....#",
+      ".#..#.",
+      "..##..",
+    ],
+    chiziq: [
+      "......",
+      "..##..",
+      "..##..",
+      "..##..",
+      "..##..",
+      "......",
+    ],
   };
 
   const gridFrom = (rows) => rows.join("").split("").map((ch) => (ch === "#" ? 1 : 0));
@@ -106,62 +132,131 @@
     return out;
   }
 
-  // 1-bosqich: "Robot shu sonlarni ko'rdi — bu qaysi rasm?"
-  function makeReadTask(prev, rng) {
+  const tierOf = (tier) => Math.max(0, Math.min(2, tier || 0));
+  const keyOf = (grid) => grid.join("");
+
+  function shuffle(arr, rng) {
+    const out = arr.slice();
+    for (let i = out.length - 1; i > 0; i--) {
+      const j = Math.floor(rng() * (i + 1));
+      const tmp = out[i];
+      out[i] = out[j];
+      out[j] = tmp;
+    }
+    return out;
+  }
+
+  // Shovqin (almashtirilgan kataklar soni) qiyinlik zinasi bo'yicha
+  const READ_NOISE = [[1, 3], [2, 4], [3, 5]];
+  const MATCH_NOISE = [[2, 4], [3, 6], [4, 7]];
+
+  // 1-bosqich: "Robot shu sonlarni ko'rdi — bu qaysi rasm?" — 4 variant.
+  // tier 0, 1: boshqa shablonlar; tier 2: bittasi — shu shablonning boshqacha buzilgani (katakma-katak solishtirish kerak).
+  function makeReadTask(prev, rng, tier) {
     rng = rng || Math.random;
+    const t = tierOf(tier);
+    const [lo, hi] = READ_NOISE[t];
     for (;;) {
       const name = pick(NAMES, rng);
-      const image = addNoise(TEMPLATES[name], randInt(1, 3, rng), rng);
-      const others = NAMES.filter((n) => n !== name).map((n) => addNoise(TEMPLATES[n], randInt(1, 3, rng), rng));
-      const options = [image].concat(others);
-      const keys = options.map((g) => g.join(""));
-      if (new Set(keys).size !== 3) continue;
-      if (prev && prev.image.join("") === image.join("")) continue;
-      // tasodifiy tartib
-      for (let i = options.length - 1; i > 0; i--) {
-        const j = Math.floor(rng() * (i + 1));
-        const tmp = options[i];
-        options[i] = options[j];
-        options[j] = tmp;
-      }
-      return { type: "read", image, options, answer: options.findIndex((g) => g.join("") === image.join("")), truth: name };
+      const image = addNoise(TEMPLATES[name], randInt(lo, hi, rng), rng);
+      const otherNames = shuffle(NAMES.filter((n) => n !== name), rng).slice(0, t >= 2 ? 2 : 3);
+      if (t >= 2) otherNames.push(name);
+      const list = shuffle([{ name, grid: image }].concat(
+        otherNames.map((n) => ({ name: n, grid: addNoise(TEMPLATES[n], randInt(lo, hi, rng), rng) }))), rng);
+      const options = list.map((x) => x.grid);
+      if (new Set(options.map(keyOf)).size !== 4) continue;
+      if (prev && keyOf(prev.image) === keyOf(image)) continue;
+      return {
+        type: "read", image, options, answer: options.findIndex((g) => keyOf(g) === keyOf(image)),
+        truth: name, sources: list.map((x) => x.name), tier: t, // sources — har variant qaysi shablondan yasalgan
+      };
     }
   }
 
-  // 2-bosqich: "Robot nima deydi?" — shablon bilan aniq javob bo'lsin
-  function makeMatchTask(prev, rng) {
+  // 2-bosqich: "Robot nima deydi?" — shablon bilan aniq javob bo'lsin.
+  // Variantlar: tier 0, 1 — 4 ta (to'g'risi + eng o'xshash 3 ta shablon), tier 2 — oltitasi ham.
+  function makeMatchTask(prev, rng, tier) {
     rng = rng || Math.random;
+    const t = tierOf(tier);
+    const [lo, hi] = MATCH_NOISE[t];
+    const margin = t >= 2 ? 2 : 3;
     for (;;) {
       const name = pick(NAMES, rng);
-      const image = addNoise(TEMPLATES[name], randInt(2, 4, rng), rng);
+      const image = addNoise(TEMPLATES[name], randInt(lo, hi, rng), rng);
       const best = bestMatch(image);
       if (best.name !== name) continue;
-      if (best.list[0].score - best.list[1].score < 3) continue;
-      if (prev && prev.answer === name && prev.image.join("") === image.join("")) continue;
-      return { type: "match", image, answer: name, truth: name };
+      if (best.list[0].score - best.list[1].score < margin) continue;
+      if (prev && prev.answer === name) continue; // ketma-ket bir xil shakl chiqmaydi
+      const options = t >= 2
+        ? NAMES.slice()
+        : NAMES.filter((n) => n === name || best.list.slice(1, 4).some((item) => item.name === n));
+      return { type: "match", image, answer: name, truth: name, options, tier: t };
     }
   }
 
-  // 3-bosqich: "Qaysi usul to'g'ri javob beradi?" — faqat bittasi to'g'ri bo'lsin
-  function makeMethodTask(prev, rng) {
+  // 3-bosqich: "Qaysi usul to'g'ri javob beradi?" — 4 javob: faqat shablon, faqat belgi, ikkalasi, hech biri.
+  // Rasm suriladi va/yoki unga kataklar qo'shiladi. Mulohaza bir xil ishlashi uchun:
+  // surilgan rasmda shablon doim adashadi, surilmaganda doim topadi; belgi — kataklar soniga qarab.
+  const METHOD_ANSWERS = ["shablon", "belgi", "ikkalasi", "hech"];
+  const CHANGES = {
+    shift: "surildi",
+    add: "kataklar qoʻshildi",
+    both: "surildi va kataklar qoʻshildi",
+    blur: "1–2 katagi oʻzgardi",
+  };
+
+  // Surishlar: 1 yoki 2 katak, istalgan tomonga (yo'g'on shakllar 1 katakka surilganda ham taniladi —
+  // bunday holatlar pastdagi shart bilan tashlab yuboriladi)
+  const SHIFTS = [];
+  for (let dx = -2; dx <= 2; dx++) {
+    for (let dy = -2; dy <= 2; dy++) if (dx || dy) SHIFTS.push([dx, dy]);
+  }
+
+  // 3-bosqich namoyishi: doira bir katak o'ngga surilsa, shablon adashadi, belgi (12 ta katak) esa saqlanadi
+  const DEMO_SHIFT = { name: "doira", dx: 1, dy: 0 };
+
+  function makeMethodTask(prev, rng, tier) {
     rng = rng || Math.random;
+    const t = tierOf(tier);
+    const wants = t === 0 ? ["shablon", "belgi"] : METHOD_ANSWERS;
+    const maxAdd = t >= 2 ? 8 : 5;
     for (;;) {
-      const name = pick(NAMES, rng);
-      const useShift = rng() < 0.5;
-      const image = useShift
-        ? shift(TEMPLATES[name], pick([1, -1], rng), pick([0, 1, -1], rng))
-        : addCells(TEMPLATES[name], randInt(3, 5, rng), rng);
-      const byPixels = bestMatch(image).name === name;
-      const byFeatureOk = byFeature(image) === name;
-      if (byPixels === byFeatureOk) continue; // faqat bitta usul to'g'ri bo'lsin
-      const answer = byPixels ? "shablon" : "belgi";
-      if (prev && prev.answer === answer && prev.image.join("") === image.join("")) continue;
-      return { type: "method", image, truth: name, answer, changed: useShift ? "surildi" : "kataklar qoʻshildi" };
+      const want = pick(wants, rng);
+      for (let attempt = 0; attempt < 200; attempt++) {
+        const name = pick(NAMES, rng);
+        const shifted = want === "belgi" || want === "hech";
+        let image = TEMPLATES[name];
+        let change;
+        if (shifted) {
+          const move = pick(SHIFTS, rng);
+          image = shift(image, move[0], move[1]);
+          if (want === "hech") image = addCells(image, randInt(3, maxAdd, rng), rng);
+          change = want === "hech" ? "both" : "shift";
+        } else if (want === "shablon") {
+          image = addCells(image, randInt(3, maxAdd, rng), rng);
+          change = "add";
+        } else {
+          image = addNoise(image, randInt(1, 2, rng), rng);
+          change = "blur";
+        }
+        const byPixels = bestMatch(image).name === name;
+        const byFeatureOk = byFeature(image) === name;
+        if (byPixels === shifted) continue; // surilgan — shablon adashsin; surilmagan — topsin
+        const answer = byPixels && byFeatureOk ? "ikkalasi" : byPixels ? "shablon" : byFeatureOk ? "belgi" : "hech";
+        if (answer !== want) continue;
+        if (prev && prev.answer === answer && keyOf(prev.image) === keyOf(image)) continue;
+        if (prev && prev.truth === name && prev.answer === answer) continue;
+        return {
+          type: "method", image, truth: name, answer, options: METHOD_ANSWERS,
+          byPixels: bestMatch(image).name, byFeature: byFeature(image), filled: filled(image),
+          changed: CHANGES[change], tier: t,
+        };
+      }
     }
   }
 
   const api = {
-    SIZE, CELLS, NAMES, TEMPLATES, PATTERNS,
+    SIZE, CELLS, NAMES, TEMPLATES, PATTERNS, METHOD_ANSWERS, DEMO_SHIFT,
     gridFrom, empty, filled, matchScore, bestMatch, byFeature, shift, addNoise, addCells,
     makeReadTask, makeMatchTask, makeMethodTask,
   };

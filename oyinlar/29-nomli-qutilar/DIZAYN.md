@@ -84,3 +84,15 @@ Bosh ekran
 ├── js/scenes/…        kirish, uch bosqich, tabrik
 └── tests/logic.test.js
 ```
+
+## 10. 2026-10-02 qiyinlik yangilanishi
+
+Sabab: hisobot-5 (C jadvali) — dasturlar 1–3 qadamli, kod yozish masalalari 3 ta (+, ×, −) edi.
+
+- **1-bosqich (natija):** qadamlar soni zina bilan 1–2 → 2–3 → 3–4. **2-bosqich (kuzatuv jadvali):** 2–3 → 3–4 → 4–5.
+  Yangi qadam turlari: `a = a - b`, `b -= k`, `a, b = b, a`, `a = a * b` (qiymatlar hamon 0–200 oraligʻida).
+- **3-bosqich (kirishli natija):** yangi savollar — `input()` matnlarini qoʻshish va songa aylantirib qoʻshish
+  (ikki kirish), `m = n` dan keyin `n` ni oʻzgartirish, `a, b = b, a + b`, `x * 2` (matn) va `int(x) * 2`.
+- **Kod yozish 3 → 7:** `almashtir`, `uch-amal`, `daqiqa` (soat × 60 + daqiqa), `yosh` (matn va son birga).
+  Test juftliklariga `[0, 0]` va `[-4, 9]` qoʻshildi — ayirmani teskari yozgan yechim yiqiladi.
+- Testlar: 10 → 12.

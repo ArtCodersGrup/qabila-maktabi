@@ -84,6 +84,7 @@
     const view = romanUi.placeView(box, task.number);
     ui.bubble("elder", `${task.number} sonidagi ${task.digit} raqami nechaga teng?`);
     return practice.numberTries({
+      maxLen: 4,
       answer: task.answer,
       hint: () => {
         view.showLabels();
@@ -98,6 +99,89 @@
       },
     });
   }
+
+  // 6.4: "{3052} sonidan 0 ni olib tashlasak, qaysi son chiqadi?" — nol xonani band qilib turadi
+  function zeroTask(task) {
+    ui.setCompact(true);
+    ui.clearWork();
+    ui.clearControl();
+    const box = ui.h("div", { class: "rbox" });
+    ui.work().append(box);
+    const view = romanUi.placeView(box, task.number);
+    ui.bubble("elder", `${task.number} sonidan 0 ni olib tashlasak, qaysi son hosil boʻladi?`);
+    return practice.numberTries({
+      maxLen: 4,
+      answer: task.answer,
+      hint: () => {
+        view.showLabels();
+        view.highlight(task.index);
+        ui.bubble("elder", "↻ 0 turgan xona yoʻqoladi. Qolgan raqamlarni oʻz tartibida yonma-yon yoz.");
+      },
+      solution: () => {
+        box.append(common.answerLine(`${task.number} → ${task.answer}: 0 boʻlmasa, raqamlar boshqa xonaga tushib qoladi`));
+        romanUi.placeView(box, task.answer, { labels: true, values: true });
+      },
+    });
+  }
+
+  // 6.4: "{352} sonida {5} va {2} joy almashdi. Endi {5} nechaga teng?" — qiymat xonaga bog'liq
+  function swapTask(task) {
+    ui.setCompact(true);
+    ui.clearWork();
+    ui.clearControl();
+    const box = ui.h("div", { class: "rbox" });
+    ui.work().append(box);
+    const view = romanUi.placeView(box, task.number);
+    ui.bubble("elder", `${task.number} sonida ${task.digit} va ${task.other} joy almashdi. Endi ${task.digit} nechaga teng?`);
+    return practice.numberTries({
+      maxLen: 4,
+      answer: task.answer,
+      hint: () => {
+        // Asbob: almashgan son xona nomlari bilan — qiymatni bola o'zi aytadi
+        view.set(task.swapped);
+        view.showLabels();
+        view.highlight(task.index);
+        ui.bubble("elder", `↻ Almashtirdim: ${task.swapped}. Endi ${task.digit} qaysi xonada turibdi?`);
+      },
+      solution: () => {
+        view.set(task.swapped);
+        view.showValues();
+        view.highlight(task.index);
+        box.append(common.answerLine(`${task.digit} avval ${task.before} edi, endi ${romanUi.PLACE_NAMES[task.place]} xonasida: ${task.answer}`));
+      },
+    });
+  }
+
+  // 6.4: "{XIV} + {26} = ?" — Rim soni bilan hisoblash uchun avval uni aylantirish kerak
+  function mixedTask(task) {
+    ui.setCompact(true);
+    ui.clearWork();
+    ui.clearControl();
+    const box = ui.h("div", { class: "rbox" },
+      ui.h("div", { class: "expr" }, romanUi.word(task.roman), ui.h("span", { text: `+ ${task.b} = ?` })));
+    ui.work().append(box);
+    ui.bubble("elder", `${task.roman} ga ${task.b} ni qoʻsh. Javobni oddiy son bilan yoz.`);
+    return practice.numberTries({
+      answer: task.answer,
+      hint: () => {
+        box.append(romanUi.breakdown(task.roman, { grouped: true }));
+        ui.bubble("elder", "↻ Avval Rim sonini oʻqi: guruhlar ostidagi qiymatlarni qoʻsh. Keyin hisobla.");
+      },
+      solution: () => {
+        const line = common.answerLine(`${task.roman} = ${task.n}; ${task.n} + ${task.b} = ${task.answer}`);
+        box.append(line);
+        line.scrollIntoView({ block: "nearest" });
+      },
+    });
+  }
+
+  const TASKS = { place: placeTask, zero: zeroTask, swap: swapTask, mixed: mixedTask };
+  const PRAISES = {
+    place: (task) => `${task.digit} — ${romanUi.PLACE_NAMES[task.place]} xonasida: ${task.answer}.`,
+    zero: (task) => `0 siz ${task.number} — ${task.answer} boʻlib qoladi. Nol xonani band qilib turadi.`,
+    swap: (task) => `${task.digit} endi ${romanUi.PLACE_NAMES[task.place]} xonasida: ${task.answer}.`,
+    mixed: (task) => `${task.roman} = ${task.n}, ${task.n} + ${task.b} = ${task.answer}.`,
+  };
 
   async function showScene(scene) {
     ui.setCompact(false);
@@ -125,11 +209,12 @@
     await expand();
     await swap();
     await zero();
-    await ui.say("elder", "Endi oʻzing: raqam qaysi xonada turibdi? 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing: raqam qaysi xonada turibdi? ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", "Savollar qiyinlashib boradi: nol, joy almashish va Rim soni bilan hisob ham keladi.");
     await practice.exercises({
-      next: (prev) => roman.makePlaceTask(prev),
-      run: placeTask,
-      praise: (task) => `${task.digit} — ${romanUi.PLACE_NAMES[task.place]} xonasida: ${task.answer}.`,
+      next: (prev, correct, tier) => roman.makeStage3Task(correct, prev, null, tier),
+      run: (task) => TASKS[task.type](task),
+      praise: (task) => PRAISES[task.type](task),
     });
     for (const scene of SCENES) await showScene(scene);
     await yearScene();

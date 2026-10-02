@@ -61,7 +61,9 @@
   const vaExercise = (task) => sonExercise(task, { ishora: "Har qadamda nechta tanlov bor? Hammasini koʻpaytir." });
 
   const qoidaExercise = (task) => sonExercise(task, {
-    ishora: "Ikkala tanlov ham qilinadimi (VA → koʻpaytirish), yoki faqat bittasimi (YOKI → qoʻshish)?",
+    ishora: task.qoida === "aralash"
+      ? "Bu yerda ikki qoida birga. Qaysi tanlovlardan faqat bittasi olinadi (YOKI), qaysi biri unga qoʻshiladi (VA)?"
+      : "Ikkala tanlov ham qilinadimi (VA → koʻpaytirish), yoki faqat bittasimi (YOKI → qoʻshish)?",
   });
 
   // Kod natijasi: sikl hamma juftlikni sanaydi

@@ -77,9 +77,9 @@
   async function stage2() {
     await pack();
     await definition();
-    await ui.say("elder", "Endi oʻzing oʻlcha: xabar necha bayt yoki necha bit? 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing oʻlcha: xabar necha bayt yoki necha bit? ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev) => bytes.makeTextTask(prev),
+      next: (prev, correct, tier) => bytes.makeTextTask(prev, undefined, tier),
       run: textTask,
       praise: (task) => {
         const n = task.message.length;

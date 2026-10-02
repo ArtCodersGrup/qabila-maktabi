@@ -76,3 +76,18 @@ Bosh ekran
 ├── js/scenes/…     kirish, uch bosqich, tabrik
 └── tests/logic.test.js
 ```
+
+## 10. 2026-10-02 qiyinlik yangilanishi
+
+Sabab: hisobot-5 (C jadvali) — ichma-ich sikllar faqat «n × m», kod yozish 5 ta qotirilgan masala edi.
+
+- **1-bosqich (`range(n)`):** zina 1–2 da — `print(i, i * i)`, sikldan keyin `print(i)` (hisoblagich oxirgi qiymatida
+  qoladi), yigʻib boruvchi `s = s + i`, satr yigʻish (`soz + str(i)`).
+- **2-bosqich (chegara, qadam):** oxiri qadamga toʻgʻri kelmaydigan `range(4, 13, 4)`, shartli sanash (`i % 3 == 0`),
+  manfiy qadam bilan sanash, `break` (toʻxtagan paytdagi `i`), `continue` (undoshlarni sanash).
+- **3-bosqich (`NESTED` 4 → 9):** `for j in range(i + 1, n)` — uchburchak juftliklar; `for j in range(i)`;
+  `if i == j: continue`; ichki siklda satr yigʻish; yigʻindisi k boʻlgan juftliklar soni.
+- **Kod yozish 5 → 9:** `uchga-bolinuvchi` (a..b, ikkala chegara kiradi), `teskari-uchburchak`,
+  `jadval` (n × n koʻpaytirish jadvali — satr yigʻib chiqariladi, `print(end=…)` talqinchida yoʻq),
+  `juftliklar` (i < j, i + j = k — ikki marta sanash va i = j xatolari testda yiqiladi).
+- Zina: 0 — eski sodda shakllar; 1–2 — yangilari ustun. Testlar: 9 → 12.

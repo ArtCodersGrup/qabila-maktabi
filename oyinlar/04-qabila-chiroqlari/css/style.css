@@ -9,6 +9,9 @@
   width: 64px; height: 76px; padding: 4px; border: none; border-radius: 14px;
   background: #fff; box-shadow: 0 3px 0 var(--soya);
 }
+/* 5 ta chiroq (2026-10-02, 2-bosqich oxiri): 360px ekranga sig'ishi uchun kichikroq */
+.lamp-row.many { gap: 6px; }
+.lamp-row.many .lamp-btn { width: 54px; height: 66px; }
 .lamp-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--soya); }
 .lamp-row.locked .lamp-btn { cursor: default; }
 .lamp-row.locked .lamp-btn:active { transform: none; box-shadow: 0 3px 0 var(--soya); }
@@ -31,6 +34,7 @@
 }
 .plabel { font-size: 18px; font-weight: 800; }
 .ctable4 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; width: 100%; max-width: 420px; }
+.ctable4[hidden] { display: none; } /* 2026-10-02: jadval 2-javobdan keyin yashiriladi, maslahat qaytaradi */
 .crow { display: flex; align-items: center; gap: 8px; padding: 4px 8px; border-radius: 10px; background: #fff; }
 .crow.hl { outline: 3px solid var(--yana); outline-offset: -3px; }
 .cmean { font-size: 18px; font-weight: 800; }

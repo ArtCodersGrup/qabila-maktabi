@@ -80,8 +80,14 @@
   }
 
   const BUILTINS = {
-    print(args, ctx, pos) {
-      ctx.write(args.map(V.str).join(" ") + "\n");
+    // kw — nomli argumentlar: faqat print(…, end=…, sep=…) qo'llanadi (bir satrga chiqarish uchun)
+    print(args, ctx, pos, kw) {
+      const matn = (nom, standart) => {
+        if (!kw || kw[nom] === undefined || kw[nom] === null) return standart;
+        if (!V.isStr(kw[nom])) throw E.typeError(nom + " must be None or a string, not " + V.typeName(kw[nom]), pos);
+        return kw[nom];
+      };
+      ctx.write(args.map(V.str).join(matn("sep", " ")) + matn("end", "\n"));
       return null;
     },
     input(args, ctx, pos) {
@@ -154,6 +160,38 @@
       }
       return V.range(start, stop, step);
     },
+    // list("abc"), list(range(5)), list(map(int, a)) — ketma-ketlikdan yangi ro'yxat
+    list(args, ctx, pos) {
+      arity("list", args, 0, 1, pos);
+      if (!args.length) return [];
+      if (V.isRange(args[0]) && V.rangeLength(args[0]) > BigInt(V.MAX_LEN)) {
+        throw E.limitError("roʻyxat juda katta", Object.assign({}, pos, {
+          hint: "Bunday uzun roʻyxat xotiraga sigʻmaydi. range ustidan toʻgʻridan-toʻgʻri for bilan yur.",
+        }));
+      }
+      return [...V.iterate(args[0], pos)];
+    },
+    // map(f, a) ni talqinchi o'zi bajaradi (interpreter.js callMap) — f bolaning funksiyasi ham bo'lishi mumkin.
+    // Bu yozuv nom tanilishi uchun turadi.
+    map(args, ctx, pos) {
+      throw E.typeError("map() must have at least two arguments.", pos);
+    },
+    ord(args, ctx, pos) {
+      arity("ord", args, 1, 1, pos);
+      const c = args[0];
+      if (!V.isStr(c)) throw E.typeError("ord() expected string of length 1, but " + V.typeName(c) + " found", pos);
+      if ([...c].length !== 1) {
+        throw E.typeError("ord() expected a character, but string of length " + [...c].length + " found",
+          Object.assign({}, pos, { hint: "ord() bitta belgining kodini beradi: ord(\"a\")." }));
+      }
+      return BigInt(c.codePointAt(0));
+    },
+    chr(args, ctx, pos) {
+      arity("chr", args, 1, 1, pos);
+      const n = wantInt("chr", args[0], pos);
+      if (n < 0n || n > 0x10ffffn) throw E.valueError("chr() arg not in range(0x110000)", pos);
+      return String.fromCodePoint(Number(n));
+    },
   };
 
   const METHODS = {
@@ -195,6 +233,18 @@
             Object.assign({}, pos, { hint: "Ajratuvchi boʻsh boʻlmasligi kerak: `split(\" \")`." }));
         }
         return obj.split(sep);
+      },
+      // " ".join(["1", "2"]) — satrlarni ajratuvchi bilan birlashtirish (sonlar avval str() qilinadi)
+      join(obj, args, ctx, pos) {
+        arity("join", args, 1, 1, pos);
+        const items = [...V.iterate(args[0], pos)];
+        items.forEach((x, k) => {
+          if (!V.isStr(x)) {
+            throw E.typeError("sequence item " + k + ": expected str instance, " + V.typeName(x) + " found",
+              Object.assign({}, pos, { hint: "join faqat satrlarni birlashtiradi. Sonlarni avval satrga aylantir: map(str, a)." }));
+          }
+        });
+        return items.join(obj);
       },
     },
   };

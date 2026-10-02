@@ -7,7 +7,8 @@
   const E = EN.errors || require("./errors.js");
   const V = EN.values || require("./values.js");
 
-  const QADAM_CHEGARA = 200000;
+  const QADAM_CHEGARA = 3000000; // Python dvigateli bilan bir xil (kod.js LIMITS)
+  const MASSIV_CHEGARA = 100000; // bitta massivdagi kataklar soni (brauzer xotirasi uchun)
 
   class Env {
     constructor(ota) {
@@ -44,6 +45,8 @@
   };
 
   // ---------- cin ----------
+  const BUTUN_ANDOZA = /[-+]?\d+/y;
+  const KASR_ANDOZA = /[-+]?(?:\d+\.?\d*|\.\d+)(?:[eE][-+]?\d+)?/y;
   function keyingiSoz(ctx, pos) {
     while (ctx.kirishOrin < ctx.kirish.length && /\s/.test(ctx.kirish[ctx.kirishOrin])) ctx.kirishOrin++;
     if (ctx.kirishOrin >= ctx.kirish.length) throw E.kirishTugadi(pos);
@@ -60,15 +63,34 @@
       if (ctx.kirishOrin >= ctx.kirish.length) throw E.kirishTugadi(pos);
       return V.belgi(ctx.kirish[ctx.kirishOrin++]);
     }
-    const soz = keyingiSoz(ctx, pos);
-    if (tur === "string") return V.matn(soz);
-    if (tur === "double") {
-      const x = Number(soz);
-      if (!isFinite(x)) throw E.kirishSoni(soz, pos);
-      return V.dbl(x);
+    if (tur === "string") return V.matn(keyingiSoz(ctx, pos));
+    // Son: cin so'zning songa o'xshagan BOSHINI oladi, qolgani keyingi o'qishga qoladi (g++ da ham shunday):
+    // "3.7" dan int ga 3 tushadi, ".7" navbatda turadi; "12abc" dan 12 olinadi.
+    while (ctx.kirishOrin < ctx.kirish.length && /\s/.test(ctx.kirish[ctx.kirishOrin])) ctx.kirishOrin++;
+    if (ctx.kirishOrin >= ctx.kirish.length) throw E.kirishTugadi(pos);
+    const andoza = tur === "double" ? KASR_ANDOZA : BUTUN_ANDOZA;
+    andoza.lastIndex = ctx.kirishOrin;
+    const m = andoza.exec(ctx.kirish);
+    if (!m) {
+      const soz = keyingiSoz(ctx, pos);
+      throw E.kirishSoni(soz, /^\.\d/.test(soz) && tur !== "double" ? Object.assign({}, pos, {
+        hint: "Butun son kutilgan edi, lekin «" + soz + "» keldi. Bu — oldingi sonning kasr qismi: cin butun songa "
+          + "faqat nuqtagacha boʻlgan qismni oladi, qolgani navbatda qoladi (haqiqiy C++ da ham shunday). "
+          + "Kasr son oʻqish uchun double ishlat.",
+      }) : pos);
     }
-    if (!/^[-+]?\d+$/.test(soz)) throw E.kirishSoni(soz, pos);
-    return V.son(tur === "ll" ? "ll" : "int", BigInt(soz));
+    ctx.kirishOrin += m[0].length;
+    if (tur === "double") return V.dbl(Number(m[0]));
+    const x = BigInt(m[0]);
+    const t = tur === "ll" ? "ll" : "int";
+    // Turga sig'maydigan son: haqiqiy C++ da o'qish "yiqiladi" — qirqib, boshqa son qilib olmaymiz
+    if (V.son(t, x).v !== x) {
+      throw E.kirishSoni(m[0], Object.assign({}, pos, {
+        hint: "Kiritilgan son «" + m[0] + "» " + (t === "int" ? "int ga sigʻmaydi (int — taxminan ±2 milliard). long long ishlat."
+          : "long long ga ham sigʻmaydi."),
+      }));
+    }
+    return V.son(t, x);
   }
 
   // ---------- Ifodalar ----------
@@ -83,15 +105,16 @@
       if (node.obj.k !== "nom") throw E.sintaksis("expected array name", node);
       const uya = env.izla(node.obj.nom);
       if (!uya) throw E.tanilmagan(node.obj.nom, node);
-      const i = Number(V.butun(baho(node.indeks, env, ctx)));
+      const i = Number(V.butun(baho(node.indeks, env, ctx), node, "int"));
       if (uya.massiv) {
         if (i < 0 || i >= uya.massiv.length) throw E.chegaradanTashqari(node.obj.nom, i, uya.massiv.length, node);
         return uya.massiv[i];
       }
       if (uya.q && uya.q.t === "string") {
-        const s = uya.q.v;
-        if (i < 0 || i >= s.length) throw E.chegaradanTashqari(node.obj.nom, i, s.length, node);
-        return { tur: "char", get q() { return V.belgi(s[i]); }, satrUya: uya, satrIndeks: i, berilgan: true };
+        const boyi = uya.q.v.length;
+        if (i < 0 || i >= boyi) throw E.chegaradanTashqari(node.obj.nom, i, boyi, node);
+        // q — getter: har safar satrning HOZIRGI holatidan o'qiydi (++s[0] dan keyin yangi belgi ko'rinsin)
+        return { tur: "char", get q() { return V.belgi(uya.q.v[i]); }, satrUya: uya, satrIndeks: i, berilgan: true };
       }
       throw E.sintaksis("subscripted value is not an array", node);
     }
@@ -101,9 +124,9 @@
   function yoz(uya, qiymat, pos) {
     if (uya.satrUya) {
       const s = uya.satrUya.q.v;
-      const yangi = s.slice(0, uya.satrIndeks) + V.turga("char", qiymat, pos).v + s.slice(uya.satrIndeks + 1);
-      uya.satrUya.q = V.matn(yangi);
-      return uya.satrUya.q;
+      const belgi = V.turga("char", qiymat, pos);
+      uya.satrUya.q = V.matn(s.slice(0, uya.satrIndeks) + belgi.v + s.slice(uya.satrIndeks + 1));
+      return belgi; // (s[0] = 'x') ning qiymati — bitta belgi, butun satr emas
     }
     uya.q = V.turga(uya.tur, qiymat, pos);
     uya.berilgan = true;
@@ -120,7 +143,7 @@
     switch (node.k) {
       // Juda katta butun son C++ da ham int emas, long long bo'ladi
       case "son": return node.tur === "double" ? V.dbl(node.v)
-        : (node.v >= -2147483648n && node.v <= 2147483647n ? V.int(node.v) : V.ll(node.v));
+        : (node.tur !== "ll" && node.v >= -2147483648n && node.v <= 2147483647n ? V.int(node.v) : V.ll(node.v));
       case "matn": return V.matn(node.v);
       case "belgi": return V.belgi(node.v);
       case "bool": return V.bool(node.v);
@@ -143,9 +166,10 @@
       case "bir": {
         if (node.op === "!") return V.bool(!V.rostmi(baho(node.ifoda, env, ctx)));
         const q = baho(node.ifoda, env, ctx);
-        if (node.op === "+") return q;
-        if (q.t === "double") return V.dbl(-q.v);
-        return V.son(q.t === "ll" ? "ll" : "int", -V.butun(q));
+        // char va bool amalda int ga ko'tariladi: +'a' → 97, -true → -1
+        if (q.t === "double") return node.op === "+" ? q : V.dbl(-q.v);
+        const x = V.butun(q);
+        return V.son(q.t === "ll" ? "ll" : "int", node.op === "+" ? x : -x);
       }
       case "oldin": case "keyin": {
         const uya = uyaTopi(node.maqsad, env, ctx);
@@ -172,7 +196,9 @@
         const ong = baho(node.qiymat, env, ctx);
         if (node.op === "=") return yoz(uya, ong, node);
         const eski = oqi(uya, nomi, node);
-        return yoz(uya, V.amal(node.op[0], eski, ong, node), node);
+        // s += 65 — C++ da songa mos BELGI qo'shiladi ("A")
+        const qoshiladigan = eski.t === "string" && V.sonmi(ong) ? V.turga("char", ong, node) : ong;
+        return yoz(uya, V.amal(node.op[0], eski, qoshiladigan, node), node);
       }
       default:
         throw E.ichki("nomaʼlum ifoda: " + node.k);
@@ -187,7 +213,7 @@
     let siljish = 0;
     if (node.k === "ikki" && (node.op === "+" || node.op === "-")) {
       nomNode = node.chap;
-      const qiymat = Number(V.butun(baho(node.ong, env, ctx)));
+      const qiymat = Number(V.butun(baho(node.ong, env, ctx), node, "int"));
       siljish = node.op === "+" ? qiymat : -qiymat;
     }
     if (nomNode.k !== "nom") return null;
@@ -213,7 +239,7 @@
       for (const u of bolak) if (!u.berilgan) throw E.qiymatsiz(bosh.nom, node);
       const qiymatlar = bolak.map((u) => u.q);
       qiymatlar.sort((a, b) => {
-        if (a.t === "string" || a.t === "char") return a.v < b.v ? -1 : a.v > b.v ? 1 : 0;
+        if (a.t === "string") return a.v < b.v ? -1 : a.v > b.v ? 1 : 0;
         const x = a.t === "double" ? a.v : V.butun(a);
         const y = b.t === "double" ? b.v : V.butun(b);
         return x < y ? -1 : x > y ? 1 : 0;
@@ -248,9 +274,8 @@
       }));
     }
     const katta = V.rostmi(V.solishtir(">", a, b, node));
-    const tanlangan = (nom === "max") === katta ? a : b;
-    const tur = V.umumiyTur(a, b);
-    return tur === "double" ? V.dbl(V.kasr(tanlangan)) : V.son(tur, V.butun(tanlangan));
+    // Ikkala argument bir xil turda — tanlangan qiymatning o'zi qaytadi (max("a"s, "b"s) ham shunday)
+    return (nom === "max") === katta ? a : b;
   }
 
   // ---------- Buyruqlar ----------
@@ -271,15 +296,27 @@
         for (const e of node.elonlar) {
           if (env.bormi(e.nom)) throw E.qaytaElon(e.nom, node);
           const royxat = e.qiymat && e.qiymat.k === "royxat" ? e.qiymat.elementlar : null;
-          if (royxat && !e.boyi) {
+          if (royxat && !e.boyi && e.massiv) {
             // int a[] = {1, 2, 3}; — bo'yi ro'yxatdan olinadi
             const massiv = royxat.map((x) => ({ tur: node.tur, q: V.turga(node.tur, baho(x, env, ctx), node), berilgan: true }));
             env.qosh(e.nom, { tur: node.tur, massiv });
             continue;
           }
           if (e.boyi) {
-            const n = Number(V.butun(baho(e.boyi, env, ctx)));
-            if (!(n > 0) || n > 100000) throw E.sintaksis("invalid array size", node);
+            const n = Number(V.butun(baho(e.boyi, env, ctx), node, "int"));
+            // Bo'yi ish paytida ma'lum bo'ladi (int a[n]) — shuning uchun bu kompilyatsiya xatosi emas
+            if (!(n > 0)) {
+              throw E.err("runtime", "invalid array size: " + n, Object.assign({ line: node.line, col: node.col }, {
+                hint: "Massivning boʻyi kamida 1 boʻlishi kerak, bu yerda esa " + n + " chiqdi. "
+                  + "Haqiqiy C++ da bunday massiv bilan dastur buzuq ishlaydi — shuning uchun toʻxtatamiz.",
+              }));
+            }
+            if (n > MASSIV_CHEGARA) {
+              throw E.yoq(MASSIV_CHEGARA + " katakdan katta massiv", Object.assign({ line: node.line, col: node.col }, {
+                hint: "Bu saytda massiv eng koʻpi bilan " + MASSIV_CHEGARA + " katakli boʻladi (brauzer xotirasi uchun). "
+                  + "Haqiqiy kompilyatorda kattaroq massiv ham ishlaydi.",
+              }));
+            }
             const massiv = [];
             // Ro'yxat berilgan bo'lsa, qolgan kataklar NOL bo'ladi (C++ shuni kafolatlaydi)
             for (let k = 0; k < n; k++) {
@@ -287,7 +324,7 @@
               massiv.push({
                 tur: node.tur,
                 q: bor ? V.turga(node.tur, baho(royxat[k], env, ctx), node) : V.boshlangich(node.tur),
-                berilgan: !!royxat,
+                berilgan: !!royxat || node.tur === "string", // string s[3] — har biri "" (C++ kafolati)
               });
             }
             if (royxat && royxat.length > n) throw E.sintaksis("excess elements in array initializer", node);
@@ -295,7 +332,7 @@
             continue;
           }
           const uya = { tur: node.tur, q: V.boshlangich(node.tur), berilgan: false };
-          // string va bool o'zi bo'sh qiymat bilan boshlanadi — C++ da ham shunday
+          // string o'zi bo'sh qiymat bilan boshlanadi — C++ da ham shunday
           if (node.tur === "string") uya.berilgan = true;
           env.qosh(e.nom, uya);
           if (e.qiymat) yoz(uya, baho(e.qiymat, env, ctx), node);
@@ -372,6 +409,11 @@
   function* execProgram(dastur, env, ctx) {
     for (const s of dastur.tana.tana) {
       const sig = yield* bajar(s, env, ctx);
+      // break/continue sikl tashqarisida — parser buni ishdan oldin ushlaydi; bu yerga yetib kelsa ham
+      // dastur jim tugab qolmasin
+      if (sig && sig.sig !== "qaytar") {
+        throw E.sintaksis("'" + (sig.sig === "uz" ? "break" : "continue") + "' statement not in loop", s);
+      }
       if (sig) return sig;
     }
     return null;

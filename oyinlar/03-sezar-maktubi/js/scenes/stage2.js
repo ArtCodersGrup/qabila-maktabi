@@ -15,17 +15,18 @@
     const tbl = caesarUi.table(0, null);
     await ui.say("elder", "Oddiy harfni tepa qatordan top — pastdagisi shifr.");
     await common.exercises({
-      count: 3,
-      total: 3,
-      doneBefore: 0,
       mode: "encode",
       tbl,
-      // Birinchi javob har doim XOʻP (kalit 3), keyin tasodifiy
-      next: (prev) => (prev ? caesar.makeExercise(caesar.REPLIES, prev) : { word: caesar.FIRST_REPLY, key: caesar.FIRST_KEY }),
-      question: (ex) => `Kalit — ${ex.key}. «${ex.word}» soʻzini shifrla.`,
-      praise: () => "Shifr tayyor!",
+      // Birinchi javob har doim XOʻP (kalit 3); keyin kalit o'sadi (1–6 → 7–14 → 15–28),
+      // uchta shunday so'zdan keyin pastki qator yashirinadi — bola harfni o'zi oldinga suradi
+      next: (prev, correct, tier) => (prev
+        ? caesar.makePlanned(caesar.REPLIES, prev, Math.max(0, correct - 1), tier, 3)
+        : { word: caesar.FIRST_REPLY, key: caesar.FIRST_KEY, blind: false }),
+      question: (ex) => (ex.blind
+        ? `Kalit — ${ex.key}. Pastki qator yashirin: «${ex.word}» ning har harfini ${ex.key} ta oldinga sur va shifr harfini bos.`
+        : `Kalit — ${ex.key}. «${ex.word}» soʻzini shifrla.`),
+      praise: (ex) => `Shifr tayyor: ${caesar.encrypt(caesar.tokenize(ex.word), ex.key).join("")}.`,
     });
-    ui.hideProgress();
     await ui.say("apprentice", "Javob Sezarga joʻnatildi!");
   }
 

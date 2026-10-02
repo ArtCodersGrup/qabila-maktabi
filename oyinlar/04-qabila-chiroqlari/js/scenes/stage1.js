@@ -51,7 +51,8 @@
     await ui.say("elder", "«Qabila kodlari» oʻyinidagi harflarni esla — xuddi shunday!");
   }
 
-  // 5.5: naqshni o'qish yoki yuborish; kod jadvali ko'rinib turadi
+  // 5.5: naqshni o'qish yoki yuborish. Kod jadvali faqat birinchi 2 javobda ko'rinadi (task.showTable),
+  // keyin yoddan; maslahat jadvalni qaytaradi, lekin javobni aytmaydi (QOIDALAR 4.3)
   function codeTask(task) {
     ui.setCompact(true);
     ui.clearWork();
@@ -68,6 +69,7 @@
       row = lampsUi.lampRow(box, { count: 3, states: lamps.PLAIN });
     }
     const table = lampsUi.codeTable(box);
+    table.show(task.showTable);
     return practice.tries({
       setup: (submit) => {
         if (task.type === "decode") lampsUi.meaningButtons((i) => submit(i));
@@ -79,11 +81,17 @@
         return ok;
       },
       hint: () => {
-        table.highlight(task.meaning);
         if (row) row.shake();
-        ui.bubble("elder", "↻ Jadvalga qara — kerakli qator yonib turibdi.");
+        if (task.showTable) {
+          table.highlight(lamps.hintPair(task.meaning));
+          ui.bubble("elder", "↻ Jadvalga qara — yonib turgan ikki qatordan biri kerakli.");
+        } else {
+          table.show(true);
+          ui.bubble("elder", "↻ Jadvalni ochdim. Kerakli naqshni undan oʻzing top.");
+        }
       },
       solution: () => {
+        table.show(true);
         table.highlight(task.meaning);
         if (row) {
           row.set(pattern);
@@ -103,9 +111,10 @@
     await common.findAll({ count: 3, states: lamps.PLAIN, labelFor: (p) => lamps.MEANINGS[lamps.toNumber(p)] });
     await ui.say("elder", "3 ta chiroq — 8 ta naqsh. Har biriga maʼno berdik!");
     await explain();
-    await ui.say("elder", "Endi qoʻshni qabila bilan gaplashamiz. 3 ta toʻgʻri javob kerak!");
+    await ui.say("elder", `Endi qoʻshni qabila bilan gaplashamiz. ${QK.practice.need()} ta toʻgʻri javob kerak!`);
+    await ui.say("elder", "Jadval avval koʻrinib turadi, keyin yashirinadi — naqshlarni eslab qol!");
     await practice.exercises({
-      next: (prev) => lamps.makeCodeTask(prev),
+      next: (prev, correct, tier) => lamps.makeCodeTask(prev, null, tier),
       run: codeTask,
       praise: (t) => `Bu — «${lamps.MEANINGS[t.meaning]}».`,
     });

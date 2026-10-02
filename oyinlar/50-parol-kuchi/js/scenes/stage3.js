@@ -31,11 +31,12 @@
   async function stage3() {
     await lugat();
     await qoida();
-    await ui.say("elder", "Endi oʻzing baho ber.");
+    await ui.say("elder", "Endi oʻzing baho ber — va oʻzing kuchli parol yasa.");
     await practice.exercises({
-      next: (prev) => L.bahoTask(Math.random, prev),
-      run: (task) => common.bahoExercise(task),
-      praise: (task) => task.parol + " — " + task.javob,
+      // Baho (5 variant: daraja + sababi) va "oʻzing yasa" navbatlashadi
+      next: (prev, togri, tier) => (togri % 2 === 1 ? L.yasaTask(Math.random, prev, tier) : L.bahoTask(Math.random, prev, tier)),
+      run: (task) => (task.tur === "yasa" ? common.yasaExercise(task) : common.bahoExercise(task)),
+      praise: (task) => (task.tur === "yasa" ? "«" + task.yasalgan + "» — topish vaqti: " + task.vaqt + "." : task.parol + " — " + task.javob),
     });
   }
 

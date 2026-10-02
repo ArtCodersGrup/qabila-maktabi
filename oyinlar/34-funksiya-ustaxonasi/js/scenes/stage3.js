@@ -27,7 +27,7 @@
     await together();
     await howItWorks();
     await practice.exercises({
-      next: (prev) => L.writeTask(Math.random, prev),
+      next: (prev, correct, tier) => L.writeTask(Math.random, prev, tier),
       run: (task) => common.writeExercise(task),
       praise: () => "Funksiya hamma sinovdan oʻtdi.",
     });

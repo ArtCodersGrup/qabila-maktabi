@@ -7,7 +7,11 @@
 
   const sign = (w) => (w > 0 ? `+${w}` : `${w}`);
 
-  // Bitta neyron: chapda kirish chiroqlari va og'irliklar, o'ngda yig'indi va chegara
+  // Manfiy son ekranda haqiqiy minus belgisi bilan: −2
+  const num = (v) => String(v).replace("-", "−");
+
+  // Bitta neyron: chapda kirish chiroqlari va og'irliklar, o'ngda yig'indi va chegara.
+  // hideSum / hideFired — mashqda yig'indi va "yondi" holati yashiriladi (bola o'zi hisoblaydi), reveal() ochadi.
   function neuronView(host, opts) {
     const state = {
       inputs: (opts.inputs || [0, 0, 0]).slice(),
@@ -47,8 +51,8 @@
       });
       const sum = neural.weightedSum(state.inputs, state.weights);
       const fired = sum >= state.threshold;
-      sumEl.textContent = `Σ ${sum}`;
-      soma.classList.toggle("fired", fired);
+      sumEl.textContent = opts.hideSum ? "Σ ?" : `Σ ${num(sum)}`;
+      soma.classList.toggle("fired", !opts.hideFired && fired);
       thr.textContent = `chegara ≥ ${state.threshold}`;
       const parts = state.inputs.map((x, i) => (x ? sign(state.weights[i]) : null)).filter(Boolean);
       line.textContent = opts.hideLine ? "" : `${parts.length ? parts.join(" ") : "0"} = ${sum} → ${fired ? "yondi ✓" : "yonmadi"}`;
@@ -61,8 +65,16 @@
         Object.assign(state, next);
         render();
       },
+      // "sum" — yig'indini ochadi, "fired" — yondi/yonmadi holatini
+      reveal(what) {
+        if (what === "sum") opts.hideSum = false;
+        if (what === "fired") opts.hideFired = false;
+        render();
+      },
       showLine() {
         opts.hideLine = false;
+        opts.hideSum = false;
+        opts.hideFired = false;
         render();
       },
     };
@@ -177,5 +189,5 @@
     ui.control().append(row);
   }
 
-  QK.neuralUi = { sign, neuronView, smallGrid, layerView, truthTable, choiceButtons };
+  QK.neuralUi = { sign, num, neuronView, smallGrid, layerView, truthTable, choiceButtons };
 })(window);

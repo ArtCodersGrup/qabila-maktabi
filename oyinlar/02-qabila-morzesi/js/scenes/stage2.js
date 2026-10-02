@@ -25,7 +25,8 @@
       ? "Men oʻqidim: ET! Harf oraligʻi harflarni ajratdi."
       : "Harflar orasida «harf oraligʻi» boʻlishi kerak.");
 
-    await ui.say("elder", "Endi qabila savol beradi. 3 ta toʻgʻri javob yoz!");
+    await ui.say("elder", `Endi qabila savol beradi. ${QK.practice.need()} ta toʻgʻri javob yoz!`);
+    await ui.say("elder", "Javoblar uzayib boradi, keyin qoʻllanma kodlari yashirinadi — unga qarab olsang boʻladi.");
     await common.writeExercises();
 
     // Yakun: qabila xayrlashadi (baholanmaydi)

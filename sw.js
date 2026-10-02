@@ -1,6 +1,6 @@
 // Offline rejim: sayt fayllari keshlanadi. Bola saytni bir marta ochsa, keyin internetsiz ham oʻynay oladi.
 // Yangi fayl qoʻshilsa, FILES roʻyxatiga ham qoʻshiladi — buni bosh/tests/offline.test.js tekshiradi.
-const VERSION = "v84";
+const VERSION = "v85";
 const CACHE = "qabila-maktabi-" + VERSION;
 
 const FILES = [
@@ -14,9 +14,9 @@ const FILES = [
   "bosh/js/bosh-art.js",
   "bosh/js/bosh.js",
   "oyinlar/umumiy/css/asos.css",
+  "oyinlar/umumiy/css/cpp.css",
   "oyinlar/umumiy/css/dastur.css",
   "oyinlar/umumiy/css/kod.css",
-  "oyinlar/umumiy/css/cpp.css",
   "oyinlar/umumiy/css/mantiq.css",
   "oyinlar/umumiy/css/onlayn.css",
   "oyinlar/umumiy/css/sanoq.css",
@@ -24,26 +24,34 @@ const FILES = [
   "oyinlar/umumiy/fonts/Nunito.woff2",
   "oyinlar/umumiy/js/app.js",
   "oyinlar/umumiy/js/art.js",
+  "oyinlar/umumiy/js/cpp-ui.js",
+  "oyinlar/umumiy/js/cpp.js",
   "oyinlar/umumiy/js/dastur-ui.js",
   "oyinlar/umumiy/js/dastur.js",
+  "oyinlar/umumiy/js/jang-ui.js",
+  "oyinlar/umumiy/js/jang.js",
   "oyinlar/umumiy/js/kod-mashq.js",
   "oyinlar/umumiy/js/kod-ui.js",
-  "oyinlar/umumiy/js/jang.js",
-  "oyinlar/umumiy/js/jang-ui.js",
   "oyinlar/umumiy/js/kod.js",
-  "oyinlar/umumiy/js/cpp.js",
-  "oyinlar/umumiy/js/cpp-ui.js",
-  "oyinlar/umumiy/js/cpp/errors.js",
-  "oyinlar/umumiy/js/cpp/tokenizer.js",
-  "oyinlar/umumiy/js/cpp/values.js",
-  "oyinlar/umumiy/js/cpp/parser.js",
-  "oyinlar/umumiy/js/cpp/semantika.js",
-  "oyinlar/umumiy/js/cpp/interpreter.js",
-  "oyinlar/umumiy/js/cpp/cpp-run.js",
   "oyinlar/umumiy/js/mantiq-ui.js",
   "oyinlar/umumiy/js/offline.js",
   "oyinlar/umumiy/js/onlayn.js",
   "oyinlar/umumiy/js/practice.js",
+  "oyinlar/umumiy/js/sanash.js",
+  "oyinlar/umumiy/js/sanoq-ui.js",
+  "oyinlar/umumiy/js/sanoq.js",
+  "oyinlar/umumiy/js/savol-ui.js",
+  "oyinlar/umumiy/js/sound.js",
+  "oyinlar/umumiy/js/storage.js",
+  "oyinlar/umumiy/js/supabase.min.js",
+  "oyinlar/umumiy/js/ui.js",
+  "oyinlar/umumiy/js/cpp/cpp-run.js",
+  "oyinlar/umumiy/js/cpp/errors.js",
+  "oyinlar/umumiy/js/cpp/interpreter.js",
+  "oyinlar/umumiy/js/cpp/parser.js",
+  "oyinlar/umumiy/js/cpp/semantika.js",
+  "oyinlar/umumiy/js/cpp/tokenizer.js",
+  "oyinlar/umumiy/js/cpp/values.js",
   "oyinlar/umumiy/js/python/builtins.js",
   "oyinlar/umumiy/js/python/errors.js",
   "oyinlar/umumiy/js/python/interpreter.js",
@@ -51,14 +59,6 @@ const FILES = [
   "oyinlar/umumiy/js/python/python.js",
   "oyinlar/umumiy/js/python/tokenizer.js",
   "oyinlar/umumiy/js/python/values.js",
-  "oyinlar/umumiy/js/sanoq-ui.js",
-  "oyinlar/umumiy/js/sanoq.js",
-  "oyinlar/umumiy/js/sanash.js",
-  "oyinlar/umumiy/js/savol-ui.js",
-  "oyinlar/umumiy/js/sound.js",
-  "oyinlar/umumiy/js/storage.js",
-  "oyinlar/umumiy/js/supabase.min.js",
-  "oyinlar/umumiy/js/ui.js",
   "oyinlar/01-qabila-kodlari/",
   "oyinlar/01-qabila-kodlari/index.html",
   "oyinlar/01-qabila-kodlari/css/style.css",
@@ -473,13 +473,13 @@ const FILES = [
   "oyinlar/37-blok-sxema/js/game-art.js",
   "oyinlar/37-blok-sxema/js/logic.js",
   "oyinlar/37-blok-sxema/js/main.js",
-  "oyinlar/37-blok-sxema/js/sxema-ui.js",
-  "oyinlar/37-blok-sxema/js/sxema.js",
   "oyinlar/37-blok-sxema/js/scenes/common.js",
   "oyinlar/37-blok-sxema/js/scenes/final.js",
   "oyinlar/37-blok-sxema/js/scenes/stage1.js",
   "oyinlar/37-blok-sxema/js/scenes/stage2.js",
   "oyinlar/37-blok-sxema/js/scenes/stage3.js",
+  "oyinlar/37-blok-sxema/js/sxema-ui.js",
+  "oyinlar/37-blok-sxema/js/sxema.js",
   "oyinlar/38-izlash/",
   "oyinlar/38-izlash/index.html",
   "oyinlar/38-izlash/css/style.css",
@@ -700,9 +700,6 @@ const FILES = [
   "oyinlar/57-cpp-massiv-saralash/js/scenes/stage1.js",
   "oyinlar/57-cpp-massiv-saralash/js/scenes/stage2.js",
   "oyinlar/57-cpp-massiv-saralash/js/scenes/stage3.js",
-  "oyinlar/cpp-shpargalka/",
-  "oyinlar/cpp-shpargalka/index.html",
-  "oyinlar/cpp-shpargalka/css/style.css",
   "oyinlar/masalalar/",
   "oyinlar/masalalar/index.html",
   "oyinlar/masalalar/css/style.css",
@@ -712,6 +709,9 @@ const FILES = [
   "oyinlar/masalalar/js/holat.js",
   "oyinlar/masalalar/js/main.js",
   "oyinlar/masalalar/js/royxat.js",
+  "oyinlar/cpp-shpargalka/",
+  "oyinlar/cpp-shpargalka/index.html",
+  "oyinlar/cpp-shpargalka/css/style.css",
   "oyinlar/musobaqa/",
   "oyinlar/musobaqa/index.html",
   "oyinlar/musobaqa/css/style.css",
@@ -725,15 +725,15 @@ const FILES = [
   "oyinlar/poyga/css/style.css",
   "oyinlar/poyga/js/main.js",
   "oyinlar/poyga/js/race.js",
-  "oyinlar/onlayn/",
-  "oyinlar/onlayn/index.html",
-  "oyinlar/onlayn/css/style.css",
-  "oyinlar/onlayn/js/sinov.js",
   "oyinlar/tank-duel/",
   "oyinlar/tank-duel/index.html",
   "oyinlar/tank-duel/css/style.css",
   "oyinlar/tank-duel/js/duel.js",
   "oyinlar/tank-duel/js/main.js",
+  "oyinlar/onlayn/",
+  "oyinlar/onlayn/index.html",
+  "oyinlar/onlayn/css/style.css",
+  "oyinlar/onlayn/js/sinov.js",
   "oyinlar/tog/",
   "oyinlar/tog/index.html",
   "oyinlar/tog/css/style.css",
@@ -777,12 +777,16 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const request = event.request;
   if (request.method !== "GET") return;
-  if (new URL(request.url).origin !== self.location.origin) return;
+  const url = new URL(request.url);
+  if (url.origin !== self.location.origin) return;
   event.respondWith(
-    caches.open(CACHE).then((cache) => cache.match(request).then((hit) => {
+    // ignoreSearch: ?bosqich=2 kabi so'rov satri bilan ochilgan o'yin ham keshdagi sahifasini topadi
+    // (aks holda internetsiz rejimda o'yin o'rniga bosh sahifa chiqardi)
+    caches.open(CACHE).then((cache) => cache.match(request, { ignoreSearch: true }).then((hit) => {
       const fresh = fetch(request, { cache: "no-cache" })
         .then((response) => {
-          if (response && response.ok) cache.put(request, response.clone());
+          // So'rov satrli variantlar keshga yozilmaydi — bitta sahifaning nusxalari yig'ilib ketmasin
+          if (response && response.ok && !url.search) cache.put(request, response.clone());
           return response;
         })
         .catch(() => hit || (request.mode === "navigate" ? cache.match("index.html") : undefined));

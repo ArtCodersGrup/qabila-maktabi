@@ -65,9 +65,11 @@
     await firstRun();
     await ownText();
     await definition();
-    await ui.say("elder", "Endi oʻzing yoz. 3 ta toʻgʻri javob — bosqich tugaydi!");
+    // Terish — koʻchirish mashqi: 2 ta toʻgʻri javob yetadi (2026-10-02); qiyin rejimda ikki satr teriladi
+    await ui.say("elder", "Endi oʻzing yoz. 2 ta toʻgʻri javob — bosqich tugaydi!");
     await practice.exercises({
-      next: (prev) => L.typeTask(Math.random, prev),
+      need: 2,
+      next: (prev, correct, tier) => L.typeTask(Math.random, prev, practice.isHard() ? 2 : 0),
       run: (task) => common.typeExercise(task),
       praise: () => "Kod aynan mos tushdi.",
     });

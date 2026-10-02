@@ -9,7 +9,8 @@
   // Son: har raqam ustida xona qiymati; values — harflar ostida qiymati (C → 12)
   function placed(number, base, opts) {
     const o = opts || {};
-    const grid = ui.h("div", { class: "placed", style: `grid-template-columns: repeat(${number.length}, auto)` });
+    // 9–10 xonali ikkilik son (tier 2) tor telefonga ham sigʻsin — "long" zichroq chiziladi
+    const grid = ui.h("div", { class: "placed" + (number.length > 8 ? " long" : ""), style: `grid-template-columns: repeat(${number.length}, auto)` });
     const parts = S.expand(number, base);
     parts.forEach((d) => grid.append(ui.h("span", { class: "pl-place", text: String(d.place) })));
     parts.forEach((d) => grid.append(ui.h("span", { class: "pl-digit", text: d.digit })));

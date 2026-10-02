@@ -40,9 +40,9 @@
   async function stage1() {
     await toshish();
     await kattaQuti();
-    await ui.say("elder", "Endi oʻzing javob ber. 3 ta toʻgʻri javob — bosqich tugaydi!");
+    await ui.say("elder", `Endi oʻzing javob ber. ${QK.practice.need()} ta toʻgʻri javob — bosqich tugaydi!`);
     await practice.exercises({
-      next: (prev, correct) => L.bosqich1Task(prev, correct),
+      next: (prev, correct, tier) => L.bosqich1Task(prev, correct, tier),
       run: (task) => common.mashq(task),
       praise: (task) => (task.tur === "toshish" ? "Qirqilgan javobni topding." : "long long ishladi."),
     });

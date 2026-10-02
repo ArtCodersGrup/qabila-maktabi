@@ -88,20 +88,25 @@
         solution: () => common.add(el, common.answerLine(`${video.CELLS} − ${task.changed} = ${task.answer}`)),
       });
     }
-    ui.bubble("elder", "Qaysi video koʻproq siqiladi?");
-    el.append(ui.h("div", { class: "story-art small", html: art.story("film") }));
+    // To'rt videodan bittasi: eng ko'p yoki eng kam siqiladigani (4 variant)
+    const most = task.ask === "most";
+    ui.bubble("elder", most ? "Toʻrtta video. Qaysi biri ENG KOʻP siqiladi?" : "Toʻrtta video. Qaysi biri ENG KAM siqiladi?");
     return practice.tries({
       setup: (submit) => videoUi.choiceButtons(task.options.map((o) => o.label), submit, "wide"),
       check: (value) => value === task.answer,
-      hint: () => ui.bubble("elder", "↻ Qaysi birida kadrdan kadrga kamroq narsa oʻzgaradi?"),
-      solution: () => common.add(el, common.answerLine(`«${task.options[task.answer].label}» — oʻzgarish kam, koʻproq siqiladi`)),
+      hint: () => ui.bubble("elder", most
+        ? "↻ Qaysi birida kadrdan kadrga eng kam narsa oʻzgaradi?"
+        : "↻ Qaysi birida kadrdan kadrga eng koʻp narsa oʻzgaradi?"),
+      solution: () => common.add(el, common.answerLine(most
+        ? `«${task.options[task.answer].label}» — oʻzgarish kam, koʻproq siqiladi`
+        : `«${task.options[task.answer].label}» — oʻzgarish koʻp, kam siqiladi`)),
     });
   }
 
   function praise(task) {
     if (task.type === "diff") return `${task.answer} ta katak — faqat shularni saqlaymiz.`;
     if (task.type === "saved") return `${task.answer} ta piksel tejaldi.`;
-    return "Tinch videoda oʻzgarish kam — u koʻproq siqiladi.";
+    return task.ask === "most" ? "Tinch videoda oʻzgarish kam — u koʻproq siqiladi." : "Harakatli videoda oʻzgarish koʻp — u kam siqiladi.";
   }
 
   async function showScene(scene) {
@@ -116,9 +121,9 @@
   async function stage3() {
     await findChanges();
     await definition();
-    await ui.say("elder", "Endi oʻzing top: siqish qanday ishlaydi. 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing top: siqish qanday ishlaydi. ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev) => video.makeCompressTask(prev),
+      next: (prev, correct, tier) => video.makeCompressTask(prev, undefined, tier),
       run: compressTask,
       praise,
     });

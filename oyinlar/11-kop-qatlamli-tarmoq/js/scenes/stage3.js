@@ -92,15 +92,26 @@
     el.append(common.line(task.target ? "Neyron YONISHI kerak edi, lekin yonmadi" : "Neyron YONMASLIGI kerak edi, lekin yondi"));
     ui.bubble("elder", "Neyron xato qildi. Yoniq kirishlarning ogʻirligini nima qilamiz?");
     const options = ["Oshiramiz", "Kamaytiramiz"];
-    return practice.tries({
-      setup: (submit) => neuralUi.choiceButtons(options, submit),
-      check: (index) => (index === 0 ? "oshir" : "kamaytir") === task.answer,
-      hint: () => ui.bubble("elder", task.target
-        ? "↻ Yonishi uchun yigʻindi kattaroq boʻlishi kerak."
-        : "↻ Yonmasligi uchun yigʻindi kichikroq boʻlishi kerak."),
+    const num = neuralUi.num;
+    // Ikki qadam: yo'nalish (2 variant) + "yangi yig'indi nechchi?" (4 variant) — ikkalasi to'g'ri bo'lsagina hisoblanadi
+    return common.twoStep({
+      first: {
+        setup: (submit) => neuralUi.choiceButtons(options, submit),
+        check: (index) => (index === 0 ? "oshir" : "kamaytir") === task.answer,
+      },
+      second: {
+        setup: (submit) => {
+          ui.bubble("elder", `Toʻgʻri! Har bir yoniq kirishning ogʻirligi 1 ga ${task.answer === "oshir" ? "oshadi" : "kamayadi"}. Yangi yigʻindi nechchi boʻladi?`);
+          neuralUi.choiceButtons(task.newSumOptions.map(num), submit);
+        },
+        check: (index) => index === task.newSumIndex,
+      },
+      hint: (step) => ui.bubble("elder", step === 1
+        ? (task.target ? "↻ Yonishi uchun yigʻindi kattaroq boʻlishi kerak." : "↻ Yonmasligi uchun yigʻindi kichikroq boʻlishi kerak.")
+        : "↻ Nechta chiroq yoniq? Har biri yigʻindini 1 ga oʻzgartiradi — oʻchiq chiroqlar hisobga kirmaydi."),
       solution: () => el.append(common.answerLine(task.answer === "oshir"
-        ? "Oshiramiz — yigʻindi kattalashib, chegaraga yetadi"
-        : "Kamaytiramiz — yigʻindi kichrayib, chegaradan tushadi")),
+        ? `Oshiramiz: ${num(task.sum)} + ${task.lit} = ${num(task.newSum)}`
+        : `Kamaytiramiz: ${num(task.sum)} − ${task.lit} = ${num(task.newSum)}`)),
     });
   }
 
@@ -117,11 +128,13 @@
     await oneFails();
     await twoWork();
     await learning();
-    await ui.say("elder", "Endi sen oʻrgat: ogʻirlikni oshiramizmi yoki kamaytiramizmi? 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi sen oʻrgat: ogʻirlikni oshiramizmi yoki kamaytiramizmi? ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev) => neural.makeUpdateTask(prev),
+      next: (prev, correct, tier) => neural.makeUpdateTask(prev, null, tier),
       run: updateTask,
-      praise: (task) => (task.answer === "oshir" ? "Oshirdik — endi yonadi." : "Kamaytirdik — endi yonmaydi."),
+      praise: (task) => (task.answer === "oshir"
+        ? `Oshirdik: yigʻindi ${neuralUi.num(task.sum)} dan ${neuralUi.num(task.newSum)} ga chiqdi.`
+        : `Kamaytirdik: yigʻindi ${neuralUi.num(task.sum)} dan ${neuralUi.num(task.newSum)} ga tushdi.`),
     });
     for (const scene of SCENES) await showScene(scene);
   }

@@ -65,7 +65,7 @@
   flex: none; width: 24px; height: 24px; border-radius: 50%;
   display: grid; place-items: center; background: var(--asosiy); color: #fff; font-size: 15px; font-weight: 900;
 }
-.bq-qoida-boshlanish { font-size: 15px; font-weight: 800; color: var(--yana); text-align: center; }
+.bq-qoida-boshlanish { font-size: 15px; font-weight: 800; color: var(--yana-matn); text-align: center; }
 
 /* ---------- Qadamlar va saytlar jadvali ---------- */
 .bq-jadval { display: flex; flex-direction: column; gap: 6px; width: 100%; max-width: 440px; margin: 0 auto; }

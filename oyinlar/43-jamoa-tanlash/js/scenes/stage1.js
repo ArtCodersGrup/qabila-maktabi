@@ -62,9 +62,9 @@
     await jamoalar();
     await nomlash();
     await practice.exercises({
-      next: (prev) => {
-        let t = L.tartibTask(Math.random, prev);
-        while (t.qoida !== "c") t = L.tartibTask(Math.random, t);
+      next: (prev, correct, tier) => {
+        let t = L.tartibTask(Math.random, prev, tier);
+        while (t.qoida !== "c") t = L.tartibTask(Math.random, t, tier);
         return t;
       },
       run: (task) => common.tartibExercise(task),

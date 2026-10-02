@@ -48,7 +48,7 @@
     await overString();
     await definition();
     await practice.exercises({
-      next: (prev) => L.boundTask(Math.random, prev),
+      next: (prev, correct, tier) => L.boundTask(Math.random, prev, tier),
       run: (task) => common.resultExercise(task),
       praise: () => "Chegaralarni toʻgʻri hisoblading.",
     });

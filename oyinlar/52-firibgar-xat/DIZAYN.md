@@ -83,3 +83,15 @@ Oʻyindan keyin bola:
 - `tests/logic.test.js` — 15 test; ichida **har soxta xatda belgi bor**, **eʼlon qilingan belgi
   matnda bor**, **domen qoidasining uch holati** va **brend nomlari yoʻq** daʼvolari qulflangan.
 - `js/scenes/` — kirish, uch bosqich, tabrik. `css/style.css` — prefiks `.fx-`.
+
+## 2026-10-02 qiyinlik yangilanishi
+
+Sabab: 2-bosqichning asosiy mashqi "Haqiqiy / Firibgar" — 2 variant, ikki urinish bilan yutqazib boʻlmasdi; 14 ta xat tez takrorlanardi.
+
+- **2-bosqich — ikki qadam** (`xabarTask` → `joy`, `nom`; tekshiruv `tekshirXabar`):
+  1. "Bu xat haqiqiymi yoki firibgarmi?"
+  2. "Firibgar" desa — **"«Shoshiltirish» belgisi xatning qayerida? Oʻsha joyni bos"**: xat qismlarga boʻlingan (`xatQismlari`: manzil, sarlavha, har gap, havola — 5–7 ta bosiladigan joy). "Haqiqiy" desa — **"manzilda zonadan oldingi nom qaysi?"** (4 variant: nom, @ dan oldingi soʻz, zona, boʻlim/https).
+  Ikkala javob birga tekshiriladi va ikkalasi toʻgʻri boʻlsagina hisoblanadi; qaysi qadam xatoligi aytilmaydi (maslahat: "ikki javobdan kamida bittasi xato" + nimaga qarash kerakligi). Belgi nomi haqiqiy xatda ham aytiladi — savolning oʻzi javobni oshkor qilmaydi.
+- **Belgi joyi** kod bilan aniqlanadi (`qismdaBelgi`): manzil/havola — domen qoidasi (`birManzil`), gap — `KALIT` soʻzlari. "Imlo" soʻralmaydi (koʻz bilan tekshiriladi).
+- **Xat generatori** (`yasaXabar`: 6 tashkilot × 4 soxta manzil turi × 6 belgi gaplari): tier 0 — qoʻlda yozilgan 14 xat (3–5 belgi); tier 1 — yasalgan, **2 belgi**; tier 2 — yasalgan, **bitta belgi** (faqat manzil xato yoki manzil toʻgʻri-yu bitta gap) va tuzoqli haqiqiy xatlar (`kirish.qabilabank.uz` boʻlimi, "biz hech qachon parol soʻramaymiz"). Test: har yasalgan gap faqat oʻz belgisining kalit soʻzini saqlaydi.
+- 1- va 3-bosqich oʻzgarmadi (4 variant, bank 16 misol va 40 vaziyat).

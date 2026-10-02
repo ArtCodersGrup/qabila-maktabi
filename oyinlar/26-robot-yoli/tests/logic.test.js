@@ -120,3 +120,80 @@ test("tekshirish: izdan tiklash — yo'l bir xil bo'lsa to'g'ri", () => {
   assert.equal(L.checkTask(t, ["up", "right", "up"]), true, "gulxanda to'xtaydi, ortiqchasi bajarilmaydi");
   assert.equal(L.checkTask(t, ["up"]), false);
 });
+
+// ---------- 2026-10-02: qiyinlik zinasi (tier) ----------
+test("tier: chegaralar o'sadi — yo'l uzayadi, tosh ko'payadi", () => {
+  for (const stage of [1, 2, 3]) {
+    const list = L.LIMITS[stage];
+    assert.equal(list.length, 3);
+    assert.deepEqual(L.STAGE[stage], list[0], "STAGE — tier 0");
+    for (let t = 1; t < 3; t++) {
+      assert.ok(list[t].max > list[t - 1].max, `${stage}-bosqich: max o'sadi`);
+      assert.ok(list[t].min >= list[t - 1].min && list[t].walls >= list[t - 1].walls);
+    }
+  }
+  assert.equal(L.LIMITS[2][2].max, 8);
+  assert.equal(L.LIMITS[3][2].walls, 4);
+});
+
+test("tier: 1–2-bosqich maydonlari chegarada, tier 2 da eng qisqa yo'l sharti", () => {
+  for (const stage of [1, 2]) {
+    for (const tier of [0, 1, 2]) {
+      const rng = rngFrom(100 + stage * 10 + tier);
+      const lim = L.LIMITS[stage][tier];
+      let prev = null;
+      let top = 0;
+      for (let k = 0; k < 60; k++) {
+        const t = L.makeTask(stage, prev, rng, tier);
+        assert.equal(t.type, "write");
+        assert.equal(t.field.walls.length, lim.walls);
+        const p = D.solve(t.field);
+        assert.ok(p.length >= lim.min && p.length <= lim.max, `${stage}/${tier}: uzunlik ${p.length}`);
+        assert.ok(D.turns(p) >= 1);
+        assert.equal(t.shortest, tier === 2 ? p.length : undefined);
+        assert.ok(L.checkTask(t, p), "eng qisqa yechim qabul qilinadi");
+        if (prev) assert.notEqual(t.id, prev.id);
+        top = Math.max(top, p.length);
+        prev = t;
+      }
+      assert.ok(top >= lim.max - 1, `${stage}/${tier}: uzun yo'llar ham chiqadi (${top})`);
+    }
+  }
+});
+
+test("tier 2: uzunroq dastur gulxanga yetsa ham hisoblanmaydi", () => {
+  const field = D.field({ robot: { x: 0, y: 4 }, goal: { x: 1, y: 3 } });
+  const t = { type: "write", field, shortest: 2 };
+  assert.equal(L.checkTask(t, ["right", "up"]), true);
+  assert.equal(L.checkTask(t, ["up", "right"]), true, "boshqa eng qisqa yo'l ham to'g'ri");
+  const long = ["left", "right", "right", "up"];
+  assert.equal(D.run(field, ["right", "left", "right", "up"]).status, "goal");
+  assert.equal(L.checkTask(t, ["right", "left", "right", "up"]), false, "aylanma yo'l — uzun");
+  assert.equal(L.tooLong(t, ["right", "left", "right", "up"]), true);
+  assert.equal(L.tooLong(t, ["up", "up"]), false, "yetmagan dastur — uzun emas, shunchaki xato");
+  assert.equal(L.tooLong({ type: "write", field }, ["right", "left", "right", "up"]), false, "shart yo'q — uzun deyilmaydi");
+  assert.equal(long.length, 4);
+});
+
+test("tier: 3-bosqich — o'qiladigan dastur uzayadi (3–5 → 4–6 → 5–7)", () => {
+  for (const tier of [0, 1, 2]) {
+    const rng = rngFrom(300 + tier);
+    const lim = L.LIMITS[3][tier];
+    const seen = new Set();
+    let prev = null;
+    for (let k = 0; k < 150; k++) {
+      const t = L.makeTask(3, prev, rng, tier);
+      seen.add(t.type);
+      assert.equal(t.field.walls.length, lim.walls);
+      if (t.type === "read") {
+        assert.ok(t.program.length >= lim.read[0] && t.program.length <= lim.read[1], `uzunlik ${t.program.length}`);
+        assert.deepEqual(t.answer, D.run(t.field, t.program).at);
+      } else {
+        assert.deepEqual(t.program, D.solve(t.field));
+        assert.ok(t.program.length >= lim.min && t.program.length <= lim.max);
+      }
+      prev = t;
+    }
+    assert.deepEqual([...seen].sort(), ["read", "trace"]);
+  }
+});

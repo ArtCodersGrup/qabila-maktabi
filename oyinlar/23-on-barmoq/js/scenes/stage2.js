@@ -27,7 +27,7 @@
     await ui.say("elder", "Endi yuqori qator. Barmoq yuqoriga chiqadi, bosadi va joyiga qaytadi.");
     await common.drills(2);
     await definition();
-    await ui.say("elder", "Endi soʻzlar. Natijada tezliging ham chiqadi — lekin avval aniqlik!");
+    await ui.say("elder", `Endi soʻzlar — ${QK.practice.need()} ta qator. Tezlik ham kerak: kamida ${T.minCpm(2, QK.practice.isHard())} belgi/daqiqa. Lekin avval aniqlik!`);
     await common.lineExercises({ stage: 2, speed: true });
   }
 

@@ -52,3 +52,19 @@ Bosh ekran
 ├── js/scenes/…     kirish, uch bosqich, tabrik
 └── tests/          sxema.test.js (10 ta), logic.test.js (10 ta)
 ```
+
+## 6. 2026-10-02 qiyinlik yangilanishi
+
+Sabab: hisobot-5 (C jadvali) — belgilar mashqi yod olish (osonlik 5), yigʻish va oʻqish roʻyxatlari qisqa edi.
+
+- **1-bosqich (belgilar):** `need: 2` — ikki toʻgʻri javob yetadi; vaqt asosiy mashqlarga qoladi.
+- **Yigʻish (`QURISH`) 5 → 9:** `modul` (shartdan keyin har doim bajariladigan chiqarish), `daraja` (kiritilgan n marta
+  takror, n = 0 sinovi), `juftlar-yigindisi` (qadamli sikl; «hamma sonni qoʻshadigan» sikl — chalgʻituvchi),
+  `uch-kattasi` (ketma-ket ikki shart, manfiy sonlar sinovi). Har birida chalgʻituvchi blok bor va u testda
+  haqiqatan notoʻgʻri javob beradi.
+- **Cheklov:** yigʻuvchida shart va takror faqat asosiy yoʻlga qoʻyiladi (bir darajali ichma-ichlik, `sxema.js`).
+  Shuning uchun hisobotdagi «sikl ichida shart» masalasi oʻrniga qadamli sikl (`range(2, n + 1, 2)`) berildi.
+- **Oʻqish (`OQISH`) 4 → 8:** `oqi-keyin`, `oqi-daraja`, `oqi-yigib` (chiqarish sikl ichida — bir necha satr),
+  `oqi-ikki-shart`. Bir sxemaga bir nechta kirish (`kirishlar`): javob har safar boshqa, chegara qiymati (n = 10) ham bor.
+- **Zina:** `tier` 0 — sodda masalalar (kvadrat, salom, yigʻindi); 1 — shartli; 2 — yangi masalalar ustun.
+- Testlar: 20 → 23.

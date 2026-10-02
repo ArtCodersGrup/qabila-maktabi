@@ -26,15 +26,15 @@
       done();
     }, "big")));
     await ui.say("elder", "Diqqat: bitta = qiymat beradi, ikkita == esa «tengmi?» deb soʻraydi.");
-    await ui.say("elder", "Endi oʻzing ayt: bu nima chiqaradi?");
+    await ui.say("elder", "Endi oʻzing ayt. Bitta print ichida uchta solishtirish boʻladi — uchalasiga javob ber.");
   }
 
   async function stage1() {
     await solishtir();
     await practice.exercises({
-      next: (prev) => L.solishtirTask(Math.random, prev),
+      next: (prev, correct, tier) => L.solishtirTask(Math.random, prev, tier),
       run: (task) => common.solishtirExercise(task),
-      praise: (task) => task.ifoda + " → " + task.javob,
+      praise: (task) => "Chiqish: " + task.javob,
     });
   }
 

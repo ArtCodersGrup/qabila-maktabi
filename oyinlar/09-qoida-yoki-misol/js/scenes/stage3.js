@@ -30,17 +30,30 @@
     await ui.say("elder", "Aqlli ishni qoida bilan ham, misol bilan ham qilsa boʻladi. Misoldan oʻrganadigani — mashinali oʻrganish.");
   }
 
-  // 6.3: hayotdan misol — qoidami yoki misolmi?
+  // 6.3: hayotdan misol — ikki qadam: "qoidami yoki misolmi?" va "nega?" (4 sabab).
+  // Ikkalasi to'g'ri bo'lsagina hisoblanadi (QOIDALAR 4.3: 2 variantli savol yolg'iz kelmaydi).
   function kindTask(task) {
     const el = common.box(true);
     el.append(ui.h("div", { class: "case-text", text: task.text }));
     ui.bubble("elder", "Bu ishga qoida yozamizmi yoki misol koʻrsatamizmi?");
     const options = ["Qoida yozamiz", "Misol koʻrsatamiz"];
-    return practice.tries({
-      setup: (submit) => rulesUi.choiceButtons(options, submit),
-      check: (index) => options[index] === (task.answer === "qoida" ? "Qoida yozamiz" : "Misol koʻrsatamiz"),
-      hint: () => ui.bubble("elder", "↻ Oʻzing aniq qoida yoza olasanmi? Yoza olsang — qoida, yoza olmasang — misol."),
-      solution: () => el.append(common.answerLine(task.why)),
+    return common.twoStep({
+      first: {
+        setup: (submit) => rulesUi.choiceButtons(options, submit),
+        check: (index) => (index === 0 ? "qoida" : "misol") === task.answer,
+      },
+      second: {
+        setup: (submit) => {
+          el.append(common.line(task.answer === "qoida" ? "Qoida yozamiz. Nega?" : "Misol koʻrsatamiz. Nega?"));
+          ui.bubble("elder", "Toʻgʻri! Endi sababini tanla: nega aynan shunday?");
+          rulesUi.choiceList(task.whyOptions, submit);
+        },
+        check: (index) => index === task.whyIndex,
+      },
+      hint: (step) => ui.bubble("elder", step === 1
+        ? "↻ Oʻzing aniq qoida yoza olasanmi? Yoza olsang — qoida, yoza olmasang — misol."
+        : "↻ Sabab aynan shu ish haqida boʻlishi kerak. Ishni yana bir oʻqi va sabablarni solishtir."),
+      solution: () => el.append(common.answerLine(`${task.answer === "qoida" ? "Qoida" : "Misol"}: ${task.why}`)),
     });
   }
 
@@ -62,7 +75,7 @@
 
   async function stage3() {
     await compare();
-    await ui.say("elder", "Endi hayotdan misollar. 3 ta toʻgʻri javob kerak!");
+    await ui.say("elder", `Endi hayotdan misollar. ${QK.practice.need()} ta toʻgʻri javob kerak!`);
     await practice.exercises({
       next: (prev) => rules.makeKindTask(prev),
       run: kindTask,

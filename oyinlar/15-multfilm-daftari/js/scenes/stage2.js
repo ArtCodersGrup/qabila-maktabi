@@ -77,47 +77,50 @@
         ui.h("div", { text: `1 soniyada — ${task.fps} kadr` }),
         ui.h("div", { text: `Video — ${task.seconds} soniya` })));
       ui.bubble("elder", "Bu video necha bayt?");
-      const perSecond = task.frameBytes * task.fps;
       return practice.numberTries({
         answer: task.answer,
         hint: () => {
-          common.add(el, common.line(`1 soniya: ${task.frameBytes} × ${task.fps} = ${perSecond} bayt`));
+          common.add(el, common.line(`1 soniya: ${task.frameBytes} × ${task.fps} = ? bayt`));
           ui.bubble("elder", "↻ Avval 1 soniyani top, keyin soniyalarga koʻpaytir.");
         },
         solution: () => common.add(el, common.answerLine(`${task.frameBytes} × ${task.fps} × ${task.seconds} = ${task.answer} bayt`)),
       });
     }
-    const inMb = task.gb * 1024;
+    // "Qaysi biri eng katta?" — uch karta va "Uchalasi teng" (4 variant)
+    const labels = { gb: `${task.gb} Gbayt`, mb: `${task.mb} Mbayt`, films: `${task.n} ta kino × ${task.each} Gbayt`, teng: "Uchalasi teng" };
+    const sizes = video.cmpSizes(task);
     el.append(ui.h("div", { class: "cmp" },
-      ui.h("div", { class: "cmp-card", text: `${task.gb} Gbayt` }),
-      ui.h("div", { class: "cmp-or", text: "yoki" }),
-      ui.h("div", { class: "cmp-card", text: `${task.mb} Mbayt` })));
-    ui.bubble("elder", "Qaysi biri katta?");
-    const keys = ["gb", "mb"];
+      ui.h("div", { class: "cmp-card", text: labels.gb }),
+      ui.h("div", { class: "cmp-card", text: labels.mb }),
+      ui.h("div", { class: "cmp-card", text: labels.films })));
+    ui.bubble("elder", "Qaysi biri eng katta? Uchalasi bir xil boʻlsa — «Uchalasi teng».");
+    const keys = video.CMP_OPTIONS;
     return practice.tries({
-      setup: (submit) => videoUi.choiceButtons([`${task.gb} Gbayt`, `${task.mb} Mbayt`], (i) => submit(keys[i])),
+      setup: (submit) => videoUi.choiceButtons(keys.map((k) => labels[k]), (i) => submit(keys[i])),
       check: (value) => value === task.answer,
       hint: () => {
-        common.add(el, common.line(`${task.gb} Gbayt = ${task.gb} × 1024 = ${inMb} Mbayt`));
-        ui.bubble("elder", "↻ Ikkalasini Mbaytda solishtir.");
+        common.add(el, common.line("1 Gbayt = 1024 Mbayt"));
+        ui.bubble("elder", "↻ Uchalasini ham Mbaytga oʻtkaz, keyin solishtir.");
       },
-      solution: () => common.add(el, common.answerLine(`${inMb} Mbayt ${inMb > task.mb ? ">" : "<"} ${task.mb} Mbayt`)),
+      solution: () => common.add(el,
+        common.line(`${labels.gb} = ${sizes.gb} Mbayt; ${labels.films} = ${task.n * task.each} Gbayt = ${sizes.films} Mbayt`),
+        common.answerLine(task.answer === "teng" ? `Uchalasi ham ${sizes.gb} Mbayt — teng` : `Eng kattasi: ${labels[task.answer]} (${sizes[task.answer]} Mbayt)`)),
     });
   }
 
   function praise(task) {
     if (task.type === "frames") return `${task.frameBytes} × ${task.frames} = ${task.answer} bayt.`;
     if (task.type === "fps") return `${task.frameBytes} × ${task.fps} × ${task.seconds} = ${task.answer} bayt.`;
-    return `${task.gb} Gbayt = ${task.gb * 1024} Mbayt.`;
+    return task.answer === "teng" ? `Uchalasi ham ${task.gb * 1024} Mbayt.` : `${task.gb} Gbayt = ${task.gb * 1024} Mbayt.`;
   }
 
   async function stage2() {
     await addFrames();
     await realVideo();
     await definition();
-    await ui.say("elder", "Endi oʻzing hisobla: video hajmi. 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing hisobla: video hajmi. ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev) => video.makeSizeTask(prev),
+      next: (prev, correct, tier) => video.makeSizeTask(prev, undefined, tier),
       run: sizeTask,
       praise,
     });

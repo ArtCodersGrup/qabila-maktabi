@@ -93,3 +93,15 @@ Bosh ekran
 ## 8. Bu o'yinga kirmaydi
 
 JPEG/PNG ichki tuzilishi (faqat bir gap), vektor grafika, rang chuqurligi atamalari (bpp), piksel zichligi (dpi), 1 Mbayt dan kattalari (15–16-oʻyinlar).
+
+## 2026-10-02 qiyinlik yangilanishi
+
+Sabab: bolalar "oson" deyishdi — rasmlar kichik (≤ 100 piksel), "qaysi katta?" 2 variantli edi.
+
+- Uchala generator `tier` oladi; chegaralar `pixels.js` da jadval:
+  - 1-bosqich (`BW_SIZE`): maydon ≤ 100 → ≤ 144 → **≤ 256 piksel** (tomon 4–16). Bayt savolida maslahat endi oraliq natijani (bitlar sonini) aytmaydi.
+  - 2-bosqich: ranglar soni (`BPP_TIER`) 2–16 → 2–256 → **20–1000** (javob 5–10 bit; maslahat jadvali kerakli qatorgacha uzayadi); rasm hajmi (`COLOR_SIZE`) ≤ 100 → ≤ 160 → ≤ 256 bit.
+  - 3-bosqich: rangli rasm (`RGB_SIZE`) ≤ 33 → ≤ 50 → ≤ 80 piksel (× 3 bayt); qisqa yozuv (`RUNS`) 2–5 → 3–6 → **4–8 boʻlak**, qator 12–16 piksel.
+- **Yangi tur** (tier 1+): `cbytes` — "4 / 16 rangli rasm necha BAYT?" = kenglik × balandlik × bit : 8 (2- va 3-bosqich bilimini birlashtiradi).
+- **Taqqoslash — 4 variant:** uch karta (`m Mbayt`, `k Kbayt`, `n ta surat × s Mbayt`) — "qaysi biri eng katta?" yoki **"Uchalasi teng"**. Mbayt 1–5 → 2–9 → 6–20; 1000 ≠ 1024 tuzogʻi saqlangan.
+- Qoldirildi: 3-bosqichdagi 12 pufakni qisqartirish ("matn dietasi") — generator ishi emas.

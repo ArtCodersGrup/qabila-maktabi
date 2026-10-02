@@ -81,12 +81,41 @@ test("bosish savoli: javob — tugmalar yozuvi, hodisa bilan tekshiriladi", () =
   assert.equal(L.belgi(ev("c", { ctrlKey: true })), L.yozuv(copy));
 });
 
-test("farq savoli: ikki variant, javob o'sha ikkitadan biri", () => {
-  for (const t of each(L.farqTask, 20, 7)) {
-    assert.equal(t.variantlar.length, 2);
+test("farq savoli: 4 xil variant, ichida adashtiradigan juftlik ham, javob ham bor", () => {
+  for (const t of each(L.farqTask, 40, 7)) {
+    assert.equal(t.variantlar.length, 4);
+    assert.equal(new Set(t.variantlar.map((v) => v.id)).size, 4);
     assert.ok(t.variantlar.some((v) => v.id === t.javob), t.matn);
-    assert.notEqual(t.variantlar[0].id, t.variantlar[1].id);
+    const j = L.JUFTLAR.find((x) => x.savol === t.matn);
+    assert.ok(t.variantlar.some((v) => v.id === j.a) && t.variantlar.some((v) => v.id === j.b), t.matn);
     assert.ok(t.nega.length > 15);
+  }
+  // to'g'ri javob har xil o'rinda chiqadi
+  const orinlar = new Set(each(L.farqTask, 60, 9).map((t) => t.variantlar.findIndex((v) => v.id === t.javob)));
+  assert.ok(orinlar.size >= 3);
+});
+
+test("farq savoli bosish rejimida: variant yo'q, kerakli birikmani o'zi bosadi", () => {
+  let prev = null;
+  for (let k = 0; k < 30; k++) {
+    const t = L.farqTask(Math.random, prev, true);
+    assert.equal(t.tur, "bosish");
+    const j = L.JUFTLAR.find((x) => t.matn.startsWith(x.savol));
+    assert.equal(t.javob, L.yozuv(L.amalById(j.javob)));
+    prev = t;
+  }
+});
+
+test("maqsad zinasi: tier 0 — oddiylar, tier 2 — ko'p tugmalilar", () => {
+  for (let k = 0; k < 50; k++) {
+    assert.ok(!L.maqsadTask(Math.random, null, 0).lvl);
+    const m = L.maqsadTask(Math.random, null, 2);
+    assert.ok(m.lvl >= 1, m.id);
+  }
+  // har maqsadni haqiqatan bajarib bo'ladi: kerakli tugmalar bilan natija qabul qilinadi
+  for (const m of L.MAQSADLAR) {
+    const kerak = m.kerak.map((id) => L.yozuv(L.amalById(id)));
+    assert.ok(L.bajarildi(m, m.maqsad, kerak), m.id);
   }
 });
 

@@ -29,7 +29,7 @@
 
   // 1-xato maslahati: 1, 2, 3… ta chiroq naqshlari (belgisiz)
   function hintRows(q) {
-    const max = q.states === lamps.PLAIN ? 6 : 4;
+    const max = q.states === lamps.PLAIN ? 9 : 6; // eng katta narsa (365 ta kun): 9 ta oddiy yoki 6 ta rangli chiroq
     const box = ui.h("div", { class: "rows2" });
     for (let n = 1; n <= max; n++) box.append(ui.h("div", { class: "formula-row", text: `${n} ta: ${lamps.count(q.states, n)}` }));
     return box;
@@ -83,9 +83,9 @@
     await common.findAll({ count: 2, states: lamps.COLOR });
     await ui.say("elder", `2 ta rangli chiroq — 9 ta naqsh: 3 × 3 = 3${ui.sup(2)}.`);
     await explain();
-    await ui.say("elder", "Endi hisoblaymiz: nechta chiroq kerak? 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi hisoblaymiz: nechta chiroq kerak? ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev) => lamps.makeLampsQuestion(prev),
+      next: (prev, correct, tier) => lamps.makeLampsQuestion(prev, null, tier),
       run: lampsTask,
       praise: (q) => `${q.answer} ta chiroq yetadi.`,
     });

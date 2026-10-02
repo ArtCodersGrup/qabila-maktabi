@@ -39,7 +39,7 @@
     await namoyish();
     await ui.say("elder", "Endi oʻzing hisobla — sikl nima chiqaradi?");
     await practice.exercises({
-      next: (prev, correct) => L.bosqich2Task(prev, correct),
+      next: (prev, correct, tier) => L.bosqich2Task(prev, correct, tier),
       run: (task) => common.mashq(task),
       praise: () => "Siklni toʻgʻri aylantirding.",
     });

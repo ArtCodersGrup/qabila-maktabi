@@ -58,9 +58,9 @@
   async function stage2() {
     await tasksIntro();
     await oneTaskThreeWays();
-    await ui.say("elder", "Endi oʻzing ayt: bu ish qaysi vazifa? 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing ayt: bu ish qaysi vazifa? ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev) => atlas.makeJobTask(prev),
+      next: (prev, correct, tier) => atlas.makeJobTask(prev, null, tier),
       run: jobTask,
       praise: (task) => `Vazifa — ${atlas.taskName(task.answer)}.`,
     });

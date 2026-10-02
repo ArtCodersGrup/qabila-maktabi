@@ -46,3 +46,8 @@ qoʻlda qayta terib qoʻyish hisoblanmaydi. Bosilgan tugmalar ekran ostida chip 
 Avtomatik brauzerda tizim buferi yopiq (yalangʻoch `textarea` da ham `Ctrl + C` ishlamadi), shuning uchun
 **«ikki marta» va «ikki qator» maqsadlari qoʻlda sinaladi** — haqiqiy kompyuterda. Qolgan uchtasi
 avtomatik tekshirildi va oʻtdi.
+
+## 2026-10-02 qiyinlik yangilanishi
+- 1-bosqich: 3-javobdan boshlab faqat nusxa olish tugmalari emas — barcha birikmalar aralash soʻraladi.
+- 2-bosqich: «farq» savoli 2 → 4 variant (adashtiradigan juftlik + 2 ta boshqa). 3-javobdan boshlab variant tanlanmaydi — bola toʻgʻri birikmani klaviaturada **oʻzi bosadi**. Juftliklar 6 → 12.
+- 3-bosqich: 4 ta yangi maqsad (End bilan qoʻshish, Home + Delete, Ctrl + ← bilan soʻz-soʻz yurish, kesib-qoʻyib soʻzlar oʻrnini almashtirish). Oxirgi javoblarda (tier 2) faqat koʻp tugmali maqsadlar.

@@ -72,7 +72,39 @@
     });
   }
 
-  const oqishExercise = (task) => M.resultExercise(task);
+  // Kodni o'qish: umumiy "natijani ayt" mashqi bilan bir xil, lekin savol matni masalaning o'ziniki
+  // (2026-10-02: "nechta solishtirish?", "qaysi indekslarga qaraydi?" savollari qo'shildi).
+  function oqishExercise(task) {
+    const K = QK.kod;
+    const U = QK.kodUI;
+    let host = null;
+    return practice.tries({
+      setup(submit) {
+        host = M.box();
+        host.append(M.note((task.savol || "Bu kod nima chiqaradi?") + " Kod chiqaradigan har satrni alohida qatorga yoz."));
+        host.append(U.codeBlock(task.code));
+        const area = h("textarea", {
+          class: "kod-javob", rows: "3", spellcheck: "false",
+          autocapitalize: "off", autocorrect: "off", "aria-label": "Chiqishni yoz",
+        });
+        area.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); submit(area.value); }
+        });
+        host.append(area);
+        ui.control().append(ui.button("Tekshir", () => submit(area.value), "big"));
+        setTimeout(() => area.focus(), 50);
+      },
+      check: (value) => K.check(task, value).ok,
+      hint(value) {
+        host.append(M.note("↻ " + K.check(task, value).hint + " Kichik jadval tuz: har aylanishda chap, oʻng va oʻrta nimaga teng?"));
+      },
+      solution() {
+        const out = U.output({ title: "Haqiqiy chiqish" });
+        out.lines(K.run(task.code, {}).output);
+        host.append(M.answer("Toʻgʻri javob:"), out.el);
+      },
+    });
+  }
   const yozishExercise = (task) => M.writeExercise(task);
 
   QK.common = Object.assign({}, M, { tarixEl, jadvalN, topish, topishExercise, oqishExercise, yozishExercise });

@@ -21,14 +21,28 @@
 
   const codeTask = (type, code, extra) => Object.assign({ id: type + ":" + code, type, code, solution: code }, extra);
 
+  // Qiyinlik zinasi (QOIDALAR 4.3): 0 — birinchi javoblar, 1 — o'rta, 2 — oxirgi va qiyin rejim.
+  // Zina berilmasa (testlar) — hammasidan teng.
+  function zinadan(list, tier, rnd) {
+    if (tier == null) return pick(list, rnd);
+    const t = Math.max(0, Math.min(2, tier));
+    const mos = list.filter((x) => (x.tier || 0) <= t);
+    const ayni = mos.filter((x) => (x.tier || 0) === t);
+    return ayni.length && rnd() < 0.6 ? pick(ayni, rnd) : pick(mos, rnd);
+  }
+  const zinali = (tier, fn) => Object.assign(fn, { tier });
+
   // Kod xatosiz ishlashini va javob chegarada ekanini tekshiradi
   function safe(code, maxLines, maxValue) {
     const r = py.run(code, { maxSteps: 100000 });
     if (r.error) return null;
     if (r.output.length === 0 || r.output.length > (maxLines || MAX_LINES)) return null;
     for (const line of r.output) {
-      const n = Number(line);
-      if (Number.isFinite(n) && Math.abs(n) > (maxValue || MAX_VALUE)) return null;
+      // Bir satrda bir nechta son bo'lishi mumkin: print(soni, n)
+      for (const soz of line.split(" ")) {
+        const n = Number(soz);
+        if (Number.isFinite(n) && Math.abs(n) > (maxValue || MAX_VALUE)) return null;
+      }
     }
     return r;
   }
@@ -52,12 +66,35 @@
       const n = int(rnd, 2, 5);
       return "i = 1\nwhile i <= " + n + ":\n    print(i * i)\n    i += 1";
     },
+    // ---- 2026-10-02: hisoblagich +1 dan boshqacha o'zgaradigan sikllar (zina 1–2) ----
+    zinali(1, (rnd) => {
+      const n = int(rnd, 20, 60);
+      return "i = 1\nwhile i < " + n + ":\n    print(i)\n    i = i * 2";
+    }),
+    zinali(1, (rnd) => {
+      const a = int(rnd, 10, 16);
+      return "i = " + a + "\nwhile i > 0:\n    print(i)\n    i -= 3";
+    }),
+    zinali(2, (rnd) => {
+      // print hisoblagich O'ZGARGANDAN keyin: birinchi chiqadigan son boshlang'ich emas
+      const n = int(rnd, 3, 6);
+      return "i = 0\nwhile i < " + n + ":\n    i += 1\n    print(i * 2)";
+    }),
+    zinali(2, (rnd) => {
+      const n = int(rnd, 40, 200);
+      return "n = " + n + "\nwhile n > 1:\n    n = n // 2\n    print(n)";
+    }),
+    zinali(2, (rnd) => {
+      const a = int(rnd, 1, 4);
+      const b = int(rnd, 10, 16);
+      return "a = " + a + "\nb = " + b + "\nwhile a < b:\n    print(a, b)\n    a += 2\n    b -= 1";
+    }),
   ];
 
-  function countTask(r, prev) {
+  function countTask(r, prev, tier) {
     const rr = r || Math.random;
     return pickNew((rnd) => {
-      const code = pick(COUNTERS, rnd)(rnd);
+      const code = zinadan(COUNTERS, tier, rnd)(rnd);
       return safe(code) ? codeTask("natija", code, { kind: "sanoq" }) : null;
     }, prev, rr);
   }
@@ -84,12 +121,33 @@
       const n = int(rnd, 5, 12);
       return "soni = 0\ni = 1\nwhile i <= " + n + ":\n    if i % 3 == 0:\n        soni += 1\n    i += 1\nprint(soni)";
     },
+    // ---- 2026-10-02: sikl necha marta aylanishini oldindan aytib bo'lmaydigan yig'uvchilar (zina 1–2) ----
+    zinali(1, (rnd) => {
+      const n = int(rnd, 100, 999);
+      return "n = " + n + "\ns = 0\nwhile n > 0:\n    s += n % 10\n    n = n // 10\nprint(s)";
+    }),
+    zinali(1, (rnd) => {
+      const n = pick([12, 20, 24, 40, 48, 56, 72, 80, 96], rnd);
+      return "n = " + n + "\nsoni = 0\nwhile n % 2 == 0:\n    n = n // 2\n    soni += 1\nprint(soni, n)";
+    }),
+    zinali(2, (rnd) => {
+      const chegara = int(rnd, 20, 60);
+      return "s = 0\ni = 0\nwhile s < " + chegara + ":\n    i += 1\n    s += i\nprint(i, s)";
+    }),
+    zinali(2, (rnd) => {
+      const n = int(rnd, 6, 12);
+      return "s = 0\ni = 1\nwhile i <= " + n + ":\n    if i % 4 == 0:\n        i += 1\n        continue\n    s += i\n    i += 1\nprint(s)";
+    }),
+    zinali(2, (rnd) => {
+      const n = int(rnd, 3, 30);
+      return "n = " + n + "\nqadam = 0\nwhile n != 1:\n    if n % 2 == 0:\n        n = n // 2\n    else:\n        n = 3 * n + 1\n    qadam += 1\n    if qadam == 5:\n        break\nprint(qadam, n)";
+    }),
   ];
 
-  function sumTask(r, prev) {
+  function sumTask(r, prev, tier) {
     const rr = r || Math.random;
     return pickNew((rnd) => {
-      const code = pick(COLLECTORS, rnd)(rnd);
+      const code = zinadan(COLLECTORS, tier, rnd)(rnd);
       return safe(code, 1) ? codeTask("natija", code, { kind: "yigindi" }) : null;
     }, prev, rr);
   }
@@ -125,12 +183,38 @@
       good: "i = 1\nwhile i <= 5:\n    print(i)\n    i += 1",
       make: (good) => good.replace("i <= 5", "i >= 1"),
     },
+    // ---- 2026-10-02: yana to'rt buzilish (zina 1–2) ----
+    {
+      kind: "raqam-cheksiz", tier: 1,
+      why: "n kichraymayapti — n = n // 10 satri yoʻq, sikl toʻxtamaydi",
+      good: "n = 472\nwhile n > 0:\n    print(n % 10)\n    n = n // 10",
+      make: (good) => good.replace("\n    n = n // 10", ""),
+    },
+    {
+      kind: "bir-ortiq", tier: 1,
+      why: "shart bir marta ortiq aylanadi: 0 ham chiqib qolyapti",
+      good: "n = 5\nwhile n > 0:\n    print(n)\n    n -= 1",
+      make: (good) => good.replace("n > 0", "n >= 0"),
+    },
+    {
+      kind: "boshlangich", tier: 2,
+      why: "yigʻindi 0 dan boshlanishi kerak — boshlangʻich qiymat notoʻgʻri",
+      good: "s = 0\ni = 1\nwhile i <= 6:\n    s += i\n    i += 1\nprint(s)",
+      make: (good) => good.replace("s = 0", "s = 1"),
+    },
+    {
+      kind: "otstup", tier: 2,
+      why: "hisoblagichni oshiradigan satr sikldan tashqarida qolgan (surilmagan) — sikl toʻxtamaydi",
+      // Sikl ichida print bor: cheksiz sikl chiqish chegarasiga tez uriladi (sahifa qotib qolmaydi)
+      good: "i = 1\nwhile i <= 4:\n    print(i)\n    i += 1\nprint(\"tamom\")",
+      make: (good) => good.replace("\n    i += 1", "\ni += 1"),
+    },
   ];
 
-  function fixTask(r, prev) {
+  function fixTask(r, prev, tier) {
     const rr = r || Math.random;
     return pickNew((rnd) => {
-      const broken = pick(BROKEN, rnd);
+      const broken = zinadan(BROKEN, tier, rnd);
       const code = broken.make(broken.good);
       if (code === broken.good) return null;
       return { id: "xato:" + broken.kind, type: "xato-top", kind: broken.kind, why: broken.why, code, solution: broken.good };
@@ -168,12 +252,43 @@
       solution: "n = int(input())\ns = 0\ni = 1\nwhile i <= n:\n    s += i\n    i += 1\nprint(s)",
       tests: [["10"], ["1"], ["100"], ["7"]],
     },
+    // ---- 2026-10-02: besh yangi masala (zina 1–2) ----
+    {
+      id: "raqamlar-kopaytmasi", tier: 1,
+      what: "Bitta musbat son kiritiladi. Uning raqamlari koʻpaytmasini chiqar.",
+      solution: "n = int(input())\nk = 1\nwhile n > 0:\n    k = k * (n % 10)\n    n = n // 10\nprint(k)",
+      tests: [["234"], ["7"], ["100"], ["999"], ["90"]],
+    },
+    {
+      id: "nollar-soni", tier: 1,
+      what: "Bitta musbat son kiritiladi. Uning yozuvida nechta 0 raqami borligini chiqar.",
+      solution: "n = int(input())\nsoni = 0\nwhile n > 0:\n    if n % 10 == 0:\n        soni += 1\n    n = n // 10\nprint(soni)",
+      tests: [["1050"], ["7"], ["100"], ["90"], ["12345"]],
+    },
+    {
+      id: "eng-kichik-raqam", tier: 1,
+      what: "Bitta musbat son kiritiladi. Undagi eng kichik raqamni chiqar.",
+      solution: "n = int(input())\nbest = 9\nwhile n > 0:\n    r = n % 10\n    if r < best:\n        best = r\n    n = n // 10\nprint(best)",
+      tests: [["5382"], ["7"], ["100"], ["999"], ["40"]],
+    },
+    {
+      id: "kollats", tier: 2,
+      what: "Bitta musbat son kiritiladi. Son juft boʻlsa 2 ga boʻlinadi, toq boʻlsa 3 ga koʻpaytirilib 1 qoʻshiladi. 1 ga yetguncha nechta qadam boʻlishini chiqar (son 1 boʻlsa — 0).",
+      solution: "n = int(input())\nqadam = 0\nwhile n != 1:\n    if n % 2 == 0:\n        n = n // 2\n    else:\n        n = 3 * n + 1\n    qadam += 1\nprint(qadam)",
+      tests: [["6"], ["1"], ["10"], ["7"], ["27"], ["8"]],
+    },
+    {
+      id: "osuvchi-raqamlar", tier: 2,
+      what: "Bitta musbat son kiritiladi. Raqamlari chapdan oʻngga qatʼiy oʻsib borsa (har keyingisi oldingisidan katta) ha, aks holda yoʻq deb yoz. Bir xonali son uchun — ha.",
+      solution: 'n = int(input())\njavob = "ha"\nong = n % 10\nn = n // 10\nwhile n > 0:\n    r = n % 10\n    if r >= ong:\n        javob = "yoʻq"\n    ong = r\n    n = n // 10\nprint(javob)',
+      tests: [["1359"], ["7"], ["120"], ["1123"], ["321"], ["89"], ["10"]],
+    },
   ];
 
-  function writeTask(r, prev) {
+  function writeTask(r, prev, tier) {
     const rr = r || Math.random;
     return pickNew((rnd) => {
-      const kind = pick(WRITE_KINDS, rnd);
+      const kind = zinadan(WRITE_KINDS, tier, rnd);
       return {
         id: "yoz:" + kind.id,
         type: "kod-yoz",
@@ -184,10 +299,10 @@
     }, prev, rr);
   }
 
-  function stage3Task(r, prev) {
+  function stage3Task(r, prev, tier) {
     const rr = r || Math.random;
     const wantWrite = prev ? prev.type !== "kod-yoz" : rr() < 0.5;
-    return wantWrite ? writeTask(rr, prev) : fixTask(rr, prev);
+    return wantWrite ? writeTask(rr, prev, tier) : fixTask(rr, prev, tier);
   }
 
   const api = {

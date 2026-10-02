@@ -28,7 +28,7 @@
     await satr();
     await ui.say("elder", "Endi satr bilan oʻzing ishla.");
     await practice.exercises({
-      next: (prev, correct) => L.bosqich2Task(prev, correct),
+      next: (prev, correct, tier) => L.bosqich2Task(prev, correct, tier),
       run: (task) => common.mashq(task),
       praise: (task) => (task.tur === "yoz" ? "Satrni uddaladding!" : "Toʻgʻri."),
     });

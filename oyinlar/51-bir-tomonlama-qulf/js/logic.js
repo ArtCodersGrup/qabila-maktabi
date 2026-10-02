@@ -72,7 +72,8 @@
 
   // ---------- So'zlar va saytlar ----------
   // Qo'lda hisoblash uchun qisqa parollar (3–4 belgi)
-  const QISQA = ["olma", "tosh", "soat", "qush", "asal", "oyna", "bosh", "qora", "kuch", "gul", "tol", "non"];
+  const QISQA = ["olma", "tosh", "soat", "qush", "asal", "oyna", "bosh", "qora", "kuch", "gul", "tol", "non",
+    "qor", "suv", "yil", "kun", "tun", "yer", "osh", "qum", "bog", "tom", "sut", "choy", "olov", "qish"];
   // Solishtirish uchun uzunroq parollar
   const PAROLLAR = ["kitob", "quyosh", "daftar", "shamol", "chaqmoq", "burgut", "gilos", "dengiz", "tulki", "qalam", "chashma", "arqon"];
   // Har saytning o'z "tuzi" bor: boshlang'ich iz shu sondan boshlanadi
@@ -126,10 +127,14 @@
   }
 
   // ---------- 1-bosqich: bir tomonlama amal ----------
-  function yigindiTask(r, prev) {
+  // Qiyinlik zinasi (QOIDALAR 4.3): son tier bo'yicha 4 / 5 / 6 xonali
+  const SON = [[1000, 9999], [10000, 99999], [100000, 999999]];
+  const sonTanla = (rnd, tier) => int(rnd, SON[tier || 0][0], SON[tier || 0][1]);
+
+  function yigindiTask(r, prev, tier) {
     const rr = r || Math.random;
     return pickNew((rnd) => {
-      const son = int(rnd, 1000, 9999);
+      const son = sonTanla(rnd, tier);
       const javob = raqamYigindi(son);
       if (javob < 6) return null; // juda oson bo'lmasin
       return { id: "yigindi:" + son, tur: "yigindi", son, javob,
@@ -139,17 +144,18 @@
     }, prev, rr);
   }
 
-  function toqnashTask(r, prev) {
+  function toqnashTask(r, prev, tier) {
     const rr = r || Math.random;
     return pickNew((rnd) => {
-      const son = int(rnd, 1000, 9999);
+      const son = sonTanla(rnd, tier);
       const yigindi = raqamYigindi(son);
       const juft = yigindiJuft(son, rnd);
       if (!juft || yigindi < 6) return null;
       const soxta = [];
-      for (let k = 0; k < 200 && soxta.length < 3; k++) {
-        const x = int(rnd, 1000, 9999);
-        if (raqamYigindi(x) === yigindi || x === son || soxta.includes(x)) continue;
+      for (let k = 0; k < 2000 && soxta.length < 3; k++) {
+        // Chalg'ituvchilar: yig'indisi javobga yaqin (±1…3) — ko'z bilan ajratib bo'lmaydi
+        const x = sonTanla(rnd, tier);
+        if (raqamYigindi(x) === yigindi || Math.abs(raqamYigindi(x) - yigindi) > 3 || x === son || soxta.includes(x)) continue;
         soxta.push(x);
       }
       if (soxta.length < 3) return null;
@@ -161,13 +167,13 @@
     }, prev, rr);
   }
 
-  const QAYTAR_SOXTA = ["Ha, yigʻindini teskari hisoblasam boʻladi", "Ha, faqat bitta son mos keladi"];
+  const QAYTAR_SOXTA = ["Ha, yigʻindini teskari hisoblasam boʻladi", "Ha, faqat bitta son mos keladi", "Ha, raqamlarni tartiblasam topaman"];
   const QAYTAR_JAVOB = "Yoʻq, koʻp son shu yigʻindini beradi";
 
-  function qaytarTask(r, prev) {
+  function qaytarTask(r, prev, tier) {
     const rr = r || Math.random;
     return pickNew((rnd) => {
-      const son = int(rnd, 1000, 9999);
+      const son = sonTanla(rnd, tier);
       const yigindi = raqamYigindi(son);
       const juft = yigindiJuft(son, rnd);
       if (!juft || yigindi < 6) return null;
@@ -175,15 +181,25 @@
         variantlar: aralash([QAYTAR_JAVOB, ...QAYTAR_SOXTA], rnd),
         matn: "Yigʻindi " + yigindi + " ekanini bilsang, asl sonni aniq topa olasanmi?",
         hisob: son + " ham, " + juft + " ham " + yigindi + " beradi",
+        ishora: "Yuqoridagi ikki songa qara: ularning yigʻindisini solishtir.",
         nega: "Yigʻindi orqaga yoʻl koʻrsatmaydi: " + son + " va " + juft + " — ikkisining yigʻindisi bir xil." };
     }, prev, rr);
   }
 
   // ---------- 2-bosqich: barmoq izi ----------
-  function izTask(r, prev) {
+  // Parol tier bo'yicha: 0 — 3 harfli so'z; 1 — 4 harfli so'z yoki 3 harf + raqam; 2 — 4 harf + raqam yoki 5 harfli so'z
+  const uzunlikda = (n) => QISQA.concat(PAROLLAR).filter((p) => p.length === n);
+  function parolTanla(rnd, tier) {
+    const raqam = String(int(rnd, 2, 9));
+    if (!tier) return pick(uzunlikda(3), rnd);
+    if (tier === 1) return rnd() < 0.5 ? pick(uzunlikda(4), rnd) : pick(uzunlikda(3), rnd) + raqam;
+    return rnd() < 0.5 ? pick(uzunlikda(4), rnd) + raqam : pick(uzunlikda(5), rnd);
+  }
+
+  function izTask(r, prev, tier) {
     const rr = r || Math.random;
     return pickNew((rnd) => {
-      const parol = pick(QISQA, rnd);
+      const parol = parolTanla(rnd, tier);
       const javob = iz(parol);
       if (javob < 10) return null; // iz ikki raqamli bo'lsin — nol bilan boshlanmaydi
       return { id: "iz:" + parol, tur: "iz", parol, tuz: 0, javob,
@@ -196,23 +212,40 @@
 
   const HA = "Ha";
   const YOQ = "Yoʻq";
+  const HECH = "Hech biri";
+  // Nomzod parollar — unlisiz harflar (tasodifan so'z chiqib qolmasin). tier 0 — 2 belgi, tier 1+ — 3 belgi
+  const UNDOSH = "bcdfghjkmnprstvxz";
+  const nomzod = (rnd, n) => Array.from({ length: n }, () => UNDOSH[Math.floor(rnd() * UNDOSH.length)]).join("");
 
-  function tengTask(r, prev) {
+  // "Qaysi parolning izi ham shu?" — 4 variant: tier 0 da 4 nomzod (bittasi to'qnashadi);
+  // tier 1+ da 3 nomzod + "Hech biri" (25% hollarda to'g'ri javob — "Hech biri").
+  function tengTask(r, prev, tier) {
     const rr = r || Math.random;
+    const t = tier || 0;
     return pickNew((rnd) => {
-      const a = pick(PAROLLAR, rnd);
-      // Yarmida atayin to'qnashuv juftligi, yarmida izlari boshqa parol
-      const boshqalar = PAROLLAR.concat(QISQA).filter((p) => p !== a && iz(p) !== iz(a));
-      const b = rnd() < 0.5 ? toqnash(a, 0) : pick(boshqalar, rnd);
-      if (!b) return null;
-      const teng = iz(a) === iz(b);
-      return { id: "teng:" + a + ":" + b, tur: "teng", ikki: [a, b], izlar: [iz(a), iz(b)],
-        javob: teng ? HA : YOQ, variantlar: [HA, YOQ],
-        matn: "Bu ikki parolning izi bir xilmi?",
-        hisob: a + " → " + iz(a) + ",  " + b + " → " + iz(b),
-        nega: teng
-          ? "Ikkalasining izi " + iz(a) + ". Bir xil iz beradigan parollar bor — bu toʻqnashuv."
-          : "Izlari boshqa: " + iz(a) + " va " + iz(b) + ". Bitta belgi oʻzgarsa ham iz oʻzgaradi." };
+      const parol = pick(uzunlikda(t ? 4 : 3), rnd);
+      const nishon = iz(parol);
+      const n = t ? 3 : 2;
+      const hech = t > 0 && rnd() < 0.25;
+      let mos = null;
+      const boshqa = [];
+      for (let k = 0; k < 4000 && (!mos || boshqa.length < 3); k++) {
+        const c = nomzod(rnd, n);
+        if (iz(c) === nishon) { if (!mos) mos = c; } else if (!boshqa.includes(c) && boshqa.length < 3) boshqa.push(c);
+      }
+      if (!mos || boshqa.length < 3) return null;
+      const sozlar = hech ? boshqa : t ? [mos, boshqa[0], boshqa[1]] : [mos, ...boshqa];
+      const variantlar = aralash(sozlar, rnd).concat(t ? [HECH] : []);
+      const javob = hech ? HECH : mos;
+      const izlar = sozlar.map((c) => c + " → " + iz(c)).join(",  ");
+      return { id: "teng:" + parol + ":" + variantlar.join(":"), tur: "teng", parol, iz: nishon, nomzodlar: sozlar,
+        javob, variantlar,
+        matn: "«" + parol + "» parolining izi — " + nishon + ". Qaysi parolning izi ham " + nishon + "?" + (t ? " Boʻlmasa — «Hech biri»." : ""),
+        hisob: izlar,
+        ishora: "Har nomzodning izini hisobla: izni 3 ga koʻpaytir, harfning sonini qoʻsh, oxirgi ikki raqamni qoldir.",
+        nega: hech
+          ? "Hech birining izi " + nishon + " emas: " + izlar + "."
+          : "«" + mos + "» ning izi ham " + nishon + ". Bir xil iz beradigan parollar bor — bu toʻqnashuv." };
     }, prev, rr);
   }
 
@@ -221,27 +254,27 @@
     { id: "baza",
       matn: "Oʻgʻri saytning bazasini oʻgʻirladi. Bazada faqat izlar bor. U sening parolingni bila oladimi?",
       javob: "Yoʻq — izdan parol chiqmaydi",
-      soxta: ["Ha — iz parolning oʻzi", "Ha — izni teskari hisoblaydi"],
+      soxta: ["Ha — iz parolning oʻzi", "Ha — izni teskari hisoblaydi", "Ha — katta kompyuter izni ochib beradi"],
       nega: "Iz bir tomonlama: oldinga hisoblash oson, orqaga yoʻl yoʻq." },
     { id: "kirish",
       matn: "Sen parolni yozib, «Kirish» ni bosding. Sayt nima qiladi?",
       javob: "Izini qayta hisoblab, saqlangan iz bilan solishtiradi",
-      soxta: ["Saqlangan parolni oʻqib solishtiradi", "Parolni senga koʻrsatadi"],
+      soxta: ["Saqlangan parolni oʻqib solishtiradi", "Parolni senga koʻrsatadi", "Parolni bazaga ochiq yozib qoʻyadi"],
       nega: "Sayt izni har safar qaytadan hisoblaydi — parolning oʻzini saqlashga hojat yoʻq." },
     { id: "xat",
       matn: "Parolingni esdan chiqarding. Sayt eski parolingni xat bilan yuborib berdi. Bu nimani koʻrsatadi?",
       javob: "Sayt parolni ochiq saqlayapti — bu xavfli",
-      soxta: ["Sayt gʻamxoʻr — bu yaxshi belgi", "Sayt izni teskari hisobladi"],
+      soxta: ["Sayt gʻamxoʻr — bu yaxshi belgi", "Sayt izni teskari hisobladi", "Sayt parolni izdan qayta yasadi"],
       nega: "Iz saqlaydigan sayt eski parolni qaytarib bera olmaydi — u faqat yangisini yasashni taklif qiladi." },
     { id: "xato",
       matn: "Sen parolni bitta harf xato yozding. Sayt nima qiladi?",
       javob: "Kiritmaydi — izlar mos kelmaydi",
-      soxta: ["Kiritadi — parol juda yaqin edi", "Izni oʻzi toʻgʻrilab qoʻyadi"],
+      soxta: ["Kiritadi — parol juda yaqin edi", "Izni oʻzi toʻgʻrilab qoʻyadi", "Kiritadi, lekin ogohlantirib qoʻyadi"],
       nega: "Bitta belgi oʻzgarsa, iz butunlay boshqa chiqadi. Sayt «yaqin» parolni tanimaydi." },
     { id: "toqnashuv",
       matn: "Ikki xil parolning izi bir xil chiqdi. Bu nima degani?",
       javob: "Toʻqnashuv — bir xil iz beradigan parollar bor",
-      soxta: ["Ikki parol aslida bir xil", "Hisobda xato bor"],
+      soxta: ["Ikki parol aslida bir xil", "Hisobda xato bor", "Sayt buzilgan"],
       nega: "Bizning iz qisqa, parollar esa koʻp. Haqiqiy saytlarda iz juda uzun — toʻqnashuv deyarli uchramaydi." },
   ];
 
@@ -249,35 +282,42 @@
     { id: "bir-parol",
       matn: "Hamma saytda bir xil parol ishlatasan. Bitta sayt buzildi. Nima boʻladi?",
       javob: "Oʻgʻri oʻsha parol bilan boshqa saytlarga ham kiradi",
-      soxta: ["Hech narsa — har sayt oʻzicha ishlaydi", "Faqat oʻsha saytdagi iz yoʻqoladi"],
+      soxta: ["Hech narsa — har sayt oʻzicha ishlaydi", "Faqat oʻsha saytdagi iz yoʻqoladi", "Saytlar parolni oʻzi almashtirib qoʻyadi"],
       nega: "Bir parol — bitta kalit hamma qulfga. Har saytga boshqa parol kerak." },
     { id: "tuz",
       matn: "Ikki saytda parolim bir xil, lekin izlari boshqa. Nega?",
       javob: "Har saytning oʻz tuzi bor",
-      soxta: ["Izlar tasodifiy chiqadi", "Saytlar parolni oʻzgartirib qoʻyadi"],
+      soxta: ["Izlar tasodifiy chiqadi", "Saytlar parolni oʻzgartirib qoʻyadi", "Bir saytda iz xato hisoblangan"],
       nega: "Tuz — saytga xos son. Boshlangʻich iz tuzdan boshlanadi, shuning uchun natija ham boshqa chiqadi." },
     { id: "ogirlangan-iz",
       matn: "Oʻgʻri bir saytdan izni oldi. Shu iz boshqa saytda ishlaydimi?",
       javob: "Yoʻq — u saytda tuz boshqa, iz ham boshqa",
-      soxta: ["Ha — iz hamma joyda bir xil", "Ha, lekin sekinroq ishlaydi"],
+      soxta: ["Ha — iz hamma joyda bir xil", "Ha, lekin sekinroq ishlaydi", "Ha — agar parol uzun boʻlsa"],
       nega: "Tuz izlarni saytga bogʻlaydi: bitta roʻyxat hamma saytga yaramaydi." },
     { id: "qisqa-iz",
       matn: "Iz qisqa boʻlsa nimasi yomon?",
       javob: "Toʻqnashuv koʻp boʻladi",
-      soxta: ["Hisoblash qiyin boʻladi", "Parol uzun boʻlib qoladi"],
+      soxta: ["Hisoblash qiyin boʻladi", "Parol uzun boʻlib qoladi", "Sayt sekin ishlaydi"],
       nega: "Shuning uchun haqiqiy izlar juda uzun — oʻnlab belgidan iborat." },
     { id: "oson-parol",
       matn: "Parolim — «12345». Sayt izni saqlaydi. Parolim xavfsizmi?",
       javob: "Yoʻq — mashhur parollarning izi oldindan hisoblangan",
-      soxta: ["Ha — iz uni yashiradi", "Ha — izdan parol chiqmaydi"],
+      soxta: ["Ha — iz uni yashiradi", "Ha — izdan parol chiqmaydi", "Ha — tuz uni kuchli qiladi"],
       nega: "Iz sirni saqlaydi, lekin zaif parolni kuchli qilmaydi. «Parol kuchi» oʻyinini esla." },
   ];
+
+  // Maslahat — tushunchani eslatadi, javobni aytmaydi
+  const HOLAT_ISHORA = {
+    2: "Esla: sayt parolni emas, izini saqlaydi. Izni oldinga hisoblash oson, orqaga yoʻl yoʻq.",
+    3: "Esla: tuz — har saytning oʻz soni. Iz sirni saqlaydi, lekin zaif parolni kuchli qilmaydi.",
+  };
 
   function holatTask(bank, r, prev) {
     const rr = r || Math.random;
     return pickNew((rnd) => {
       const h = pick(bank, rnd);
       return { id: "holat:" + h.id, tur: "holat", matn: h.matn, javob: h.javob, nega: h.nega,
+        ishora: HOLAT_ISHORA[bank === HOLATLAR3 ? 3 : 2],
         variantlar: aralash([h.javob, ...h.soxta], rnd) };
     }, prev, rr);
   }
@@ -286,11 +326,11 @@
   const holat3Task = (r, prev) => holatTask(HOLATLAR3, r, prev);
 
   // ---------- 3-bosqich: tuz ----------
-  function tuzTask(r, prev) {
+  function tuzTask(r, prev, tier) {
     const rr = r || Math.random;
     return pickNew((rnd) => {
       const sayt = pick(SAYTLAR, rnd);
-      const parol = pick(QISQA, rnd);
+      const parol = parolTanla(rnd, tier);
       const javob = iz(parol, sayt.tuz);
       const tuzsiz = iz(parol, 0);
       if (javob < 10 || javob === tuzsiz) return null; // tuz izni oʻzgartirgani koʻrinsin
@@ -310,10 +350,11 @@
   const BOSQICH2 = [izTask, tengTask, holat2Task];
   const BOSQICH3 = [tuzTask, holat3Task, holat3Task];
 
-  const navbat = (bank) => (r, prev, n) => bank[(n || 0) % bank.length](r, prev);
+  // n — nechanchi to'g'ri javob (mashq turi navbati), tier — qiyinlik zinasi
+  const navbat = (bank) => (r, prev, n, tier) => bank[(n || 0) % bank.length](r, prev, tier);
 
   const api = {
-    ALIFBO, KOP, CHEK, QISQA, PAROLLAR, SAYTLAR, HOLATLAR2, HOLATLAR3, HA, YOQ,
+    ALIFBO, KOP, CHEK, QISQA, PAROLLAR, SAYTLAR, HOLATLAR2, HOLATLAR3, HA, YOQ, HECH, SON, UNDOSH, parolTanla,
     QAYTAR_JAVOB, QAYTAR_SOXTA, BOSQICH1, BOSQICH2, BOSQICH3,
     belgiQiymat, iz, izQadamlar, izHisob, toqnash, tuzJadval,
     raqamYigindi, yigindiHisob, yigindiJuft,

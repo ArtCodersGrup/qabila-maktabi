@@ -29,6 +29,17 @@ test("savollar banki tekshiruvdan o'tadi", { skip: SKIP }, () => {
   assert.ok(Number(m[2]) >= 150, "savollar: " + m[2]);
 });
 
+// 2026-10-02: 12–16 yosh bloklariga «tahlil» qatlami qoʻshildi (qadamlarni yurgizish, xatoni topish)
+test("12–16 yosh bloklarida oʻta qiyin (tahlil) savollar yetarli", { skip: SKIP }, () => {
+  const royxat = ishga(["--royxat"]);
+  for (const [blok, jami, ota] of [["python", 30, 12], ["algoritm", 20, 9], ["kombinatorika", 20, 9]]) {
+    const m = new RegExp("^" + blok + "\\s+.*?(\\d+)\\s+\\((\\d+)/(\\d+)/(\\d+)\\)", "m").exec(royxat);
+    assert.ok(m, blok + " roʻyxatda yoʻq:\n" + royxat);
+    assert.ok(Number(m[1]) >= jami, blok + ": jami " + m[1] + " ta savol (kamida " + jami + ")");
+    assert.ok(Number(m[4]) >= ota, blok + ": oʻta qiyin " + m[4] + " ta (kamida " + ota + ")");
+  }
+});
+
 test("har blok fayli BLOK va savollar(q, M) beradi", () => {
   const dir = path.join(ROOT, "oqituvchi/savollar");
   const fayllar = fs.readdirSync(dir).filter((f) => f.endsWith(".py") && !f.startsWith("_"));

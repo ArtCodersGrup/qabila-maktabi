@@ -55,3 +55,15 @@ saralash, 1 dan 1 000 000 gacha yigʻindi, 10 000 ta oʻquvchining juftliklari.
 - `js/logic.js` — namunalar, `olcha/olchovlar/nisbat/sinfniTop`, savollar.
 - `js/scenes/*` — bosqichlar; `common.js` da oʻsish grafigi va jadval.
 - `tests/logic.test.js` — 14 test, oʻlchov ↔ sinf mosligi shu yerda qulflangan.
+
+## 2026-10-02 qiyinlik yangilanishi
+
+Sabab: hisobot-5 (C jadvali) — 3-bosqichdagi amaliy savollarda **ikki** tanlov bor edi (50% taxmin).
+
+- **Amaliy savol:** har birida **toʻrt** tanlov; tanlovlar qadamlar sonini ham aytadi («10 000 000 000 — n² ta»),
+  yaʼni bola usul nomini emas, oʻsishni tanlaydi. Tanlovlar har safar boshqa tartibda. Savollar 4 → 8:
+  kichik n da oddiy usul yetishi, «bir marta saralab, koʻp marta izlash», O(n²) da n oʻn barobar oshishi,
+  ikkilik izlashning 1 000 → 1 000 000 dagi qadami. Yangi savollar `tier` 1–2 dan ochiladi.
+- **Qoida bilan hisoblash:** n **toʻrt barobar** oshadigan holat qoʻshildi (qoida ikki marta qoʻllanadi:
+  O(n) — ×4, O(n²) — ×16). Ikkinchi savol shu turdan boʻlishi mumkin; maslahat «ikki marta ikkilandi» deydi.
+- Testlar: 14 → 15.

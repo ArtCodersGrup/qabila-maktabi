@@ -56,3 +56,17 @@ Bosh ekran
 ├── js/scenes/…    kirish, uch bosqich, tabrik
 └── tests/logic.test.js (12 ta)
 ```
+
+## 2026-10-02 qiyinlik yangilanishi
+
+Sabab: hisobot-5 (C jadvali) — 1-bosqich mashqi «almashtiramizmi? ha / yoʻq» edi, 50% taxmin bilan oʻtardi
+(QOIDALAR §4.3: 2 variantli savol yolgʻiz kelmaydi).
+
+- **1-bosqich:** endi savol — «bitta toʻliq oʻtishda **nechta** almashtirish boʻladi?» (javob — son, klaviaturadan).
+  Bola oʻtishni xayolan toʻliq bajaradi: almashgan katta son keyingi juftlikda yana qatnashadi.
+  Maslahat usulni aytadi, javobni emas; yechimda almashgan juftliklar va oʻtishdan keyingi ustunlar koʻrsatiladi.
+- **Qiyinlik zinasi** (`tier` 0/1/2): 1-bosqichda roʻyxat 4–5 → 5–6 → 6–7 ta son; 2-bosqichda 4 → 4–5 → 5–6.
+- **3-bosqich (kod yozish):** ikki yangi masala — `kamayish` (kamayish tartibida saralash, manfiy sonlar bilan test)
+  va `almashishlar(a)` (pufakcha usulidagi almashtirishlar sonini qaytarish — tanlash usuli bilan sanalgan yechim
+  testdan oʻtmaydi). Birinchi zinada faqat `pufak`/`tanlash`, oxirgisida yangi masalalar ustun.
+- `logic.js`: `birOtish()`, `zinadan()`; testlar: 12 → 14.

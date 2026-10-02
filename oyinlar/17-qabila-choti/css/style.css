@@ -18,6 +18,16 @@
 .dt-val { font-size: 12px; font-weight: 800; }
 .strip-host { min-height: 60px; }
 
+/* ---------- "Xato raqamni bos" (2-bosqich mashqi) ---------- */
+.pick-digits { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: center; gap: 8px; }
+.pick-digit {
+  min-width: 52px; min-height: 60px; padding: 0 10px; border: 3px solid var(--chiziq); border-radius: 14px;
+  background: #fff; box-shadow: 0 4px 0 var(--soya); font-size: 32px; font-weight: 900; color: var(--matn);
+}
+.pick-digit:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--soya); }
+.pick-digit.bad { border-color: var(--yana); background: #FFF6E5; }
+.pick-base { font-size: 20px; font-weight: 900; color: var(--asosiy); }
+
 /* ---------- Tizim turlari ---------- */
 .kinds { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
 .kind-card {
@@ -25,7 +35,7 @@
   border-radius: 14px; background: #fff; box-shadow: 0 3px 0 var(--soya); font-size: 17px; font-weight: 800; animation: pop 0.3s;
 }
 .kind-title { font-size: 20px; font-weight: 900; color: var(--asosiy); }
-.kind-ex { color: #7A7266; }
+.kind-ex { color: var(--matn-3); }
 
 /* ---------- Xona qutilari (o'ngda 1) ---------- */
 .places { display: flex; flex-direction: row-reverse; flex-wrap: wrap-reverse; justify-content: center; gap: 8px; }
@@ -34,7 +44,7 @@
   font-size: 22px; font-weight: 900; text-align: center; animation: pop 0.25s;
 }
 .nplaces { display: grid; gap: 0 14px; justify-items: center; }
-.np-place { font-size: 15px; font-weight: 900; color: var(--yana); }
+.np-place { font-size: 15px; font-weight: 900; color: var(--yana-matn); }
 .np-digit { font-size: 30px; font-weight: 900; }
 
 /* ---------- Formula, hikoya, tabrik ---------- */

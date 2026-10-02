@@ -127,43 +127,87 @@
 
   const FPS = [2, 4, 5, 10, 12, 24];
 
-  const taskKey = (t) => JSON.stringify([t.type, t.answer, t.fps, t.seconds, t.frameBytes, t.frames, t.gb, t.mb,
+  const taskKey = (t) => JSON.stringify([t.type, t.answer, t.fps, t.seconds, t.frameBytes, t.frames, t.gb, t.mb, t.n, t.each, t.ask,
     t.changed, t.a && t.a.join(""), t.b && t.b.join(""), t.options && t.options.map((o) => (typeof o === "object" ? o.label : o))]);
   const same = (a, b) => !!a && taskKey(a) === taskKey(b);
 
+  // Qiyinlik zinasi (QOIDALAR 4.3): chegaralar tier 0 / 1 / 2 bo'yicha
+  const FRAME = [{ min: 2, sec: 9, total: 100 }, { min: 3, sec: 12, total: 150 }, { min: 4, sec: 15, total: 200 }]; // 1-bosqich
+  const FRAME_BYTES = [[2, 12], [4, 16], [6, 20]]; // 2-bosqich: 1 kadr hajmi; kadrlar ≤ 10
+  const FRAMES_TOTAL = [100, 150, 200]; // kadrlar × bayt chegarasi
+  const FPS_TASK = [{ fb: [1, 4], sec: 5, total: 100 }, { fb: [1, 5], sec: 5, total: 150 }, { fb: [2, 6], sec: 6, total: 240 }];
+  const CMP_GB = [[1, 5], [2, 9], [6, 20]]; // taqqoslashdagi Gbayt
+  const CHANGED = [[2, 12], [8, 20], [15, 30]]; // 3-bosqich: o'zgargan piksellar (kadr — 36 piksel)
+
   // 1-bosqich mashqi: jami kadr / necha soniya
-  function makeFrameTask(prev, rng) {
+  function makeFrameTask(prev, rng, tier) {
     rng = rng || Math.random;
+    const lim = FRAME[tier || 0];
     for (;;) {
       const fps = pick(FPS, rng);
-      const seconds = randInt(2, Math.min(9, Math.floor(100 / fps)), rng);
+      const max = Math.min(lim.sec, Math.floor(lim.total / fps));
+      if (max < lim.min) continue;
+      const seconds = randInt(lim.min, max, rng);
       const type = rng() < 0.5 ? "total" : "seconds";
       const task = { type, fps, seconds, total: fps * seconds, answer: type === "total" ? fps * seconds : seconds };
       if (!same(prev, task)) return task;
     }
   }
 
+  // "Qaysi biri eng katta?" — uch karta: g Gbayt, m Mbayt, n ta kino × s Gbayt — va "Uchalasi teng" (4 variant).
+  // Qiymatlar Mbaytda. Yo bitta eng katta, yo uchalasi teng.
+  const cmpSizes = (t) => ({ gb: t.gb * 1024, mb: t.mb, films: t.n * t.each * 1024 });
+  function cmpAnswer(t) {
+    const v = cmpSizes(t);
+    if (v.gb === v.mb && v.gb === v.films) return "teng";
+    const max = Math.max(v.gb, v.mb, v.films);
+    return ["gb", "mb", "films"].find((k) => v[k] === max);
+  }
+  const CMP_OPTIONS = ["gb", "mb", "films", "teng"];
+  function makeCompareTask(rng, tier) {
+    const [lo, hi] = CMP_GB[tier];
+    for (;;) {
+      const gb = randInt(lo, hi, rng);
+      const equal = rng() < 0.2;
+      const total = equal ? gb : gb + pick([-2, -1, 1, 2], rng);
+      if (total < 1) continue;
+      const ns = [2, 3, 4, 5].filter((n) => total % n === 0);
+      const n = ns.length ? pick(ns, rng) : 1;
+      // 1000 ≠ 1024 tuzog'i: 1000·g Mbayt < g Gbayt < 1000·(g + 1) Mbayt
+      const mb = equal ? gb * 1024 : 1000 * (gb + (rng() < 0.5 ? 0 : 1));
+      const task = { type: "compare", gb, mb, n, each: total / n };
+      const v = cmpSizes(task);
+      const top = Math.max(v.gb, v.mb, v.films);
+      if ([v.gb, v.mb, v.films].filter((x) => x === top).length === 2) continue; // ikkitasi teng — savol noaniq
+      task.answer = cmpAnswer(task);
+      return task;
+    }
+  }
+
   // 2-bosqich mashqi: kadrlar × bayt, soniyalar, Gbayt va Mbayt
-  function makeSizeTask(prev, rng) {
+  function makeSizeTask(prev, rng, tier) {
     rng = rng || Math.random;
+    tier = tier || 0;
     for (;;) {
       const r = rng();
       let task;
       if (r < 1 / 3) {
-        const frameBytes = randInt(2, 12, rng);
-        const frames = randInt(2, Math.min(10, Math.floor(100 / frameBytes)), rng);
+        const frameBytes = randInt(FRAME_BYTES[tier][0], FRAME_BYTES[tier][1], rng);
+        const lo = tier ? 4 : 2;
+        const max = Math.min(10, Math.floor(FRAMES_TOTAL[tier] / frameBytes));
+        if (max < lo) continue;
+        const frames = randInt(lo, max, rng);
         task = { type: "frames", frameBytes, frames, answer: frameBytes * frames };
       } else if (r < 2 / 3) {
-        const frameBytes = randInt(1, 4, rng);
+        const lim = FPS_TASK[tier];
+        const frameBytes = randInt(lim.fb[0], lim.fb[1], rng);
         const fps = pick([2, 4, 5, 10], rng);
-        const max = Math.floor(100 / (frameBytes * fps));
+        const max = Math.floor(lim.total / (frameBytes * fps));
         if (max < 2) continue;
-        const seconds = randInt(2, Math.min(5, max), rng);
+        const seconds = randInt(2, Math.min(lim.sec, max), rng);
         task = { type: "fps", frameBytes, fps, seconds, answer: frameBytes * fps * seconds };
       } else {
-        const gb = randInt(1, 5, rng);
-        const mb = 1000 * (gb + (rng() < 0.5 ? 0 : 1));
-        task = { type: "compare", gb, mb, answer: gb * 1024 > mb ? "gb" : "mb" };
+        task = makeCompareTask(rng, tier);
       }
       if (!same(prev, task)) return task;
     }
@@ -184,9 +228,19 @@
     return list;
   }
 
-  // 3-bosqich mashqi: nechta katak o'zgardi, nechta piksel tejaldi, qaysi video ko'proq siqiladi
-  function makeCompressTask(prev, rng) {
+  function shuffle(list, rng) {
+    const out = list.slice();
+    for (let i = out.length - 1; i > 0; i--) {
+      const j = Math.floor(rng() * (i + 1));
+      [out[i], out[j]] = [out[j], out[i]];
+    }
+    return out;
+  }
+
+  // 3-bosqich mashqi: nechta katak o'zgardi, nechta piksel tejaldi, to'rt videodan qaysi biri eng ko'p / eng kam siqiladi
+  function makeCompressTask(prev, rng, tier) {
     rng = rng || Math.random;
+    tier = tier || 0;
     for (;;) {
       const r = rng();
       let task;
@@ -195,15 +249,17 @@
         const answer = diff(a, b).length;
         task = { type: "diff", a, b, answer, options: numberOptions(answer, rng) };
       } else if (r < 2 / 3) {
-        const changed = randInt(2, 12, rng);
+        const changed = randInt(CHANGED[tier][0], CHANGED[tier][1], rng);
         task = { type: "saved", changed, answer: CELLS - changed };
       } else {
-        const pair = pick(PAIRS, rng);
-        const calmFirst = rng() < 0.5;
-        const options = calmFirst
-          ? [{ label: pair.calm, calm: true }, { label: pair.busy, calm: false }]
-          : [{ label: pair.busy, calm: false }, { label: pair.calm, calm: true }];
-        task = { type: "which", options, answer: calmFirst ? 0 : 1 };
+        // 4 variant: "eng ko'p siqiladi" — 1 tinch + 3 harakatli; "eng kam siqiladi" (tier 1+) — 1 harakatli + 3 tinch
+        const ask = tier > 0 && rng() < 0.5 ? "least" : "most";
+        const calm = shuffle(PAIRS.map((p) => p.calm), rng);
+        const busy = shuffle(PAIRS.map((p) => p.busy), rng);
+        const one = ask === "most" ? { label: calm[0], calm: true } : { label: busy[0], calm: false };
+        const rest = (ask === "most" ? busy : calm).slice(0, 3).map((label) => ({ label, calm: ask !== "most" }));
+        const options = shuffle([one, ...rest], rng);
+        task = { type: "which", ask, options, answer: options.indexOf(one) };
       }
       if (!same(prev, task)) return task;
     }
@@ -214,6 +270,7 @@
     background, BOUNCE, MISSING, bounceFrame, placeOk, SPEEDS,
     TINY, tinyFrame, REAL, DEMO_A, DEMO_B, diff, makeScene, PAIRS, FPS,
     taskKey, makeFrameTask, makeSizeTask, makeCompressTask,
+    FRAME, FRAME_BYTES, FRAMES_TOTAL, FPS_TASK, CMP_GB, CHANGED, CMP_OPTIONS, cmpSizes, cmpAnswer,
   };
 
   if (typeof module !== "undefined" && module.exports) module.exports = api;

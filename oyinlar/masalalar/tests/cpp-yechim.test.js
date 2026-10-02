@@ -35,6 +35,15 @@ test("buzilgan C++ yechimi to'liq ball olmaydi", () => {
   assert.match(xato.birinchiYiqilgan.error.hint, /./);
 });
 
+test("qadam chegarasi bor har masalaning samarali C++ yechimi shu chegaraga sig'adi", () => {
+  const qadamli = R.hammasi().filter((p) => p.qadam).map((p) => p.id).sort();
+  assert.ok(qadamli.length >= 6);
+  const bor = new Set(YECHIMLAR.map((y) => y.id));
+  assert.deepEqual(qadamli.filter((id) => !bor.has(id)), [], "C++ yechimi yo'q — chegara C++ da sinalmagan");
+  // (to'liq o'tishi yuqoridagi test bilan tekshirilgan: baho() task.qadam ni C++ yadrosiga ham beradi)
+  for (const id of qadamli) assert.equal(R.vazifa(bittasi(id)).qadam, 200000, id);
+});
+
 test("har daraja uchun kamida bitta C++ yechimi bor", () => {
   const darajalar = new Set(YECHIMLAR.map((y) => bittasi(y.id).daraja));
   assert.ok(darajalar.size >= 3, "darajalar: " + [...darajalar].join(", "));

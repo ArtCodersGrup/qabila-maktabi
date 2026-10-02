@@ -23,11 +23,11 @@
     await ui.say("elder", "1A₁₆ × 3 = 4E₁₆. Tekshiramiz: 26 × 3 = 78 = 4·16 + 14 ✓");
   }
 
-  // 6.2: mashq — 2 xonali son × 2–9
+  // 6.2: mashq — 2 xonali son × bir xonali son (tier 2 da A…F)
   function mulTask(task) {
     const el = common.box(true);
     el.append(amal16Ui.multiples());
-    const board = sanoqUi.ustun(el, { a: task.a, b: String(task.d), op: "×", base: 16, width: 4 });
+    const board = sanoqUi.ustun(el, { a: task.a, b: S.digitChar(task.d), op: "×", base: 16, width: 4 });
     ui.bubble("elder", "Koʻpaytir! Javobni 16-likda yoz.");
     const x = S.fromBase(task.a, 16);
     const steps = S.stepsMul(task.a, task.d, 16).filter((st) => st.i < task.a.length);
@@ -36,8 +36,9 @@
       base: 16,
       maxLen: 3,
       hint: () => {
-        steps.forEach((st) => common.add(el, common.line(`${st.say.replace(". Qaysi raqamni yozamiz?", "")} → ${st.hint}`, "small")));
-        ui.bubble("elder", "↻ Har ustunni oʻnlikda hisobladim. 16 ga boʻlib, qoldiqni yoz.");
+        // Maslahat — faqat birinchi (o'ng) ustunning o'nlikdagi hisobi; raqam va ko'chishni bola o'zi topadi
+        common.add(el, common.line(`Oʻng ustun: ${steps[0].say.replace(". Qaysi raqamni yozamiz?", "")}`, "small"));
+        ui.bubble("elder", "↻ Har ustunni oʻnlikda hisobla. 16 ga boʻl: boʻlinma — koʻchadi, qoldiq — yoziladi.");
       },
       solution: () => {
         S.mulDigit(task.a, task.d, 16).cols.forEach((c, i) => { if (c.carryOut) board.setCarry(i + 1, String(c.carryOut)); });
@@ -57,11 +58,11 @@
 
   async function stage3() {
     await guidedMul();
-    await ui.say("elder", "Endi oʻzing koʻpaytir. 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing koʻpaytir. ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev) => amal16.makeMulTask(prev),
+      next: (prev, correct, tier) => amal16.makeMulTask(prev, undefined, tier),
       run: mulTask,
-      praise: (task) => `${h16(task.a)} × ${task.d} = ${h16(task.answer)}.`,
+      praise: (task) => `${h16(task.a)} × ${S.digitChar(task.d)} = ${h16(task.answer)}.`,
     });
     for (const scene of SCENES) await showScene(scene);
   }

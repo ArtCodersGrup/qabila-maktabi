@@ -111,16 +111,26 @@
         if (atOp("(")) {
           const open = next();
           const args = [];
+          // Nomli argumentlar (end=" ") alohida yig'iladi; qaysi funksiyada ruxsat borligini talqinchi hal qiladi
+          const kwargs = [];
           while (!atOp(")")) {
             if (at("name") && peek(1).type === "op" && peek(1).value === "=") {
-              throw E.notYet("nomli argument (" + here().value + "=…)", "print(a, b)", where());
+              const nameTok = next();
+              next(); // "="
+              kwargs.push({ name: nameTok.value, value: parseExpr(), ...where(nameTok) });
+            } else {
+              if (kwargs.length) {
+                throw E.syntaxError("positional argument follows keyword argument", Object.assign(where(), {
+                  hint: "Nomli argument (end=…) oxirida yoziladi: print(a, b, end=\" \").",
+                }));
+              }
+              args.push(parseExpr());
             }
-            args.push(parseExpr());
             if (atOp(",")) next();
             else break;
           }
           expectOp(")", "Chaqiruvda ochilgan `(` yopilmagan.");
-          node = { t: "Call", func: node, args, ...where(open) };
+          node = { t: "Call", func: node, args, kwargs, ...where(open) };
           continue;
         }
         if (atOp("[")) {

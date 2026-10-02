@@ -16,7 +16,7 @@
 
   // Uzun belgilar oldin tekshiriladi: "<<=" bo'lmasa ham "<<" "<=" dan oldin turadi
   const BELGILAR = [
-    "<<", ">>", "++", "--", "+=", "-=", "*=", "/=", "%=", "==", "!=", "<=", ">=", "&&", "||",
+    "<<", ">>", "++", "--", "+=", "-=", "*=", "/=", "%=", "==", "!=", "<=", ">=", "&&", "||", "::",
     "+", "-", "*", "/", "%", "=", "<", ">", "!", "(", ")", "{", "}", "[", "]", ";", ",", ".", ":", "?", "&",
   ];
 
@@ -65,19 +65,60 @@
         continue;
       }
 
-      // Son: 12, 12.5
+      // Son: 12, 12.5, 2., 1e-5, 2.5e3, 100000LL
       if (ch >= "0" && ch <= "9") {
         const pos = joy();
         let j = i;
         while (j < src.length && /[0-9]/.test(src[j])) j++;
         let kasr = false;
-        if (src[j] === "." && /[0-9]/.test(src[j + 1] || "")) {
+        if (src[j] === "." && !/[A-Za-z_.]/.test(src[j + 1] || "")) {
           kasr = true;
           j++;
           while (j < src.length && /[0-9]/.test(src[j])) j++;
         }
+        // Eksponent: 1e-5 = 0.00001, 2e3 = 2000 (har doim kasr son — double)
+        if ((src[j] === "e" || src[j] === "E") && !(src[i] === "0" && /[xX]/.test(src[i + 1] || ""))) {
+          const belgi = src[j + 1] === "-" || src[j + 1] === "+" ? 1 : 0;
+          if (!/[0-9]/.test(src[j + 1 + belgi] || "")) {
+            throw E.sintaksis("exponent has no digits", Object.assign({ line: pos.line, col: pos.col + (j - i) }, {
+              hint: "e dan keyin daraja yoziladi: 1e5 — bu 100000, 1e-5 — bu 0.00001.",
+            }));
+          }
+          kasr = true;
+          j += 1 + belgi;
+          while (j < src.length && /[0-9]/.test(src[j])) j++;
+        }
         const matn = src.slice(i, j);
-        push(kasr ? "double" : "int", matn, pos);
+        // Sondan keyin yopishgan harflar: LL (long long), yoki xato
+        const qoshimcha = (/^[A-Za-z_][A-Za-z0-9_]*/.exec(src.slice(j, j + 40)) || [""])[0];
+        let tur = kasr ? "double" : "int";
+        if (qoshimcha) {
+          if (!kasr && /^0[xXbB]/.test(matn + qoshimcha)) {
+            throw E.yoq("0x… yoki 0b… koʻrinishidagi son", Object.assign(pos, {
+              hint: "Oʻn oltilik (0x1F) va ikkilik (0b101) yozuv bu yerda hali ishlamaydi. Sonni oddiy oʻnlik koʻrinishda yoz.",
+            }));
+          }
+          if (!kasr && /^(ll|LL|l|L)$/.test(qoshimcha)) tur = "ll"; // 100000LL — long long
+          else if (!kasr && /^[uU]/.test(qoshimcha)) throw E.yoq("unsigned", pos);
+          else if (kasr && /^[fF]$/.test(qoshimcha)) throw E.yoq("float", pos);
+          else {
+            throw E.sintaksis("invalid suffix '" + qoshimcha + "' on " + (kasr ? "floating" : "integer") + " constant",
+              Object.assign({ line: pos.line, col: pos.col + matn.length }, {
+                hint: "Son bilan harflar yopishib qolgan: «" + matn + qoshimcha + "». Oʻzgaruvchi nomi raqamdan boshlanmaydi; "
+                  + "son va nom orasida amal (masalan *) boʻlishi kerak.",
+              }));
+          }
+          j += qoshimcha.length;
+        }
+        // 010 — C++ da SAKKIZLIK son (8). Jimgina 10 deb olish yolg'on natija bo'lar edi.
+        if (!kasr && matn.length > 1 && matn[0] === "0") {
+          throw E.yoq("0 bilan boshlanadigan butun son", Object.assign(pos, {
+            hint: "C++ da 0 bilan boshlangan butun son sakkizlik sanoq tizimida oʻqiladi: 010 — bu 8, oʻn emas. "
+              + "Oldidagi 0 ni olib tashla.",
+          }));
+        }
+        push(tur, matn, pos);
+        tokens[tokens.length - 1].uzunlik = j - i;
         olga(j - i);
         continue;
       }
@@ -118,7 +159,18 @@
           qiymat = src[j];
           j++;
         }
-        if (src[j] !== "'") throw E.sintaksis("missing terminating ' character", pos);
+        if (src[j] !== "'") {
+          throw E.sintaksis("missing terminating ' character", Object.assign(pos, {
+            hint: "Bir tirnoq ichida faqat BITTA belgi turadi: 'a'. Matn qoʻshtirnoqda yoziladi: \"salom\".",
+          }));
+        }
+        // char — bitta bayt: lotin bo'lmagan harf (ʻ, ё, ş…) unga sig'maydi
+        if (qiymat === undefined || qiymat.charCodeAt(0) > 127) {
+          throw E.sintaksis("character too large for enclosing character literal type", Object.assign(pos, {
+            hint: "char — bitta bayt: unga faqat oddiy lotin harfi, raqam yoki tinish belgisi sigʻadi. "
+              + "Boshqa harflarni qoʻshtirnoq ichida, string sifatida yoz.",
+          }));
+        }
         push("belgi", qiymat, pos);
         tokens[tokens.length - 1].uzunlik = j + 1 - i;
         olga(j + 1 - i);

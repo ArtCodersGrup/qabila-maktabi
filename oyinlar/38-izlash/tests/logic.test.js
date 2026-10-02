@@ -75,13 +75,72 @@ test("qadam jadvali: chiziqli ikki barobar o'sadi, ikkilik deyarli o'smaydi", ()
   assert.ok(j[3].ikkilik < j[3].chiziqli, "80 da ikkilik tejamli bo'lishi kerak");
 });
 
-test("o'qish savollari: bitta satr javob beradi va tekshiriladi", () => {
-  for (const task of each(L.oqishTask, 20)) {
+test("o'qish savollari: javob 1–4 satr va tekshiriladi", () => {
+  for (const task of each(L.oqishTask, 60)) {
     const r = py.run(task.code);
     assert.equal(r.error, null, task.id);
-    assert.equal(r.output.length, 1, task.id);
-    assert.equal(K.check(task, r.output[0]).ok, true, task.id);
+    // Faqat "qaysi indekslarga qaraydi" savolida bir necha satr; qolganlarida bitta
+    if (task.id.startsWith("ikkilik-iz:")) assert.ok(r.output.length >= 2 && r.output.length <= 4, task.id);
+    else assert.equal(r.output.length, 1, task.id);
+    assert.equal(K.check(task, r.output.join("\n")).ok, true, task.id);
   }
+});
+
+// 2026-10-02: qadamlarni yurgizish savollari
+test("qadam savollari: sanoq va iz haqiqiy ikkilik izlashga mos", () => {
+  const a = "a = [2, 5, 8, 12, 16, 23, 38, 56, 72, 91]\n";
+  // 23 ni izlash: o'rtalar 4 (16), 7 (56), 5 (23) — uchta solishtirish
+  assert.deepEqual(py.run(a + "x = 23\n" + L.IKKILIK_IZ).output, ["4", "7", "5"]);
+  assert.deepEqual(py.run(a + "x = 23\n" + L.IKKILIK_SANOQ).output, ["3"]);
+  // Chiziqli izlash 23 ni 6-solishtirishda topadi; yo'q sonni izlasa — hammasini ko'radi
+  assert.deepEqual(py.run(a + "x = 23\n" + L.CHIZIQLI_SANOQ).output, ["6"]);
+  assert.deepEqual(py.run(a + "x = 24\n" + L.CHIZIQLI_SANOQ).output, ["10"]);
+  // Yo'q sonni ikkilik izlash 4 qadamdan ko'p qilmaydi (10 ta son)
+  for (let x = 0; x <= 95; x++) assert.ok(Number(py.run(a + "x = " + x + "\n" + L.IKKILIK_SANOQ).output[0]) <= 4, "x = " + x);
+});
+
+test("zina: qadam savollari yuqori zinalarda, birinchisida — faqat natija", () => {
+  const idlar = (tier) => {
+    const r = rngFrom(19);
+    let prev = null;
+    const out = new Set();
+    for (let k = 0; k < 80; k++) { prev = L.oqishTask(r, prev, tier); out.add(prev.id.split(":")[0]); }
+    return out;
+  };
+  assert.deepEqual([...idlar(0)].sort(), ["chiziqli", "ikkilik", "yoq"]);
+  const qiyin = idlar(2);
+  for (const id of ["ikkilik-iz", "ikkilik-sanoq", "chiziqli-sanoq"]) assert.ok(qiyin.has(id), id);
+  // Ro'yxatda yo'q son ham izlanadi (yo'l oxirigacha boradi)
+  const r = rngFrom(4);
+  let prev = null;
+  let yoq = 0;
+  for (let k = 0; k < 80; k++) {
+    prev = L.oqishTask(r, prev, 2);
+    const m = /a = \[([^\]]+)\]\nx = (-?\d+)/.exec(prev.code);
+    if (!m[1].split(", ").includes(m[2])) yoq++;
+  }
+  assert.ok(yoq >= 8, "yo'q son kam izlandi: " + yoq);
+});
+
+test("yangi kod yozish masalalari: takrorli ro'yxat va chekka holatlar", () => {
+  assert.ok(L.WRITE.length >= 4);
+  const vazifa = (id) => {
+    const w = L.WRITE.find((x) => x.id === id);
+    return { type: "kod-yoz", solution: w.solution, tail: w.tail, tests: w.tests.map((stdin) => ({ stdin })) };
+  };
+  // "Bormi?" ni qaytargan (0/1) yechim takrorlarda yiqiladi
+  assert.equal(K.check(vazifa("necha-marta"), "def sana(a, x):\n    for y in a:\n        if y == x:\n            return 1\n    return 0").ok, false);
+  // Birinchi >= x: chiziqli yechim ham to'g'ri
+  assert.equal(K.check(vazifa("birinchi"), "def birinchi(a, x):\n    for i in range(len(a)):\n        if a[i] >= x:\n            return i\n    return len(a)").ok, true);
+  // "Topilmasa −1" deb yozilgan yechim yiqiladi (shart: ro'yxat uzunligi)
+  assert.equal(K.check(vazifa("birinchi"), "def birinchi(a, x):\n    for i in range(len(a)):\n        if a[i] >= x:\n            return i\n    return -1").ok, false);
+  // Qat'iy katta (>) ni izlagan yechim "2 2 2 5 / 2" va "5 / 5" da yiqiladi
+  assert.equal(K.check(vazifa("birinchi"), "def birinchi(a, x):\n    for i in range(len(a)):\n        if a[i] > x:\n            return i\n    return len(a)").ok, false);
+  assert.deepEqual(K.expectedFor(vazifa("birinchi"), { stdin: ["2 2 2 5", "2"] }), ["0"]);
+  // Zina 0 da faqat ikki asosiy masala
+  const r = rngFrom(7);
+  let prev = null;
+  for (let k = 0; k < 30; k++) { prev = L.writeTask(r, prev, 0); assert.ok(["yoz:chiziqli", "yoz:ikkilik"].includes(prev.id), prev.id); }
 });
 
 test("o'qish: topilmagan holat ham uchraydi (-1)", () => {

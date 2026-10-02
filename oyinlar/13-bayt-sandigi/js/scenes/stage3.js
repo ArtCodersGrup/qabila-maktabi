@@ -67,11 +67,13 @@
     await ui.say("elder", "Demak, bir sahifa — 2 Kbaytga yaqin.");
   }
 
-  // "Qaysi biri katta?" tugmalari
+  // "Qaysi biri eng katta?" — uch karta va "Teng" (4 variant)
+  const cmpLabels = (task) => ({ kb: `${task.kb} Kbayt`, bytes: `${task.bytes} bayt`, pages: `${task.pages} sahifa`, teng: "Uchalasi teng" });
+
   function compareButtons(task, submit) {
+    const labels = cmpLabels(task);
     const row = ui.h("div", { class: "choice-row" });
-    row.append(ui.button(`${task.kb} Kbayt`, () => submit("kb")));
-    row.append(ui.button(`${task.bytes} bayt`, () => submit("bytes")));
+    bytes.CMP_OPTIONS.forEach((k) => row.append(ui.button(labels[k], () => submit(k), k === "teng" ? "secondary" : "")));
     ui.clearControl();
     ui.control().append(row);
   }
@@ -80,15 +82,19 @@
   function kbTask(task) {
     const el = common.box(true);
     if (task.type === "pages") {
-      const view = ui.h("div", { class: "task-view" }, bytesUi.pages(task.pages, false));
+      // Ko'p sahifa (tier 1–2) ekranga sig'maydi — son yoziladi
+      const many = task.pages > 10;
+      const view = ui.h("div", { class: "task-view" }, many
+        ? ui.h("div", { class: "big-value", text: `${task.pages} sahifa` })
+        : bytesUi.pages(task.pages, false));
       el.append(view);
       ui.bubble("elder", `Bir sahifa — 2 Kbayt deb olamiz. ${task.pages} sahifa — necha Kbayt?`);
       return practice.numberTries({
         answer: task.answer,
         hint: () => {
-          view.replaceChildren(bytesUi.pages(task.pages, true));
-          common.add(el, common.line(Array(task.pages).fill("2").join(" + ") + " = ?"));
-          ui.bubble("elder", "↻ Har sahifa ostida 2 Kbayt. Hammasini qoʻsh.");
+          if (!many) view.replaceChildren(bytesUi.pages(task.pages, true));
+          common.add(el, common.line(many ? `${task.pages} × 2 = ?` : Array(task.pages).fill("2").join(" + ") + " = ?"));
+          ui.bubble("elder", "↻ Har sahifa — 2 Kbayt. Hammasini qoʻsh.");
         },
         solution: () => common.add(el, common.answerLine(`${task.pages} × 2 = ${task.answer} Kbayt`)),
       });
@@ -99,30 +105,34 @@
       return practice.numberTries({
         answer: task.answer,
         hint: () => {
+          // Maslahat — asbob: jadvalning boshi, davomini bola o'zi topadi
           const table = ui.h("div", { class: "kb-table" });
-          for (let k = 1; k <= 6; k++) table.append(ui.h("div", { text: `${k} Kbayt = ${k * bytes.KB} bayt` }));
+          for (let k = 1; k <= 2; k++) table.append(ui.h("div", { text: `${k} Kbayt = ${k * bytes.KB} bayt` }));
+          table.append(ui.h("div", { text: "… har safar 1024 qoʻshiladi" }));
           common.add(el, table);
-          ui.bubble("elder", "↻ Jadvaldan shu sonni top.");
+          ui.bubble("elder", "↻ 1024 ni necha marta qoʻshsang, shu son chiqadi?");
         },
         solution: () => common.add(el, common.answerLine(`${task.answer} × 1024 = ${task.bytes} → ${task.answer} Kbayt`)),
       });
     }
-    const kbBytes = task.kb * bytes.KB;
+    const labels = cmpLabels(task);
+    const sizes = bytes.cmpSizes(task);
     el.append(ui.h("div", { class: "cmp" },
-      ui.h("div", { class: "cmp-card", text: `${task.kb} Kbayt` }),
-      ui.h("div", { class: "cmp-or", text: "yoki" }),
-      ui.h("div", { class: "cmp-card", text: `${task.bytes} bayt` })));
-    ui.bubble("elder", "Qaysi biri katta?");
+      ui.h("div", { class: "cmp-card", text: labels.kb }),
+      ui.h("div", { class: "cmp-card", text: labels.bytes }),
+      ui.h("div", { class: "cmp-card", text: labels.pages })));
+    ui.bubble("elder", "Qaysi biri eng katta? Uchalasi bir xil boʻlsa — «Uchalasi teng».");
     return practice.tries({
       setup: (submit) => compareButtons(task, submit),
       check: (value) => value === task.answer,
       hint: () => {
-        common.add(el, common.line(`${task.kb} Kbayt = ${task.kb} × 1024 = ${kbBytes} bayt`));
-        ui.bubble("elder", "↻ Ikkalasini baytda solishtir.");
+        common.add(el, common.line("1 Kbayt = 1024 bayt, 1 sahifa = 2 Kbayt"));
+        ui.bubble("elder", "↻ Uchalasini ham baytga oʻtkaz, keyin solishtir.");
       },
       solution: () => {
-        const sign = kbBytes > task.bytes ? ">" : "<";
-        common.add(el, common.answerLine(`${kbBytes} bayt ${sign} ${task.bytes} bayt`));
+        common.add(el,
+          common.line(`${labels.kb} = ${sizes.kb} bayt; ${labels.pages} = ${task.pages * 2} Kbayt = ${sizes.pages} bayt`),
+          common.answerLine(task.answer === "teng" ? `Uchalasi ham ${sizes.kb} bayt — teng` : `Eng kattasi: ${labels[task.answer]} (${sizes[task.answer]} bayt)`));
       },
     });
   }
@@ -130,7 +140,7 @@
   function praise(task) {
     if (task.type === "pages") return `${task.pages} sahifa ≈ ${task.answer} Kbayt.`;
     if (task.type === "toKb") return `${task.bytes} bayt = ${task.answer} Kbayt.`;
-    return `${task.kb} Kbayt = ${task.kb * bytes.KB} bayt.`;
+    return task.answer === "teng" ? `Uchalasi ham ${task.kb * bytes.KB} bayt.` : `${task.kb} Kbayt = ${task.kb * bytes.KB} bayt.`;
   }
 
   async function showScene(scene) {
@@ -146,9 +156,9 @@
     await doubling();
     await kbFill();
     await definition();
-    await ui.say("elder", "Endi oʻzing hisobla: kilobaytlar. 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing hisobla: kilobaytlar. ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev) => bytes.makeKbTask(prev),
+      next: (prev, correct, tier) => bytes.makeKbTask(prev, undefined, tier),
       run: kbTask,
       praise,
     });

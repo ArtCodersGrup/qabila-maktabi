@@ -16,6 +16,7 @@
     { name: "uchburchak", color: "#2F6FDE", path: (x, y, r) => `M${x} ${y - r} L${x + r} ${y + r * 0.8} L${x - r} ${y + r * 0.8} Z` },
     { name: "kvadrat", color: "#F08A24", path: (x, y, r) => `M${x - r} ${y - r} H${x + r} V${y + r} H${x - r} Z` },
     { name: "olmos", color: "#8E5BD0", path: (x, y, r) => `M${x} ${y - r} L${x + r} ${y} L${x} ${y + r} L${x - r} ${y} Z` },
+    { name: "olti burchak", color: "#B0457A", path: (x, y, r) => `M${x - r} ${y} L${x - r / 2} ${y - r * 0.87} L${x + r / 2} ${y - r * 0.87} L${x + r} ${y} L${x + r / 2} ${y + r * 0.87} L${x - r / 2} ${y + r * 0.87} Z` },
   ];
 
   const el = (tag, attrs) => {
@@ -40,21 +41,29 @@
     wrap.querySelector(".field-box").append(svg);
     host.append(wrap);
 
-    const state = { points: [], test: [], line: null, query: null, links: [], options: [], glow: [], regions: true };
+    // onPick(index, kind) — berilsa, misol ("train") va sinov ("test") nuqtalari bosiladigan bo'ladi
+    const state = { points: [], test: [], line: null, query: null, links: [], options: [], glow: [], regions: true, onPick: null };
     const px = (x) => 6 + x * 8.8;
     const py = (y) => 94 - y * 8.8;
 
-    function dot(p, kind) {
+    function dot(p, kind, index) {
       const x = px(p.x);
       const y = py(p.y);
       const r = 3.4;
-      if (kind === "test") {
-        return el("rect", {
+      const node = kind === "test"
+        ? el("rect", {
           x: x - r, y: y - r, width: r * 2, height: r * 2, rx: 0.8,
           fill: p.full ? FULL : EMPTY, stroke: INK, "stroke-width": 1.4,
-        });
-      }
-      return el("circle", { cx: x, cy: y, r, fill: p.full ? FULL : EMPTY, stroke: INK, "stroke-width": 1.4 });
+        })
+        : el("circle", { cx: x, cy: y, r, fill: p.full ? FULL : EMPTY, stroke: INK, "stroke-width": 1.4 });
+      if (!state.onPick) return node;
+      // Bosish maydoni nuqtadan kattaroq (barmoq uchun): ko'rinmas doira + nuqtaning o'zi
+      const g = el("g", { class: "pick", role: "button", tabindex: "0", "aria-label": `${p.full ? "toʻla" : "boʻsh"} yongʻoq: kattaligi ${p.x}, ogʻirligi ${p.y}` });
+      g.append(el("circle", { cx: x, cy: y, r: 5.6, fill: "transparent" }), node);
+      const fire = () => { if (state.onPick) state.onPick(index, kind); };
+      g.addEventListener("click", fire);
+      g.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); fire(); } });
+      return g;
     }
 
     function draw() {
@@ -89,9 +98,9 @@
         }));
       }
 
-      state.points.forEach((p) => svg.append(dot(p, "train")));
-      state.test.forEach((p) => {
-        svg.append(dot(p, "test"));
+      state.points.forEach((p, i) => svg.append(dot(p, "train", i)));
+      state.test.forEach((p, i) => {
+        svg.append(dot(p, "test", i));
         if (!p.mark) return;
         const x = px(p.x);
         const y = py(p.y) - 6;
@@ -187,7 +196,7 @@
       ui.button("Boʻsh", () => onPick(false), "secondary")));
   }
 
-  // Variant tugmalari: shakllar bilan (uchburchak, kvadrat, olmos)
+  // Variant tugmalari: shakllar bilan (uchburchak, kvadrat, olmos, olti burchak)
   function optionButtons(count, onPick) {
     const row = ui.h("div", { class: "choice-row" });
     for (let i = 0; i < count; i++) {

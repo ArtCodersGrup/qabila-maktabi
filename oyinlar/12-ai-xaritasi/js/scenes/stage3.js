@@ -45,9 +45,9 @@
 
   async function stage3() {
     await yourGames();
-    await ui.say("elder", "Endi hayotdan misollar: xaritaning qayerida? 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi hayotdan misollar: xaritaning qayerida? ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev) => atlas.makeExampleTask(prev),
+      next: (prev, correct, tier) => atlas.makeExampleTask(prev, null, tier),
       run: exampleTask,
       praise: (task) => task.why,
     });

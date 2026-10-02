@@ -29,18 +29,54 @@
     return make(r);
   }
 
+  // Qiyinlik zinasi (QOIDALAR 4.3): 0 — birinchi javoblar, 1 — o'rta, 2 — oxirgi va qiyin rejim.
+  // Zina berilmasa (testlar, parity namunalari) — eng qiyini.
+  const zina = (tier) => (tier == null ? 2 : Math.max(0, Math.min(2, tier)));
+
+  function zinadan(list, tier, rnd) {
+    if (tier == null) return pick(list, rnd);
+    const t = zina(tier);
+    const mos = list.filter((x) => (x.tier || 0) <= t);
+    const ayni = mos.filter((x) => (x.tier || 0) === t);
+    return ayni.length && rnd() < 0.6 ? pick(ayni, rnd) : pick(mos, rnd);
+  }
+
   // ---------- 1-bosqich: massiv ----------
   const sonlar = (rnd, n, a, b) => Array.from({ length: n }, () => int(rnd, a, b));
 
-  function massivTask(r, prev) {
+  // 2026-10-02: zina bilan massiv uzayadi (4–5 → 5–6 → 6–8), oxirgi zinada manfiy sonlar va
+  // uch yangi tur keladi: juftlar soni, o'sgan joylar soni, chetlarni almashtirish.
+  const MASSIV_TURLARI = [
+    { id: "yigindi", tier: 0 }, { id: "eng-katta", tier: 0 }, { id: "teskari", tier: 0 }, { id: "indeks", tier: 0 },
+    { id: "juftlar", tier: 1 }, { id: "osgan", tier: 2 }, { id: "almashtir", tier: 2 },
+  ];
+  const MASSIV_UZUNLIK = [[4, 5], [5, 6], [6, 8]];
+
+  function massivTask(r, prev, tier) {
     const rr = r || Math.random;
+    const t = zina(tier);
     return pickNew((rnd) => {
-      const tur = pick(["yigindi", "eng-katta", "teskari", "indeks"], rnd);
-      const n = int(rnd, 4, 6);
-      const a = sonlar(rnd, n, 1, 20);
+      const tur = zinadan(MASSIV_TURLARI, tier, rnd).id;
+      const n = int(rnd, MASSIV_UZUNLIK[t][0], MASSIV_UZUNLIK[t][1]);
+      const a = sonlar(rnd, n, t === 2 ? -9 : 1, t === 0 ? 20 : 30);
       const elon = ["int a[" + n + "] = {" + a.join(", ") + "};"];
       let tana;
       let chiqish;
+      if (tur === "juftlar") {
+        tana = elon.concat(["int k = 0;", "for (int i = 0; i < " + n + "; i++) if (a[i] % 2 == 0) k++;", C.chiqar("k")]);
+        chiqish = [String(a.filter((x) => x % 2 === 0).length)];
+      } else if (tur === "osgan") {
+        // Qo'shnisidan katta bo'lgan kataklar soni: sikl 1 dan boshlanadi (a[i - 1] bor bo'lishi uchun)
+        tana = elon.concat(["int k = 0;", "for (int i = 1; i < " + n + "; i++) if (a[i] > a[i - 1]) k++;", C.chiqar("k")]);
+        chiqish = [String(a.filter((x, i) => i > 0 && x > a[i - 1]).length)];
+      } else if (tur === "almashtir") {
+        tana = elon.concat(["int t = a[0];", "a[0] = a[" + (n - 1) + "];", "a[" + (n - 1) + "] = t;",
+          "for (int i = 0; i < " + n + "; i++) cout << a[i] << \" \";", 'cout << "\\n";']);
+        const b = a.slice();
+        b[0] = a[n - 1];
+        b[n - 1] = a[0];
+        chiqish = [b.join(" ") + " "];
+      } else
       if (tur === "yigindi") {
         tana = elon.concat(["int s = 0;", "for (int i = 0; i < " + n + "; i++) s += a[i];", C.chiqar("s")]);
         chiqish = [String(a.reduce((x, y) => x + y, 0))];
@@ -67,24 +103,49 @@
   // Chegaradan chiqish — C++ da aniqlanmagan xatti-harakat.
   // Buni dasturda ko'rsatib bo'lmaydi (har kompilyatorda har xil), shuning uchun savol — tanlov.
   const CHEGARA_JAVOB = "Dastur toʻxtamaydi, lekin javob buzilishi mumkin";
+  const ICHIDA_JAVOB = "Hammasi joyida — yozilgan kataklar massiv ichida";
+  const CHEGARA_VARIANTLAR = [CHEGARA_JAVOB, ICHIDA_JAVOB, "Dastur xato berib toʻxtaydi", "Massiv oʻzi kattalashadi"];
 
-  function chegaraTask(r, prev) {
+  // 2026-10-02: oldin javob DOIM bir xil edi (CHEGARA_JAVOB) — bola o'qimasdan bosardi.
+  // Endi dastur ba'zan chegaradan chiqadi, ba'zan yo'q (oxirgi katak a[n − 1], sikl sharti i < n):
+  // bola indeksni massiv bo'yi bilan o'zi solishtiradi. Savol matni javobni aytmaydi.
+  //   yozuv — bitta katakka yozish: a[n − 1] (ichida), a[n], a[n + 1] (tashqarida)
+  //   sikl  — to'ldiruvchi siklning sharti: i < n (ichida) yoki i <= n (bitta ortiq)
+  //   surish — a[i + 1] = a[i]: sikl n − 1 gacha (ichida) yoki n gacha (tashqarida)
+  const CHEGARA_TURLARI = [{ id: "yozuv", tier: 0 }, { id: "sikl", tier: 1 }, { id: "surish", tier: 2 }];
+
+  function chegaraTask(r, prev, tier) {
     const rr = r || Math.random;
     return pickNew((rnd) => {
-      const n = int(rnd, 3, 5);
-      const chet = pick([n, n + 1], rnd);
-      const tana = ["int a[" + n + "];", "for (int i = 0; i < " + n + "; i++) a[i] = i;", "a[" + chet + "] = 100;",
-        C.chiqar('"tayyor"')];
+      const tur = zinadan(CHEGARA_TURLARI, tier, rnd).id;
+      const n = int(rnd, 3, 6);
+      const chiqadi = rnd() < 0.5;
+      let tana;
+      let oxirgi; // dastur yozadigan eng katta indeks
+      if (tur === "yozuv") {
+        oxirgi = chiqadi ? pick([n, n + 1], rnd) : n - 1;
+        tana = ["int a[" + n + "];", "for (int i = 0; i < " + n + "; i++) a[i] = i;", "a[" + oxirgi + "] = 100;"];
+      } else if (tur === "sikl") {
+        oxirgi = chiqadi ? n : n - 1;
+        tana = ["int a[" + n + "];", "for (int i = 0; i " + (chiqadi ? "<=" : "<") + " " + n + "; i++) a[i] = i * 2;"];
+      } else {
+        oxirgi = chiqadi ? n : n - 1;
+        tana = ["int a[" + n + "];", "a[0] = 1;",
+          "for (int i = 0; i < " + (chiqadi ? n : n - 1) + "; i++) a[i + 1] = a[i] + 1;"];
+      }
+      tana.push(C.chiqar('"tayyor"'));
       return {
-        id: "chegara:" + n + ":" + chet, tur: "chegara", kod: C.dastur(tana),
-        savol: "Massivda " + n + " ta katak bor (a[0] … a[" + (n - 1) + "]), dastur esa a[" + chet + "] ga yozyapti. Nima boʻladi?",
-        javob: CHEGARA_JAVOB,
-        variantlar: aralash([CHEGARA_JAVOB, "Dastur xato berib toʻxtaydi",
-          "Massiv oʻzi kattalashadi", "Kompilyator yozishga ruxsat bermaydi"], rnd),
-        yolYoriq: "C++ massiv chegarasini tekshirmaydi — tezlik uchun.",
-        nega: "C++ da bu «aniqlanmagan xatti-harakat»: dastur ishlayveradi, lekin begona joyga yozadi. "
-          + "Javob toʻgʻri ham chiqishi mumkin, buzuq ham — shuning uchun bu eng yomon xato turi. "
-          + "Oʻyin ichida uni ataylab toʻxtatamiz.",
+        id: "chegara:" + tur + ":" + n + ":" + oxirgi, tur: "chegara", kind: tur, chiqadi, n, oxirgi, kod: C.dastur(tana),
+        savol: "Massivda " + n + " ta katak bor. Dastur qaysi kataklarga yozyapti — va nima boʻladi?",
+        javob: chiqadi ? CHEGARA_JAVOB : ICHIDA_JAVOB,
+        variantlar: aralash(CHEGARA_VARIANTLAR, rnd),
+        yolYoriq: "Massivning oxirgi katagi qaysi indeksda? Dastur yozadigan eng katta indeksni top va shu bilan solishtir.",
+        nega: chiqadi
+          ? "Kataklar a[0] … a[" + (n - 1) + "], dastur esa a[" + oxirgi + "] ga ham yozyapti. C++ da bu «aniqlanmagan xatti-harakat»: "
+            + "dastur ishlayveradi, lekin begona joyga yozadi. Javob toʻgʻri ham chiqishi mumkin, buzuq ham — "
+            + "shuning uchun bu eng yomon xato turi. Oʻyin ichida uni ataylab toʻxtatamiz."
+          : "Kataklar a[0] … a[" + (n - 1) + "]. Dastur yozgan eng katta indeks — " + oxirgi
+            + ": bu oxirgi katak, chegaradan chiqilmadi.",
       };
     }, prev, rr);
   }
@@ -107,36 +168,85 @@
         "int k = 0;", "for (int i = 0; i < n; i++) if (a[i] * n > s) k++;", C.chiqar("k")]),
       yolYoriq: "Oʻrtachani bilish uchun avval hammasini oʻqish kerak — demak sonlarni saqlab qoʻyish shart.",
     },
+    // 2026-10-02: uch yangi masala (zina 1–2)
+    {
+      id: "eng-katta-indeks", tier: 1,
+      savol: "n ta sonni oʻqib, eng kattasi nechanchi katakda turganini chiqar (kataklar 0 dan sanaladi; bir nechta boʻlsa — birinchisi).",
+      sinovlar: [{ kirish: ["5", "3 9 2 7 5"], chiqish: ["1"] }, { kirish: ["4", "3 9 2 9"], chiqish: ["1"] },
+        { kirish: ["3", "-4 -9 -1"], chiqish: ["2"] }, { kirish: ["1", "7"], chiqish: ["0"] }],
+      yechim: C.dastur(["int n;", "cin >> n;", "int a[100];", "for (int i = 0; i < n; i++) cin >> a[i];",
+        "int eng = 0;", "for (int i = 1; i < n; i++) {", "    if (a[i] > a[eng]) eng = i;", "}", C.chiqar("eng")]),
+      yolYoriq: "Qiymatni emas, indeksni eslab qol: eng = 0 dan boshla va a[i] ni a[eng] bilan solishtir.",
+    },
+    {
+      id: "ikkinchi-katta", tier: 2,
+      savol: "n ta har xil sonni oʻqib (n kamida 2), ikkinchi eng kattasini chiqar.",
+      sinovlar: [{ kirish: ["5", "3 9 2 7 5"], chiqish: ["7"] }, { kirish: ["2", "10 20"], chiqish: ["10"] },
+        { kirish: ["3", "-4 -9 -1"], chiqish: ["-4"] }, { kirish: ["4", "8 1 9 5"], chiqish: ["8"] }],
+      yechim: C.dastur(["int n;", "cin >> n;", "int a[100];", "for (int i = 0; i < n; i++) cin >> a[i];",
+        "int bir = a[0];", "int ikki = a[1];", "if (ikki > bir) {", "    bir = a[1];", "    ikki = a[0];", "}",
+        "for (int i = 2; i < n; i++) {", "    if (a[i] > bir) {", "        ikki = bir;", "        bir = a[i];",
+        "    } else if (a[i] > ikki) {", "        ikki = a[i];", "    }", "}", C.chiqar("ikki")]),
+      yolYoriq: "Ikkita oʻzgaruvchi tut: eng kattasi va undan keyingisi. Yangi son eng kattadan oshsa — eskisi ikkinchiga tushadi.",
+    },
+    {
+      id: "pufakcha", tier: 2,
+      savol: "n ta sonni oʻqib, pufakcha usulida oʻsish tartibida saralab chiqar (orasida boʻshliq bilan).",
+      sinovlar: [{ kirish: ["5", "5 2 9 1 7"], chiqish: ["1 2 5 7 9 "] }, { kirish: ["3", "3 3 1"], chiqish: ["1 3 3 "] },
+        { kirish: ["1", "4"], chiqish: ["4 "] }, { kirish: ["4", "-2 0 -7 5"], chiqish: ["-7 -2 0 5 "] }],
+      yechim: C.dastur(["int n;", "cin >> n;", "int a[100];", "for (int i = 0; i < n; i++) cin >> a[i];",
+        "for (int oxir = n - 1; oxir > 0; oxir--) {", "    for (int i = 0; i < oxir; i++) {",
+        "        if (a[i] > a[i + 1]) {", "            int t = a[i];", "            a[i] = a[i + 1];",
+        "            a[i + 1] = t;", "        }", "    }", "}",
+        "for (int i = 0; i < n; i++) cout << a[i] << \" \";", 'cout << "\\n";']),
+      yolYoriq: "Ikki qavat sikl: ichkisi qoʻshni kataklarni solishtiradi (a[i] va a[i + 1]) — shuning uchun i oxirgi katakkacha bormaydi.",
+    },
   ];
 
-  function massivYozTask(r, prev) {
+  function massivYozTask(r, prev, tier) {
     const rr = r || Math.random;
     return pickNew((rnd) => {
-      const y = pick(MASSIV_YOZISH, rnd);
+      const y = zinadan(MASSIV_YOZISH, tier, rnd);
       return Object.assign({ tur: "yoz", qolip: QOLIP, rows: 9 }, y, { id: "yoz:" + y.id });
     }, prev, rr);
   }
 
-  const bosqich1Task = (prev, correct) => {
+  const bosqich1Task = (prev, correct, tier) => {
     const n = (correct || 0) % 3;
-    if (n === 0) return massivTask(null, prev);
-    if (n === 1) return chegaraTask(null, prev);
-    return massivYozTask(null, prev);
+    if (n === 0) return massivTask(null, prev, tier);
+    if (n === 1) return chegaraTask(null, prev, tier);
+    return massivYozTask(null, prev, tier);
   };
 
   // ---------- 2-bosqich: satr ----------
   const SOZLAR = ["salom", "qabila", "dastur", "olimpiada", "kompyuter", "maktab", "daftar", "quyosh"];
   const UNLILAR = "aeiou";
 
-  function satrTask(r, prev) {
+  // 2026-10-02: zina 1 — oxirgi harflar; zina 2 — birinchi harf necha marta, qo'shilgan satr uzunligi
+  const SATR_TURLARI = [
+    { id: "uzunlik", tier: 0 }, { id: "belgi", tier: 0 }, { id: "unli", tier: 0 }, { id: "teskari", tier: 0 },
+    { id: "oxirgi", tier: 1 }, { id: "sanash", tier: 2 }, { id: "qoshish", tier: 2 },
+  ];
+
+  function satrTask(r, prev, tier) {
     const rr = r || Math.random;
     return pickNew((rnd) => {
       const s = pick(SOZLAR, rnd);
-      const tur = pick(["uzunlik", "belgi", "unli", "teskari"], rnd);
+      const tur = zinadan(SATR_TURLARI, tier, rnd).id;
       const elon = ['string s = "' + s + '";'];
       let tana;
       let chiqish;
-      if (tur === "uzunlik") {
+      if (tur === "oxirgi") {
+        tana = elon.concat([C.chiqar("s[s.size() - 1] << s[s.size() - 2]")]);
+        chiqish = [s[s.length - 1] + s[s.length - 2]];
+      } else if (tur === "sanash") {
+        tana = elon.concat(["int k = 0;", "for (int i = 0; i < s.size(); i++) {", "    if (s[i] == s[0]) k++;", "}", C.chiqar("k")]);
+        chiqish = [String([...s].filter((ch) => ch === s[0]).length)];
+      } else if (tur === "qoshish") {
+        const t = pick(SOZLAR.filter((x) => x !== s), rnd);
+        tana = elon.concat(['string t = "' + t + '";', "string u = s + t;", C.chiqar("u.size() << \" \" << u[" + s.length + "]")]);
+        chiqish = [(s.length + t.length) + " " + t[0]];
+      } else if (tur === "uzunlik") {
         tana = elon.concat([C.chiqar("s.size()")]);
         chiqish = [String(s.length)];
       } else if (tur === "belgi") {
@@ -178,17 +288,38 @@
         'cout << "\\n";'], { string: true }),
       yolYoriq: "Oxirgi harfning indeksi s.size() - 1.",
     },
+    // 2026-10-02: ikki yangi masala (zina 1–2)
+    {
+      id: "harf-sanash", tier: 1,
+      savol: "Bitta soʻz va bitta harf oʻqiladi (orasida boʻshliq). Shu harf soʻzda necha marta uchrashini chiqar.",
+      sinovlar: [{ kirish: ["qabila a"], chiqish: ["2"] }, { kirish: ["kitob z"], chiqish: ["0"] },
+        { kirish: ["aaaa a"], chiqish: ["4"] }, { kirish: ["dastur r"], chiqish: ["1"] }],
+      yechim: C.dastur(["string s, h;", "cin >> s >> h;", "int k = 0;", "for (int i = 0; i < s.size(); i++) {",
+        "    if (s[i] == h[0]) k++;", "}", C.chiqar("k")], { string: true }),
+      yolYoriq: "Harfni ham string qilib oʻqish mumkin: uning birinchi belgisi — h[0].",
+    },
+    {
+      id: "palindrom", tier: 2,
+      savol: "Bitta soʻzni oʻqi. Chapdan ham, oʻngdan ham bir xil oʻqilsa «palindrom», aks holda «palindrom emas» deb yoz.",
+      sinovlar: [{ kirish: ["abba"], chiqish: ["palindrom"] }, { kirish: ["salom"], chiqish: ["palindrom emas"] },
+        { kirish: ["a"], chiqish: ["palindrom"] }, { kirish: ["abca"], chiqish: ["palindrom emas"] },
+        { kirish: ["kiyik"], chiqish: ["palindrom"] }],
+      yechim: C.dastur(["string s;", "cin >> s;", "int n = s.size();", "bool ok = true;",
+        "for (int i = 0; i < n; i++) {", "    if (s[i] != s[n - 1 - i]) ok = false;", "}",
+        "if (ok) {", '    cout << "palindrom\\n";', "} else {", '    cout << "palindrom emas\\n";', "}"], { string: true }),
+      yolYoriq: "s[i] ning «oynadagi» jufti — s[n - 1 - i]. Bitta juftlik mos kelmasa ham — palindrom emas.",
+    },
   ];
 
-  function satrYozTask(r, prev) {
+  function satrYozTask(r, prev, tier) {
     const rr = r || Math.random;
     return pickNew((rnd) => {
-      const y = pick(SATR_YOZISH, rnd);
+      const y = zinadan(SATR_YOZISH, tier, rnd);
       return Object.assign({ tur: "yoz", qolip: QOLIP, rows: 9 }, y, { id: "yoz:" + y.id });
     }, prev, rr);
   }
 
-  const bosqich2Task = (prev, correct) => ((correct || 0) % 2 === 0 ? satrTask(null, prev) : satrYozTask(null, prev));
+  const bosqich2Task = (prev, correct, tier) => ((correct || 0) % 2 === 0 ? satrTask(null, prev, tier) : satrYozTask(null, prev, tier));
 
   // ---------- 3-bosqich: vector va sort (faqat o'qish) ----------
   // Bu dasturlar YADRODA ISHLAMAYDI. Chiqishlari g++ bilan tekshiriladi.
@@ -288,9 +419,11 @@
         out.push({ id: "yechim:" + y.id + ":" + sinov.kirish.join("|"), kod: y.yechim, kirish: sinov.kirish, chiqish: sinov.chiqish });
       }
     }
+    // Yechimlardan TASHQARI yana `soni` ta yasalgan misol (yechimlar ko'paygani uchun alohida sanaladi)
     const yasovchilar = [massivTask, satrTask, vectorTask];
+    const kerak = out.length + (soni || 24);
     let prev = null;
-    for (let k = 0; out.length < (soni || 24) && k < (soni || 24) * 10; k++) {
+    for (let k = 0; out.length < kerak && k < (soni || 24) * 10; k++) {
       const task = yasovchilar[k % yasovchilar.length](rnd, prev);
       prev = task;
       if (!task || korilgan.has(task.id)) continue;
@@ -301,7 +434,8 @@
   }
 
   const api = {
-    SOZLAR, MASSIV_YOZISH, SATR_YOZISH, FARQLAR, QOLIP, CHEGARA_JAVOB, vDastur,
+    SOZLAR, MASSIV_YOZISH, SATR_YOZISH, FARQLAR, QOLIP, CHEGARA_JAVOB, ICHIDA_JAVOB, CHEGARA_VARIANTLAR,
+    MASSIV_TURLARI, SATR_TURLARI, vDastur,
     massivTask, chegaraTask, massivYozTask, satrTask, satrYozTask, vectorTask, farqTask,
     bosqich1Task, bosqich2Task, bosqich3Task, namunalar,
   };

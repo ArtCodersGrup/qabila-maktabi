@@ -61,7 +61,6 @@
     lastLetter = sentence;
     const words = sentence.split(" ");
     const opened = [];
-    ui.setProgress(3, 0);
     for (let w = 0; w < words.length; w++) {
       ui.bubble("elder", w === 0 ? "Pastki qatordan shifrlangan harfni top va katakni bos." : `${w + 1}-soʻzni och.`);
       const ok = await common.solveWord({ plain: caesar.tokenize(words[w]), key: caesar.FIRST_KEY, mode: "decode", tbl, opened });
@@ -69,7 +68,6 @@
       if (ok) await ui.sleep(700);
       else await ui.say("elder", `Bu soʻz — ${words[w]}. Davom etamiz.`); // 2-xato: yechimni ko'rib olsin
     }
-    ui.setProgress(3, 1);
     ui.clearWork();
     ui.work().append(ui.h("div", { class: "opened big", text: sentence }));
     await ui.say("elder", `Sezar yozibdi: «${sentence}»`);
@@ -98,18 +96,21 @@
     // 5.4: mashq — jadval 3 da ochiladi, bola kalitni o'zi o'zgartiradi
     ui.clearWork();
     const practice = caesarUi.table(caesar.FIRST_KEY, null);
-    await ui.say("elder", "Endi boshqa kalitli soʻzlar. Jadvalni oʻzing sozla!");
+    // Xat — bosqichning birinchi javobi, shuning uchun so'zlar bittaga kam (4 ta javobdan 3 tasi)
+    const need = QK.practice.need() - 1;
+    await ui.say("elder", `Endi boshqa kalitli soʻzlar — ${need} ta. Jadvalni oʻzing sozla!`);
+    await ui.say("elder", "Oxirida jadvalning pastki qatori yashirinadi — harfni oʻzing surasan.");
     await common.exercises({
-      count: 2,
-      total: 3,
-      doneBefore: 1,
+      need,
       mode: "decode",
       tbl: practice,
-      next: (prev) => caesar.makeExercise(caesar.PRACTICE, prev),
-      question: (ex) => `Kalit — ${ex.key}. Jadvalni sozla va soʻzni och.`,
+      // Reja: 1-so'z — kalit 1–6, 2-so'z — kalit 7–14 (alifbo aylanadi), keyin pastki qator yashirin
+      next: (prev, correct, tier) => caesar.makePlanned(caesar.PRACTICE, prev, correct, tier, 2),
+      question: (ex) => (ex.blind
+        ? `Kalit — ${ex.key}. Pastki qator yashirin: har harfni ${ex.key} ta orqaga sur va tepadagi harfni bos.`
+        : `Kalit — ${ex.key}. Jadvalni sozla va soʻzni och.`),
       praise: (ex) => `Bu — ${ex.word}.`,
     });
-    ui.hideProgress();
   }
 
   QK.scenes = QK.scenes || {};

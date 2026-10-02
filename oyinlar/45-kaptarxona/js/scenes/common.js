@@ -69,7 +69,8 @@
   }
 
   const dirixleExercise = (task) => sonExercise(task, {
-    ishora: "Eng tekis taqsimlansa nima boʻladi? Har qutiga tengdan boʻlib koʻr.",
+    // Yangi savollarda quti yashirin — maslahat qutilar nima ekanini aytadi (javobni emas)
+    ishora: task.ishora ? task.ishora + " Keyin eng tekis taqsimlab koʻr." : "Eng tekis taqsimlansa nima boʻladi? Har qutiga tengdan boʻlib koʻr.",
   });
 
   const kerakExercise = (task) => sonExercise(task, {

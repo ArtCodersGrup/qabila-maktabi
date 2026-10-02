@@ -164,6 +164,121 @@ test("xabar savollari: javob xatning turiga mos, filtr ishlaydi", () => {
   }
 });
 
+test("xat qismlari: manzil, sarlavha, gaplar, havola — kamida 4 ta bosiladigan joy", () => {
+  for (const x of L.XABARLAR) {
+    const q = L.xatQismlari(x);
+    assert.ok(q.length >= 4, x.id + " — qismlar: " + q.length);
+    assert.equal(q[0].tur, "manzil");
+    assert.equal(q[1].tur, "sarlavha");
+    assert.equal(q.filter((p) => p.tur === "havola").length, x.havola ? 1 : 0, x.id);
+    // Gaplar birga matnni beradi (hech narsa yoʻqolmaydi)
+    assert.equal(q.filter((p) => p.tur === "gap").map((p) => p.matn).join(" "), x.matn, x.id);
+  }
+});
+
+test("soxta xat: har birida soʻraladigan belgi bor, belgi turgan joy aniq", () => {
+  for (const x of soxtalar) {
+    const belgilar = L.soraladiganBelgilar(x);
+    assert.ok(belgilar.length >= 1, x.id + " — soʻraladigan belgi yoʻq");
+    assert.ok(!belgilar.includes("imlo"), x.id);
+    const q = L.xatQismlari(x);
+    for (const id of belgilar) {
+      const n = q.filter((p) => L.qismdaBelgi(x, p, id)).length;
+      assert.ok(n >= 1 && n < q.length, x.id + " → " + id + ": " + n + "/" + q.length);
+      // Manzil belgisi faqat manzil/havolada, matn belgilari faqat sarlavha/gapda
+      for (const p of q.filter((pp) => L.qismdaBelgi(x, pp, id))) {
+        assert.equal(["manzil", "havola"].includes(p.tur), id === "manzil", x.id + " → " + id + " → " + p.tur);
+      }
+    }
+  }
+});
+
+test("generator gaplari: har gap faqat oʻz belgisining kalit soʻzini saqlaydi", () => {
+  const belgilar = Object.keys(L.SOXTA_GAP);
+  const bor = (gap, id) => L.KALIT[id].some((k) => (gap.toLowerCase() + " ").includes(k));
+  for (const id of belgilar) {
+    assert.ok(L.SOXTA_GAP[id].length >= 2, id);
+    for (const gap of L.SOXTA_GAP[id]) {
+      assert.deepEqual(belgilar.filter((b) => bor(gap, b)), [id], gap);
+    }
+  }
+  // Belgisiz gaplar va sarlavhalarda hech bir kalit soʻz yoʻq
+  const toza = [...L.HAVOLA_GAP, ...L.HAQIQIY_GAP];
+  for (const t of L.TASHKILOTLAR) toza.push(L.KIRISH[t.id].sarlavha, ...L.KIRISH[t.id].gap);
+  for (const gap of toza) assert.deepEqual(belgilar.filter((b) => bor(gap, b)), [], gap);
+  assert.deepEqual(belgilar.filter((b) => bor(L.HAQIQIY_QOSHIMCHA, b)), ["parol"], "tuzoq gap: parol soʻzi bor, lekin soʻralmaydi");
+});
+
+test("yasalgan xatlar: soxtasida aynan eʼlon qilingan belgilar, haqiqiysida manzil toʻgʻri", () => {
+  const r = rngFrom(77);
+  const turlar = new Set();
+  for (const daraja of [1, 2]) {
+    for (let k = 0; k < 200; k++) {
+      const s = L.yasaXabar(r, true, daraja);
+      assert.equal(s.soxta, true);
+      assert.equal(s.belgilar.length, daraja === 2 ? 1 : 2, s.id + " — daraja " + daraja);
+      assert.equal(new Set(s.belgilar).size, s.belgilar.length);
+      const b = L.manzilBahosi(s);
+      assert.equal(!!b.xil, s.belgilar.includes("manzil"), s.id + " → " + s.manzil);
+      if (b.xil) turlar.add(b.xil);
+      // Matndagi belgilar — aynan eʼlon qilinganlari
+      const matn = (s.sarlavha + " " + s.matn).toLowerCase() + " ";
+      for (const id of Object.keys(L.SOXTA_GAP)) {
+        assert.equal(L.KALIT[id].some((w) => matn.includes(w)), s.belgilar.includes(id), s.id + " → " + id + ": " + s.matn);
+      }
+      assert.deepEqual(L.soraladiganBelgilar(s), s.belgilar, s.id);
+      assert.ok(L.xatQismlari(s).length >= 4, s.id);
+
+      const h = L.yasaXabar(r, false, daraja);
+      assert.equal(h.soxta, false);
+      assert.deepEqual(h.belgilar, []);
+      assert.equal(L.manzilBahosi(h).xil, null, h.id + " → " + h.manzil);
+      assert.ok(L.xatQismlari(h).length >= 4, h.id);
+    }
+  }
+  assert.ok(turlar.size >= 3, "soxta manzil turlari: " + [...turlar]);
+});
+
+test("xabar savoli — ikki qadam: javob + (belgi turgan joy yoki zonadan oldingi nom)", () => {
+  const r = rngFrom(19);
+  for (const tier of [0, 1, 2]) {
+    let prev = null;
+    let yasama = 0;
+    for (let k = 0; k < 120; k++) {
+      const t = L.xabarTask(r, prev, k % 2 === 0, tier);
+      assert.equal(t.xabar.soxta, k % 2 === 0);
+      if (prev && prev.xabar.soxta === t.xabar.soxta) assert.notEqual(t.id, prev.id);
+      if (t.id.startsWith("xabar:gen:")) yasama++;
+      // 2-qadam variantlari: bosiladigan joylar ≥ 4, nom variantlari — 4 ta
+      assert.ok(t.joy.qismlar.length >= 4, t.id);
+      assert.equal(t.nom.variantlar.length, 4, t.id + ": " + t.nom.variantlar);
+      assert.equal(new Set(t.nom.variantlar).size, 4, t.id);
+      assert.equal(t.nom.javob, L.ajrat(t.xabar.manzil).nom);
+      assert.ok(t.nom.variantlar.includes(t.nom.javob));
+      assert.ok(t.joy.matn.includes(t.joy.belgi.nom));
+      const togri = t.joy.qismlar.map((q, i) => (q.togri ? i : -1)).filter((i) => i >= 0);
+      if (t.xabar.soxta) {
+        assert.ok(togri.length >= 1 && togri.length < t.joy.qismlar.length, t.id);
+        assert.ok(t.xabar.belgilar.includes(t.joy.belgi.id), t.id);
+        // Ikkala qadam ham toʻgʻri boʻlsagina hisoblanadi
+        assert.ok(L.tekshirXabar(t, { javob: L.JAVOB.soxta, qism: togri[0] }));
+        const notogri = t.joy.qismlar.findIndex((q) => !q.togri);
+        assert.ok(!L.tekshirXabar(t, { javob: L.JAVOB.soxta, qism: notogri }));
+        assert.ok(!L.tekshirXabar(t, { javob: L.JAVOB.haqiqiy, nom: t.nom.javob }));
+      } else {
+        assert.deepEqual(togri, [], t.id + " — haqiqiy xatda belgi joyi yoʻq");
+        assert.ok(L.tekshirXabar(t, { javob: L.JAVOB.haqiqiy, nom: t.nom.javob }));
+        for (const v of t.nom.variantlar) if (v !== t.nom.javob) assert.ok(!L.tekshirXabar(t, { javob: L.JAVOB.haqiqiy, nom: v }));
+        for (let i = 0; i < t.joy.qismlar.length; i++) assert.ok(!L.tekshirXabar(t, { javob: L.JAVOB.soxta, qism: i }));
+      }
+      assert.ok(!L.tekshirXabar(t, null));
+      prev = t;
+    }
+    if (tier === 0) assert.equal(yasama, 0, "tier 0 — faqat qoʻlda yozilgan xatlar");
+    else assert.ok(yasama > 40, "tier " + tier + " — yasalgan xatlar: " + yasama);
+  }
+});
+
 test("vaziyat savollari: bitta toʻgʻri javob va toʻrtta variant", () => {
   assert.ok(L.VAZIYATLAR.length >= 6, "vaziyatlar soni: " + L.VAZIYATLAR.length);
   for (const v of L.VAZIYATLAR) {
@@ -210,6 +325,15 @@ function korinadiganMatnlar() {
   }
   for (const t of L.TASHKILOTLAR) out.push(t.nom);
   out.push(...L.QOIDALAR, ...Object.values(L.FARQ_IZOH), ...Object.values(L.JAVOB));
+  // Generator matnlari (2026-10-02)
+  for (const list of Object.values(L.SOXTA_GAP)) out.push(...list);
+  for (const k of Object.values(L.KIRISH)) out.push(k.sarlavha, ...k.gap);
+  out.push(...L.HAVOLA_GAP, ...L.HAQIQIY_GAP, L.HAQIQIY_QOSHIMCHA);
+  const rg = rngFrom(43);
+  for (let k = 0; k < 40; k++) {
+    const t = L.xabarTask(rg, null, k % 2 === 0, 1 + (k % 2));
+    out.push(t.xabar.manzil, t.xabar.matn, t.xabar.havola, t.joy.matn, t.nom.matn);
+  }
   const r = rngFrom(41);
   for (let k = 0; k < 20; k++) {
     for (const make of [L.belgiTask, L.xabarTask, L.vaziyatTask]) {

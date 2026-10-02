@@ -52,7 +52,7 @@
     await qur();
     await ui.say("elder", "Endi oʻzing: belgilangan katakda qaysi son turadi?");
     await practice.exercises({
-      next: (prev) => L.katakTask(Math.random, prev),
+      next: (prev, correct, tier) => L.katakTask(Math.random, prev, tier),
       run: (task) => common.katakExercise(task),
       praise: (task) => task.hisob,
     });

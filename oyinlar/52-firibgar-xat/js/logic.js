@@ -427,26 +427,151 @@
     }, prev, rr);
   }
 
-  // ---------- 2-bosqich: xatni tekshir ----------
+  // ---------- Xat generatori (tier 1–2): tashkilot × manzil turi × belgi gaplari ----------
+  // Har gap faqat o'z belgisining kalit so'zini saqlaydi (test tekshiradi) — "qaysi gap belgi?" aniq bo'lishi uchun.
+  const SOXTA_GAP = {
+    shoshiltirish: ["Javob berishga atigi 15 daqiqa vaqting bor.", "Buni hoziroq qilishing kerak, keyin kech boʻladi.", "Bugun kechgacha ulgurishing shart."],
+    qorqitish: ["Javob bermasang, hisobing butunlay yopiladi.", "Javob bermasang, hisobing bloklanadi.", "Javob bermasang, ustingdan jarima yoziladi."],
+    parol: ["Davom etish uchun parolingni shu xatga javoban yoz.", "Telefoningga kelgan SMS kodni bizga yubor.", "Hisobni tasdiqlash uchun parolingni havolaga kirit."],
+    yutuq: ["Tabriklaymiz, sen maxsus sovrin egasi boʻlding!", "Senga maxsus sovgʻa ajratildi.", "Hisobingga 5000 bonus qoʻshib beramiz."],
+    sir: ["Bu haqda hech kimga aytma.", "Bu xatni ota-onangga koʻrsatma."],
+    pul: ["Hisobni saqlab qolish uchun 10 000 soʻm oʻtkazishing kerak.", "Xizmat haqi uchun ozgina pul joʻnat."],
+  };
+  // Belgisiz gaplar: tashkilot bo'yicha kirish gapi va sarlavha
+  const KIRISH = {
+    bank: { sarlavha: "Hisobing haqida xabar", gap: ["Hisobingda yangi harakat qayd etildi.", "Kartang boʻyicha maʼlumot yangilandi."] },
+    maktab: { sarlavha: "Maktabdan xabar", gap: ["Kundalik tizimida yangilanish boʻldi.", "Sinfing uchun yangi eʼlon bor."] },
+    dostlar: { sarlavha: "Yangi xabar", gap: ["Salom, bu men, sinfdoshingman.", "Senga yangi xabar keldi."] },
+    pochta: { sarlavha: "Pochta xizmati xabari", gap: ["Pochta qutingda oʻzgarish boʻldi.", "Hisobing sozlamalari yangilandi."] },
+    dokon: { sarlavha: "Buyurtma haqida", gap: ["Buyurtmang boʻyicha yangilik bor.", "Kitob doʻkonida hisobing yangilandi."] },
+    oyin: { sarlavha: "Oʻyin yangiligi", gap: ["Oʻyindagi hisobingda yangilik bor.", "Oʻyinda yangi mavsum boshlandi."] },
+  };
+  const HAVOLA_GAP = ["Batafsil maʼlumot havolada.", "Tafsilotlarni havola orqali koʻrasan."];
+  const HAQIQIY_GAP = ["Hech narsa yozish yoki yuborish shart emas.", "Savoling boʻlsa, kattalardan soʻra.", "Istasang, rasmiy ilovani oʻzing ochib koʻrasan."];
+  const HAQIQIY_QOSHIMCHA = "Biz hech qachon parol soʻramaymiz."; // tier 2: "parol" so'zi bor, lekin xat haqiqiy
+  // Soxta manzil turlari (domenFarqi bilan bir xil nomlar)
+  const SOXTA_MANZIL = {
+    harf: (nom) => (nom.includes("l") ? nom.replace("l", "1") : nom.replace("o", "0")) + ".uz",
+    qoshimcha: (nom, r) => nom + pick(["-tekshiruv", "-xavfsizlik", "-yordam"], r) + ".uz",
+    kochgan: (nom, r) => nom + "." + pick(["kirish", "tekshir", "xizmat"], r) + ".uz",
+    zona: (nom, r) => nom + "." + pick(GUMONLI_ZONA, r),
+  };
+
+  // daraja 1: ikkita belgi; daraja 2: BITTA belgi (faqat manzil yoki faqat bitta gap) — eng qiyini
+  function yasaXabar(r, soxta, daraja) {
+    const t = pick(TASHKILOTLAR, r);
+    const k = KIRISH[t.id];
+    const nom = ajrat(t.domen).nom;
+    if (!soxta) {
+      const bolim = daraja >= 2 && r() < 0.5 ? "kirish." : ""; // tashkilotning o'z bo'limi — ishonchli
+      const gaplar = [pick(k.gap, r), ...aralash(HAQIQIY_GAP, r).slice(0, daraja >= 2 ? 1 : 2)];
+      if (daraja >= 2) gaplar.push(HAQIQIY_QOSHIMCHA);
+      return {
+        id: "gen:h:" + t.id + ":" + bolim + gaplar.join("|").length, tashkilot: t.id, kimdan: t.nom,
+        manzil: "xabar@" + bolim + t.domen, sarlavha: k.sarlavha, matn: gaplar.join(" "),
+        havola: "https://" + bolim + t.domen + "/xabar", soxta: false, belgilar: [],
+      };
+    }
+    const matnBelgi = Object.keys(SOXTA_GAP);
+    const manzilXato = daraja >= 2 ? r() < 0.5 : r() < 0.6;
+    const nechta = daraja >= 2 ? (manzilXato ? 0 : 1) : manzilXato ? 1 : 2;
+    const belgilar = aralash(matnBelgi, r).slice(0, nechta);
+    const tur = manzilXato ? pick(Object.keys(SOXTA_MANZIL), r) : null;
+    const domen = tur ? SOXTA_MANZIL[tur](nom, r) : t.domen;
+    const gaplar = [pick(k.gap, r), ...belgilar.map((b) => pick(SOXTA_GAP[b], r))];
+    if (!belgilar.length) gaplar.push(pick(HAVOLA_GAP, r));
+    return {
+      id: "gen:s:" + t.id + ":" + (tur || "-") + ":" + belgilar.join("+"), tashkilot: t.id, kimdan: t.nom,
+      manzil: "xabar@" + domen, sarlavha: k.sarlavha, matn: gaplar.join(" "),
+      havola: "https://" + domen + "/xabar", soxta: true, belgilar: (tur ? ["manzil"] : []).concat(belgilar),
+    };
+  }
+
+  // ---------- Xat qismlari: "qaysi joyda belgi?" savoli uchun ----------
+  // Manzil, sarlavha, matndagi har gap va havola — alohida bosiladigan qism
+  function xatQismlari(x) {
+    const gaplar = (String(x.matn).match(/[^.!?]+[.!?]*/g) || [x.matn]).map((g) => g.trim()).filter(Boolean);
+    const out = [{ tur: "manzil", matn: x.manzil }, { tur: "sarlavha", matn: x.sarlavha }];
+    gaplar.forEach((g) => out.push({ tur: "gap", matn: g }));
+    if (x.havola) out.push({ tur: "havola", matn: x.havola });
+    return out;
+  }
+
+  // Shu qismda shu belgi bormi: manzil/havola — domen qoidasi bilan, matn — kalit so'zlar bilan
+  function qismdaBelgi(x, qism, belgiId) {
+    if (belgiId === "manzil") {
+      if (qism.tur !== "manzil" && qism.tur !== "havola") return false;
+      const t = tashkilot(x.tashkilot);
+      return birManzil(qism.matn, t ? t.domen : null).xil !== null;
+    }
+    if (qism.tur !== "sarlavha" && qism.tur !== "gap") return false;
+    const past = qism.matn.toLowerCase() + " ";
+    return (KALIT[belgiId] || []).some((k) => past.includes(k));
+  }
+
+  // So'raladigan belgilar: xatda e'lon qilingan, kamida bitta qismda bor va hamma qismda emas ("imlo" so'ralmaydi)
+  function soraladiganBelgilar(x) {
+    const qismlar = xatQismlari(x);
+    return x.belgilar.filter((id) => {
+      const n = qismlar.filter((q) => qismdaBelgi(x, q, id)).length;
+      return id !== "imlo" && n >= 1 && n < qismlar.length;
+    });
+  }
+
+  // "Zonadan oldingi nom qaysi?" — 4 variant: nom, @ dan oldingi so'z, zona, bo'lim yoki "https"
+  function nomVariantlari(x, r) {
+    const a = ajrat(x.manzil);
+    const out = [a.nom];
+    const push = (v) => { if (v && !out.includes(v) && out.length < 4) out.push(v); };
+    push(String(x.manzil).split("@")[0].toLowerCase());
+    push(a.zona);
+    a.oldi.forEach(push);
+    push("https");
+    push("www");
+    return { variantlar: aralash(out, r), javob: a.nom };
+  }
+
+  // ---------- 2-bosqich: xatni tekshir (ikki qadam) ----------
+  // 1-qadam: Haqiqiy / Firibgar. 2-qadam: "Firibgar" desa — aytilgan belgi turgan joyni bosadi (5–7 qism),
+  // "Haqiqiy" desa — zonadan oldingi nomni tanlaydi (4 variant). Ikkalasi to'g'ri bo'lsagina hisoblanadi.
   const JAVOB = { haqiqiy: "Haqiqiy", soxta: "Firibgar" };
 
-  function xabarTask(r, prev, soxta) {
+  // tier 0 — qo'lda yozilgan xatlar (3–5 belgi); tier 1 — yasalgan, 2 belgi; tier 2 — yasalgan, bitta belgi
+  function xabarTask(r, prev, soxta, tier) {
     const rr = r || Math.random;
     const royxat = typeof soxta === "boolean" ? XABARLAR.filter((x) => x.soxta === soxta) : XABARLAR;
     return pickNew((rnd) => {
-      const x = pick(royxat, rnd);
+      const yasama = tier >= 2 ? rnd() < 0.8 : tier === 1 ? rnd() < 0.6 : false;
+      const x = yasama ? yasaXabar(rnd, typeof soxta === "boolean" ? soxta : rnd() < 0.5, tier) : pick(royxat, rnd);
       const belgilar = x.belgilar.map(belgi);
       const nomlar = belgilar.map((b) => b.nom.toLowerCase()).join(", ");
+      const qismlar = xatQismlari(x);
+      // Soxta xatda — haqiqatan bor belgi; haqiqiy xatda ham belgi nomi aytiladi (savol javobni oshkor qilmasin)
+      const soraladigan = x.soxta ? soraladiganBelgilar(x) : ["shoshiltirish", "qorqitish", "parol", "sir", "pul", "manzil"];
+      if (!soraladigan.length) return null;
+      const sorov = belgi(pick(soraladigan, rnd));
       return {
         id: "xabar:" + x.id, tur: "xabar", xabar: x, belgilar, manzil: manzilBahosi(x),
         matn: "Bu xat haqiqiymi yoki firibgarmi?",
         variantlar: [JAVOB.haqiqiy, JAVOB.soxta],
         javob: x.soxta ? JAVOB.soxta : JAVOB.haqiqiy,
+        joy: {
+          belgi: sorov, matn: "«" + sorov.nom + "» belgisi xatning qayerida? Oʻsha joyni bos.",
+          qismlar: qismlar.map((q) => ({ tur: q.tur, matn: q.matn, togri: x.soxta && qismdaBelgi(x, q, sorov.id) })),
+        },
+        nom: Object.assign({ matn: "Tekshir: manzilda zonadan oldingi nom qaysi?" }, nomVariantlari(x, rnd)),
         nega: x.soxta
           ? "Bu xatda " + belgilar.length + " ta belgi bor: " + nomlar + "."
           : "Bu xatda firibgarlik belgisi yoʻq: manzil toʻgʻri, parol soʻralmaydi, shoshiltirish ham yoʻq.",
       };
     }, prev, rr);
+  }
+
+  // Ikki qadamli javob: { javob, qism } (Firibgar) yoki { javob, nom } (Haqiqiy)
+  function tekshirXabar(task, v) {
+    if (!v || v.javob !== task.javob) return false;
+    if (task.xabar.soxta) return !!(task.joy.qismlar[v.qism] && task.joy.qismlar[v.qism].togri);
+    return v.nom === task.nom.javob;
   }
 
   // ---------- 3-bosqich: nima qilaman ----------
@@ -478,6 +603,8 @@
     GUMONLI_ZONA, IKKI_ZONA, FARQ_IZOH,
     belgi, tashkilot, ajrat, sodda, tahrir, domenFarqi, gumonliZona, birManzil, manzilBahosi, ishonchliManzil,
     belgiTask, xabarTask, vaziyatTask,
+    SOXTA_GAP, KIRISH, HAVOLA_GAP, HAQIQIY_GAP, HAQIQIY_QOSHIMCHA, SOXTA_MANZIL,
+    yasaXabar, xatQismlari, qismdaBelgi, soraladiganBelgilar, nomVariantlari, tekshirXabar,
   };
 
   root.QK = root.QK || {};

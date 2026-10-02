@@ -69,58 +69,92 @@ test("makeScene: 2–8 ta o'zgarish, yer va quyosh joyida", () => {
   assert.ok(counts.has(3) || counts.has(5), "toq sonlar ham chiqsin");
 });
 
-test("makeFrameTask: jami kadr va necha soniya, javob ≤ 100", () => {
-  const types = new Set();
-  for (let k = 0; k < 300; k++) {
-    const t = V.makeFrameTask(null);
-    types.add(t.type);
-    assert.ok(V.FPS.includes(t.fps));
-    assert.equal(t.total, t.fps * t.seconds);
-    assert.ok(t.total <= 100 && t.seconds >= 2);
-    assert.equal(t.answer, t.type === "total" ? t.total : t.seconds);
+test("makeFrameTask: jami kadr va necha soniya; chegara tier bilan o'sadi (100 / 150 / 200)", () => {
+  for (const tier of [0, 1, 2]) {
+    const types = new Set();
+    const lim = V.FRAME[tier];
+    let max = 0;
+    for (let k = 0; k < 300; k++) {
+      const t = V.makeFrameTask(null, Math.random, tier);
+      types.add(t.type);
+      assert.ok(V.FPS.includes(t.fps));
+      assert.equal(t.total, t.fps * t.seconds);
+      assert.ok(t.total <= lim.total && t.seconds >= lim.min && t.seconds <= lim.sec);
+      assert.equal(t.answer, t.type === "total" ? t.total : t.seconds);
+      max = Math.max(max, t.total);
+    }
+    assert.deepEqual([...types].sort(), ["seconds", "total"]);
+    assert.ok(max > lim.total * 0.7);
+    noRepeat((prev) => V.makeFrameTask(prev, Math.random, tier));
   }
-  assert.deepEqual([...types].sort(), ["seconds", "total"]);
-  noRepeat((prev) => V.makeFrameTask(prev));
+  assert.deepEqual(V.FRAME.map((x) => x.total), [100, 150, 200]);
 });
 
-test("makeSizeTask: kadrlar, soniyalar, Gbayt taqqoslash", () => {
-  const types = new Set();
-  for (let k = 0; k < 300; k++) {
-    const t = V.makeSizeTask(null);
-    types.add(t.type);
-    if (t.type === "frames") assert.equal(t.answer, t.frameBytes * t.frames);
-    else if (t.type === "fps") assert.equal(t.answer, t.frameBytes * t.fps * t.seconds);
-    else {
-      assert.equal(t.type, "compare");
-      assert.ok(t.mb === 1000 * t.gb || t.mb === 1000 * (t.gb + 1));
-      assert.equal(t.answer, t.gb * 1024 > t.mb ? "gb" : "mb");
+test("makeSizeTask: kadrlar, soniyalar, 4 variantli Gbayt taqqoslash (teng ham bor)", () => {
+  for (const tier of [0, 1, 2]) {
+    const types = new Set();
+    const answers = new Set();
+    for (let k = 0; k < 900; k++) {
+      const t = V.makeSizeTask(null, Math.random, tier);
+      types.add(t.type);
+      if (t.type === "frames") {
+        assert.equal(t.answer, t.frameBytes * t.frames);
+        assert.ok(t.frames <= 10 && t.answer <= V.FRAMES_TOTAL[tier]);
+        assert.ok(t.frameBytes >= V.FRAME_BYTES[tier][0] && t.frameBytes <= V.FRAME_BYTES[tier][1]);
+      } else if (t.type === "fps") {
+        assert.equal(t.answer, t.frameBytes * t.fps * t.seconds);
+        assert.ok(t.answer <= V.FPS_TASK[tier].total && t.seconds >= 2);
+      } else {
+        assert.equal(t.type, "compare");
+        assert.ok(t.gb >= V.CMP_GB[tier][0] && t.gb <= V.CMP_GB[tier][1]);
+        assert.ok(t.n >= 1 && t.each >= 1 && Number.isInteger(t.each));
+        const v = { gb: t.gb * 1024, mb: t.mb, films: t.n * t.each * 1024 };
+        const top = Math.max(v.gb, v.mb, v.films);
+        const tops = Object.keys(v).filter((key) => v[key] === top);
+        if (t.answer === "teng") assert.equal(tops.length, 3);
+        else assert.deepEqual(tops, [t.answer], "bitta eng katta");
+        answers.add(t.answer);
+      }
+      if (t.type !== "compare") assert.ok(t.answer >= 4);
     }
-    if (t.type !== "compare") assert.ok(t.answer <= 100 && t.answer >= 4);
+    assert.deepEqual([...types].sort(), ["compare", "fps", "frames"]);
+    assert.deepEqual([...answers].sort(), ["films", "gb", "mb", "teng"], `tier ${tier}`);
+    noRepeat((prev) => V.makeSizeTask(prev, Math.random, tier));
   }
-  assert.deepEqual([...types].sort(), ["compare", "fps", "frames"]);
-  noRepeat((prev) => V.makeSizeTask(prev));
+  assert.equal(V.CMP_OPTIONS.length, 4);
 });
 
-test("makeCompressTask: farq, tejalgan piksel, qaysi video", () => {
-  const types = new Set();
-  for (let k = 0; k < 300; k++) {
-    const t = V.makeCompressTask(null);
-    types.add(t.type);
-    if (t.type === "diff") {
-      assert.equal(t.answer, V.diff(t.a, t.b).length);
-      assert.equal(t.options.length, 4);
-      assert.equal(new Set(t.options).size, 4);
-      assert.ok(t.options.includes(t.answer));
-      assert.ok(t.options.every((n) => n >= 1));
-    } else if (t.type === "saved") {
-      assert.equal(t.answer, 36 - t.changed);
-    } else {
-      assert.equal(t.type, "which");
-      assert.equal(t.options.length, 2);
-      assert.equal(t.options[t.answer].calm, true);
+test("makeCompressTask: farq, tejalgan piksel, to'rt videodan bittasi (4 variant)", () => {
+  for (const tier of [0, 1, 2]) {
+    const types = new Set();
+    const asks = new Set();
+    for (let k = 0; k < 400; k++) {
+      const t = V.makeCompressTask(null, Math.random, tier);
+      types.add(t.type);
+      if (t.type === "diff") {
+        assert.equal(t.answer, V.diff(t.a, t.b).length);
+        assert.equal(t.options.length, 4);
+        assert.equal(new Set(t.options).size, 4);
+        assert.ok(t.options.includes(t.answer));
+        assert.ok(t.options.every((n) => n >= 1));
+      } else if (t.type === "saved") {
+        assert.equal(t.answer, 36 - t.changed);
+        assert.ok(t.changed >= V.CHANGED[tier][0] && t.changed <= V.CHANGED[tier][1]);
+        assert.ok(t.answer >= 6);
+      } else {
+        assert.equal(t.type, "which");
+        asks.add(t.ask);
+        assert.equal(t.options.length, 4);
+        assert.equal(new Set(t.options.map((o) => o.label)).size, 4);
+        // "eng ko'p siqiladi" — yagona tinch video; "eng kam" — yagona harakatli
+        const want = t.ask === "most";
+        assert.equal(t.options.filter((o) => o.calm === want).length, 1);
+        assert.equal(t.options[t.answer].calm, want);
+      }
     }
+    assert.deepEqual([...types].sort(), ["diff", "saved", "which"]);
+    assert.deepEqual([...asks].sort(), tier ? ["least", "most"] : ["most"]);
+    noRepeat((prev) => V.makeCompressTask(prev, Math.random, tier));
   }
-  assert.deepEqual([...types].sort(), ["diff", "saved", "which"]);
   assert.ok(V.PAIRS.length >= 4);
-  noRepeat((prev) => V.makeCompressTask(prev));
 });

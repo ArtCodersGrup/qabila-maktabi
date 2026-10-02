@@ -50,3 +50,13 @@ Keyingi mavzu: sun'iy intellekt.
 ## 4. Bu sahifaga kirmaydi
 
 Qidiruv, o'qituvchi paneli, bolaning ismi/profili, server — hammasi brauzerda, ro'yxatdan o'tishsiz.
+
+## 2026-10-02: dizayn yangilanishi (tahlil natijasi)
+
+Bolalar "oson va zerikarli" deyishgan; dizayn tanqidi (`hisobotlar/2026-10-02-2-dizayn.md`) bosh sahifada uchta muammoni ko'rsatdi: bitta uzun ustun, "qayerdaman" ko'rinmaydi, musobaqalar yangi bola uchun noto'g'ri joyda.
+
+- **Tepada umumiy progress** ("Tugagan: 5 / 32" + chiziq) va **"Davom et" kartasi**: avval boshlab qo'yilgan o'yin, bo'lmasa birinchi tugallanmagani. Telefonda klaviatura kerak bo'lgan o'yin (💻) taklif qilinmaydi.
+- **Kartalar**: ramka + rangli qirra, kompyuterda (≥ 720 px) 2 ustun, raqam — bo'lim rangidagi nishon, tugagan o'yinda ✓ va `★ 7/9` (qiyin rejim o'tilgan bo'lsa 🔥), tugallanmaganida segmentli progress.
+- **Bo'limlar**: rang tasmasi (c0…c3 aylanma) va `2/4` hisobi.
+- **Musobaqalar va mashqlar** — ixcham gorizontal qator, ro'yxat **oxirida**; "Hammasi" (o'qituvchi) toifasida musobaqalar tepada qoladi.
+- Yulduzlar va qiyin rejim holati `QK.storage` dan o'qiladi (`{done, stars, hard}`).

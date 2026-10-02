@@ -8,6 +8,12 @@
 
   const SAHIFADA = 10; // bir sahifada nechta masala (muallif talabi, 2026-10-01)
 
+  // Standart filtr: ro'yxat 12–16 yoshli bolaga "Ikki son yigʻindisi" dan emas, 500+ reytingdan ochiladi.
+  // Bola "Tozalash" ni bossa — hammasini ko'radi (tanlov holat.js da saqlanadi).
+  const STANDART_QIYINLIK = "500+";
+  const QIYINLIK_CHEGARALARI = [500, 800, 1000]; // "N+" — reytingi N va undan yuqori
+  const standartFiltr = () => ({ qidiruv: "", daraja: "", teg: "", qiyinlik: STANDART_QIYINLIK, holat: "", sahifa: 1 });
+
   // Bankdagi hamma masala bitta ro'yxatda: daraja belgisi bilan, qiyinlik bo'yicha tartiblangan
   function hammasi() {
     const out = [];
@@ -25,6 +31,17 @@
     return bank.TAGS.filter((t) => bor.has(t));
   };
   const qiyinliklar = () => [...new Set(hammasi().map((p) => p.rating))].sort((a, b) => a - b);
+  // "Qiyinlik" tanlovi: avval chegaralar (500+, 800+, 1000+), keyin aniq reytinglar
+  const qiyinlikTanlovlari = () => QIYINLIK_CHEGARALARI.map((n) => ({ id: n + "+", nom: "Qiyinlik: " + n + "+" }))
+    .concat(qiyinliklar().map((q) => ({ id: String(q), nom: String(q) })));
+
+  // Qiyinlik filtri: "500+" — 500 va undan yuqori; "800" — aynan 800; bo'sh — hammasi
+  function qiyinlikMos(rating, q) {
+    const matn = String(q == null ? "" : q).trim();
+    if (!matn) return true;
+    if (matn.endsWith("+")) return rating >= Number(matn.slice(0, -1));
+    return rating === Number(matn);
+  }
 
   // Qidiruv: nom, shart, teg va manba kodi bo'yicha (katta-kichik harf farqsiz)
   function mosKeladi(p, matn) {
@@ -42,11 +59,23 @@
     return list.filter((p) => {
       if (o.daraja && p.daraja !== o.daraja) return false;
       if (o.teg && !(p.tags || []).includes(o.teg)) return false;
-      if (o.qiyinlik && p.rating !== Number(o.qiyinlik)) return false;
+      if (!qiyinlikMos(p.rating, o.qiyinlik)) return false;
       if (o.holat === "yechilgan" && !(h[p.id] && h[p.id].yechilgan)) return false;
       if (o.holat === "yechilmagan" && h[p.id] && h[p.id].yechilgan) return false;
       return mosKeladi(p, o.qidiruv);
     });
+  }
+
+  // Saqlangan filtrni tekshirish: bankda endi yo'q daraja/teg/qiyinlik bo'sh ro'yxatga olib kelmasin
+  function tozaFiltr(f) {
+    const o = f || {};
+    const bormi = (qiymat, tanlovlar) => (tanlovlar.includes(String(qiymat || "")) ? String(qiymat) : "");
+    return {
+      daraja: bormi(o.daraja, darajalar().map((d) => d.id)),
+      teg: bormi(o.teg, teglar()),
+      qiyinlik: bormi(o.qiyinlik, qiyinlikTanlovlari().map((q) => q.id)),
+      holat: bormi(o.holat, ["yechilgan", "yechilmagan"]),
+    };
   }
 
   // Sahifalash: 1-sahifadan boshlanadi, chegaradan chiqmaydi
@@ -71,11 +100,16 @@
       hint: p.hint,
       solution: p.solution,
       tail: p.tail || null,
+      // Masalaga xos qadam chegarasi (samaradorlik sinovi) — baho.js shuni o'qiydi
+      qadam: p.qadam || null,
       tests: [{ stdin: p.namuna.stdin, out: p.namuna.out }].concat(p.tests.map((stdin) => ({ stdin }))),
     };
   }
 
-  const api = { SAHIFADA, hammasi, darajalar, teglar, qiyinliklar, mosKeladi, filtr, sahifa, bittasi, vazifa };
+  const api = {
+    SAHIFADA, STANDART_QIYINLIK, QIYINLIK_CHEGARALARI, standartFiltr, tozaFiltr,
+    hammasi, darajalar, teglar, qiyinliklar, qiyinlikTanlovlari, qiyinlikMos, mosKeladi, filtr, sahifa, bittasi, vazifa,
+  };
 
   if (node) module.exports = api;
   else {

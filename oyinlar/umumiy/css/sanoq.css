@@ -33,7 +33,7 @@
   font-family: ui-monospace, Menlo, Consolas, monospace;
 }
 .ucell { display: grid; place-items: center; height: 36px; border-radius: 6px; font-size: 28px; font-weight: 800; }
-.ucarry { height: 20px; font-size: 15px; font-weight: 900; color: var(--yana); font-family: "Nunito", system-ui, sans-serif; }
+.ucarry { height: 20px; font-size: 15px; font-weight: 900; color: var(--yana-matn); font-family: "Nunito", system-ui, sans-serif; }
 .usign { font-size: 26px; color: var(--asosiy); }
 .ures { background: #F4F1EA; }
 .ures.filled { background: none; color: var(--togri); animation: pop 0.2s; }
@@ -41,7 +41,7 @@
 .ures.hl { box-shadow: inset 0 0 0 2px var(--asosiy); }
 .udigit.gave { color: #A89F90; text-decoration: line-through; }
 .uline { height: 3px; margin: 2px 0; border-radius: 2px; background: var(--matn); }
-.ubase { font-size: 16px; font-weight: 800; color: #7A7266; }
+.ubase { font-size: 16px; font-weight: 800; color: var(--matn-3); }
 
 /* ---------- Raqam tugmalari ---------- */
 .dbuttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 480px; }

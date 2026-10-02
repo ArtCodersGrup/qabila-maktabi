@@ -23,26 +23,33 @@
     return el;
   }
 
-  // 1-bosqich: shu juftlikni almashtirish kerakmi
+  // 1-bosqich: bitta to'liq o'tishda nechta almashtirish bo'ladi (javob — son, taxmin bilan topilmaydi)
   function almashExercise(task) {
     let host = null;
+    const son = (value) => String(value).trim();
     return practice.tries({
       setup(submit) {
         host = M.box(true);
-        host.append(M.note("Belgilangan ikki ustunni almashtirish kerakmi?"));
-        host.append(ustunlar(task.holat, { juft: task.i }));
-        ui.control().append(
-          ui.button("Ha, almashtiramiz", () => submit(true), "big"),
-          ui.button("Yoʻq, joyida", () => submit(false), "big"));
+        host.append(M.note("Chapdan oʻngga bitta toʻliq oʻtish qilamiz. Nechta almashtirish boʻladi? Sonini yoz."));
+        host.append(ustunlar(task.holat));
+        const area = h("input", {
+          class: "kod-javob", type: "text", inputmode: "numeric", spellcheck: "false", autocomplete: "off",
+          "aria-label": "Almashtirishlar soni",
+        });
+        area.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); submit(area.value); } });
+        host.append(area);
+        ui.control().append(ui.button("Tekshir", () => submit(area.value), "big"));
+        setTimeout(() => area.focus(), 50);
       },
-      check: (value) => value === task.javob,
+      check: (value) => /^\d+$/.test(son(value)) && Number(son(value)) === task.javob,
       hint() {
-        host.append(M.note("↻ Chapdagisi oʻngdagisidan katta boʻlsa — almashtiriladi. Oʻsish tartibi kerak."));
+        host.append(M.note("↻ Har juftlikni navbat bilan solishtir. Diqqat: almashgan katta son oʻngga suriladi va keyingi juftlikda yana qatnashadi."));
       },
       solution() {
         host.append(M.answer(task.javob
-          ? task.holat[task.i] + " > " + task.holat[task.i + 1] + " — almashtiriladi"
-          : task.holat[task.i] + " < " + task.holat[task.i + 1] + " — joyida qoladi"));
+          ? task.javob + " ta almashtirish: " + task.almashishlar.map((j) => j[0] + " ↔ " + j[1]).join(", ")
+          : "0 ta — roʻyxat allaqachon tartibda"));
+        host.append(ustunlar(task.natija, { tayyor: task.natija.length - 1 }));
       },
     });
   }

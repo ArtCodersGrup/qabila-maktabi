@@ -11,9 +11,11 @@ const G = require("./gpp.js");
 const C = require("../js/cpp/cpp-run.js");
 
 const bor = G.bormi();
+// gppsiz: bu mashinadagi kompilyatorda yo'q narsa (masalan macOS da <bits/stdc++.h>) — faqat dvigatelda sinaladi
+const SOLISHTIRILADI = CORPUS.filter((t) => !t.gppsiz);
 
 test("g++ bo'lmasa, parity o'tkazib yuboriladi", () => {
-  assert.ok(true, bor ? "g++ bor — " + CORPUS.length + " dastur solishtiriladi" : "g++ yo'q");
+  assert.ok(true, bor ? "g++ bor — " + SOLISHTIRILADI.length + " dastur solishtiriladi" : "g++ yo'q");
 });
 
 if (bor) {
@@ -21,7 +23,7 @@ if (bor) {
     const ust = G.ustaxona();
     const farqlar = [];
     try {
-      for (const { t, r } of await G.hammasi(ust, CORPUS, (x) => ({ kod: x.kod, kirish: x.kirish }))) {
+      for (const { t, r } of await G.hammasi(ust, SOLISHTIRILADI, (x) => ({ kod: x.kod, kirish: x.kirish }))) {
         assert.ok(r.ok, t.id + ": g++ ishlamadi — " + r.xato + "\n" + t.kod);
         const bizniki = C.run(t.kod, { stdin: t.kirish || [] });
         assert.equal(bizniki.error, null, t.id + ": dvigatel xato berdi — " + JSON.stringify(bizniki.error));

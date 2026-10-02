@@ -10,7 +10,7 @@
     await ui.say("elder", "Nom bilan oʻlchamasdan ham aytish mumkin. Ikki savol beraman.");
     let oldingi = null;
     for (let k = 0; k < 2; k++) {
-      const task = L.hisobTask(Math.random, oldingi);
+      const task = L.hisobTask(Math.random, oldingi, k === 0 ? 0 : 2); // ikkinchisi qiyinroq: n toʻrt barobar ham oshishi mumkin
       oldingi = task;
       QK.current = task; // tekshirish uchun (practice.exercises ham shunday qiladi)
       const host = common.box(true);
@@ -23,7 +23,11 @@
       await practice.numberTries({
         answer: task.javob,
         maxLen: String(task.javob).length + 1,
-        hint() { host.append(common.note("↻ " + task.sinf.izoh + ". " + task.qadam + " ni shunga koʻpaytir.")); },
+        hint() {
+          host.append(common.note("↻ " + task.sinf.izoh + ". " + (task.karra === 4
+            ? "Bu yerda n toʻrt barobar oshdi — yaʼni ikki marta ikkilandi: qoidani ikki marta qoʻlla."
+            : "Shu qoidani " + task.qadam + " ga qoʻlla.")));
+        },
         solution() { host.append(common.answer(String(task.javob) + " qadam")); },
       });
       ui.clearWork();
@@ -62,7 +66,7 @@
     await katta();
     await ui.say("elder", "Endi oʻzing tanla: qaysi usul yaraydi?");
     await practice.exercises({
-      next: (prev) => L.amaliyTask(Math.random, prev),
+      next: (prev, correct, tier) => L.amaliyTask(Math.random, prev, tier),
       run: (task) => common.amaliyExercise(task),
       praise: () => "Toʻgʻri usul tanlandi.",
     });

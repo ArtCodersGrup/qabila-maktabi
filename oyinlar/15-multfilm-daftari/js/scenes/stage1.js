@@ -110,9 +110,9 @@
     const all = await missingFrame();
     await playBoth(all);
     await definition();
-    await ui.say("elder", "Endi oʻzing hisobla: kadrlar va soniyalar. 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing hisobla: kadrlar va soniyalar. ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev) => video.makeFrameTask(prev),
+      next: (prev, correct, tier) => video.makeFrameTask(prev, undefined, tier),
       run: frameTask,
       praise: (task) => `${task.fps} × ${task.seconds} = ${task.total} kadr.`,
     });

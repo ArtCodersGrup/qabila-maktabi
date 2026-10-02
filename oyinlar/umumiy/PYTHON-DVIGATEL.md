@@ -41,13 +41,16 @@ Bolaning yozgan Python kodini **brauzerda oʻzimiz** bajaradigan talqinchi. Kutu
 - `def` … `return` (parametrlar, standart qiymatsiz);
 - izoh `#`.
 
-**Ichki funksiyalar:** `print`, `input`, `int`, `str`, `float`, `bool`, `len`, `range`, `abs`, `min`, `max`, `sum`, `sorted`.
-**Metodlar:** `list.append`, `list.pop`, `str.upper`, `str.lower`, `str.count`, `str.split`.
+**Ichki funksiyalar:** `print` (`end=`, `sep=` bilan), `input`, `int`, `str`, `float`, `bool`, `len`, `range`, `abs`, `min`, `max`, `sum`, `sorted`, `list`, `map`, `ord`, `chr`.
+**Metodlar:** `list.append`, `list.pop`, `str.upper`, `str.lower`, `str.count`, `str.split`, `str.join`.
+
+**2026-10-02 qoʻshildi (olimpiada kirish-chiqishi uchun):** `list(map(int, input().split()))`, `a, b = map(int, input().split())`, `print(x, end=" ")`, `" ".join(map(str, a))`, `ord`/`chr`. `map` natijasi — alohida qiymat: ustidan yurish, `list(...)`, `sum(...)`, ochish mumkin; indeks va `len` Python kabi xato beradi. Farq: `print(map(...))` haqiqiy Pythonda manzil bilan chiqadi (`<map object at 0x…>`), bu yerda `<map object>`; `map` bir marta emas, qayta ham oʻqiladi.
+**Chegaralar:** qadam — 3 000 000; satr/roʻyxat uzunligi — 1 000 000; daraja koʻrsatkichi — 100 000. Oshsa — `Limit` xabari (tab qulamaydi).
 
 ### Nima yoʻq (va nima deyiladi)
 
 `f"..."`, `%` bilan formatlash, `.format`, `dict`, `tuple`, `set`, `import`, `class`, `lambda`, `global`,
-`while … else`, `try/except`, `enumerate`, `zip`, `map`, `filter`, `print(..., end=…)` kabi nomli argumentlar,
+`while … else`, `try/except`, `enumerate`, `zip`, `filter`, `print` dan boshqa joyda nomli argumentlar (`f(a=1)`),
 qadamli kesish `a[::2]`, `input()` ni faylga yoʻnaltirish.
 
 Har biri uchun aniq xabar tayyorlanadi:
@@ -87,7 +90,7 @@ Bular tuzoq: notoʻgʻri qilsak, bola saytdan bir narsa, maktabda boshqa narsa o
 
 ```js
 // Bir marta bajarish
-QK.python.run(kod, { stdin: ["5", "7"], maxSteps: 200000 });
+QK.python.run(kod, { stdin: ["5", "7"], maxSteps: 3000000 });
 // → { output: ["12"], error: null, steps: 34, vars: { a: 5, b: 7 } }
 
 // Qadam-baqadam (generator)
@@ -119,7 +122,7 @@ Skriptlar oddiy `<script>` bilan ulanadi (modul emas — QOIDALAR §8). Har biri
 
 ## 6. Chegaralar va xavfsizlik
 
-- **Qadam chegarasi** — standart 200 000. Oshsa: `ChegaraXato` → *"Dastur toʻxtamadi: 200 000 qadam bajarildi. Sikldagi shart qachon yolgʻon boʻladi?"* Bu 31-oʻyinda dars sifatida ishlatiladi.
+- **Qadam chegarasi** — standart 3 000 000. Oshsa: `ChegaraXato` → *"3 000 000 qadamdan oshdi — sikl juda uzun yoki tugamaydi. Sikldagi shart qachon yolgʻon boʻladi?"* Bu 31-oʻyinda dars sifatida ishlatiladi.
 - **Chuqurlik chegarasi** — 200 chaqiriq → `RecursionError`.
 - **Chiqish chegarasi** — 2 000 satr (`print` bilan ekranni toʻldirib yuborishdan saqlaydi).
 - **`eval` va `new Function` ishlatilmaydi.** Bolaning kodi hech qachon JS sifatida bajarilmaydi. Bu qoida QOIDALAR §8 ga yoziladi.
@@ -160,4 +163,4 @@ oyinlar/umumiy/tests/
 ## 9. Keyin qoʻshilishi mumkin
 
 `f"..."` satrlar (eng koʻp soʻraladigani boʻlsa kerak), `dict`, `tuple` va `a, b = funksiya()`, `enumerate`,
-`print(..., end=…)`, `try/except`, qadamli kesish. Har biri: dvigatelga qoʻshiladi → parity testiga korpus qoʻshiladi → "hali yoʻq" xabari oʻchiriladi.
+`try/except`, qadamli kesish. Har biri: dvigatelga qoʻshiladi → parity testiga korpus qoʻshiladi → "hali yoʻq" xabari oʻchiriladi.

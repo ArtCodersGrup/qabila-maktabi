@@ -1,17 +1,19 @@
-// So'zni ochish/shifrlash va mashq sikllari (QOIDALAR 4.4, 4.5).
+// So'zni ochish/shifrlash va mashq sikli (QOIDALAR 4.4, 4.5) — umumiy practice.js ustida:
+// bosqichga qarab 4 / 5 / 6 ta to'g'ri javob, yulduzlar, seriya, qiyin rejim.
 (function (root) {
   "use strict";
 
   const QK = root.QK;
-  const { caesar, ui, sound, caesarUi } = QK;
+  const { caesar, ui, caesarUi, practice } = QK;
 
-  const PRAISE = ["✓ Barakalla!", "✓ Zoʻr!", "✓ Toʻppa-toʻgʻri!"];
+  const PRAISE = practice.PRAISE;
 
   // Bitta so'z. mode "decode": kataklar ustida shifr, bola jadvaldan oddiy harfni tanlaydi;
   // "encode": ustida oddiy harflar, bola shifrni tanlaydi. Hamma katak to'lganda avtomatik tekshiriladi.
-  // 1-xato: jadval kaliti noto'g'ri bo'lsa — kalit haqida maslahat, aks holda noto'g'ri kataklar ↻;
+  // blind — jadvalning pastki qatori yashirin: jadval oddiy alifbo klaviaturasi, bola harfni o'zi suradi.
+  // 1-xato: yashirin qator ochiladi / jadval kaliti noto'g'ri bo'lsa — kalit haqida maslahat / noto'g'ri kataklar ↻;
   // 2-xato: to'g'ri javob ko'rsatiladi. Natija: true — bola o'zi to'g'ri bajardi.
-  function solveWord({ plain, key, mode, tbl, opened }) {
+  function solveWord({ plain, key, mode, tbl, opened, blind }) {
     ui.setCompact(true);
     ui.clearWork();
     ui.clearControl();
@@ -22,68 +24,82 @@
     const box = ui.h("div", { class: "cbox" });
     if (opened && opened.length) box.append(ui.h("div", { class: "opened", text: opened.join(" ") }));
     ui.work().append(box);
-    caesarUi.keyControl(box, tbl);
+    let hidden = !!blind;
+    tbl.setBlind(hidden);
+    if (hidden) {
+      // Kalit oldindan qo'yiladi: maslahat qatorni ochganda jadval to'g'ri turadi
+      tbl.setKey(key);
+      box.append(ui.h("div", { class: "blind-note", text: `Kalit: ${key} · pastki qator yashirin` }));
+    } else {
+      caesarUi.keyControl(box, tbl);
+    }
     const slots = caesarUi.wordSlots(box, shown);
-    let wrongCount = 0;
+    const done = () => {
+      slots.lock();
+      tbl.setPick(null);
+    };
+    let last = 0;
 
-    return ui.settle((finish) => {
-      function done(ok) {
-        slots.lock();
-        tbl.setPick(null);
-        finish(ok);
-      }
-      function check() {
-        const wrong = caesar.checkLetters(answer, slots.letters());
-        if (!wrong.length) {
-          sound.play("correct");
-          ui.pose("apprentice", "happy", 900);
-          done(true);
-          return;
-        }
-        sound.play("retry");
-        ui.pose("apprentice", "think", 1000);
-        wrongCount++;
-        if (wrongCount === 1) {
-          if (tbl.getKey() !== key) {
-            slots.clearAll();
-            ui.bubble("elder", `Jadval kaliti ${tbl.getKey()} emas, ${key} boʻlishi kerak.`);
-          } else {
-            slots.markWrong(wrong);
-            ui.bubble("elder", "↻ Belgilangan harflarni qaytadan top.");
+    return practice.tries({
+      setup: (submit) => {
+        // practice.tries 400 ms ichidagi ikkinchi javobni tashlab yuboradi — shuning uchun oraliq saqlanadi
+        const send = () => {
+          if (!slots.isFull()) return;
+          const wait = 450 - (Date.now() - last);
+          if (wait > 0) {
+            setTimeout(send, wait);
+            return;
           }
-          return;
+          last = Date.now();
+          submit(slots.letters());
+        };
+        tbl.setPick((p, c) => {
+          // Yashirin qatorda bola javob harfining o'zini bosadi; ochiq jadvalda — ustunni
+          if (slots.fill(hidden || mode === "decode" ? p : c) && slots.isFull()) send();
+        });
+      },
+      check: (given) => {
+        const ok = !caesar.checkLetters(answer, given).length;
+        if (ok) done();
+        return ok;
+      },
+      hint: (given) => {
+        const wrong = caesar.checkLetters(answer, given);
+        if (hidden) {
+          hidden = false;
+          tbl.setBlind(false);
+          slots.markWrong(wrong);
+          ui.bubble("elder", "↻ Jadvalning pastki qatorini ochdim. Belgilangan harflarni qaytadan top.");
+        } else if (tbl.getKey() !== key) {
+          slots.clearAll();
+          ui.bubble("elder", `Jadval kaliti ${tbl.getKey()} emas, ${key} boʻlishi kerak.`);
+        } else {
+          slots.markWrong(wrong);
+          ui.bubble("elder", "↻ Belgilangan harflarni qaytadan top.");
         }
+      },
+      solution: () => {
+        tbl.setBlind(false);
         slots.showSolution(answer);
-        done(false);
-      }
-      tbl.setPick((p, c) => {
-        if (slots.fill(mode === "decode" ? p : c) && slots.isFull()) check();
-      });
+        done();
+      },
     });
   }
 
-  // Mashq: count ta to'g'ri javob; next(prev, correct) → { word, key }.
-  // Doiralar: total ta, doneBefore tasi oldindan to'la (1-bosqichda xat birinchisini to'ldiradi).
+  // Mashq: `need` ta to'g'ri javob (berilmasa — bosqich bo'yicha); next(prev, correct, tier) → { word, key, blind }.
   // 2-xatodan keyin yangi so'z beriladi, xato qilingani hisoblanmaydi.
-  async function exercises({ count, total, doneBefore, mode, tbl, next, question, praise }) {
-    let correct = 0;
-    let prev = null;
-    ui.setProgress(total, doneBefore);
-    while (correct < count) {
-      const ex = next(prev, correct);
-      prev = ex;
-      ui.paper(String(ex.key));
-      ui.raisePaper(true);
-      ui.bubble("elder", question(ex));
-      const ok = await solveWord({ plain: caesar.tokenize(ex.word), key: ex.key, mode, tbl });
-      if (ok) {
-        correct++;
-        ui.setProgress(total, doneBefore + correct);
-        await ui.say("elder", `${PRAISE[(correct - 1) % PRAISE.length]} ${praise(ex)}`);
-      } else {
-        await ui.say("elder", "Toʻgʻri javob ekranda. Endi yangi soʻz.");
-      }
-    }
+  function exercises({ need, mode, tbl, next, question, praise }) {
+    return practice.exercises({
+      need,
+      next,
+      run: (ex) => {
+        ui.paper(String(ex.key));
+        ui.raisePaper(true);
+        ui.bubble("elder", question(ex));
+        return solveWord({ plain: caesar.tokenize(ex.word), key: ex.key, mode, tbl, blind: ex.blind });
+      },
+      praise,
+    });
   }
 
   QK.common = { PRAISE, solveWord, exercises };

@@ -5,7 +5,7 @@
   const QK = root.QK;
   const { roman, ui, sound } = QK;
 
-  const PLACE_NAMES = ["birlar", "oʻnlar", "yuzlar"];
+  const PLACE_NAMES = ["birlar", "oʻnlar", "yuzlar", "minglar"];
 
   // Bitta Rim belgisi (rangli kartochka); size: "sm" | "lg" | yo'q
   const symbol = (ch, size) => ui.h("span", { class: `rtile r-${ch}${size ? " " + size : ""}`, text: ch });

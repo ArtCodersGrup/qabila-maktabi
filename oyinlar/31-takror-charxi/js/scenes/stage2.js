@@ -46,7 +46,7 @@
     await definition();
     await ui.say("elder", "Endi oʻzing hisobla: dastur nima chiqaradi?");
     await practice.exercises({
-      next: (prev) => L.sumTask(Math.random, prev),
+      next: (prev, correct, tier) => L.sumTask(Math.random, prev, tier),
       run: (task) => common.resultExercise(task),
       praise: () => "Yigʻindini toʻgʻri topding.",
     });

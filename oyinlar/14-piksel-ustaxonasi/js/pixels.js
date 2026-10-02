@@ -67,7 +67,7 @@
   }
 
   // Takrorni tekshirish uchun savolning o'zi (rasmdagi tasodifiy kataklarsiz)
-  const taskKey = (t) => ({ type: t.type, w: t.w, h: t.h, colors: t.colors, row: t.row && t.row.join(""), mb: t.mb, kb: t.kb });
+  const taskKey = (t) => ({ type: t.type, w: t.w, h: t.h, colors: t.colors, row: t.row && t.row.join(""), mb: t.mb, kb: t.kb, n: t.n, each: t.each });
   const same = (a, b) => !!a && JSON.stringify(taskKey(a)) === JSON.stringify(taskKey(b));
 
   // Kenglik va balandlik: a..b oralig'ida, maydon limit ichida, ixtiyoriy shart bilan
@@ -79,29 +79,40 @@
     }
   }
 
+  // Qiyinlik zinasi (QOIDALAR 4.3): chegaralar tier 0 / 1 / 2 bo'yicha
+  const BW_SIZE = [{ a: 3, b: 10, area: 100 }, { a: 5, b: 12, area: 144 }, { a: 4, b: 16, area: 256 }]; // 1-bosqich
+  const BPP_TIER = [[2, 3, 4, 5, 8, 10, 16], BPP_COLORS, [20, 32, 50, 64, 100, 200, 256, 500, 1000]]; // 2-bosqich: ranglar soni
+  const COLOR_SIZE = [{ b: 8, bits: 100 }, { b: 10, bits: 160 }, { b: 12, bits: 256 }]; // 2-bosqich: rasm (bitda)
+  const RGB_SIZE = [{ a: 2, b: 6, area: 33 }, { a: 3, b: 8, area: 50 }, { a: 4, b: 10, area: 80 }]; // 3-bosqich: × 3 bayt
+  const RUNS = [{ r: [2, 5], len: [8, 12] }, { r: [3, 6], len: [10, 14] }, { r: [4, 8], len: [12, 16] }]; // qisqa yozuv
+  const CMP_MB = [[1, 5], [2, 9], [6, 20]]; // taqqoslashdagi Mbayt
+
   // 1-bosqich mashqi: oq-qora rasm necha bit / necha bayt
-  function makeBwTask(prev, rng) {
+  function makeBwTask(prev, rng, tier) {
     rng = rng || Math.random;
+    const lim = BW_SIZE[tier || 0];
     for (;;) {
       const type = rng() < 0.5 ? "bits" : "bytes";
-      const { w, h } = size(3, 10, 100, rng, type === "bytes" ? (area) => area % 8 === 0 : null);
+      const { w, h } = size(lim.a, lim.b, lim.area, rng, type === "bytes" ? (area) => area % 8 === 0 : null);
       const task = { type, w, h, cells: randomCells(w * h, 2, rng), answer: type === "bits" ? w * h : (w * h) / 8 };
       if (!same(prev, task)) return task;
     }
   }
 
   // 2-bosqich mashqi: N rangga nechta bit / rasm necha bit
-  function makeColorTask(prev, rng) {
+  function makeColorTask(prev, rng, tier) {
     rng = rng || Math.random;
+    tier = tier || 0;
     for (;;) {
       let task;
       if (rng() < 0.5) {
-        const colors = pick(BPP_COLORS, rng);
+        const colors = pick(BPP_TIER[tier], rng);
         task = { type: "bpp", colors, answer: minBits(colors) };
       } else {
         const colors = pick([2, 4, 16], rng);
         const bpp = minBits(colors);
-        const { w, h } = size(2, 8, Math.floor(100 / bpp), rng);
+        const lim = COLOR_SIZE[tier];
+        const { w, h } = size(2, lim.b, Math.floor(lim.bits / bpp), rng);
         task = { type: "size", colors, bpp, w, h, cells: randomCells(w * h, colors, rng), answer: w * h * bpp };
       }
       if (!same(prev, task)) return task;
@@ -109,9 +120,10 @@
   }
 
   // Tasodifiy qator: L piksel, r bo'lak
-  function randomRow(rng) {
-    const r = randInt(2, 5, rng);
-    const len = randInt(Math.max(8, r), 12, rng);
+  function randomRow(rng, tier) {
+    const lim = RUNS[tier || 0];
+    const r = randInt(lim.r[0], lim.r[1], rng);
+    const len = randInt(Math.max(lim.len[0], r), lim.len[1], rng);
     const parts = Array(r).fill(1);
     for (let k = r; k < len; k++) parts[Math.floor(rng() * r)]++;
     let value = rng() < 0.5 ? 1 : 0;
@@ -123,22 +135,63 @@
     return row;
   }
 
-  // 3-bosqich mashqi: rangli rasm necha bayt, qisqa yozuv, Mbayt va Kbayt
-  function makePhotoTask(prev, rng) {
+  // "Qaysi biri eng katta?" — uch karta: m Mbayt, k Kbayt, n ta surat × s Mbayt — va "Uchalasi teng" (4 variant).
+  // Qiymatlar Kbaytda: m × 1024, k, n × s × 1024. Yo bitta eng katta, yo uchalasi teng.
+  const cmpSizes = (t) => ({ mb: t.mb * 1024, kb: t.kb, photos: t.n * t.each * 1024 });
+  function cmpAnswer(t) {
+    const v = cmpSizes(t);
+    if (v.mb === v.kb && v.mb === v.photos) return "teng";
+    const max = Math.max(v.mb, v.kb, v.photos);
+    return ["mb", "kb", "photos"].find((k) => v[k] === max);
+  }
+  const CMP_OPTIONS = ["mb", "kb", "photos", "teng"];
+  // total Mbayt ni "n ta surat × s Mbayt" ga yoyish (n ≥ 2 bo'lsa — yaxshi)
+  function split(total, rng) {
+    const ns = [2, 3, 4, 5].filter((n) => total % n === 0 && total / n >= 1);
+    const n = ns.length ? pick(ns, rng) : 1;
+    return { n, each: total / n };
+  }
+  function makeCompareTask(rng, tier) {
+    const [lo, hi] = CMP_MB[tier];
+    for (;;) {
+      const mb = randInt(lo, hi, rng);
+      const equal = rng() < 0.2;
+      const total = equal ? mb : mb + pick([-2, -1, 1, 2], rng);
+      if (total < 1) continue;
+      // 1000 ≠ 1024 tuzog'i: 1000·m Kbayt < m Mbayt < 1000·(m + 1) Kbayt
+      const kb = equal ? mb * 1024 : 1000 * (mb + (rng() < 0.5 ? 0 : 1));
+      const task = Object.assign({ type: "compare", mb, kb }, split(total, rng));
+      const v = cmpSizes(task);
+      const top = Math.max(v.mb, v.kb, v.photos);
+      if ([v.mb, v.kb, v.photos].filter((x) => x === top).length === 2) continue; // ikkitasi teng — savol noaniq
+      task.answer = cmpAnswer(task);
+      return task;
+    }
+  }
+
+  // 3-bosqich mashqi: rangli rasm necha bayt, qisqa yozuv, Mbayt va Kbayt;
+  // tier 1+ da yana: kam rangli rasm necha BAYT (kenglik × balandlik × bit : 8)
+  function makePhotoTask(prev, rng, tier) {
     rng = rng || Math.random;
+    tier = tier || 0;
     for (;;) {
       const r = rng();
       let task;
-      if (r < 1 / 3) {
-        const { w, h } = size(2, 6, 33, rng);
+      if (tier > 0 && r < 0.25) {
+        const colors = pick([4, 16], rng);
+        const bpp = minBits(colors);
+        const lim = COLOR_SIZE[tier];
+        const { w, h } = size(2, lim.b, Math.floor(lim.bits / bpp), rng, (area) => (area * bpp) % 8 === 0);
+        task = { type: "cbytes", colors, bpp, w, h, cells: randomCells(w * h, colors, rng), answer: (w * h * bpp) / 8 };
+      } else if (r < 0.5) {
+        const lim = RGB_SIZE[tier];
+        const { w, h } = size(lim.a, lim.b, lim.area, rng);
         task = { type: "rgb", w, h, cells: randomCells(w * h, 16, rng), answer: w * h * 3 };
-      } else if (r < 2 / 3) {
-        const row = randomRow(rng);
+      } else if (r < 0.75) {
+        const row = randomRow(rng, tier);
         task = { type: "runs", row, answer: runs(row).length };
       } else {
-        const mb = randInt(1, 5, rng);
-        const kb = 1000 * (mb + (rng() < 0.5 ? 0 : 1));
-        task = { type: "compare", mb, kb, answer: mb * 1024 > kb ? "mb" : "kb" };
+        task = makeCompareTask(rng, tier);
       }
       if (!same(prev, task)) return task;
     }
@@ -148,6 +201,7 @@
     PALETTE4, PALETTE16, COLOR_TABLE, BPP_COLORS, MIX_NAMES, TARGETS, DEMO_ROW, PHOTO,
     minBits, code, mixName, mixCss, runs, taskKey,
     makeBwTask, makeColorTask, makePhotoTask,
+    BW_SIZE, BPP_TIER, COLOR_SIZE, RGB_SIZE, RUNS, CMP_MB, CMP_OPTIONS, cmpSizes, cmpAnswer,
   };
 
   if (typeof module !== "undefined" && module.exports) module.exports = api;

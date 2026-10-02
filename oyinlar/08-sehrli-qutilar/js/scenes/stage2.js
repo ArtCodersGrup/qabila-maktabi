@@ -18,29 +18,39 @@
     await ui.say("elder", "Mana shu — mukofot bilan oʻrganish. Robotga qoida aytmadik!");
   }
 
-  // 6.4: mashq
+  const USED_LABEL = { kok: "koʻk", sariq: "sariq", ikkalasi: "ikkalasi ham", hech: "hech qaysi" };
+
+  // 6.4: mashq — hamma savolda 4 variant
   function stageTask(task) {
     const el = common.box(true);
-    if (task.type === "reward") {
-      ui.bubble("elder", `Robot ${task.won ? "yutdi" : "yutqazdi"}. Ishlatgan munchoqlariga nima boʻladi?`);
+    const row = boxesUi.boxRow(el, {});
+    if (task.type === "count") {
+      // "Robot shu qutidan {rang} tortdi va yutdi / yutqazdi. Endi nechta {rang} munchoq bo'ladi?"
+      row.set({ [task.n]: { 1: task.blue, 2: task.yellow } }, [task.n]);
+      const pulled = boxesUi.COLOR_NAME[task.color];
+      const asked = boxesUi.COLOR_NAME[task.askColor];
+      ui.bubble("elder", `Robot shu qutidan ${pulled} munchoq tortdi va ${task.won ? "yutdi" : "yutqazdi"}. Endi qutida nechta ${asked} munchoq boʻladi?`);
       return practice.tries({
-        setup: (submit) => boxesUi.optionButtons(task.options, submit),
+        setup: (submit) => boxesUi.optionButtons(task.options, submit, (m) => `${m} ta`),
         check: (index) => index === task.answer,
-        hint: () => ui.bubble("elder", "↻ Yutsa — koʻpayadi, yutqazsa — kamayadi."),
-        solution: () => el.append(common.answerLine(task.options[task.answer])),
+        hint: () => ui.bubble("elder", "↻ Faqat tortilgan munchoq oʻzgaradi: yutsa — bitta qoʻshiladi, yutqazsa — bitta olinadi. Lekin qutida kamida 1 ta qoladi."),
+        solution: () => {
+          row.set({ [task.n]: task.after }, [task.n]);
+          row.flash(task.n);
+          el.append(common.answerLine(`Endi ${asked}: ${task.value} ta`));
+        },
       });
     }
     const state = boxes.newBoxes();
     const move = task.color === "kok" ? 1 : 2;
     state[task.n][move] += 2;
-    const row = boxesUi.boxRow(el, {});
     row.set(state, [task.n]);
     ui.bubble("elder", `Robot yutqazdi. ${task.n} li qutida ${boxesUi.COLOR_NAME[task.color]} munchoq tortgan edi — qaysi munchoq olinadi?`);
     return practice.tries({
-      setup: (submit) => boxesUi.optionButtons(task.options, submit, (c) => boxesUi.COLOR_NAME[c] || c),
+      setup: (submit) => boxesUi.optionButtons(task.options, submit, (c) => USED_LABEL[c]),
       check: (index) => index === task.answer,
-      hint: () => ui.bubble("elder", "↻ Faqat robot tortgan munchoq olinadi, boshqasi tegilmaydi."),
-      solution: () => el.append(common.answerLine(boxesUi.COLOR_NAME[task.color])),
+      hint: () => ui.bubble("elder", "↻ Robot shu oʻyinda qaysi munchoqni ishlatgan edi? Mukofot faqat ishlatilgan munchoqqa tegadi."),
+      solution: () => el.append(common.answerLine(`Faqat ${boxesUi.COLOR_NAME[task.color]} munchoq olinadi`)),
     });
   }
 
@@ -48,13 +58,16 @@
     const state = (QK.state && QK.state[7]) ? QK.state : boxes.newBoxes();
     QK.state = state;
     await gamesWithReward(state);
-    await ui.say("elder", "Endi savollar. 3 ta toʻgʻri javob kerak!");
+    await ui.say("elder", `Endi savollar. ${QK.practice.need()} ta toʻgʻri javob kerak!`);
     await practice.exercises({
-      next: (prev, correct) => boxes.makeStage2Task(correct, prev),
+      next: (prev, correct, tier) => boxes.makeStage2Task(correct, prev, null, tier),
       run: stageTask,
-      praise: (task) => (task.type === "reward"
-        ? `Yutsa qoʻshiladi, yutqazsa olinadi.`
-        : `Faqat ${boxesUi.COLOR_NAME[task.color]} munchoq olinadi.`),
+      praise: (task) => {
+        if (task.type !== "count") return `Faqat ${boxesUi.COLOR_NAME[task.color]} munchoq olinadi.`;
+        if (task.ask === "other") return "Tortilmagan rang oʻzgarmaydi.";
+        if (task.won) return "Yutdi — bitta qoʻshildi.";
+        return task.kept ? "Qutida kamida 1 ta munchoq qoladi." : "Yutqazdi — bitta olindi.";
+      },
     });
   }
 

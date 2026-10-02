@@ -69,11 +69,64 @@ test("katak savoli: chekka emas, javob tepasidagi ikkitadan chiqadi", () => {
 });
 
 test("o'qish savoli: javob C(n,k), qator va son 0 dan sanaladi", () => {
-  for (const t of each(L.oqishTask, 30, 7)) {
+  for (const t of each(L.oqishTask, 60, 7)) {
+    if (t.qoshni) continue; // alohida testda
     assert.equal(t.javob, S.C(t.n, t.k), t.matn);
     assert.ok(t.k >= 0 && t.k <= t.n);
     assert.ok(t.matn.includes("C(" + t.n + ", " + t.k + ")"), t.matn);
   }
+});
+
+// 2026-10-02: ikki qoʻshni son yigʻindisi — keyingi qatordagi son (uchburchakda koʻrinmaydigan 9-qator ham)
+test("qo'shni sonlar savoli: C(n, k) + C(n, k + 1) = C(n + 1, k + 1)", () => {
+  const r = rngFrom(21);
+  let prev = null;
+  let qoshni = 0;
+  for (let k = 0; k < 120; k++) {
+    prev = L.oqishTask(r, prev, 2);
+    if (!prev.qoshni) continue;
+    qoshni++;
+    assert.equal(prev.javob, S.C(prev.n, prev.k) + S.C(prev.n, prev.k + 1), prev.matn);
+    assert.equal(prev.javob, S.C(prev.n + 1, prev.k + 1), prev.matn);
+    assert.ok(prev.hisob.includes("C(" + (prev.n + 1) + ", " + (prev.k + 1) + ")"), prev.hisob);
+    assert.ok(String(prev.javob).length <= 3, "javob uch xonadan oshmasin: " + prev.javob);
+  }
+  assert.ok(qoshni >= 20, "qoʻshni savollar kam: " + qoshni);
+  prev = null;
+  for (let k = 0; k < 40; k++) { prev = L.oqishTask(r, prev, 0); assert.ok(!prev.qoshni && prev.n <= 5, prev.matn); }
+});
+
+test("zina: qator raqami zina bilan pastga tushadi", () => {
+  const r = rngFrom(4);
+  for (const [tier, [kam, kop]] of L.QATOR_ZINA.entries()) {
+    let prev = null;
+    for (let k = 0; k < 30; k++) {
+      prev = L.katakTask(r, prev, tier);
+      assert.ok(prev.n >= kam && prev.n <= kop, "katak, zina " + tier + ": n = " + prev.n);
+    }
+    const y = L.yigindiTask(r, null, tier);
+    assert.ok(y.n >= Math.max(kam, 3) && y.n <= kop, "yigʻindi, zina " + tier + ": n = " + y.n);
+  }
+});
+
+test("yangi kod masalalari: eng_katta, qaysi_qator, uchburchak", () => {
+  const vazifa = (id) => {
+    const w = L.WRITE.find((x) => x.id === id);
+    return { type: "kod-yoz", solution: w.solution, tail: w.tail, tests: w.tests.map((stdin) => ({ stdin })) };
+  };
+  // Eng katta son — qatorning o'rtasi: C(n, n // 2)
+  for (const n of [0, 1, 4, 5, 8, 10]) {
+    assert.deepEqual(K.expectedFor(vazifa("eng-katta"), { stdin: [String(n)] }), [String(S.C(n, Math.floor(n / 2)))], "n = " + n);
+  }
+  // qaysi_qator: 2^n → n; 2^20 ham sig'adi
+  assert.deepEqual(K.expectedFor(vazifa("qaysi-qator"), { stdin: ["1048576"] }), ["20"]);
+  // "s // 2" ni qaytargan yechim yiqiladi
+  assert.equal(K.check(vazifa("qaysi-qator"), "def qaysi_qator(s):\n    return s // 2").ok, false);
+  // uchburchak(3): to'rt qator; n = 0 da faqat [1]
+  assert.deepEqual(K.expectedFor(vazifa("uchburchak"), { stdin: ["3"] }), ["[1]", "[1, 1]", "[1, 2, 1]", "[1, 3, 3, 1]"]);
+  assert.deepEqual(K.expectedFor(vazifa("uchburchak"), { stdin: ["0"] }), ["[1]"]);
+  // Birinchi qatorni ([1]) unutgan yechim yiqiladi
+  assert.equal(K.check(vazifa("uchburchak"), "def uchburchak(n):\n    a = [1]\n    for i in range(n):\n        yangi = [1]\n        for j in range(len(a) - 1):\n            yangi.append(a[j] + a[j + 1])\n        yangi.append(1)\n        a = yangi\n        print(a)").ok, false);
 });
 
 test("yig'indi savoli: javob 2^n", () => {

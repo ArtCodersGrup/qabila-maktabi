@@ -16,45 +16,68 @@
     }
   }
 
-  // 2–3 xonali n-lik sonning qiymati
-  const value = (base, r) => randInt(base, Math.min(base ** 3 - 1, 200), r);
+  // Qiyinlik zinasi (QOIDALAR 4.3): tier 0 — 2–3 xonali (≤ 200), tier 1 — 3 xonali, ko'chish/qarz albatta;
+  // tier 2 — 3–4 xonali (≤ 999), asos 12 gacha (A, B raqamlari), kamida ikkita ko'chish/qarz
+  const BASES = [[3, 9], [3, 9], [3, 12]];
+  function value(base, r, tier) {
+    if (tier === 2) return randInt(base ** 2, Math.min(base ** 4 - 1, 999), r);
+    return randInt(tier === 1 ? base ** 2 : base, Math.min(base ** 3 - 1, 200), r);
+  }
+  const count = (cols, key) => cols.filter((c) => c[key]).length;
 
-  // 1-bosqich: 90% hollarda kamida bitta ko'chish
-  const makeAddTask = (prev, rng) => loop(prev, rng, (r) => {
-    const base = randInt(3, 9, r);
-    const a = S.toBase(value(base, r), base);
-    const b = S.toBase(value(base, r), base);
-    if (!S.addColumns(a, b, base).cols.some((c) => c.carryOut) && r() < 0.9) return null;
-    return { base, a, b, answer: S.toBase(S.fromBase(a, base) + S.fromBase(b, base), base) };
-  });
-
-  // 2-bosqich: a > b, 90% hollarda kamida bitta qarz
-  const makeSubTask = (prev, rng) => loop(prev, rng, (r) => {
-    const base = randInt(3, 9, r);
-    const x = value(base, r);
-    if (x - 1 < base) return null; // b ham kamida 2 xonali va a dan kichik bo'lsin
-    const y = randInt(base, x - 1, r);
+  // 1-bosqich: tier 0 — 90% hollarda kamida bitta ko'chish; natija 4 xonadan oshmaydi
+  const makeAddTask = (prev, rng, tier) => loop(prev, rng, (r) => {
+    tier = tier || 0;
+    const base = randInt(BASES[tier][0], BASES[tier][1], r);
+    const x = value(base, r, tier);
+    const y = value(base, r, tier);
+    if (x + y >= base ** 4) return null;
     const a = S.toBase(x, base);
     const b = S.toBase(y, base);
-    if (!S.subColumns(a, b, base).cols.some((c) => c.borrowOut) && r() < 0.9) return null;
+    const n = count(S.addColumns(a, b, base).cols, "carryOut");
+    if (tier === 0 ? !n && r() < 0.9 : n < tier) return null;
+    return { base, a, b, answer: S.toBase(x + y, base) };
+  });
+
+  // 2-bosqich: a > b; tier 0 — 90% hollarda kamida bitta qarz
+  const makeSubTask = (prev, rng, tier) => loop(prev, rng, (r) => {
+    tier = tier || 0;
+    const base = randInt(BASES[tier][0], BASES[tier][1], r);
+    const x = value(base, r, tier);
+    const lo = tier ? base ** 2 : base; // b ham kamida 2 (tier 1+ da 3) xonali va a dan kichik bo'lsin
+    if (x - 1 < lo) return null;
+    const y = randInt(lo, x - 1, r);
+    const a = S.toBase(x, base);
+    const b = S.toBase(y, base);
+    const n = count(S.subColumns(a, b, base).cols, "borrowOut");
+    if (tier === 0 ? !n && r() < 0.9 : n < tier) return null;
     return { base, a, b, answer: S.toBase(x - y, base) };
   });
 
-  // 3-bosqich: ko'paytirish (2 xonali × bir xonali) yoki jumboq
-  const makeStage3Task = (prev, rng) => loop(prev, rng, (r) => {
-    const base = randInt(4, 9, r);
+  // 3-bosqich: ko'paytirish (tier 0–1: 2 xonali, tier 2: 3 xonali × bir xonali) yoki jumboq.
+  // Jumboq: tier 0 — bir xonali (x + y = 1c); tier 1+ — ikki xonali ("12 + 13 = 30 qaysi tizimda?")
+  const makeStage3Task = (prev, rng, tier) => loop(prev, rng, (r) => {
+    tier = tier || 0;
+    const base = randInt(tier ? 5 : 4, 9, r);
     if (r() < 0.6) {
-      const a = S.toBase(randInt(base, base * base - 1, r), base);
-      const d = randInt(2, base - 1, r);
-      return { type: "mul", base, a, d, answer: S.toBase(S.fromBase(a, base) * d, base) };
+      const x = tier === 2 ? randInt(base ** 2, Math.min(base ** 3 - 1, 200), r) : randInt(base, base * base - 1, r);
+      const d = randInt(tier ? 3 : 2, base - 1, r);
+      return { type: "mul", base, a: S.toBase(x, base), d, answer: S.toBase(x * d, base) };
     }
-    // x + y = 1c (base-lik): x, y < base, x + y ≥ base
+    // birlar: x + y = base + c (x, y < base, ko'chish bor)
     const x = randInt(2, base - 1, r);
     const y = randInt(Math.max(base - x, 1), base - 1, r);
-    return { type: "puzzle", x, y, c: x + y - base, answer: base };
+    const c = x + y - base;
+    if (tier === 0) return { type: "puzzle", x, y, c, answer: base };
+    // o'nlar: p + q + 1 < base — yig'indi ikki xonali bo'lib qoladi
+    const top = tier === 2 ? 3 : 1;
+    const p = randInt(1, top, r);
+    const q = randInt(1, top, r);
+    if (p + q + 1 >= base) return null;
+    return { type: "puzzle2", x, y, c, a: `${p}${x}`, b: `${q}${y}`, sum: `${p + q + 1}${c}`, answer: base };
   });
 
-  const api = { makeAddTask, makeSubTask, makeStage3Task };
+  const api = { BASES, makeAddTask, makeSubTask, makeStage3Task };
 
   if (node) module.exports = api;
   else root.QK.sayyora = api;

@@ -22,13 +22,30 @@ test("countWords turga qarab tanlaydi", () => {
   assert.equal(L.countWords(3, 2, "upto"), 12);
 });
 
-test("STAGE_PAIRS: 8 ta juftlik, hammasi chegarada", () => {
-  assert.equal(L.STAGE_PAIRS.length, 8);
+test("STAGE_PAIRS: 12 ta juftlik, takrorsiz, hammasi chegarada", () => {
+  assert.equal(L.STAGE_PAIRS.length, 12);
+  assert.equal(new Set(L.STAGE_PAIRS.map((p) => p.join("^"))).size, 12);
   for (const [a, i] of L.STAGE_PAIRS) {
-    assert.ok(a >= 2 && a <= 4, `a=${a}`);
-    assert.ok(L.countExact(a, i) <= 64, `${a}^${i}`);
-    assert.ok(L.countUpTo(a, i) <= 84, `sum ${a},${i}`);
+    assert.ok(a >= 2 && a <= 6, `a=${a}`);
+    assert.ok(a <= L.LETTER_POOL.length, "harflar yetmaydi");
+    assert.ok(L.countExact(a, i) <= 81, `${a}^${i}`);
+    assert.ok(L.countUpTo(a, i) <= 126, `sum ${a},${i}`);
   }
+});
+
+test("pairsFor: zina bo'yicha to'rttadan juftlik, javob kattalashib boradi", () => {
+  const max = (tier, fn) => Math.max(...L.pairsFor(tier).map(([a, i]) => fn(a, i)));
+  for (const tier of [0, 1, 2]) assert.equal(L.pairsFor(tier).length, 4);
+  assert.deepEqual(L.pairsFor(0), [[2, 2], [2, 3], [3, 2], [2, 4]]);
+  assert.deepEqual(L.pairsFor(undefined), L.pairsFor(0));
+  assert.deepEqual(L.pairsFor(5), L.pairsFor(2));
+  assert.equal(max(0, L.countExact), 16);
+  assert.equal(max(1, L.countExact), 32);
+  assert.equal(max(2, L.countExact), 81);
+  assert.ok(max(0, L.countUpTo) < max(1, L.countUpTo) && max(1, L.countUpTo) < max(2, L.countUpTo));
+  // Zinalar kesishmaydi: yuqori zinadagi har bir javob pastki zinadagi eng kattasidan kichik emas
+  const min2 = Math.min(...L.pairsFor(2).map(([a, i]) => L.countExact(a, i)));
+  assert.ok(min2 > max(1, L.countExact), "tier 2 dagi javoblar tier 1 dan katta boʻlishi kerak");
 });
 
 test("listWords exact: to'liq, takrorsiz, tartibli", () => {
@@ -63,9 +80,14 @@ test("stage3Steps: 1 dan javobgacha", () => {
 
 test("stage3Range: odamlar soni oralig'i", () => {
   assert.deepEqual(L.stage3Range("exact", 2, 2), [2, 4]);
-  assert.deepEqual(L.stage3Range("exact", 3, 4), [28, 30]);
-  assert.deepEqual(L.stage3Range("upto", 3, 3), [15, 30]);
-  assert.equal(L.stage3Range("upto", 3, 4), null);
+  assert.equal(L.MAX_PEOPLE, 80);
+  assert.deepEqual(L.stage3Range("exact", 3, 4), [28, 64]);
+  assert.deepEqual(L.stage3Range("exact", 3, 4, 30), [28, 30]);
+  assert.deepEqual(L.stage3Range("upto", 3, 3), [15, 39]);
+  assert.deepEqual(L.stage3Range("upto", 3, 3, 30), [15, 30]);
+  assert.equal(L.stage3Range("upto", 3, 4, 30), null);
+  assert.deepEqual(L.stage3Range("upto", 3, 4), [40, 80]);
+  assert.deepEqual(L.stage3Range("exact", 2, 6), [26, 36]);
 });
 
 test("makeRng: bir xil urug' — bir xil ketma-ketlik", () => {
@@ -109,6 +131,63 @@ test("makeExercise: 1000 marta — chegaralar, yagona javob, ketma-ket takror yo
       if (prev) assert.notEqual(L.exerciseKey(ex), L.exerciseKey(prev));
       prev = ex;
     }
+  }
+});
+
+test("makeExercise: tier bilan qiyinlashadi — 1- va 2-bosqich", () => {
+  const rng = L.makeRng(11);
+  for (const stage of [1, 2]) {
+    const maxAnswer = [];
+    for (const tier of [0, 1, 2]) {
+      let prev = null;
+      const seen = new Set();
+      let max = 0;
+      for (let k = 0; k < 300; k++) {
+        const ex = L.makeExercise(stage, prev, rng, tier);
+        assert.equal(ex.tier, tier);
+        assert.ok(L.pairsFor(tier).some(([a, i]) => a === ex.a && i === ex.i), `tier ${tier}: ${ex.a}^${ex.i}`);
+        assert.equal(ex.answer, L.countWords(ex.a, ex.i, ex.type));
+        assert.equal(ex.letters.length, ex.a);
+        assert.equal(new Set(ex.letters).size, ex.a);
+        if (prev) assert.notEqual(L.exerciseKey(ex), L.exerciseKey(prev));
+        seen.add(`${ex.a}^${ex.i}`);
+        max = Math.max(max, ex.answer);
+        prev = ex;
+      }
+      assert.equal(seen.size, 4, `tier ${tier}: to'rtala juftlik ham chiqishi kerak`);
+      maxAnswer.push(max);
+    }
+    assert.ok(maxAnswer[0] < maxAnswer[1] && maxAnswer[1] < maxAnswer[2], `bosqich ${stage}: ${maxAnswer}`);
+  }
+});
+
+test("makeExercise: tier bilan qiyinlashadi — 3-bosqich (javob 6 gacha, 80 kishigacha)", () => {
+  const rng = L.makeRng(13);
+  const limits = [
+    { answer: [2, 4], len: [2, 3], people: 30 },
+    { answer: [3, 5], len: [2, 3], people: 50 },
+    { answer: [3, 6], len: [2, 4], people: 80 },
+  ];
+  assert.deepEqual(L.STAGE3, limits);
+  for (const tier of [0, 1, 2]) {
+    const lim = limits[tier];
+    let prev = null;
+    const answers = new Set();
+    let maxPeople = 0;
+    for (let k = 0; k < 600; k++) {
+      const ex = L.makeExercise(3, prev, rng, tier);
+      assert.ok(ex.answer >= lim.answer[0] && ex.answer <= lim.answer[1], `tier ${tier}: javob ${ex.answer}`);
+      assert.ok(ex.i >= lim.len[0] && ex.i <= lim.len[1], `tier ${tier}: uzunlik ${ex.i}`);
+      assert.ok(ex.people >= 2 && ex.people <= lim.people, `tier ${tier}: odamlar ${ex.people}`);
+      assert.equal(L.minLetters(ex.people, ex.i, ex.type), ex.answer, "javob yagona va to'g'ri bo'lishi kerak");
+      assert.ok(ex.answer <= L.LETTER_POOL.length);
+      if (prev) assert.notEqual(L.exerciseKey(ex), L.exerciseKey(prev));
+      answers.add(ex.answer);
+      maxPeople = Math.max(maxPeople, ex.people);
+      prev = ex;
+    }
+    assert.equal(answers.size, lim.answer[1] - lim.answer[0] + 1, `tier ${tier}: hamma javoblar chiqishi kerak`);
+    assert.ok(maxPeople > (tier === 0 ? 20 : limits[tier - 1].people), `tier ${tier}: odamlar soni o'smadi (${maxPeople})`);
   }
 });
 

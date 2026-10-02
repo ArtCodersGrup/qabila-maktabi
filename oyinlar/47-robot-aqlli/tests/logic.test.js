@@ -101,3 +101,101 @@ test("ko'rinadigan matnlarda to'g'ri tutuq belgisi", () => {
     for (const lvl of list) assert.ok(!/['’`´]/.test(lvl.matn), lvl.matn);
   }
 });
+
+// ---------- 2026-10-02: daraja generatori ----------
+function rngFrom(seed) {
+  let s = seed;
+  return () => {
+    s = (s * 1103515245 + 12345) % 2147483648;
+    return s / 2147483648;
+  };
+}
+const RUXSAT = ["right", "left", "up", "down", "takror", "agar"];
+const ishlatilgan = (list) => list.flatMap((b) => (b.t === "yur" ? [b.yon]
+  : b.t === "takror" ? ["takror"].concat(ishlatilgan(b.ichi))
+    : ["agar"].concat(ishlatilgan(b.ichi), ishlatilgan(b.aks))));
+
+test("generator: har bosqich va tier da namunali yechim ishlaydi, maydon ekranga sig'adi, takror yo'q", () => {
+  for (const bosqich of ["takror", "agar", "birga"]) {
+    for (const tier of [0, 1, 2]) {
+      const rng = rngFrom(47 + tier * 7 + bosqich.length);
+      const idlar = new Set();
+      let prev = null;
+      for (let k = 0; k < 200; k++) {
+        const lvl = L.yasa(bosqich, prev, rng, tier);
+        const nom = `${bosqich}/${tier}/${lvl.id}`;
+        if (prev) assert.notEqual(lvl.id, prev.id, "ketma-ket bir xil daraja");
+        idlar.add(lvl.id);
+        const t = L.tekshir(lvl, lvl.yechim);
+        assert.equal(t.ok, true, nom + ": " + t.natijalar.map((n) => n.status).join(","));
+        assert.equal(t.uzun, false, nom + ": yechim blok chegarasidan uzun");
+        assert.ok(lvl.matn.length > 15 && !/['’`´]/.test(lvl.matn), nom);
+        for (const b of lvl.bloklar) assert.ok(RUXSAT.includes(b), nom + ": " + b);
+        for (const b of ishlatilgan(lvl.yechim)) assert.ok(lvl.bloklar.includes(b), nom + ": yechimda ruxsatsiz blok " + b);
+        for (const f of lvl.maydonlar) {
+          assert.ok(f.w <= 6 && f.h <= 5, nom + ": maydon katta " + f.w + "×" + f.h);
+          assert.ok(D.solve(f) !== null, nom + ": yo'l yo'q");
+          assert.ok(!D.sameCell(f.robot, f.goal), nom);
+        }
+        // Takror soni tugmada bor (2…6)
+        const sonlar = (list) => list.flatMap((b) => (b.t === "takror" ? [b.n].concat(sonlar(b.ichi)) : b.t === "agar" ? sonlar(b.ichi).concat(sonlar(b.aks)) : []));
+        for (const n of sonlar(lvl.yechim)) assert.ok(n >= 2 && n <= 6, nom + ": takror " + n);
+        prev = lvl;
+      }
+      assert.ok(idlar.size >= 8, `${bosqich}/${tier}: faqat ${idlar.size} xil daraja`);
+    }
+  }
+});
+
+test("generator, takror: takrorsiz (faqat qadamlar bilan) blok chegarasiga sig'maydi", () => {
+  for (const tier of [0, 1, 2]) {
+    const rng = rngFrom(11 + tier);
+    for (let k = 0; k < 200; k++) {
+      const lvl = L.yasa("takror", null, rng, tier);
+      assert.equal(lvl.maydonlar.length, 1);
+      const engQisqa = D.solve(lvl.maydonlar[0]).length;
+      assert.ok(engQisqa > lvl.maxBlok, `${lvl.id}: ${engQisqa} qadam ${lvl.maxBlok} blokka sig'adi — takror shart emas`);
+      assert.ok(ishlatilgan(lvl.yechim).includes("takror"));
+    }
+  }
+});
+
+test("generator, agar/birga: shartsiz dastur hamma maydondan o'tolmaydi", () => {
+  for (const bosqich of ["agar", "birga"]) {
+    for (const tier of [0, 1, 2]) {
+      const rng = rngFrom(23 + tier);
+      for (let k = 0; k < 200; k++) {
+        const lvl = L.yasa(bosqich, null, rng, tier);
+        assert.equal(lvl.maydonlar.length, 2, lvl.id);
+        assert.notEqual(lvl.maydonlar[0].id, lvl.maydonlar[1].id, lvl.id + ": maydonlar bir xil");
+        // Ikkala maydonning toshlari birga — hech qanday qotirilgan yo'l qolmaydi
+        assert.equal(L.shartsizYolYoq(lvl.maydonlar), true, lvl.id + ": agarsiz yo'l bor");
+        // Har maydonning o'z eng qisqa yo'li ikkinchisida ishlamaydi
+        const [a, b] = lvl.maydonlar;
+        const yolA = D.solve(a).map((yon) => yur(yon));
+        const yolB = D.solve(b).map((yon) => yur(yon));
+        assert.equal(L.yechdi(lvl.maydonlar, yolA), false, lvl.id);
+        assert.equal(L.yechdi(lvl.maydonlar, yolB), false, lvl.id);
+        assert.ok(ishlatilgan(lvl.yechim).includes("agar"));
+        if (bosqich === "birga") assert.ok(ishlatilgan(lvl.yechim).includes("takror"));
+      }
+    }
+  }
+});
+
+test("generator: tier bilan qiyinlashadi", () => {
+  const rng = rngFrom(5);
+  const namuna = (bosqich, tier) => Array.from({ length: 150 }, () => L.yasa(bosqich, null, rng, tier));
+  // takror: tier 0 — yo'lak/burchak, tier 2 — zina/uchlik (takror ichida 2–3 buyruq)
+  assert.ok(namuna("takror", 0).every((l) => /^(yolak|burchak)/.test(l.id)));
+  assert.ok(namuna("takror", 2).every((l) => /^(zina|uchlik)/.test(l.id)));
+  // agar: tier 0 da tosh robot yonida; tier 2 da agar dan oldin 1–2 qadam bor
+  assert.ok(namuna("agar", 0).every((l) => l.yechim[0].t === "agar"));
+  assert.ok(namuna("agar", 2).every((l) => l.yechim[0].t === "yur"));
+  // birga: yo'lak uzayadi, toshlar ko'payadi
+  const tosh = (l) => l.maydonlar.reduce((n, f) => n + f.walls.length, 0);
+  const ortacha = (list) => list.reduce((n, l) => n + tosh(l), 0) / list.length;
+  assert.ok(namuna("birga", 0).every((l) => Math.max(l.maydonlar[0].w, l.maydonlar[0].h) === 5));
+  assert.ok(namuna("birga", 2).every((l) => Math.max(l.maydonlar[0].w, l.maydonlar[0].h) === 6));
+  assert.ok(ortacha(namuna("birga", 2)) > ortacha(namuna("birga", 0)));
+});

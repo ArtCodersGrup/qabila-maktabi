@@ -31,7 +31,7 @@
 /* ---------- A–F va 16 ga karralilar ---------- */
 .hexstrip { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 8px; font-size: 15px; font-weight: 900; color: var(--asosiy); max-width: 420px; }
 .hx { padding: 2px 6px; border-radius: 6px; background: #fff; }
-.hexstrip.mult { color: #7A7266; font-size: 14px; }
+.hexstrip.mult { color: var(--matn-3); font-size: 14px; }
 
 /* ---------- Hikoya va tabrik ---------- */
 .story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }

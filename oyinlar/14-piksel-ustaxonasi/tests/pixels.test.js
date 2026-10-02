@@ -54,62 +54,96 @@ test("telefon surati: 12 million piksel, 36 million bayt ≈ 34 Mbayt", () => {
   assert.equal(P.PHOTO.mb, 34);
 });
 
-test("makeBwTask: bit — W × H, bayt — W × H : 8, javob ≤ 100", () => {
-  const types = new Set();
-  for (let k = 0; k < 300; k++) {
-    const t = P.makeBwTask(null);
-    types.add(t.type);
-    assert.equal(t.cells.length, t.w * t.h);
-    assert.ok(t.w >= 3 && t.h >= 3 && t.w * t.h <= 100);
-    assert.ok(t.cells.some((c) => c === 1) && t.cells.some((c) => c === 0));
-    if (t.type === "bits") assert.equal(t.answer, t.w * t.h);
-    else {
-      assert.equal((t.w * t.h) % 8, 0);
-      assert.equal(t.answer, (t.w * t.h) / 8);
+test("makeBwTask: bit — W × H, bayt — W × H : 8; maydon tier bilan o'sadi (100 / 144 / 256)", () => {
+  for (const tier of [0, 1, 2]) {
+    const types = new Set();
+    const lim = P.BW_SIZE[tier];
+    let max = 0;
+    for (let k = 0; k < 300; k++) {
+      const t = P.makeBwTask(null, Math.random, tier);
+      types.add(t.type);
+      assert.equal(t.cells.length, t.w * t.h);
+      assert.ok(t.w >= lim.a && t.h >= lim.a && t.w <= lim.b && t.h <= lim.b && t.w * t.h <= lim.area);
+      assert.ok(t.cells.some((c) => c === 1) && t.cells.some((c) => c === 0));
+      if (t.type === "bits") assert.equal(t.answer, t.w * t.h);
+      else {
+        assert.equal((t.w * t.h) % 8, 0);
+        assert.equal(t.answer, (t.w * t.h) / 8);
+      }
+      max = Math.max(max, t.w * t.h);
     }
+    assert.deepEqual([...types].sort(), ["bits", "bytes"]);
+    assert.ok(max > lim.area * 0.7, `tier ${tier}: eng katta maydon ${max}`);
+    noRepeat((prev) => P.makeBwTask(prev, Math.random, tier));
   }
-  assert.deepEqual([...types].sort(), ["bits", "bytes"]);
-  noRepeat((prev) => P.makeBwTask(prev));
+  assert.deepEqual(P.BW_SIZE.map((x) => x.area), [100, 144, 256]);
 });
 
-test("makeColorTask: bit soni va rasm hajmi", () => {
-  const types = new Set();
-  for (let k = 0; k < 300; k++) {
-    const t = P.makeColorTask(null);
-    types.add(t.type);
-    if (t.type === "bpp") {
-      assert.ok(P.BPP_COLORS.includes(t.colors));
-      assert.equal(t.answer, P.minBits(t.colors));
-    } else {
-      assert.ok([2, 4, 16].includes(t.colors));
-      assert.equal(t.bpp, P.minBits(t.colors));
-      assert.equal(t.answer, t.w * t.h * t.bpp);
-      assert.ok(t.answer <= 100 && t.w * t.h >= 4);
-      assert.ok(t.cells.every((c) => c >= 0 && c < t.colors));
+test("makeColorTask: bit soni va rasm hajmi, tier bilan ranglar va hajm o'sadi", () => {
+  for (const tier of [0, 1, 2]) {
+    const types = new Set();
+    for (let k = 0; k < 300; k++) {
+      const t = P.makeColorTask(null, Math.random, tier);
+      types.add(t.type);
+      if (t.type === "bpp") {
+        assert.ok(P.BPP_TIER[tier].includes(t.colors));
+        assert.equal(t.answer, P.minBits(t.colors));
+        assert.ok(2 ** t.answer >= t.colors && 2 ** (t.answer - 1) < t.colors);
+      } else {
+        assert.ok([2, 4, 16].includes(t.colors));
+        assert.equal(t.bpp, P.minBits(t.colors));
+        assert.equal(t.answer, t.w * t.h * t.bpp);
+        assert.ok(t.answer <= P.COLOR_SIZE[tier].bits && t.w * t.h >= 4);
+        assert.ok(t.cells.every((c) => c >= 0 && c < t.colors));
+      }
     }
+    assert.deepEqual([...types].sort(), ["bpp", "size"]);
+    noRepeat((prev) => P.makeColorTask(prev, Math.random, tier));
   }
-  assert.deepEqual([...types].sort(), ["bpp", "size"]);
-  noRepeat((prev) => P.makeColorTask(prev));
+  assert.ok(Math.max(...P.BPP_TIER[2]) === 1000 && Math.max(...P.BPP_TIER[0]) === 16);
 });
 
-test("makePhotoTask: rangli rasm, qisqa yozuv, Mbayt taqqoslash", () => {
-  const types = new Set();
-  for (let k = 0; k < 400; k++) {
-    const t = P.makePhotoTask(null);
-    types.add(t.type);
-    if (t.type === "rgb") {
-      assert.equal(t.answer, t.w * t.h * 3);
-      assert.ok(t.answer <= 100 && t.w * t.h >= 4);
-    } else if (t.type === "runs") {
-      assert.ok(t.row.length >= 8 && t.row.length <= 12);
-      assert.equal(t.answer, P.runs(t.row).length);
-      assert.ok(t.answer >= 2 && t.answer <= 5);
-    } else {
-      assert.equal(t.type, "compare");
-      assert.ok(t.kb === 1000 * t.mb || t.kb === 1000 * (t.mb + 1));
-      assert.equal(t.answer, t.mb * 1024 > t.kb ? "mb" : "kb");
+test("makePhotoTask: rangli rasm, qisqa yozuv, 4 variantli taqqoslash; tier 1+ da kam rangli rasm baytda", () => {
+  for (const tier of [0, 1, 2]) {
+    const types = new Set();
+    const answers = new Set();
+    for (let k = 0; k < 900; k++) {
+      const t = P.makePhotoTask(null, Math.random, tier);
+      types.add(t.type);
+      if (t.type === "rgb") {
+        assert.equal(t.answer, t.w * t.h * 3);
+        assert.ok(t.answer <= P.RGB_SIZE[tier].area * 3 && t.w * t.h >= 4);
+      } else if (t.type === "cbytes") {
+        assert.ok(tier > 0, "tier 0 da bu tur yo'q");
+        assert.equal(t.bpp, P.minBits(t.colors));
+        assert.equal((t.w * t.h * t.bpp) % 8, 0);
+        assert.equal(t.answer, (t.w * t.h * t.bpp) / 8);
+        assert.ok(t.cells.every((c) => c >= 0 && c < t.colors));
+      } else if (t.type === "runs") {
+        const lim = P.RUNS[tier];
+        assert.ok(t.row.length >= lim.len[0] && t.row.length <= lim.len[1]);
+        assert.equal(t.answer, P.runs(t.row).length);
+        assert.ok(t.answer >= lim.r[0] && t.answer <= lim.r[1]);
+      } else {
+        assert.equal(t.type, "compare");
+        assert.ok(t.mb >= P.CMP_MB[tier][0] && t.mb <= P.CMP_MB[tier][1]);
+        assert.ok(t.n >= 1 && t.each >= 1 && Number.isInteger(t.each));
+        // Mustaqil hisob: Kbaytda
+        const v = { mb: t.mb * 1024, kb: t.kb, photos: t.n * t.each * 1024 };
+        const max = Math.max(v.mb, v.kb, v.photos);
+        const tops = Object.keys(v).filter((key) => v[key] === max);
+        if (t.answer === "teng") assert.equal(tops.length, 3);
+        else assert.deepEqual(tops, [t.answer], "bitta eng katta");
+        answers.add(t.answer);
+      }
     }
+    assert.deepEqual([...types].sort(), tier ? ["cbytes", "compare", "rgb", "runs"] : ["compare", "rgb", "runs"]);
+    assert.deepEqual([...answers].sort(), ["kb", "mb", "photos", "teng"], `tier ${tier}: 4 javobning hammasi uchraydi`);
+    noRepeat((prev) => P.makePhotoTask(prev, Math.random, tier));
   }
-  assert.deepEqual([...types].sort(), ["compare", "rgb", "runs"]);
-  noRepeat((prev) => P.makePhotoTask(prev));
+  assert.equal(P.CMP_OPTIONS.length, 4);
+  assert.equal(P.cmpAnswer({ mb: 4, kb: 4096, n: 2, each: 2 }), "teng");
+  assert.equal(P.cmpAnswer({ mb: 4, kb: 4000, n: 1, each: 3 }), "mb");
+  assert.equal(P.cmpAnswer({ mb: 4, kb: 5000, n: 1, each: 3 }), "kb");
+  assert.equal(P.cmpAnswer({ mb: 4, kb: 4000, n: 5, each: 1 }), "photos");
 });

@@ -39,3 +39,16 @@ va test buni qulflab qoʻygan.
 - `js/logic.js` — savollar, kod masalalari, `OSISH` jadvali. Hisob — `umumiy/js/sanash.js`.
 - `tests/logic.test.js` — 11 test: roʻyxat uzunligi `n!` ga teng, `A` ning koʻpaytuvchilari soni `k` ga teng,
   namunali yechimlar testdan oʻtadi, `n ** k` kabi tipik xato yechim oʻtmaydi.
+
+## 2026-10-02 qiyinlik yangilanishi
+
+Sabab: hisobot-5 (C jadvali) — savollar formulani sonlarga qoʻyish darajasida edi (n!, A(n, k)).
+
+- **1-bosqich (n!):** «bitta oʻrin band» savollari — Anvar doim birinchi; lugʻat doim oxirida; ikki chekka band.
+  Javob (n − 1)! yoki (n − 2)!: bola avval nechta narsa terilishini aniqlaydi.
+- **2-bosqich (A(n, k)):** **cheklovli terish** — formulaga tushmaydi, har oʻrinni alohida oʻylash kerak:
+  raqamlari har xil ikki / uch xonali sonlar (9 × 9 = 81, 9 × 9 × 8 = 648), 4 xonali kod (9 × 9 × 8 × 7 = 4536),
+  «Anvar oltin olmagan». Javoblar testda toʻgʻridan-toʻgʻri sanab tekshirilgan.
+- **3-bosqich:** oʻqiladigan kodga raqamlari har xil sonlarni sanaydigan sikl (`if a != b`); yozishga
+  `takrorli(n, k)` (n! ÷ k! — «ANORA») va `harxil(k)` (9 × 9 × 8 × …; 0 ni unutgan yechim yiqiladi).
+- Zina: 0 — eski savollar; 1–2 — yangilari ustun. Testlar: 11 → 14.

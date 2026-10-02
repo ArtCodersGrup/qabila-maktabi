@@ -106,9 +106,9 @@
   async function stage2() {
     await bags();
     await definition();
-    await ui.say("elder", "Endi oʻzing: boʻlib-boʻlib oʻtkaz. 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing: boʻlib-boʻlib oʻtkaz. ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev) => qop.makeDivTask(prev),
+      next: (prev, correct, tier) => qop.makeDivTask(prev, undefined, tier),
       run: divTask,
       praise: (task) => `${task.n} = ${S.fmt(task.answer, task.base)}.`,
     });

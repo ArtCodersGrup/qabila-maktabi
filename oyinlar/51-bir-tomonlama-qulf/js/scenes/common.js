@@ -122,7 +122,8 @@
           ...task.variantlar.map((v) => ui.button(String(v), () => submit(v), o.qator ? "" : "wide"))));
       },
       check: (value) => value === task.javob,
-      hint() { host.append(note("↻ " + task.nega)); },
+      // Maslahat javobni aytmaydi: ishora (usul) bo'lsa — o'sha
+      hint() { host.append(note("↻ " + (task.ishora || task.nega))); },
       solution() {
         host.append(answer(String(task.javob)));
         if (o.yechim) o.yechim(host);
@@ -155,12 +156,13 @@
     yechim: (host) => host.append(izJadval(task.qadamlar)),
   });
 
+  // "Qaysi parolning izi ham shu?" — berilgan parolning izi ko'rinib turadi, nomzodlarnikini bola hisoblaydi
   const tengExercise = (task) => tanlovExercise(task, {
-    oldin: (host) => host.append(h("div", { class: "bq-juft" },
-      ...task.ikki.map((p) => parolKarta(p, { qiymat: false })))),
+    oldin: (host) => host.append(parolKarta(task.parol, { qiymat: false, iz: true, kichik: true })),
+    keyin: (host) => host.append(alifboJadval()),
     qator: true,
     yechim: (host) => host.append(h("div", { class: "bq-juft" },
-      ...task.ikki.map((p) => parolKarta(p, { qiymat: false, iz: true })))),
+      ...task.nomzodlar.map((p) => parolKarta(p, { iz: true, kichik: true, belgi: L.iz(p) === task.iz ? "✓" : null })))),
   });
 
   const holatExercise = (task) => tanlovExercise(task, {});
@@ -185,7 +187,7 @@
     if (task.tur === "yigindi") return task.hisob;
     if (task.tur === "toqnash") return task.hisob + " — bir xil yigʻindi.";
     if (task.tur === "iz" || task.tur === "tuz") return "Iz = " + task.javob;
-    if (task.tur === "teng") return task.hisob;
+    if (task.tur === "teng") return task.javob === L.HECH ? "Hech birining izi " + task.iz + " emas." : "«" + task.javob + "» ning izi ham " + task.iz + " — toʻqnashuv.";
     return task.nega;
   }
 

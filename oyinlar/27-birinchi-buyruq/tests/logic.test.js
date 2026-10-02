@@ -43,6 +43,79 @@ test("natija: har bir kod xatosiz ishlaydi va chiqishi bor", () => {
   }
 });
 
+// 2026-10-02: yangi turlar va qiyinlik zinasi
+test("natija: yetti tur ham uchraydi; zina bilan qiyinlashadi", () => {
+  const turlar = new Set(each(L.resultTask, 120).map((t) => t.kind));
+  assert.deepEqual([...turlar].sort(), [...L.RESULT_KINDS].sort());
+  const zinada = (tier) => {
+    const r = rngFrom(3);
+    let prev = null;
+    const out = new Set();
+    for (let k = 0; k < 60; k++) { prev = L.resultTask(r, prev, tier); out.add(prev.kind); }
+    return out;
+  };
+  assert.ok(!zinada(0).has("uch") && !zinada(0).has("qoshish") && !zinada(0).has("son"));
+  assert.ok(zinada(2).has("uch") && zinada(2).has("qoshish"));
+});
+
+test("natija: vergul bo'shliq qo'yadi, + yopishtiradi", () => {
+  const q = each(L.resultTask, 120).find((t) => t.kind === "qoshish");
+  const out = K.run(q.code).output;
+  assert.equal(out.length, 2);
+  assert.ok(!out[0].includes(" ") && out[1].includes(" "), out.join(" / "));
+  assert.equal(out[0], out[1].replace(" ", ""));
+  const u = each(L.resultTask, 120).find((t) => t.kind === "uch");
+  const uo = K.run(u.code).output;
+  assert.equal(uo.length, 3);
+  assert.match(uo[1], /^\d+ \d+$/, "print(a, b) — ikki son bo'shliq bilan");
+  assert.match(uo[2], /^\d+ \S+$/, "print(a * b, \"so'z\") — hisoblangan son va matn");
+});
+
+test("xato-top: zina bilan dastur uzayadi, xato faqat bitta satrda", () => {
+  for (const [tier, satrlar] of [[0, 1], [1, 2], [2, 3]]) {
+    const r = rngFrom(11 + tier);
+    let prev = null;
+    for (let k = 0; k < 30; k++) {
+      const task = L.fixTask(r, prev, tier);
+      prev = task;
+      const bad = task.code.split("\n");
+      const good = task.solution.split("\n");
+      assert.equal(good.length, satrlar, task.id);
+      assert.equal(bad.length, satrlar, task.id);
+      assert.equal(bad.filter((s, i) => s !== good[i]).length, 1, "aynan bitta satr buzilgan: " + task.code);
+      assert.notEqual(bad[task.line - 1], good[task.line - 1], task.id);
+      assert.ok(K.run(task.code).error, task.code);
+      assert.equal(K.check(task, task.solution).ok, true);
+    }
+  }
+});
+
+test("kod-yoz: satrlar soni zina bilan o'sadi (1–2 → 2–3 → 3–4)", () => {
+  for (const [tier, kam, kop] of [[0, 1, 2], [1, 2, 3], [2, 3, 4]]) {
+    const r = rngFrom(5 + tier);
+    let prev = null;
+    const uzunliklar = new Set();
+    for (let k = 0; k < 40; k++) {
+      prev = L.writeTask(r, prev, tier);
+      uzunliklar.add(prev.lines.length);
+      assert.equal(new Set(prev.lines).size, prev.lines.length, "satrlar takrorlanmaydi");
+    }
+    assert.deepEqual([...uzunliklar].sort(), [kam, kop], "zina " + tier);
+  }
+});
+
+test("ter: oddiy rejimda bitta satr, qiyin rejimda ikki satr", () => {
+  for (const task of each(L.typeTask, 20)) assert.equal(task.code.split("\n").length, 1);
+  const r = rngFrom(2);
+  let prev = null;
+  for (let k = 0; k < 20; k++) {
+    prev = L.typeTask(r, prev, 2);
+    assert.equal(prev.code.split("\n").length, 2, prev.code);
+    assert.equal(K.run(prev.code).error, null, prev.code);
+    assert.equal(K.check(prev, prev.code).ok, true);
+  }
+});
+
 test("natija: qo'shtirnoq ichidagi amal hisoblanmasligi ham chiqadi", () => {
   const task = each(L.resultTask, 60).find((t) => t.kind === "son");
   assert.ok(task, "son turidagi savol chiqmadi");
@@ -65,9 +138,9 @@ test("xato-top: buzuq kod haqiqatan xato beradi, yechimi ishlaydi", () => {
   assert.equal(kinds.size, L.BROKEN.length, "hamma xato turi uchraydi");
 });
 
-test("kod-yoz: kutilgan chiqish 1–2 satr, boshqacha yozilgan yechim ham o'tadi", () => {
+test("kod-yoz: kutilgan chiqish 1–4 satr, boshqacha yozilgan yechim ham o'tadi", () => {
   for (const task of each(L.writeTask, 30)) {
-    assert.ok(task.lines.length >= 1 && task.lines.length <= 2);
+    assert.ok(task.lines.length >= 1 && task.lines.length <= 4);
     assert.equal(K.check(task, task.solution).ok, true);
     const other = task.lines.map((line) => "s = \"" + line + "\"\nprint(s)").join("\n");
     assert.equal(K.check(task, other).ok, true, "boshqa yo'l bilan yozilgani ham to'g'ri");

@@ -42,7 +42,9 @@
     await belgilar();
     await definition();
     await practice.exercises({
-      next: (prev) => L.belgiTask(Math.random, prev),
+      // Belgilar — yod olish mashqi: 2 ta toʻgʻri javob yetadi (2026-10-02), asosiy mashq — yigʻish va oʻqish
+      need: 2,
+      next: (prev, correct, tier) => L.belgiTask(Math.random, prev, tier),
       run: (task) => common.belgiExercise(task),
       praise: () => "Belgini toʻgʻri tanding.",
     });

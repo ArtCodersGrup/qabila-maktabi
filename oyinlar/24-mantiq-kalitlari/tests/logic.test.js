@@ -42,10 +42,20 @@ test("ifodalar: qiymat va qadamlar mustaqil hisobga mos", () => {
     notAnd: (a, b) => not(a & b),
     notOr: (a, b) => not(a | b),
     notAAndNotB: (a, b) => not(a) & not(b),
+    notAOrNotB: (a, b) => not(a) | not(b),
+    notAAndNotB2: (a, b) => not(a & not(b)),
+    orAndNotA: (a, b) => (a | b) & not(a),
+    andOrNotB: (a, b) => (a & b) | not(b),
+    notNotAOrB: (a, b) => not(not(a) | b),
   };
   assert.deepEqual(L.EXPRS.map((e) => e.id).sort(), Object.keys(expected).sort());
   for (const e of L.EXPRS) {
     assert.match(e.text, /^[AB()EMSVYOKI ]+$/, e.text);
+    assert.ok([0, 1, 2].includes(e.level), e.id);
+    assert.ok(e.hint && e.hint.length > 10, e.id);
+    // Qiyinlik: level 2 — uch amal (VA/YOKI/EMAS so'zlari soni)
+    const ops = (e.text.match(/VA|YOKI|EMAS/g) || []).length;
+    assert.equal(ops >= 3, e.level === 2 || e.id === "notAAndNotB", `${e.id}: ${ops} amal`);
     for (const [a, b] of PAIRS) {
       const v = L.evalExpr(e, a, b);
       assert.equal(v, expected[e.id](a, b), `${e.text} ${a}${b}`);
@@ -53,7 +63,11 @@ test("ifodalar: qiymat va qadamlar mustaqil hisobga mos", () => {
       assert.ok(steps.length >= 1, e.id);
       assert.ok(steps[steps.length - 1].endsWith(`= ${v}`), `${e.id}: ${steps.join(" | ")}`);
     }
+    // Jadvali hech bo'lmasa bitta 0 va bitta 1 beradi (hammasi bir xil — chalg'ituvchi)
+    const outs = PAIRS.map(([a, b]) => L.evalExpr(e, a, b));
+    assert.equal(new Set(outs).size, 2, e.id);
   }
+  for (const level of [0, 1, 2]) assert.ok(L.EXPRS.some((e) => e.level === level), `level ${level}`);
 });
 
 test("hayotiy qoidalar: ifoda va hisob mos, matnlar to'liq", () => {
@@ -75,27 +89,88 @@ test("hayotiy qoidalar: ifoda va hisob mos, matnlar to'liq", () => {
   }
 });
 
-test("topshiriqlar: bosqich bo'yicha turlar, javob to'g'ri, ketma-ket takror yo'q", () => {
-  for (const stage of [1, 2, 3]) {
-    let prev = null;
-    const ops = new Set();
-    const types = new Set();
-    for (let k = 0; k < 300; k++) {
-      const t = L.makeTask(stage, prev);
-      assert.notEqual(t.id, prev && prev.id, `${stage}: takror ${t.id}`);
-      types.add(t.type);
-      if (t.op) ops.add(t.op);
-      if (t.type === "out") assert.equal(t.answer, L.apply(t.op, t.a, t.b));
-      if (t.type === "need") assert.equal(t.answer, L.needB(t.op, t.a, t.want));
-      if (t.type === "expr") assert.equal(t.answer, L.evalExpr(t.expr, t.a, t.b));
-      if (t.type === "life") assert.equal(t.answer, L.evalLife(t.life, t.a, t.b));
-      prev = t;
+test("hayotiy qoida ifodasi: 4 variant, bittasi to'g'ri, takrorsiz", () => {
+  for (const l of L.LIFE) {
+    assert.ok(L.lifeExprForms(l).includes(l.expr), `${l.id}: ifoda shakllar ro'yxatida yo'q`);
+    assert.equal(new Set(L.lifeExprForms(l)).size, 8, l.id);
+    for (let k = 0; k < 20; k++) {
+      const opts = L.lifeExprOptions(l);
+      assert.equal(opts.length, 4, l.id);
+      assert.equal(new Set(opts).size, 4, l.id);
+      assert.equal(opts.filter((t) => t === l.expr).length, 1, l.id);
     }
-    if (stage === 1) assert.deepEqual([...ops], ["and"]);
-    if (stage === 2) assert.deepEqual([...ops].sort(), ["and", "or"]);
-    if (stage < 3) assert.deepEqual([...types].sort(), ["need", "out"]);
-    if (stage === 3) assert.deepEqual([...types].sort(), ["expr", "life"]);
   }
+});
+
+test("jadval to'ldirish: xato qatorlar soni", () => {
+  assert.equal(L.wrongRows([0, 0, 0, 1], [0, 0, 0, 1]), 0);
+  assert.equal(L.wrongRows([0, 0, 0, 1], [0, 1, 1, 1]), 2);
+  assert.equal(L.wrongRows([0, 0, 0, 1], [null, 0, 0, 1]), 1);
+  assert.equal(L.wrongRows([0, 0, 0, 1], undefined), 4);
+  assert.ok(L.fillOk([1, 0], [1, 0]));
+  assert.ok(!L.fillOk([1, 0], [0, 0]));
+  assert.deepEqual(L.fillRows(true), [[0], [1]]);
+  assert.deepEqual(L.fillRows(false), PAIRS);
+});
+
+test("topshiriqlar: bosqich va tier bo'yicha turlar, javob to'g'ri, ketma-ket takror yo'q", () => {
+  for (const stage of [1, 2, 3]) {
+    for (const tier of [0, 1, 2]) {
+      let prev = null;
+      const ops = new Set();
+      const types = new Set();
+      const levels = new Set();
+      for (let k = 0; k < 400; k++) {
+        const t = L.makeTask(stage, prev, Math.random, tier);
+        assert.notEqual(t.id, prev && prev.id, `${stage}/${tier}: takror ${t.id}`);
+        types.add(t.type);
+        if (t.op) ops.add(t.op);
+        if (t.type === "need") {
+          assert.equal(t.answer, L.needB(t.op, t.a, t.want));
+          assert.ok(L.checkTask(t, t.answer));
+          // 4 variantdan faqat bittasi to'g'ri
+          assert.equal(L.NEED_ORDER.filter((v) => L.checkTask(t, v)).length, 1);
+        }
+        if (t.type === "fill") {
+          assert.deepEqual(t.answer, PAIRS.map(([a, b]) => L.apply(t.op, a, b)));
+          assert.equal(t.named, tier < 2, "tier 2 da amal nomi yashirin — faqat sxema");
+          assert.equal(t.rows.length, 4);
+        }
+        if (t.type === "fillExpr") {
+          assert.deepEqual(t.answer, t.rows.map(([a, b]) => L.evalExpr(t.expr, a, b)));
+          assert.equal(t.rows.length, t.expr.id === "notA" ? 2 : 4);
+          levels.add(t.expr.level);
+        }
+        if (t.type === "fillLife") assert.deepEqual(t.answer, PAIRS.map(([a, b]) => L.evalLife(t.life, a, b)));
+        if (t.type === "life") {
+          assert.equal(t.answer.out, L.evalLife(t.life, t.a, t.b));
+          assert.equal(t.answer.expr, t.life.expr);
+          assert.equal(t.options.length, 4);
+          assert.equal(new Set(t.options).size, 4);
+          assert.ok(t.options.includes(t.life.expr));
+          // Ikkala qadam ham to'g'ri bo'lsagina hisoblanadi
+          assert.ok(L.checkTask(t, { expr: t.life.expr, out: t.answer.out }));
+          assert.ok(!L.checkTask(t, { expr: t.life.expr, out: 1 - t.answer.out }));
+          for (const o of t.options) if (o !== t.life.expr) assert.ok(!L.checkTask(t, { expr: o, out: t.answer.out }));
+        }
+        if (t.type !== "need" && t.type !== "life") {
+          assert.ok(L.checkTask(t, t.answer));
+          assert.ok(!L.checkTask(t, t.answer.map((v) => 1 - v)));
+          assert.ok(!L.checkTask(t, t.answer.map(() => null)));
+        }
+        prev = t;
+      }
+      // 0/1 javobli savol yo'q: hamma tur — jadval, 4 variant yoki ikki qadam
+      if (stage === 1) assert.deepEqual([...ops], ["and"]);
+      if (stage === 2) assert.deepEqual([...ops].sort(), ["and", "or"]);
+      if (stage < 3) assert.deepEqual([...types].sort(), ["fill", "need"]);
+      if (stage === 3 && tier < 2) assert.deepEqual([...types].sort(), ["fillExpr", "life"]);
+      if (stage === 3 && tier === 2) assert.deepEqual([...types].sort(), ["fillExpr", "fillLife", "life"]);
+      if (stage === 3) assert.deepEqual([...levels].sort(), tier === 0 ? [0, 1] : [tier]);
+    }
+  }
+  // tier berilmasa — 0
+  assert.ok(["need", "fill"].includes(L.makeTask(1, null).type));
 });
 
 test("matnlarda oddiy apostrof yo'q (ʻ ishlatiladi)", () => {

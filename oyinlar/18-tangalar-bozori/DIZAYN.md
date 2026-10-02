@@ -76,3 +76,14 @@ Bosh ekran
 ## 8. Bu o'yinga kirmaydi
 
 Oʻnlikdan boshqa tizimga (19), kasr sonlar, 255 dan katta sonlar.
+
+## 2026-10-02 qiyinlik yangilanishi
+
+Sabab: bolalar "oson" deyishdi — bosqich ichida sonlar oʻsmasdi. Savollar sonli (raqam klaviaturasi), 2 variantli savol bu oʻyinda yoʻq edi.
+
+- Generatorlar `tier` oladi (`makeBinTask(prev, rng, tier)` va h.k.), topshiriqda `tier` maydoni bor:
+  - 1-bosqich (`BIN`): 8–63 (4–6 xona) → 64–255 (7–8 xona) → **256–1023 (9–10 xona)**.
+  - 2-bosqich: 2–3 xonali → faqat 3 xonali → **4 xonali** (≤ 999; masalan 1750₈).
+  - 3-bosqich (`HEX`): 2 xonali → birinchi raqami ham harf (A0–FF) → **3 xonali** (100–1FF, albatta harfli).
+- Javob 4 xonagacha (`maxLen: 4`).
+- **A–F qatori** (3-bosqich) faqat birinchi ikki javobda koʻrinadi; keyin yashirin — maslahat (1-xato) uni qaytaradi (QOIDALAR 4.3).

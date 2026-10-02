@@ -32,7 +32,7 @@
   async function stage1() {
     await korsat();
     await practice.exercises({
-      next: (prev, togri) => L.bosqich1Task(Math.random, prev, togri),
+      next: (prev, togri, tier) => L.bosqich1Task(Math.random, prev, togri, tier),
       run: (task) => common.run(task),
       praise: (task) => common.praise(task),
     });

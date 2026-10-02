@@ -82,6 +82,16 @@
       + "shuning uchun avval qiymat ber: " + nom + " = 0;",
   }, extra));
 
+  // Kasr sonni butunga aylantirish: inf, nan yoki turga sig'maydigan son — C++ da ANIQLANMAGAN
+  // xatti-harakat (kompyuterga qarab har xil buzuq son chiqadi). Taqlid qilmaymiz, to'xtaymiz.
+  const butungaSigmaydi = (qiymat, tur, extra) => err("runtime",
+    "cannot convert " + qiymat + " to '" + tur + "'", Object.assign({
+      hint: (qiymat === "inf" || qiymat === "-inf" || qiymat === "nan"
+        ? "Kasr hisobning natijasi «" + qiymat + "» boʻldi (odatda 0.0 ga boʻlishdan chiqadi) — uni butun songa aylantirib boʻlmaydi. "
+        : "Bu kasr son " + tur + " turiga sigʻmaydi. ")
+        + "Haqiqiy C++ da bu yerda xato chiqmaydi — buzuq son chiqadi. Shuning uchun bu yerda toʻxtatamiz.",
+    }, extra));
+
   // — Yadroda yo'q imkoniyat (o'qish qismida o'rganiladi) —
 
   const yoq = (nima, extra) => err("yoq", "not supported here: " + nima, Object.assign({
@@ -113,7 +123,7 @@
   const api = {
     CppError, err, describe,
     nuqtaliVergul, kutilgan, tanilmagan, qaytaElon, turMos, sintaksis,
-    nolgaBolish, qadamChegarasi, kirishTugadi, kirishSoni, chegaradanTashqari, qiymatsiz, yoq, ichki,
+    nolgaBolish, qadamChegarasi, kirishTugadi, kirishSoni, chegaradanTashqari, qiymatsiz, butungaSigmaydi, yoq, ichki,
   };
   root.QK = root.QK || {};
   root.QK.cppEngine = Object.assign(root.QK.cppEngine || {}, { errors: api });

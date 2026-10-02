@@ -82,9 +82,9 @@
   async function stage2() {
     await drawLine();
     await robotTrains();
-    await ui.say("elder", "Endi oʻzing chiz! 3 ta toʻgʻri javob kerak.");
+    await ui.say("elder", `Endi oʻzing chiz! ${QK.practice.need()} ta toʻgʻri javob kerak.`);
     await practice.exercises({
-      next: (prev) => learn.makeLineTask(prev),
+      next: (prev, correct, tier) => learn.makeLineTask(prev, null, tier),
       run: lineTask,
       praise: () => "Xato 0 — model tayyor.",
     });

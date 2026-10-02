@@ -50,9 +50,9 @@
     await twoResults();
     await slashIsFloat();
     await definition();
-    await ui.say("elder", "Endi oʻzing hisobla. 3 ta toʻgʻri javob kerak.");
+    await ui.say("elder", `Endi oʻzing hisobla. ${QK.practice.need()} ta toʻgʻri javob kerak.`);
     await practice.exercises({
-      next: (prev) => L.divisionTask(Math.random, prev),
+      next: (prev, correct, tier) => L.divisionTask(Math.random, prev, tier),
       run: (task) => common.resultExercise(task),
       praise: () => "Toʻgʻri boʻlding.",
     });

@@ -97,7 +97,7 @@
   const spaced = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 
   const stepLimit = (steps, extra) => limitError(
-    spaced(steps) + " qadam bajarildi, dastur tugamadi", at(extra, {
+    spaced(steps) + " qadamdan oshdi — sikl juda uzun yoki tugamaydi", at(extra, {
       hint: "Sikl aylanishdan toʻxtamadi. Shart qachon yolgʻon boʻladi? Hisoblagich oʻzgaryaptimi?",
     }));
 

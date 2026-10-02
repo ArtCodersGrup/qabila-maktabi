@@ -143,9 +143,10 @@
     ui.bubble("elder", "Oddiy songa aylantirib hisobla, javobni Rim raqamida yoz.");
     return common.romanAnswer({
       target: task.answer,
+      // Maslahat javobni aytmaydi (QOIDALAR 4.3): sonlar aylantirib beriladi, hisobni bola o'zi qiladi
       hint: () => {
-        note.textContent = plain;
-        ui.bubble("elder", `↻ ${a} = ${task.a}, ${b} = ${task.b}. ${plain}`);
+        note.textContent = `${task.a} ${task.op} ${task.b} = ?`;
+        ui.bubble("elder", `↻ ${a} = ${task.a}, ${b} = ${task.b}. Endi hisobla va javobni Rim raqamida yoz.`);
       },
       solution: (answer) => {
         note.textContent = plain;
@@ -160,9 +161,9 @@
     await tidyDemo();
     await ordinary();
     await minusDemo();
-    await ui.say("elder", "Endi oʻzing hisobla: goh lagan bilan, goh oddiy sonlarda. 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing hisobla: goh lagan bilan, goh oddiy sonlarda. ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev, correct) => roman.makeCalcTask(correct, prev),
+      next: (prev, correct, tier) => roman.makeCalcTask(correct, prev, null, tier),
       run: (task) => (task.type === "tidy" ? tidyTask(task) : arithTask(task)),
       praise: (task) => `${roman.toRoman(task.a)} ${task.op} ${roman.toRoman(task.b)} = ${roman.toRoman(task.answer)}.`,
     });

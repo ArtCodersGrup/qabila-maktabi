@@ -12,62 +12,81 @@
     { art: "robot", lines: ["Koʻrish — bu vazifa. Uni qoida bilan ham, misol bilan ham yechsa boʻladi.", "Bugungi dasturlar belgilarni oʻzi topadi — bu keyingi oʻyinda."] },
   ];
 
+  const TOP = 3; // moslik ustunchalari: eng o'xshash uchtasi (oltitasi telefonda sig'maydi)
+
   // 6.1–6.2: rasm suriladi, shablon adashadi, belgi qutqaradi
   async function shiftDemo() {
-    const name = vision.NAMES[1];
+    const demo = vision.DEMO_SHIFT;
+    const name = demo.name;
     const original = vision.TEMPLATES[name];
     const el = common.box(true);
     const board = visionUi.grid(el, {});
     board.set(original);
     const feature = visionUi.featureLine(el); // belgi toʻr ostida — ekranda koʻrinib tursin
     const list = visionUi.scores(el);
-    list.set(vision.bestMatch(original).list, name);
+    list.set(vision.bestMatch(original).list.slice(0, TOP), name);
     feature.set(original);
     await ui.say("elder", `Mana toza rasm: robot uni ${name} deb tanidi — 36 tadan 36 ta mos.`);
     ui.bubble("elder", "Endi rasmni bir katak oʻngga suramiz. «Sur»ni bos.");
     await ui.settle((done) => {
       ui.control().append(ui.button("Sur ▶︎", () => { ui.clearControl(); done(); }, "big"));
     });
-    const moved = vision.shift(original, 1, 0);
+    const moved = vision.shift(original, demo.dx, demo.dy);
     board.set(moved);
     board.flash();
     const best = vision.bestMatch(moved);
-    list.set(best.list, best.name);
+    list.set(best.list.slice(0, TOP), best.name);
     feature.set(moved);
     sound.play("retry");
     await ui.say("elder", `Koʻzga deyarli bir xil, lekin mosliklar tushib ketdi: eng yaxshisi ${best.score} ta.`);
-    await ui.say("elder", "Robot uchun surilgan rasm — butunlay boshqa sonlar.");
+    await ui.say("elder", best.name === name
+      ? "Robot uchun surilgan rasm — butunlay boshqa sonlar."
+      : `Robot endi uni ${best.name} deb oʻylayapti! Uning uchun surilgan rasm — butunlay boshqa sonlar.`);
     await ui.say("elder", `Endi belgiga qaraymiz: boʻyalgan kataklar ${vision.filled(original)} ta edi, endi ${vision.filled(moved)} ta — deyarli oʻzgarmadi.`);
     el.append(common.answerLine(`Belgi boʻyicha javob: ${vision.byFeature(moved)}`));
     sound.play("correct");
     await ui.say("elder", "Belgi — rasmdagi muhim xususiyat. U surilganda ham saqlanadi.");
   }
 
-  // 6.4: mashq — qaysi usul to'g'ri javob beradi?
+  const METHOD_LABELS = { shablon: "Faqat shablon", belgi: "Faqat belgi", ikkalasi: "Ikkalasi ham", hech: "Hech biri" };
+  const METHOD_WHY = {
+    shablon: "Faqat shablon: piksellar joyida, lekin kataklar soni boshqa shaklga yaqinlashdi",
+    belgi: "Faqat belgi: rasm surilgan — piksellar mos kelmaydi, kataklar soni esa saqlangan",
+    ikkalasi: "Ikkalasi ham: rasm deyarli oʻzgarmagan — piksellar ham, kataklar soni ham mos",
+    hech: "Hech biri: rasm surilgan (shablon adashadi) va kataklar soni ham oʻzgargan (belgi adashadi)",
+  };
+  // Shablonlarning belgisi — bo'yalgan kataklar soni: "kvadrat 32 · uchburchak 24 · …"
+  const featureLegend = () => vision.NAMES.map((n) => `${n} ${vision.filled(vision.TEMPLATES[n])}`).join(" · ");
+
+  // 6.4: mashq — qaysi usul to'g'ri javob beradi? 4 javob: faqat shablon, faqat belgi, ikkalasi, hech biri.
+  // Ekranda asboblar bor (kataklar soni va shablonlar belgisi), natijani bola o'zi chiqaradi.
   function methodTask(task) {
     const el = common.box(true);
     const board = visionUi.grid(el, {});
     board.set(task.image);
     el.append(common.line(`Haqiqiy shakl: ${task.truth} · rasm ${task.changed}`));
-    ui.bubble("elder", "Qaysi usul toʻgʻri javob beradi?");
-    const options = ["Shablon (piksel)", "Belgi (kataklar soni)"];
+    const feature = visionUi.featureLine(el);
+    feature.set(task.image);
+    el.append(common.line(`Shablonlarda: ${featureLegend()}`));
+    const list = visionUi.scores(el);
+    ui.bubble("elder", "Qaysi usul toʻgʻri javob beradi: shablonmi, belgimi, ikkalasimi yoki hech biri?");
     return practice.tries({
       setup: (submit) => {
         const row = ui.h("div", { class: "choice-row" });
-        options.forEach((label, i) => row.append(ui.button(label, () => submit(i), i ? "secondary" : "")));
+        task.options.forEach((key, i) => row.append(ui.button(METHOD_LABELS[key], () => submit(key), i % 2 ? "secondary" : "")));
         ui.clearControl();
         ui.control().append(row);
       },
-      check: (index) => (index === 0 ? "shablon" : "belgi") === task.answer,
+      check: (key) => key === task.answer,
       hint: () => {
-        const best = vision.bestMatch(task.image);
-        el.append(common.line(`Shablon: ${best.name} · Belgi: ${vision.byFeature(task.image)}`));
-        ui.bubble("elder", "↻ Ikkala usul natijasini ochdim. Qaysi biri haqiqiy shaklga toʻgʻri keldi?");
+        // Asbob: moslik ustunchalari ochiladi (eng yaxshisi belgilanmaydi) — xulosani bola o'zi chiqaradi
+        list.set(vision.bestMatch(task.image).list.slice(0, TOP), null);
+        ui.bubble("elder", "↻ Eng oʻxshash uchta shablonni ochdim. Shablon — eng koʻp mos kelgani; belgi — kataklar soni eng yaqini. Ikkalasini haqiqiy shakl bilan solishtir.");
       },
       solution: () => {
-        el.append(common.answerLine(task.answer === "belgi"
-          ? "Belgi toʻgʻri: kataklar soni surilganda oʻzgarmaydi"
-          : "Shablon toʻgʻri: piksellar deyarli oʻzgarmagan"));
+        list.set(vision.bestMatch(task.image).list.slice(0, TOP), task.byPixels);
+        el.append(common.answerLine(`Shablon: ${task.byPixels} · Belgi: ${task.byFeature}`));
+        el.append(common.answerLine(METHOD_WHY[task.answer]));
       },
     });
   }
@@ -83,11 +102,16 @@
 
   async function stage3() {
     await shiftDemo();
-    await ui.say("elder", "Endi oʻzing ayt: qaysi usul ishlaydi? 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing ayt: qaysi usul ishlaydi? ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev) => vision.makeMethodTask(prev),
+      next: (prev, correct, tier) => vision.makeMethodTask(prev, null, tier),
       run: methodTask,
-      praise: (task) => (task.answer === "belgi" ? "Belgi surilishga chidamli." : "Piksellar saqlangan — shablon yetarli."),
+      praise: (task) => ({
+        belgi: "Belgi surilishga chidamli.",
+        shablon: "Piksellar saqlangan — shablon yetarli, belgi esa adashdi.",
+        ikkalasi: "Rasm deyarli oʻzgarmagan — ikkala usul ham topdi.",
+        hech: "Surildi va kataklar qoʻshildi — ikkala usul ham adashdi.",
+      }[task.answer]),
     });
     for (const scene of SCENES) await showScene(scene);
   }

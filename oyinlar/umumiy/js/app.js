@@ -1,11 +1,14 @@
 // O'yin qobig'i: qahramonlar, bosh ekran, bosqichlar oqimi, ovoz tugmasi va ?bosqich=N.
 // Har bir o'yinning main.js i faqat QK.app.start({ title, storageKey, stageTitles }) ni chaqiradi.
 // Sahnalar QK.scenes da: intro(), stage1()..stageN(), stageDone(s, goingOn), finale() (ixtiyoriy), congrats().
+// 2026-10-02: yulduzlar (practice statistikasi), bosqich/final kartalari, qiyin rejim (hamma bosqich tugagach).
 (function (root) {
   "use strict";
 
   function start({ title, storageKey, stageTitles }) {
     const { storage, sound, art, ui } = root.QK;
+    // practice.js ulanmagan o'yinda (o'z mashq sikli bor) qobiq baribir ishlaydi: yulduz 3, qiyin rejim oddiy
+    const practice = root.QK.practice || { setStage() {}, stars: () => 3, isHard: () => false, need: () => 3 };
     const $ = (id) => document.getElementById(id);
     const count = stageTitles.length;
     const store = storage.create(storageKey, count);
@@ -13,6 +16,7 @@
     sound.setMuted(state.muted);
     const saveState = () => store.save(state);
     const SITE_HOME = "../../index.html"; // loyiha bosh sahifasi — barcha o'yinlar ro'yxati
+    const allDone = () => state.done.every(Boolean);
 
     // 🏠: bosqich ichida — o'yin bosh ekraniga, o'yin bosh ekranida — barcha o'yinlar ro'yxatiga
     let onHome = false;
@@ -34,58 +38,97 @@
       ui.setCompact(false);
       ui.hideProgress();
       ui.paper("");
+      ui.clearKeep();
       ui.clearWork();
       ui.clearControl();
-      ui.bubble("elder", "Salom! Qaysi bosqichni oʻynaymiz?");
+      ui.bubble("elder", allDone() ? "Hammasini oʻtding! Yulduzlarni toʻldirasanmi yoki qiyin rejimni sinaysanmi?" : "Salom! Qaysi bosqichni oʻynaymiz?");
 
       // "Barcha oʻyinlar" — loyiha bosh sahifasi (Information/index.html); o'yin yolg'iz ochilsa ham ishlaydi
       const back = ui.h("a", { class: "back-link", href: SITE_HOME, text: "◀︎ Barcha oʻyinlar" });
       const heading = ui.h("h1", { class: "game-title", text: title });
+      const jami = state.stars.reduce((a, b) => a + b, 0);
+      const note = ui.h("div", { class: "hard-note", text: `★ ${jami} / ${count * 3}` + (state.hard.some(Boolean) ? " · 🔥 qiyin rejim" : "") });
       const cards = ui.h("div", { class: "cards" });
       stageTitles.forEach((titleText, k) => {
         const open = k === 0 || state.done[k - 1];
         const clickable = open || state.done[k]; // tugagan bosqich, hattoki qulflangan bo'lsa ham, qayta o'ynaladi
+        const stateEl = state.done[k]
+          ? ui.stars(state.stars[k], "card-stars")
+          : ui.h("span", { class: "card-state", text: open ? "" : "🔒" });
         cards.append(ui.h("button", {
           class: "card" + (state.done[k] ? " done" : ""),
           type: "button",
           disabled: !clickable,
           onClick: () => { sound.play("tap"); play(k + 1, state.done[k]); },
         },
-        ui.h("span", { class: "card-num", text: String(k + 1) }),
+        ui.h("span", { class: "card-num", text: state.hard[k] ? "🔥" : String(k + 1) }),
         ui.h("span", { class: "card-title", text: titleText }),
-        ui.h("span", { class: "card-state", text: state.done[k] ? "✓" : open ? "" : "🔒" })));
+        stateEl));
       });
-      ui.work().append(back, heading, cards);
+      ui.work().append(back, heading, note, cards);
 
       const next = state.done.indexOf(false);
       const first = next === -1 ? 1 : next + 1;
-      ui.control().append(ui.button(next === -1 ? "Qayta oʻynash" : "Boshlash", () => play(first), "big"));
+      if (next === -1) {
+        const row = ui.h("div", { class: "hard-row" },
+          ui.button("Qayta oʻynash", () => play(first)),
+          ui.button("Qiyin rejim 🔥", () => play(1, false, true), "secondary"));
+        ui.control().append(row, ui.h("div", { class: "hard-note", text: "Qiyin rejim: 7 ta javob, bitta urinish" }));
+      } else {
+        ui.control().append(ui.button(next === -1 ? "Qayta oʻynash" : "Boshlash", () => play(first), "big"));
+      }
+    }
+
+    // Bosqich tugadi: yulduzlar saqlanadi (eng yaxshisi qoladi), karta chiziladi, keyin o'yinning stageDone pufagi
+    function finishStage(s, hard) {
+      const stars = practice.stars();
+      if (hard) {
+        state.hard[s - 1] = true;
+      } else {
+        state.done[s - 1] = true;
+        state.stars[s - 1] = Math.max(state.stars[s - 1], stars);
+      }
+      saveState();
+      return stars;
     }
 
     // once — tugagan bosqichni faqat o'zini qayta o'ynash: davom etmaydi, bosh ekranga qaytadi
-    async function play(stage, once) {
+    // hard — qiyin rejim: 7 ta javob, bitta urinish, eng qiyin misollar (hamma bosqich tugagach ochiladi)
+    async function play(stage, once, hard) {
       const scenes = root.QK.scenes;
       setOnHome(false);
       ui.newRun();
       ui.resetPoses();
       ui.hideProgress();
+      ui.clearKeep();
       ui.clearControl();
-      if (stage === 1 && !state.done[0]) await scenes.intro();
+      if (stage === 1 && !state.done[0] && !hard) await scenes.intro();
       if (once) {
+        practice.setStage(stage, false);
         await scenes["stage" + stage]();
+        const stars = finishStage(stage, false);
+        ui.stageCard({ num: stage, total: count, title: stageTitles[stage - 1], stars });
         await scenes.stageDone(stage, false); // davom etmaymiz — "keyingisiga oʻtamiz" deyilmaydi
+        ui.clearKeep();
         home();
         return;
       }
+      const stars = [];
       for (let s = stage; s <= count; s++) {
+        practice.setStage(s, hard);
         await scenes["stage" + s]();
-        state.done[s - 1] = true;
-        saveState();
-        if (s < count) await scenes.stageDone(s, true); // keyingi bosqichga o'tamiz
+        stars[s - 1] = finishStage(s, hard);
+        if (s < count) {
+          ui.stageCard({ num: s, total: count, title: stageTitles[s - 1], stars: stars[s - 1], hard });
+          await scenes.stageDone(s, true); // keyingi bosqichga o'tamiz
+          ui.clearKeep();
+        }
       }
       if (scenes.finale) await scenes.finale();
+      ui.finalCard({ title, stageTitles, stars: hard ? state.stars : state.stars.map((v, k) => stars[k] || v), hard });
       const next = await scenes.congrats();
-      if (next === "replay") play(1);
+      ui.clearKeep();
+      if (next === "replay") play(1, false, hard);
       else home();
     }
 
@@ -111,9 +154,10 @@
     const unlock = () => sound.unlock();
     ["pointerdown", "pointerup", "touchend", "click", "keydown"].forEach((t) => document.addEventListener(t, unlock, true));
 
-    // O'qituvchi va sinov uchun: ?bosqich=2 — shu bosqichdan boshlash
-    const direct = Number(new URLSearchParams(root.location.search).get("bosqich"));
-    if (Number.isInteger(direct) && direct >= 1 && direct <= count) play(direct);
+    // O'qituvchi va sinov uchun: ?bosqich=2 — shu bosqichdan boshlash; &qiyin=1 — qiyin rejim
+    const params = new URLSearchParams(root.location.search);
+    const direct = Number(params.get("bosqich"));
+    if (Number.isInteger(direct) && direct >= 1 && direct <= count) play(direct, false, params.get("qiyin") === "1");
     else home();
   }
 

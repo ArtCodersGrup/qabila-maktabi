@@ -56,9 +56,9 @@
     await ui.say("elder", "256 rang — 8 bit, yaʼni har piksel 1 bayt.");
   }
 
-  function bitsTable(mark) {
+  function bitsTable(mark, upTo) {
     const table = ui.h("div", { class: "ctable" });
-    for (let k = 1; k <= 8; k++) {
+    for (let k = 1; k <= Math.max(8, upTo || 0); k++) {
       table.append(ui.h("span", { text: `${k} bit` }), ui.h("span", { text: `${2 ** k} rang${mark === k ? " ✓" : ""}` }));
     }
     return table;
@@ -74,12 +74,12 @@
       return practice.numberTries({
         answer: task.answer,
         hint: () => {
-          table = bitsTable(null);
+          table = bitsTable(null, task.answer);
           common.add(el, table);
           ui.bubble("elder", "↻ Jadvalga qara: qaysi qatorda rang yetadi?");
         },
         solution: () => {
-          const marked = bitsTable(task.answer);
+          const marked = bitsTable(task.answer, task.answer);
           if (table) table.replaceWith(marked);
           else common.add(el, marked);
           common.add(el, common.answerLine(`${task.answer} bit — ${2 ** task.answer} rang, ${task.colors} ga yetadi`));
@@ -103,9 +103,9 @@
   async function stage2() {
     await paint();
     await definition();
-    await ui.say("elder", "Endi oʻzing hisobla: ranglar va bitlar. 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing hisobla: ranglar va bitlar. ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev) => pixels.makeColorTask(prev),
+      next: (prev, correct, tier) => pixels.makeColorTask(prev, undefined, tier),
       run: colorTask,
       praise: (task) => (task.type === "bpp"
         ? `${task.colors} rang — ${task.answer} bit.`

@@ -34,7 +34,7 @@
     await tuz();
     await ui.say("elder", "Endi oʻzing hisobla va xulosa chiqar.");
     await practice.exercises({
-      next: (prev, togri) => L.bosqich3Task(Math.random, prev, togri),
+      next: (prev, togri, tier) => L.bosqich3Task(Math.random, prev, togri, tier),
       run: (task) => common.run(task),
       praise: (task) => common.praise(task),
     });

@@ -8,7 +8,7 @@
   --kod-satr-rang: #1A9E77;
   --kod-son: #C2700F;
   --kod-ichki: #2F6FDE;
-  --kod-izoh: #8A8577;
+  --kod-izoh: #6B6558;
 }
 
 .kod-blok,
@@ -97,7 +97,7 @@
 .kod-xato { margin-top: 6px; padding-top: 8px; border-top: 2px dashed var(--chiziq); }
 .kod-xato-matn { color: #A85C10; font-weight: 800; }
 .kod-xato-satr { margin: 6px 0 0; color: var(--matn); white-space: pre; overflow-x: auto; }
-.kod-xato-oq { margin: 0; color: var(--yana); font-weight: 800; white-space: pre; }
+.kod-xato-oq { margin: 0; color: var(--yana-matn); font-weight: 800; white-space: pre; }
 .kod-xato-izoh { margin-top: 6px; font-family: inherit; color: var(--matn); font-weight: 700; }
 .kod-chiqish .kod-xato-izoh { font-family: Nunito, system-ui, sans-serif; }
 

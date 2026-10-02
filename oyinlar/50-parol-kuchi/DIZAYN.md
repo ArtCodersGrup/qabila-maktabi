@@ -50,3 +50,14 @@ Bu tekshiruv **uzunlik hisobidan ustun turadi**: lugʻatda topilsa, baho darhol 
 - `js/logic.js` — `tahlil`, `vaqtMatni`, `baho`, lugʻat tekshiruvi, toʻrt xil savol.
 - `tests/logic.test.js` — 12 test; ichida **«uzun oddiy parol qisqa murakkabdan kuchli»** va
   **«ism/yil/mashhur soʻz — uzunligidan qatʼi nazar zaif»** daʼvolari qulflangan.
+
+## 2026-10-02 qiyinlik yangilanishi
+
+Sabab: "qaysi parol kuchliroq?" 2 variantli edi, baho savolida 10 ta qotirilgan parol, variant savolida 5 ta savol; bola hech narsa yasamasdi.
+
+- **1-bosqich:** `VARIANT_SAVOL` 5 → 18 ta, uch darajada (`daraja` = tier): javob ≤ 1 100 → ≤ 20 000 → ≤ 1 000 000 (alifbo 2 / 3 / 5 / 10 / 26 / 36 / 62).
+- **2-bosqich, vaqt:** tier 1+ da generator (`ALIFBO` × uzunlik 6–10 → 8–12), chalgʻituvchilar — **qoʻshni birliklar** (× 60, ÷ 60, × 24 …), tier 2 da "kuchli uskuna" (sekundiga 1 milliard) ham chiqadi.
+- **2-bosqich, qiyos — 4 variant:** "toʻrtta parol, qaysi biri ENG kuchli?" Parollar yasaladi (`yasaParol`): tier 0 — uchtasi ochiq-oydin zaif; tier 1 — bittasi "oʻrtacha"; tier 2 — murakkab koʻrinadigan qisqa parollar va niqoblangan lugʻat soʻzlari (`P@ssw0rd`, `s@l0m`). Maslahat — usul ("avval lugʻatdagilarini chiqar, keyin uzunlikka qara"), javob emas.
+- **3-bosqich, baho — 5 variant:** daraja + **sababi** (`SABABLAR`): "Zaif — mashhur soʻz", "Zaif — ism yoki yil", "Zaif — juda qisqa", "Oʻrtacha", "Kuchli". Parollar yasaladi va har biri `baho()` bilan tasdiqlanadi (yasovchi yolgʻon gapirmaydi).
+- **3-bosqich, "oʻzing yasa"** (`yasaTask` / `yasaTekshir`): bola soʻz kartalaridan ibora yigʻadi, "Tekshir" — topish vaqti chiqadi. Shartlar tier boʻyicha: 3 soʻz, kuchli → million yildan koʻp, kartalar ichida 2 ta tuzoq (ism, yil, mashhur soʻz) → 4 soʻz, **koinot yoshidan koʻp**, 3 ta tuzoq. Takror soʻz va tuzoq soʻz rad etiladi, sababi aytiladi. Baho va "yasa" navbatlashadi.
+- **Tuzatilgan xato:** `lugatda("123456")` avval `null` qaytarardi (raqamlar "soddalashtirish"da olib tashlanardi) — endi raqamli mashhur parollar ham lugʻatda.

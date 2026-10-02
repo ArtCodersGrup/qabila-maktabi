@@ -30,7 +30,7 @@
 .cslot.current { border-style: solid; border-color: var(--asosiy); }
 .cslot.wrong { border-style: solid; border-color: var(--yana); }
 .cslot.wrong.current { border-color: var(--asosiy); }
-.cslot.wrong:empty::after { content: "↻"; color: var(--yana); font-size: 20px; }
+.cslot.wrong:empty::after { content: "↻"; color: var(--yana-matn); font-size: 20px; }
 .cslot.solution { border-style: solid; border-color: var(--togri); color: var(--togri); }
 
 /* ---------- Surish jadvali: tepada oddiy harf, pastda shifri ---------- */
@@ -43,6 +43,9 @@
 .ct-cell:active { transform: translateY(2px); box-shadow: none; }
 .ct-top { font-size: 20px; font-weight: 900; color: var(--matn); }
 .ct-bottom { font-size: 18px; font-weight: 800; color: var(--asosiy); }
+/* Pastki qator yashirin (2026-10-02): bola harfni o'zi suradi */
+.ctable.blind .ct-bottom { color: var(--matn-3); }
+.blind-note { font-size: 18px; font-weight: 800; text-align: center; }
 @media (orientation: landscape) {
   /* Yotiq ekran: jadval ustuni kengroq (5 ustun), sahna ustuni torroq */
   .play.has-guide { grid-template-columns: minmax(140px, 20%) minmax(0, 1fr) minmax(260px, 40%); }

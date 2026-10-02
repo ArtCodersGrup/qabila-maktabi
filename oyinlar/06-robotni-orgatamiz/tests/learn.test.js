@@ -79,6 +79,45 @@ test("makeNearestTask: eng yaqin misol javobga mos va ikkilanishsiz", () => {
   }
 });
 
+test("makeNearestTask: bosiladigan javob — eng yaqin misolning indeksi, u yagona", () => {
+  for (const tier of [0, 1, 2]) {
+    let prev = null;
+    for (let i = 0; i < 200; i++) {
+      const task = L.makeNearestTask(prev, Math.random, tier);
+      const list = L.nearestList(task.points, task.query, task.points.length);
+      assert.equal(task.points[task.nearIndex], list[0], "nearIndex eng yaqin misolni koʻrsatmayapti");
+      assert.equal(task.points[task.nearIndex].full, task.answer);
+      assert.ok(L.dist(list[1], task.query) - L.dist(list[0], task.query) >= 0.5 - 1e-9, "ikkita misol bir xil yaqin");
+      assert.ok(!task.points.some((p) => p.x === task.query.x && p.y === task.query.y), "soʻrov misol ustida");
+      if (prev) assert.notDeepEqual(task.query, prev.query);
+      prev = task;
+    }
+  }
+});
+
+test("makeNearestTask: tier bilan qiyinlashadi — misol koʻpayadi, farq kichrayadi", () => {
+  const diff = (task) => {
+    const list = L.nearestList(task.points, task.query, task.points.length);
+    return L.dist(list.find((p) => p.full !== list[0].full), task.query) - L.dist(list[0], task.query);
+  };
+  const avg = (tier) => {
+    let sum = 0;
+    for (let i = 0; i < 300; i++) sum += diff(L.makeNearestTask(null, Math.random, tier));
+    return sum / 300;
+  };
+  assert.equal(L.makeNearestTask(null, Math.random, 0).points.length, 6);
+  assert.equal(L.makeNearestTask(null, Math.random, 1).points.length, 6);
+  assert.equal(L.makeNearestTask(null, Math.random, 2).points.length, 8);
+  for (let i = 0; i < 200; i++) {
+    const q = L.makeNearestTask(null, Math.random, 0).query;
+    assert.ok(q.x >= 2 && q.x <= 8 && q.y >= 2 && q.y <= 8, "tier 0 da soʻrov 2..8 ichida");
+    assert.ok(diff(L.makeNearestTask(null, Math.random, 0)) >= 1.1 - 1e-9, "tier 0 da farq katta boʻlishi kerak");
+    const d2 = diff(L.makeNearestTask(null, Math.random, 2));
+    assert.ok(d2 >= 0.4 - 1e-9 && d2 <= 2.0 + 1e-9, `tier 2 da farq 0.4..2.0 boʻlishi kerak: ${d2}`);
+  }
+  assert.ok(avg(2) < avg(0), "tier 2 da boshqa sinfdagi misol yaqinroq boʻlishi kerak");
+});
+
 test("makeLineTask: boshida 3–5 xato, robot 0 ga keltira oladi", () => {
   let prev = null;
   for (let i = 0; i < 100; i++) {
@@ -87,7 +126,22 @@ test("makeLineTask: boshida 3–5 xato, robot 0 ga keltira oladi", () => {
     const e = L.errorsOf(task.points, task.start);
     assert.ok(e >= 3 && e <= 5, String(e));
     assert.equal(L.errorsOf(task.points, L.fit(task.points, task.start)), 0);
+    if (prev) assert.notDeepEqual(task.start, prev.start);
     prev = task;
+  }
+});
+
+test("makeLineTask: tier bilan boshlangʻich xato koʻpayadi (4–6, 5–7)", () => {
+  const range = { 0: [3, 5], 1: [4, 6], 2: [5, 7] };
+  for (const tier of [0, 1, 2]) {
+    let prev = null;
+    for (let i = 0; i < 100; i++) {
+      const task = L.makeLineTask(prev, Math.random, tier);
+      const e = L.errorsOf(task.points, task.start);
+      assert.ok(e >= range[tier][0] && e <= range[tier][1], `tier ${tier}: ${e}`);
+      assert.equal(L.errorsOf(task.points, L.fit(task.points, task.start)), 0);
+      prev = task;
+    }
   }
 });
 
@@ -106,33 +160,56 @@ test("makeBiasTask: o'qitish o'ng chekkada, sinovda 2 xato, qo'shimcha misol tuz
   }
 });
 
-test("makePredictTask: javob model chizig'iga mos", () => {
-  let prev = null;
-  for (let i = 0; i < 200; i++) {
-    const task = L.makePredictTask(prev);
-    assert.equal(task.type, "predict");
-    assert.equal(task.answer, L.predict(task.line, task.query));
-    assert.ok(L.gap(task.line, task.query) >= 1.2 - 1e-9);
-    if (prev) assert.notDeepEqual(task.query, prev.query);
-    prev = task;
+test("makeMistakeTask: robot aynan bitta yongʻoqda adashadi — javob oʻsha", () => {
+  const gapRange = { 0: [1.0, 3.0], 1: [0.8, 2.0], 2: [0.5, 1.5] };
+  for (const tier of [0, 1, 2]) {
+    let prev = null;
+    for (let i = 0; i < 200; i++) {
+      const task = L.makeMistakeTask(prev, Math.random, tier);
+      assert.equal(task.type, "mistake");
+      assert.equal(task.test.length, tier === 2 ? 8 : 6, "variantlar soni");
+      assert.ok(task.test.length >= 4, "kamida 4 variant");
+      assert.equal(new Set(task.test.map((p) => `${p.x}:${p.y}`)).size, task.test.length, "nuqtalar takrorlandi");
+      const wrong = L.wrongOnes(task.test, task.line);
+      assert.equal(wrong.length, 1, "aynan bitta xato boʻlishi kerak");
+      assert.equal(task.test[task.answer], wrong[0]);
+      const g = L.gap(task.line, wrong[0]);
+      assert.ok(g >= gapRange[tier][0] - 1e-9 && g <= gapRange[tier][1] + 1e-9, `tier ${tier}: masofa ${g}`);
+      for (const p of task.test) assert.ok(L.gap(task.line, p) >= 0.5 - 1e-9, "nuqta chiziq ustida");
+      if (prev) assert.notDeepEqual(task.line, prev.line);
+      prev = task;
+    }
   }
 });
 
-test("makeUsefulTask: to'g'ri javob — misollardan eng uzoqdagi yong'oq", () => {
-  let prev = null;
-  for (let i = 0; i < 200; i++) {
-    const task = L.makeUsefulTask(prev);
-    assert.equal(task.type, "useful");
-    assert.equal(task.options.length, 3);
-    const far = task.options.map((o) => Math.min(...task.points.map((p) => L.dist(p, o))));
-    const sorted = [...far].sort((a, b) => b - a);
-    assert.equal(far[task.answer], sorted[0]);
-    assert.ok(sorted[0] - sorted[1] >= 1.5, "variantlar bir-biriga yaqin");
-    prev = task;
+test("makeUsefulTask: 4 variant, to'g'ri javob — misollardan eng uzoqdagi yong'oq", () => {
+  for (const tier of [0, 1, 2]) {
+    let prev = null;
+    for (let i = 0; i < 200; i++) {
+      const task = L.makeUsefulTask(prev, Math.random, tier);
+      assert.equal(task.type, "useful");
+      assert.equal(task.options.length, 4);
+      assert.equal(new Set(task.options.map((o) => `${o.x}:${o.y}`)).size, 4);
+      const far = task.options.map((o) => Math.min(...task.points.map((p) => L.dist(p, o))));
+      const sorted = [...far].sort((a, b) => b - a);
+      assert.equal(far[task.answer], sorted[0]);
+      assert.ok(sorted[0] - sorted[1] >= (tier === 2 ? 1.0 : 1.5) - 1e-9, "variantlar bir-biriga yaqin");
+      if (prev) assert.notDeepEqual(task.options[task.answer], prev.options[prev.answer]);
+      prev = task;
+    }
   }
 });
 
-test("makeStage3Task: avval bashorat, keyin foydali misol", () => {
-  assert.equal(L.makeStage3Task(0, null).type, "predict");
+test("makeStage3Task: avval «qayerda adashadi», keyin foydali misol; tier uzatiladi", () => {
+  assert.equal(L.makeStage3Task(0, null).type, "mistake");
   assert.equal(L.makeStage3Task(1, null).type, "useful");
+  assert.equal(L.makeStage3Task(0, null, Math.random, 2).test.length, 8);
+  const seen = new Set();
+  let prev = null;
+  for (let i = 0; i < 60; i++) {
+    prev = L.makeStage3Task(5, prev, Math.random, 2);
+    assert.equal(prev.tier, 2);
+    seen.add(prev.type);
+  }
+  assert.deepEqual([...seen].sort(), ["mistake", "useful"]);
 });

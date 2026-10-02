@@ -246,7 +246,11 @@ const ANSWER = {
   ifoda: (q) => {
     const { a, b } = q.data;
     const n = (x) => 1 - x;
-    return { aAndNotB: a & n(b), notAOrB: n(a) | b, notAnd: n(a & b), notOr: n(a | b), notAAndNotB: n(a) & n(b) }[q.data.expr];
+    // 24-o'yindagi EXPRS bilan bir xil ro'yxat (2026-10-02: 3 amalli ifodalar qo'shildi) — mustaqil hisob
+    return {
+      aAndNotB: a & n(b), notAOrB: n(a) | b, notAnd: n(a & b), notOr: n(a | b), notAAndNotB: n(a) & n(b),
+      notAOrNotB: n(a) | n(b), notAAndNotB2: n(a & n(b)), orAndNotA: (a | b) & n(a), andOrNotB: (a & b) | n(b), notNotAOrB: n(n(a) | b),
+    }[q.data.expr];
   },
   sxema: (q) => {
     const { tpl, op, a, b } = q.data;

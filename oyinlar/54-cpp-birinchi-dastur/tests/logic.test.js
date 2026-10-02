@@ -22,7 +22,69 @@ test("dastur qolipi: har misolda to'liq C++ dasturi bor", () => {
 test("natija: har tur uchun chiqish aniq hisoblangan", () => {
   const korilgan = new Set();
   for (let k = 0; k < 200; k++) korilgan.add(L.natijaTask(r, null).kind);
-  assert.deepEqual([...korilgan].sort(), ["hisob", "ikki", "ketma", "qoshma"]);
+  assert.deepEqual([...korilgan].sort(), ["hisob", "ikki", "ketma", "qayta", "qoshma", "yopishgan"]);
+});
+
+// 2026-10-02: o'qish misollarining chiqishi yadroda ham aynan shunday bo'lishi kerak (g++ — parity testida)
+test("natija va kirish misollari yadroda aynan shunday chiqadi", () => {
+  const E = require("../../umumiy/js/cpp/cpp-run.js");
+  let soni = 0;
+  for (let k = 0; k < 150; k++) {
+    for (const f of [L.natijaTask, L.kirishTask]) {
+      const t = f(r, null);
+      soni++;
+      const natija = E.run(t.kod, { stdin: t.kirish || [] });
+      assert.equal(natija.error, null, t.id + ": " + JSON.stringify(natija.error));
+      assert.deepEqual(natija.output, t.chiqish, t.id + "\n" + t.kod);
+    }
+  }
+  assert.ok(soni >= 300);
+});
+
+test("zina: yangi turlar yuqori zinalarda; cout bo'shliq qo'ymasligi ko'rinadi", () => {
+  for (let k = 0; k < 60; k++) {
+    assert.ok(["hisob", "ikki", "ketma", "qoshma"].includes(L.natijaTask(r, null, 0).kind));
+    assert.ok(!/uch-satr|ism-yosh/.test(L.kirishTask(r, null, 0).id));
+    assert.ok(["yoz:salom", "yoz:yigindi", "yoz:kvadrat", "yoz:ikki-satr"].includes(L.yozTask(r, null, 0).id));
+  }
+  const turlar = new Set();
+  const kirishlar = new Set();
+  const yozishlar = new Set();
+  for (let k = 0; k < 120; k++) {
+    turlar.add(L.natijaTask(r, null, 2).kind);
+    kirishlar.add(L.kirishTask(r, null, 2).id.split(":")[1]);
+    yozishlar.add(L.yozTask(r, null, 2).id);
+  }
+  assert.ok(turlar.has("yopishgan") && turlar.has("qayta"));
+  assert.ok(kirishlar.has("uch-satr") && kirishlar.has("ism-yosh"));
+  assert.ok(yozishlar.has("yoz:uch-son") && yozishlar.has("yoz:ism-yosh"));
+  // "yopishgan": birinchi satrda ikki raqam yonma-yon (bo'shliqsiz), ikkinchisida — bo'shliq bilan
+  for (let k = 0; k < 200; k++) {
+    const t = L.natijaTask(r, null, 2);
+    if (t.kind !== "yopishgan") continue;
+    assert.match(t.chiqish[0], /^\d\d$/, t.id);
+    assert.match(t.chiqish[1], /^\d+ \d+$/, t.id);
+  }
+  // "uch-satr": kirish ikki satrda, cin uchalasini ham o'qiydi
+  for (let k = 0; k < 200; k++) {
+    const t = L.kirishTask(r, null, 2);
+    if (!t.id.startsWith("kirish:uch-satr")) continue;
+    assert.equal(t.kirish.length, 2, t.id);
+    assert.ok(t.kod.includes("cin >> a >> b >> c;"), t.id);
+  }
+});
+
+test("yangi yozish mashqlari: 8 ta masala; tipik xato yechim yiqiladi", () => {
+  assert.ok(L.YOZISHLAR.length >= 8);
+  const top = (id) => L.YOZISHLAR.find((y) => y.id === id);
+  // O'rtacha: int bilan yozilsa, kasr yo'qoladi (3.66667 o'rniga 3)
+  assert.equal(C.tekshir(top("uch-son"), top("uch-son").yechim.replace("double a, b, c;", "int a, b, c;")).ok, false);
+  // Teskari tartib: bo'shliqsiz chiqargan yechim yiqiladi
+  assert.equal(C.tekshir(top("almashtir"), C.dastur(["int a, b;", "cin >> a >> b;", C.chiqar("b << a")])).ok, false);
+  // To'rtburchak: perimetrni a + b deb olgan yechim yiqiladi
+  assert.equal(C.tekshir(top("tortburchak"), C.dastur(["int a, b;", "cin >> a >> b;", C.chiqar("a + b"), C.chiqar("a * b")])).ok, false);
+  // Ism va yosh: yoshga 1 qo'shmagan yechim yiqiladi
+  assert.equal(C.tekshir(top("ism-yosh"), top("ism-yosh").yechim.replace("yosh + 1", "yosh")).ok, false);
 });
 
 // cout o'zidan keyin yangi satrga o'tmaydi — "ketma" misoli aynan shuni ko'rsatadi
@@ -165,6 +227,8 @@ test("yoz: har mashqning yechimi dvigatelda ishlaydi va chiqishi mos", () => {
 test("namunalar: parity testi uchun turli xil misollar", () => {
   const ns = L.namunalar(12);
   assert.ok(ns.length >= 12);
+  // Yechimlar ko'paydi — yasalgan misollar ulardan TASHQARI sanaladi
+  assert.ok(ns.filter((n) => !n.id.startsWith("yechim:")).length >= 12, "yasalgan misollar kam");
   assert.equal(new Set(ns.map((n) => n.id)).size, ns.length, "takrorlanmasin");
   assert.ok(ns.some((n) => n.id.startsWith("yechim:")), "namunali yechimlar ham tekshirilsin");
   assert.ok(ns.some((n) => n.kirish.length), "cin li misol ham bo'lsin");

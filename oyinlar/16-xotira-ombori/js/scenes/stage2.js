@@ -72,42 +72,28 @@
     await ui.say("elder", "Solishtirishning ikki qoidasi. Aylantirishda 1024 ni unutma!");
   }
 
-  // Ikkala hajm kichikroq birlikda
-  function inSmall(task) {
-    const small = U.indexOf(task.a.unit) <= U.indexOf(task.b.unit) ? task.a.unit : task.b.unit;
-    const conv = (s) => (s.unit === small ? s.n : s.n * units.factor(U.indexOf(small)));
-    return { small, a: conv(task.a), b: conv(task.b) };
-  }
-
-  // 5.4: mashq — qaysi biri katta?
+  // 5.4: mashq — uch kartadan qaysi biri eng katta, yoki uchalasi teng (4 variant)
   function compareTask(task) {
     const el = common.box(true);
-    el.append(ui.h("div", { class: "cmp" }, unitsUi.sizeCard(task.a), ui.h("div", { class: "cmp-or", text: "yoki" }), unitsUi.sizeCard(task.b)));
-    ui.bubble("elder", "Qaysi biri katta?");
-    const labels = [task.a, task.b].map((s) => `${s.n} ${s.unit}`);
+    el.append(ui.h("div", { class: "cmp" }, ...task.cards.map((c) => ui.h("div", { class: "cmp-card", text: c.label }))));
+    ui.bubble("elder", "Qaysi biri eng katta? Uchalasi bir xil boʻlsa — «Uchalasi teng».");
     return practice.tries({
       setup: (submit) => {
         const row = ui.h("div", { class: "choice-row" });
-        labels.forEach((label, i) => row.append(ui.button(label, () => submit(i))));
+        task.cards.forEach((c, i) => row.append(ui.button(c.label, () => submit(i))));
+        row.append(ui.button("Uchalasi teng", () => submit(units.TENG), "secondary"));
         ui.clearControl();
         ui.control().append(row);
       },
       check: (value) => value === task.answer,
       hint: () => {
-        if (task.a.unit === task.b.unit) {
-          common.add(el, common.line("Birlik bir xil — sonlarni solishtir"));
-          ui.bubble("elder", "↻ Birlik bir xil. Qaysi son katta?");
-        } else {
-          const big = U.indexOf(task.a.unit) > U.indexOf(task.b.unit) ? task.a : task.b;
-          const small = big === task.a ? task.b : task.a;
-          common.add(el, common.line(`${big.n} ${big.unit} = ${big.n} × 1024 = ${big.n * 1024} ${small.unit}`));
-          ui.bubble("elder", "↻ Ikkalasini bir xil birlikda solishtir.");
-        }
+        common.add(el, common.line(`1 ${task.unit} = 1024 ${task.small}`));
+        ui.bubble("elder", `↻ Uchalasini ham ${task.small}ga oʻtkaz, keyin solishtir.`);
       },
       solution: () => {
-        const c = inSmall(task);
-        const sign = c.a > c.b ? ">" : "<";
-        common.add(el, common.answerLine(`${c.a} ${c.small} ${sign} ${c.b} ${c.small}`));
+        common.add(el,
+          common.line(task.cards.map((c) => `${c.label} = ${c.value} ${task.small}`).join("; ")),
+          common.answerLine(task.answer === units.TENG ? "Uchalasi teng" : `Eng kattasi: ${task.cards[task.answer].label}`));
       },
     });
   }
@@ -116,13 +102,13 @@
     await sortFiles();
     await trap();
     await definition();
-    await ui.say("elder", "Endi oʻzing solishtir. 3 ta toʻgʻri javob!");
+    await ui.say("elder", `Endi oʻzing solishtir. ${QK.practice.need()} ta toʻgʻri javob!`);
     await practice.exercises({
-      next: (prev) => units.makeCompareTask(prev),
+      next: (prev, correct, tier) => units.makeCompareTask(prev, undefined, tier),
       run: compareTask,
       praise: (task) => {
-        const w = task.answer === 0 ? task.a : task.b;
-        return `${w.n} ${w.unit} kattaroq.`;
+        if (task.answer === units.TENG) return `Uchalasi ham ${task.cards[0].value} ${task.small}.`;
+        return `${task.cards[task.answer].label} — eng kattasi.`;
       },
     });
   }

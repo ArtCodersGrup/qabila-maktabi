@@ -23,7 +23,7 @@
 }
 .ps-katak.belgi { background: var(--asosiy); border-color: #1B4A94; color: #fff; }
 .ps-katak.tepa { background: #D8E6FB; border-color: var(--asosiy); color: #1B4A94; }
-.ps-katak.yashirin { background: #FFE9C7; border-color: var(--yana); color: var(--yana); font-size: 20px; }
+.ps-katak.yashirin { background: #FFE9C7; border-color: var(--yana); color: var(--yana-matn); font-size: 20px; }
 .ps-katak.diagonal { background: #E7DBF7; border-color: #8E5BD0; color: #5B3391; }
 
 .ps-hisob {

@@ -17,7 +17,7 @@
 }
 .men-natija { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 16px; border-radius: 14px; background: #fff; box-shadow: 0 3px 0 var(--soya); }
 .men-orin { font-size: 24px; font-weight: 900; color: var(--togri); }
-.men-son { font-size: 16px; font-weight: 700; color: #7A7266; }
+.men-son { font-size: 16px; font-weight: 700; color: var(--matn-3); }
 
 /* Uzun matn (50 ta soʻz) bir necha qatorga sigʻadi: uch qator koʻrinadi,
    yozilgan sari ichida suriladi (ekran.js dagi scrollIntoView). */
@@ -28,14 +28,14 @@
 }
 
 /* ---------- Tartib roʻyxati ---------- */
-.reyting-holat { font-size: 14px; font-weight: 800; color: #7A7266; }
+.reyting-holat { font-size: 14px; font-weight: 800; color: var(--matn-3); }
 .reyting-qator.keldi .reyting-holat { color: var(--togri); }
 
 /* ---------- Natija jadvali ---------- */
 .natija-jadval { border-collapse: separate; border-spacing: 0 4px; font-size: 16px; font-weight: 800; }
-.natija-jadval th { padding: 2px 8px; font-size: 14px; font-weight: 800; color: #7A7266; }
+.natija-jadval th { padding: 2px 8px; font-size: 14px; font-weight: 800; color: var(--matn-3); }
 .natija-jadval td { padding: 5px 8px; background: #fff; }
-.natija-jadval td:first-child { border-radius: 12px 0 0 12px; color: #7A7266; }
+.natija-jadval td:first-child { border-radius: 12px 0 0 12px; color: var(--matn-3); }
 .natija-jadval td:last-child { border-radius: 0 12px 12px 0; }
 .natija-jadval tr.men td { background: #E3ECFB; }
 .natija-jadval tr.win td { background: #E4F5EE; }

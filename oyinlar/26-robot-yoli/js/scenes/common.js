@@ -111,7 +111,10 @@
     const { el, view, list } = board(field);
     let last = null;
     let pad = null;
-    ui.bubble("elder", "Robotni gulxangacha olib bor.");
+    // tier 2: eng qisqa yo'l sharti — buyruqlar soni aytiladi, yo'lni bola o'zi topadi
+    ui.bubble("elder", task.shortest
+      ? `Robotni gulxangacha ENG QISQA yoʻl bilan olib bor — ${task.shortest} ta buyruq.`
+      : "Robotni gulxangacha olib bor.");
     return practice.tries({
       setup: (submit) => {
         pad = writing(view, list, field, (program, r) => {
@@ -120,8 +123,10 @@
         });
       },
       check: (program) => L.checkTask(task, program),
-      hint: () => {
-        ui.bubble("elder", stopText(last));
+      hint: (program) => {
+        ui.bubble("elder", L.tooLong(task, program)
+          ? `↻ Robot yetdi, lekin ${program.length} ta buyruq bilan. ${task.shortest} ta buyruq yetadi — qisqaroq yoʻl top.`
+          : stopText(last));
         reset(view, list, field);
         pad.lock(false);
       },
@@ -211,11 +216,11 @@
 
   const praise = (task) => (task.type === "read"
     ? "Robot aynan shu katakda toʻxtaydi."
-    : task.type === "trace" ? "Aynan shu buyruqlar!" : "Robot gulxanga yetdi.");
+    : task.type === "trace" ? "Aynan shu buyruqlar!" : task.shortest ? "Robot eng qisqa yoʻldan yetdi." : "Robot gulxanga yetdi.");
 
   function exercises(stage) {
     return practice.exercises({
-      next: (prev) => L.makeTask(stage, prev),
+      next: (prev, correct, tier) => L.makeTask(stage, prev, undefined, tier),
       run: runTask,
       praise,
     });

@@ -55,9 +55,9 @@
     await stepDemo();
     await plusOne();
     await definition();
-    await ui.say("elder", "Endi oʻzing ayt: dastur nima chiqaradi? 3 ta toʻgʻri javob kerak.");
+    await ui.say("elder", `Endi oʻzing ayt: dastur nima chiqaradi? ${QK.practice.need()} ta toʻgʻri javob kerak.`);
     await practice.exercises({
-      next: (prev) => L.resultTask(Math.random, prev),
+      next: (prev, correct, tier) => L.resultTask(Math.random, prev, tier),
       run: (task) => common.resultExercise(task),
       praise: () => "Qutilarni toʻgʻri kuzatding.",
     });

@@ -25,7 +25,7 @@
     await digits();
     await ui.say("elder", "Endi navbat senga. Bu masalalar olimpiadalarda ham uchraydi.");
     await practice.exercises({
-      next: (prev) => L.stage3Task(Math.random, prev),
+      next: (prev, correct, tier) => L.stage3Task(Math.random, prev, tier),
       run: (task) => common.stage3Exercise(task),
       praise: (task) => (task.type === "kod-yoz" ? "Dastur hamma sinovdan oʻtdi." : "Xatoni topding."),
     });

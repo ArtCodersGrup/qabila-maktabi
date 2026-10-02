@@ -91,26 +91,64 @@
   const pick = (arr, rng) => arr[Math.floor(rng() * arr.length)];
   const bits = (n, rng) => Array.from({ length: n }, () => (rng() < 0.5 ? 1 : 0));
 
-  // 1-bosqich: "Bu neyron yonadimi?"
-  function makeFireTask(prev, rng) {
+  const tierOf = (tier) => Math.max(0, Math.min(2, tier || 0));
+
+  function shuffle(arr, rng) {
+    const out = arr.slice();
+    for (let i = out.length - 1; i > 0; i--) {
+      const j = Math.floor(rng() * (i + 1));
+      const tmp = out[i];
+      out[i] = out[j];
+      out[j] = tmp;
+    }
+    return out;
+  }
+
+  // To'g'ri son + chalg'ituvchilar (avval berilgan nomzodlar, keyin qo'shni sonlar) — jami `count` ta, takrorsiz
+  function numberOptions(answer, candidates, rng, count) {
+    const out = [answer];
+    const add = (v) => { if (out.length < (count || 4) && !out.includes(v)) out.push(v); };
+    candidates.forEach(add);
+    for (let d = 1; out.length < (count || 4); d++) {
+      add(answer + d);
+      add(answer - d);
+    }
+    return shuffle(out, rng);
+  }
+
+  // Og'irlik: tier 0 — faqat +1 / −1; tier 1, 2 — −2..2 (0 bo'lmaydi)
+  const weightFor = (t, rng) => (t === 0 ? (rng() < 0.65 ? 1 : -1) : pick([-2, -1, 1, 2], rng));
+
+  // 1-bosqich: ikki qadam — avval yig'indi (4 variant), keyin "yonadimi?".
+  // tier 0: 3 kirish, og'irlik ±1, chegara 1..2; tier 1: og'irlik −2..2, chegara 1..3; tier 2: 4 kirish, chegara 1..4.
+  function makeFireTask(prev, rng, tier) {
     rng = rng || Math.random;
+    const t = tierOf(tier);
+    const n = t >= 2 ? 4 : 3;
     for (;;) {
-      const inputs = bits(3, rng);
-      const weights = Array.from({ length: 3 }, () => (rng() < 0.65 ? 1 : -1));
-      const threshold = pick([1, 2], rng);
+      const inputs = bits(n, rng);
+      const weights = Array.from({ length: n }, () => weightFor(t, rng));
+      const threshold = randInt(1, [2, 3, 4][t], rng);
       if (!inputs.some((x) => x)) continue;
       if (!weights.some((w) => w > 0)) continue;
-      const answer = fire(inputs, weights, threshold);
+      if (t >= 1 && inputs.filter((x) => x).length < 2) continue; // bitta chiroq — qo'shadigan narsa yo'q
+      const sum = weightedSum(inputs, weights);
+      const answer = sum >= threshold;
       if (prev && prev.answer === answer && rng() < 0.5) continue; // javoblar aralash chiqsin
       if (prev && prev.inputs.join() === inputs.join() && prev.weights.join() === weights.join() && prev.threshold === threshold) continue;
-      return { type: "fire", inputs, weights, threshold, answer };
+      // Chalg'ituvchilar — tipik xatolar: hamma og'irlikni qo'shish, yoniq chiroqlarni sanash, chegarani aytish
+      const all = weights.reduce((a, b) => a + b, 0);
+      const lit = inputs.filter((x) => x).length;
+      const sumOptions = numberOptions(sum, [all, lit, threshold], rng, 4);
+      return { type: "fire", inputs, weights, threshold, answer, sum, sumOptions, sumIndex: sumOptions.indexOf(sum), tier: t };
     }
   }
 
-  // 3×3 rasm: kerakli yashirin holat bilan
-  function makeImage(label, rng) {
+  // 3×3 rasm: kerakli yashirin holat bilan. density — ortiqcha bo'yalgan kataklar ulushi (ko'p bo'lsa chiziqni ko'rish qiyin)
+  function makeImage(label, rng, density) {
+    const keep = density || 0.6;
     for (;;) {
-      const image = bits(9, rng).map((x) => (x && rng() < 0.6 ? 1 : 0));
+      const image = bits(9, rng).map((x) => (x && rng() < keep ? 1 : 0));
       if (label === "ikkalasi" || label === "faqat tik") [1, 4, 7].forEach((i) => { image[i] = 1; });
       if (label === "ikkalasi" || label === "faqat yotiq") [3, 4, 5].forEach((i) => { image[i] = 1; });
       if (hiddenLabel(image) === label) return image;
@@ -118,56 +156,83 @@
   }
 
   const LABELS = ["ikkalasi", "faqat tik", "faqat yotiq", "hech biri"];
+  const OUTPUTS = ["krest", "chiziq", "boshqa"];
+  const DENSITY = [0.6, 0.8, 1]; // tier bo'yicha: rasm "shovqini" ortadi
+  const filledCount = (image) => image.reduce((a, b) => a + b, 0);
 
-  // 2-bosqich: "Qaysi neyronlar yonadi?"
-  function makeHiddenTask(prev, rng) {
+  // 2-bosqich: "Qaysi neyronlar yonadi?" (4 variant)
+  function makeHiddenTask(prev, rng, tier) {
     rng = rng || Math.random;
+    const t = tierOf(tier);
     for (;;) {
       const label = pick(LABELS, rng);
-      const image = makeImage(label, rng);
+      const image = makeImage(label, rng, DENSITY[t]);
+      if (t >= 1 && filledCount(image) < 4) continue; // yuqori zinada deyarli bo'sh rasm chiqmaydi
       if (prev && prev.image && prev.image.join() === image.join()) continue;
-      return { type: "hidden", image, answer: label, options: LABELS };
+      return { type: "hidden", image, answer: label, options: LABELS, tier: t };
     }
   }
 
-  // 2-bosqich: "Tarmoq nima deydi?"
-  function makeOutputTask(prev, rng) {
+  // 2-bosqich: "Tarmoq nima deydi?" — chiqish qatlamida 3 ta neyron bor, shuning uchun bu savol yolg'iz kelmaydi:
+  // makeBothTask da avval 1-qatlam (4 variant), keyin chiqish so'raladi.
+  function makeOutputTask(prev, rng, tier) {
     rng = rng || Math.random;
+    const t = tierOf(tier);
     for (;;) {
-      const image = makeImage(pick(LABELS, rng), rng);
+      const image = makeImage(pick(LABELS, rng), rng, DENSITY[t]);
       if (prev && prev.image && prev.image.join() === image.join()) continue;
-      return { type: "output", image, answer: output(image), options: ["krest", "chiziq", "boshqa"] };
+      return { type: "output", image, answer: output(image), options: OUTPUTS, tier: t };
     }
   }
 
-  const makeStage2Task = (k, prev, rng) => {
+  // 2-bosqich: ikki qadam — "1-qatlamda qaysi neyronlar yonadi?" (4 variant) → "tarmoq nima deydi?" (3 variant)
+  function makeBothTask(prev, rng, tier) {
+    const h = makeHiddenTask(prev, rng, tier);
+    return { type: "both", image: h.image, hidden: h.answer, hiddenOptions: LABELS, answer: output(h.image), options: OUTPUTS, tier: h.tier };
+  }
+
+  // Mashq tartibi: avval faqat 1-qatlam, keyin ikki qadamli (1-qatlam → chiqish)
+  const makeStage2Task = (k, prev, rng, tier) => {
     rng = rng || Math.random;
-    const useHidden = k === 0 ? true : k === 1 ? false : rng() < 0.5;
-    return useHidden ? makeHiddenTask(prev, rng) : makeOutputTask(prev, rng);
+    return k === 0 ? makeHiddenTask(prev, rng, tier) : makeBothTask(prev, rng, tier);
   };
 
-  // 3-bosqich: neyron xato qildi — og'irlikni oshiramizmi yoki kamaytiramizmi?
-  function makeUpdateTask(prev, rng) {
+  // 3-bosqich: neyron xato qildi — ikki qadam: "oshiramizmi / kamaytiramizmi?" va
+  // "yoniq kirishlarning og'irligi 1 ga o'zgarsa, yangi yig'indi nechchi?" (4 variant).
+  // tier 0: 3 kirish, og'irlik −1..2, chegara 1..3; tier 1: og'irlik −2..3; tier 2: 4 kirish, chegara 1..4.
+  function makeUpdateTask(prev, rng, tier) {
     rng = rng || Math.random;
+    const t = tierOf(tier);
+    const n = t >= 2 ? 4 : 3;
     for (;;) {
-      const inputs = bits(3, rng);
+      const inputs = bits(n, rng);
       if (!inputs.some((x) => x)) continue;
-      const weights = Array.from({ length: 3 }, () => randInt(-1, 2, rng));
-      const threshold = randInt(1, 3, rng);
+      const weights = Array.from({ length: n }, () => (t === 0 ? randInt(-1, 2, rng) : randInt(-2, 3, rng)));
+      const threshold = randInt(1, t >= 2 ? 4 : 3, rng);
+      const lit = inputs.filter((x) => x).length;
+      if (t >= 1 && lit < 2) continue;
       const out = fire(inputs, weights, threshold);
       const target = !out; // xato bo'lishi uchun kerakli javob — teskarisi
       const answer = updateRule(target, out);
       if (prev && prev.answer === answer && rng() < 0.5) continue;
       if (prev && prev.inputs.join() === inputs.join() && prev.weights.join() === weights.join()) continue;
-      return { type: "update", inputs, weights, threshold, target, output: out, answer };
+      const sum = weightedSum(inputs, weights);
+      const step = answer === "oshir" ? lit : -lit; // har yoniq kirish og'irligi 1 ga o'zgaradi
+      const newSum = sum + step;
+      // Chalg'ituvchilar: teskari tomonga, o'zgarmagan, faqat 1 ga o'zgargan, hamma kirish o'zgargan
+      const newSumOptions = numberOptions(newSum, [sum - step, sum, sum + Math.sign(step), sum + Math.sign(step) * n], rng, 4);
+      return {
+        type: "update", inputs, weights, threshold, target, output: out, answer,
+        sum, lit, newSum, newSumOptions, newSumIndex: newSumOptions.indexOf(newSum), tier: t,
+      };
     }
   }
 
   const api = {
-    DEMO, TIK, YOTIQ, LINE_THRESHOLD, TABLES, THRESHOLDS, LABELS,
+    DEMO, TIK, YOTIQ, LINE_THRESHOLD, TABLES, THRESHOLDS, LABELS, OUTPUTS,
     weightedSum, fire, hidden, output, hiddenLabel,
     tableErrors, bestOneNeuron, canOneNeuron, twoLayer, updateRule, trainNeuron,
-    makeFireTask, makeHiddenTask, makeOutputTask, makeStage2Task, makeUpdateTask,
+    numberOptions, makeFireTask, makeHiddenTask, makeOutputTask, makeBothTask, makeStage2Task, makeUpdateTask,
   };
 
   if (typeof module !== "undefined" && module.exports) module.exports = api;

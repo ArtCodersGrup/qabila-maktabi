@@ -37,3 +37,19 @@ boʻlishi VA bilet boʻlishi kerak» → qaysi amal kerak?
 - `js/logic.js` — `qiymat()` va `jadval()` (ikkalasi ham Pythonni ishga tushiradi), toʻrt xil savol.
 - `tests/logic.test.js` — 10 test: rostlik jadvallari, De Morgan, savol javoblarining
   hisoblanishi, chegara xatolarining rad etilishi.
+
+## 2026-10-02 qiyinlik yangilanishi
+
+Sabab: hisobot-5 (C jadvali) — 1- va 2-bosqich mashqlari bitta «True / False» tugmasi edi (50% taxmin);
+QOIDALAR §4.3: variantli savolda kamida 4 variant, 2 variantli savol yolgʻiz kelmaydi.
+
+- **1-bosqich:** bitta `print` ichida **uchta solishtirish** — `print(a > b, a == b, a != b)` uslubida, amallar
+  tasodifiy. Har qatorga True/False tanlanadi, uchalasi toʻgʻri boʻlsagina hisoblanadi (8 kombinatsiya, hammasi
+  uchraydi — testda tekshiriladi). Zina: 0 — sodda `a amal b`; 1 — `a + 1`, `a % 2 == 0`; 2 — manfiy sonlar,
+  `a * 2`, `a - b`. Teng sonlar ataylab uchraydi (`==` va `>=` farqi).
+- **2-bosqich:** ifoda **ikki holat** uchun birga soʻraladi (4 kombinatsiya). Oxirgi zinada murakkab ifodalar:
+  `(a or b) and not c`, `a or b and c` (amallar tartibi), `(not (a or b)) == (not a and not b)` (De Morgan).
+  Rostlik jadvali 8 qatorgacha (a, b, c). Hayotiy gaplarda toʻrtinchi variant — `and not`.
+- **3-bosqich:** oʻqiladigan kodlarga ikki satrli va uch shartli misollar; yoziladigan masalalarga `kabisa(yil)`,
+  `uchburchak(a, b, c)`, `faqat_bittasi(a, b)` — har biriga 5–6 test, tipik xato yechimlar testda yiqiladi.
+- Yangi CSS yoʻq: tanlov tugmalari umumiy `btn sm` / `btn sm secondary`. Testlar: 10 → 13.

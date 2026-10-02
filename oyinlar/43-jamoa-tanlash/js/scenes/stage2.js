@@ -39,7 +39,7 @@
     await xossalar();
     await ui.say("elder", "Endi savollar aralash keladi. Avval tartib muhimligini oʻyla.");
     await practice.exercises({
-      next: (prev) => L.tartibTask(Math.random, prev),
+      next: (prev, correct, tier) => L.tartibTask(Math.random, prev, tier),
       run: (task) => common.tartibExercise(task),
       praise: (task) => (task.qoida === "c" ? "Tartib muhim emas: " : "Tartib muhim: ") + task.hisob,
     });
