@@ -389,7 +389,7 @@ def test_oqituvchi_sorovi(c):
         await e.dispose()
         return tok
 
-    c.cookies.set("kj_sessiya", asyncio.run(och()), domain="testserver")
+    c.cookies.set("kj_sessiya", asyncio.run(och()))
     assert c.post("/api/hisob/oqituvchi-sorov").json() == {"detail": "ism-kerak"}
     c.post("/api/hisob/profil", json={"ism": "Dilnoza R."})
     r = c.post("/api/hisob/oqituvchi-sorov")

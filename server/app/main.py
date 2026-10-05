@@ -2,12 +2,17 @@
 import os
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Response
+from fastapi import FastAPI, Request, Response
+from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from . import config
+from .cheklov import Cheklov
 from .db import baza_tirikmi, make_engine
+from .hisob import router as hisob_router
 from .xonalar import Boshqaruvchi, router as xonalar_router
+
+XAVFSIZ = ("GET", "HEAD", "OPTIONS")
 
 
 def create_app(db_url: str | None = None) -> FastAPI:
@@ -20,7 +25,19 @@ def create_app(db_url: str | None = None) -> FastAPI:
     # Avtomatik hujjat sahifalari yopiq — ochiq saytda API tuzilishi ko'rinmasin
     app = FastAPI(title="kelajagim", docs_url=None, redoc_url=None, openapi_url=None, lifespan=lifespan)
     app.state.xonalar = Boshqaruvchi()
+    app.state.cheklov_login = Cheklov(10, 15 * 60)
+    app.state.cheklov_ip = Cheklov(30, 15 * 60)
+
+    @app.middleware("http")
+    async def origin_tekshir(request: Request, call_next):
+        # CSRF: o'zgartiradigan so'rov faqat o'z sahifalarimizdan (brauzer Origin ni o'zi qo'yadi)
+        if request.method not in XAVFSIZ and request.url.path.startswith("/api/"):
+            if request.headers.get("origin") not in config.originlar():
+                return JSONResponse({"detail": "origin"}, status_code=403)
+        return await call_next(request)
+
     app.include_router(xonalar_router)
+    app.include_router(hisob_router)
 
     @app.get("/api/salomat")
     async def salomat(response: Response):
