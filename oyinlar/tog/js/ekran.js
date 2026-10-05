@@ -35,26 +35,30 @@
 
   // Savol qiyinligi balandlikka qarab (DIZAYN 2.2). Ketma-ket bir xil savol bermaymiz.
   // mavzular — tanlangan mavzular roʻyxati (boʻsh boʻlsa — hammasi).
-  function nextQ(level, prev, mavzular) {
+  // rng berilsa (o'qituvchi "savollar hammaga bir xil" ni tanlagan) — savol shu urug'dan aniq hosil bo'ladi;
+  // shunda oldingi savol bilan solishtirilmaydi: oldingi savol bolada har xil bo'lishi mumkin, natija esa bir xil bo'lishi kerak
+  function nextQ(level, prev, mavzular, rng) {
+    const r = rng || Math.random;
+    const tanla = (list) => list[Math.floor(r() * list.length)];
     const royxat = (mavzular && mavzular.length ? savollar.TOPICS.filter((t) => mavzular.includes(t.id)) : savollar.TOPICS);
     for (let k = 0; k < 60; k++) {
-      const topic = pick(royxat).id;
+      const topic = tanla(royxat).id;
       const kinds = savollar.kindsOf(topic, level);
       if (!kinds.length) continue;
-      const q = savollar.make(pick(kinds), level, Math.random, () => true);
-      if (q && (!prev || q.key !== prev.key)) return q;
+      const q = savollar.make(tanla(kinds), level, r, () => true);
+      if (q && (rng || !prev || q.key !== prev.key)) return q;
     }
     // Tanlangan mavzuda shu darajada savol topilmadi — boshqa darajadan beramiz
     for (const daraja of [1, 2, 3]) {
       for (const t of royxat) {
         const kinds = savollar.kindsOf(t.id, daraja);
         if (kinds.length) {
-          const q = savollar.make(pick(kinds), daraja, Math.random, () => true);
+          const q = savollar.make(tanla(kinds), daraja, r, () => true);
           if (q) return q;
         }
       }
     }
-    return savollar.make("sozlar", 1, Math.random, () => true);
+    return savollar.make("sozlar", 1, r, () => true);
   }
 
   // ---------- Mavzu tanlash ----------
@@ -154,12 +158,17 @@
     let rejim = "";
     const hisob = (me) => me.togri + me.xato;
 
+    let urinishPog = -1; // urinish raqami shu pog'onada (xatodan keyin yangi savol — boshqa urinish)
+    let urinish = 0;
     function savolBer(me) {
       rejim = "savol";
       pastki.innerHTML = "";
       pauzaOyna = null;
-      joriy = nextQ(T.daraja(t, me.pogona), joriy, tanlangan);
-      QK.probe = Object.assign(QK.probe || {}, { savol: joriy });
+      if (me.pogona !== urinishPog) { urinishPog = me.pogona; urinish = 0; } else urinish++;
+      const s = holat();
+      const rng = s && s.urug ? T.urugRng(s.urug, me.pogona, urinish) : null; // bir balandlikda — bir xil savol
+      joriy = nextQ(T.daraja(t, me.pogona), joriy, tanlangan, rng);
+      QK.probe = Object.assign(QK.probe || {}, { savol: joriy, savolPog: me.pogona, urinish });
       togUi.savol(pastki, joriy);
       savolUi.answerPad(joriy, (value) => {
         const ok = savollar.check(joriy, value);

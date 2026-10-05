@@ -179,3 +179,8 @@
   .savol-karta, .pauza, .tomoshabin { padding: 6px 10px; gap: 4px; }
   .pauza-sanoq { font-size: 22px; }
 }
+
+/* O'qituvchi sozlamalari: savollar va qolib ketish (2026-10-05) */
+.tog-sozlama { display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 560px; margin: 0 auto; }
+.tog-sozlama-nom { font-size: 17px; font-weight: 900; color: var(--matn-2); }
+.menyu-karta.tanlangan { border-color: var(--togri); background: var(--togri-och); box-shadow: 0 4px 0 var(--togri-qora); }

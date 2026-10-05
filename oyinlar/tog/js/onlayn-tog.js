@@ -64,15 +64,58 @@
       orqaga: () => host(qayt),
       onDavom: async (mavzular) => {
         mavzulariniSaqla(mavzular);
+        const sozlama = await sozlamaTanlash();
         // Kirgan o'qituvchi — natijalar qaysi sinfga yozilsin (boshqalar uchun so'ralmaydi)
         const sinf = QK.sinfTanlov ? await QK.sinfTanlov(E) : null;
-        lobbi(togId, qayt, mavzular, sinf);
+        lobbi(togId, qayt, mavzular, sinf, sozlama);
       },
     });
     ui.bubble("elder", "Bugun qaysi mavzulardan soʻraymiz?");
   }
 
-  function lobbi(togId, qayt, mavzular, sinf) {
+  // ---------- O'qituvchi sozlamalari (2026-10-05): savollar bir xilmi va orqada qolganlar chiqadimi ----------
+  const SOZLAMA_XOTIRA = "tog:sozlama:v1";
+  function sozlamaOl() {
+    try {
+      const d = JSON.parse(root.localStorage.getItem(SOZLAMA_XOTIRA) || "null");
+      if (d && typeof d.birXil === "boolean" && typeof d.chiqish === "boolean") return d;
+    } catch (e) { /* yo'q */ }
+    return { birXil: false, chiqish: true }; // sukut — avvalgidek
+  }
+
+  function sozlamaTanlash() {
+    const s = sozlamaOl();
+    return new Promise((resolve) => {
+      function chiz() {
+        const el = E.box(false);
+        const guruh = (sarlavha, variantlar, joriy, ozgar) => h("div", { class: "tog-sozlama" },
+          h("div", { class: "tog-sozlama-nom", text: sarlavha }),
+          h("div", { class: "tog-menyu" }, ...variantlar.map((v) => h("button", {
+            class: "menyu-karta" + (v.qiymat === joriy ? " tanlangan" : ""), type: "button", "aria-pressed": String(v.qiymat === joriy),
+            onClick: () => { sound.play("tap"); ozgar(v.qiymat); chiz(); },
+          }, h("span", { class: "menyu-nom", text: (v.qiymat === joriy ? "✓ " : "") + v.nom }), h("span", { class: "menyu-izoh", text: v.izoh })))));
+        el.append(h("h1", { class: "game-title", text: "Sozlamalar" }),
+          guruh("Savollar", [
+            { qiymat: false, nom: "Har kimga har xil", izoh: "Qoʻshnisidan koʻchirib boʻlmaydi" },
+            { qiymat: true, nom: "Hammaga bir xil", izoh: "Bir pogʻonaga yetgan bolalar aynan bir xil savolni oladi" },
+          ], s.birXil, (v) => { s.birXil = v; }),
+          guruh("Orqada qolganlar", [
+            { qiymat: true, nom: "Chiqib ketadi", izoh: "Yetakchidan bir necha pogʻona orqada qolgan bola tomoshabin boʻladi" },
+            { qiymat: false, nom: "Chiqmaydi", izoh: "Hamma oxirigacha oʻynaydi" },
+          ], s.chiqish, (v) => { s.chiqish = v; }));
+        E.buttons([{ label: "Davom etish", onClick: () => {
+          try { root.localStorage.setItem(SOZLAMA_XOTIRA, JSON.stringify(s)); } catch (e) { /* saqlanmadi */ }
+          resolve(s);
+        } }]);
+        ui.bubble("elder", "Qoidalarni tanlang.");
+      }
+      chiz();
+    });
+  }
+  const sozlamaMatni = (s) => `Savollar: ${s.birXil ? "hammaga bir xil" : "har kimga har xil"} · Orqada qolganlar: ${s.chiqish ? "chiqib ketadi" : "chiqmaydi"}`;
+
+  function lobbi(togId, qayt, mavzular, sinf, sozlama) {
+    const qoidalar = sozlama || sozlamaOl();
     const code = onlayn.makeCode();
     let odamlar = []; // [{ id, qahramon }]
     let state = null; // o'yin boshlangach — hisob shu yerda
@@ -89,8 +132,9 @@
       h("div", { class: "code-lead", text: "Xona kodi:" }),
       h("div", { class: "code-big", text: code }),
       sinf ? sinfIzoh : null,
+      h("p", { class: "tog-note", text: sozlamaMatni(qoidalar) }),
       holati, royxat);
-    QK.probe = { rejim: "host", code, odamlar, tog: togId };
+    QK.probe = { rejim: "host", code, odamlar, tog: togId, sozlama: qoidalar };
 
     const chiqish = () => { if (room) room.leave(); clearInterval(timer); qayt(); };
 
@@ -125,7 +169,11 @@
     }
 
     function oyin() {
-      state = T.create({ tog: togId, players: odamlar, now: Date.now(), mavzular });
+      state = T.create({
+        tog: togId, players: odamlar, now: Date.now(), mavzular,
+        qoida: qoidalar.chiqish ? "chegara" : "yoq",
+        urug: qoidalar.birXil ? 1 + Math.floor(Math.random() * 4294967294) : 0, // har o'yinda yangi urug'
+      });
       QK.probe.state = state;
       sound.play("win");
       const box = E.box(true, "tog-oyin");

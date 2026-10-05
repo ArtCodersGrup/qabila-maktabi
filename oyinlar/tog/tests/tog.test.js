@@ -169,3 +169,29 @@ test("ikkinchi qoida (oxirgi o'rindagi chiqadi) — zaxira variant sifatida ishl
   const x = simulate({ tog: "hazrati", n: 12, rng: rng(5), opt: { qoida: "oxirgi", bekat: 2 } });
   assert.ok(x.golib && x.sekund >= 90, "robotlar bilan ham o'yin normal davom etadi");
 });
+
+test("qoida «yoq»: hech kim chiqib ketmaydi, g'olib — cho'qqiga birinchi chiqqan", () => {
+  const s = T.create({ tog: "chimyon", players: players(3), now: 0, qoida: "yoq" });
+  let t = 2000;
+  for (let k = 0; k < 14; k++) { T.javob(s, "p0", true, t); t += 2000; }
+  assert.equal(s.oyinchilar.p0.pogona, 14);
+  assert.ok(!s.oyinchilar.p1.chiqdi && !s.oyinchilar.p2.chiqdi, "14 pog'ona orqada ham chiqmadi");
+  T.javob(s, "p0", true, t);
+  assert.equal(s.tugadi, true);
+  assert.equal(s.golib, "p0");
+  assert.equal(s.sabab, "chogqi");
+  assert.deepEqual(T.QOIDALAR, ["chegara", "oxirgi", "yoq"]);
+});
+
+test("urug'li tasodif: bir xil urug', pog'ona va urinish — bir xil son; boshqasi — boshqa", () => {
+  const ketma = (r) => [r(), r(), r()];
+  assert.deepEqual(ketma(T.urugRng(12345, 3, 0)), ketma(T.urugRng(12345, 3, 0)));
+  assert.notDeepEqual(ketma(T.urugRng(12345, 3, 0)), ketma(T.urugRng(12345, 4, 0)), "boshqa pog'ona");
+  assert.notDeepEqual(ketma(T.urugRng(12345, 3, 0)), ketma(T.urugRng(12345, 3, 1)), "xatodan keyingi urinish");
+  assert.notDeepEqual(ketma(T.urugRng(12345, 3, 0)), ketma(T.urugRng(999, 3, 0)), "boshqa o'yin");
+  const r = T.urugRng(7, 0, 0);
+  for (let k = 0; k < 1000; k++) { const x = r(); assert.ok(x >= 0 && x < 1); }
+  const s = T.create({ tog: "chimyon", players: players(2), now: 0, urug: 4242 });
+  assert.equal(s.urug, 4242);
+  assert.equal(T.create({ tog: "chimyon", players: players(2), now: 0 }).urug, 0, "sukut — har xil savollar");
+});

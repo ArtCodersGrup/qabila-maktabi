@@ -38,6 +38,8 @@
       tgr: r.map((p) => p.togri),
       xat: r.map((p) => p.xato),
       qoldi: Math.max(0, Math.ceil((s.tugaydi - now) / 1000)),
+      urug: s.urug || 0, // 0 — har kimga har xil savol
+      qoida: s.qoida || "chegara",
       tugadi: s.tugadi ? 1 : 0,
       golib: s.golib || "",
       sabab: s.sabab || "",
@@ -54,6 +56,8 @@
     if (!["pog", "chiq", "pauza", "tgr", "xat"].every((k) => p[k].every((v) => typeof v === "number" && v >= 0 && v < 100000))) return false;
     if (typeof p.qoldi !== "number" || p.qoldi < 0) return false;
     if (p.sabab && !SABABLAR.includes(p.sabab)) return false;
+    if (p.urug !== undefined && !(Number.isInteger(p.urug) && p.urug >= 0 && p.urug < 4294967296)) return false;
+    if (p.qoida !== undefined && !T.QOIDALAR.includes(p.qoida)) return false;
     if (p.mav && (!Array.isArray(p.mav) || p.mav.length > 16 || !p.mav.every((v) => typeof v === "string"))) return false;
     return !!T.TOGLAR.find((t) => t.id === p.tog);
   }
@@ -76,6 +80,8 @@
       tugadi: !!p.tugadi,
       golib: p.golib || null,
       sabab: p.sabab || null,
+      urug: p.urug || 0,
+      qoida: p.qoida || "chegara",
     };
     p.ids.forEach((id, k) => {
       s.oyinchilar[id] = {

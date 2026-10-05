@@ -48,7 +48,24 @@
   // qoida: "chegara" — yetakchidan chegara pog'ona orqada qolgan chiqadi (muallif qoidasi);
   //        "oxirgi" — yetakchi har bekatdan o'tganda eng pastdagi bitta o'yinchi chiqadi.
   // boshlanish: qoida yetakchi tog'ning qaysi qismini bosgandan keyin ishlashi (0.5 — yarim yo'l).
-  function create({ tog, players, now, daqiqa, qoida, boshlanish, bekat, mavzular }) {
+  // Qolib ketish qoidalari: "yoq" — hech kim chiqmaydi (o'qituvchi sozlamasi, 2026-10-05)
+  const QOIDALAR = ["chegara", "oxirgi", "yoq"];
+
+  // Savollar hammaga bir xil bo'lsa: urug' (o'yin uchun bitta son) + pog'ona + shu pog'onadagi urinish raqami
+  // → bir xil tasodif ketma-ketligi. Bir balandlikka yetgan bolalar aynan bir xil savolni oladi.
+  function urugRng(urug, pogona, urinish) {
+    let a = ((urug >>> 0) ^ Math.imul((pogona | 0) + 1, 0x9e3779b1) ^ Math.imul((urinish | 0) + 1, 0x85ebca77)) >>> 0;
+    return () => {
+      a = (a + 0x6d2b79f5) >>> 0; // mulberry32
+      let t = a;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  // urug: 0 — har kimga har xil savol, aks holda — bir balandlikda bir xil
+  function create({ tog, players, now, daqiqa, qoida, boshlanish, bekat, mavzular, urug }) {
     const t = togById(tog);
     const minutes = daqiqa || t.daqiqa;
     const state = {
@@ -60,7 +77,8 @@
       chegara: t.chegara,
       oyinchilar: {},
       tartib: players.map((p) => p.id),
-      qoida: qoida || "chegara",
+      qoida: QOIDALAR.includes(qoida) ? qoida : "chegara",
+      urug: (urug >>> 0) || 0,
       boshlanish: boshlanish == null ? 0.5 : boshlanish,
       bekat: bekat || 2, // "oxirgi" qoidasida: yetakchi har necha pog'onada bittadan chiqarish
       oxirgiBekat: 0,
@@ -169,7 +187,7 @@
   }
 
   const api = {
-    TOGLAR, DEFAULT_TOG, QAHRAMONLAR, MIN_PLAYERS, MAX_PLAYERS, PAUZA, JIM,
+    TOGLAR, DEFAULT_TOG, QAHRAMONLAR, MIN_PLAYERS, MAX_PLAYERS, PAUZA, JIM, QOIDALAR, urugRng,
     togById, yarim, daraja, create, javob, tekshir, reyting, chiqar, javobBeraOladi, jim, leader,
   };
 

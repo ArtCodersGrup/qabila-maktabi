@@ -143,3 +143,22 @@ test("mavzular ham uzatiladi: bola oʻqituvchi tanlagan mavzudan savol oladi", (
   assert.equal(P.yaxshiPaket(Object.assign({}, p, { mav: new Array(17).fill("x") })), false);
   assert.equal(P.yaxshiPaket(Object.assign({}, p, { mav: [1, 2] })), false);
 });
+
+test("paket urug' va qoidani yetkazadi; noto'g'ri qiymat rad etiladi", () => {
+  const T2 = require("../js/tog.js");
+  const s = T2.create({ tog: "chimyon", players: [{ id: "a1b2c3", qahramon: "qizil" }, { id: "d4e5f6", qahramon: "kok" }], now: 0, qoida: "yoq", urug: 987654 });
+  const p = P.paket(s, 1000);
+  assert.equal(p.urug, 987654);
+  assert.equal(p.qoida, "yoq");
+  assert.ok(P.yaxshiPaket(p));
+  assert.ok(O.validMessage({ type: "holat", data: p, t: 1, from: "host" }, P.TYPES));
+  const h = P.holat(p, 1000);
+  assert.equal(h.urug, 987654);
+  assert.equal(h.qoida, "yoq");
+  assert.ok(!P.yaxshiPaket(Object.assign({}, p, { qoida: "boshqa" })));
+  assert.ok(!P.yaxshiPaket(Object.assign({}, p, { urug: -1 })));
+  const eski = Object.assign({}, p);
+  delete eski.urug; delete eski.qoida;
+  assert.ok(P.yaxshiPaket(eski), "eski versiyadagi paket ham qabul qilinadi");
+  assert.equal(P.holat(eski, 0).urug, 0);
+});
