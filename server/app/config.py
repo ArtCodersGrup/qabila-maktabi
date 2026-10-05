@@ -24,3 +24,14 @@ def google():
 
 def google_qaytish() -> str:
     return os.environ.get("GOOGLE_REDIRECT", "https://kelajagim.uz/api/hisob/google/qaytish")
+
+
+def pochta():
+    """(gmail, app_password) yoki None — xat yuborish sozlanmagan."""
+    u, p = os.environ.get("SMTP_USER"), os.environ.get("SMTP_PAROL")
+    return (u, p) if u and p else None
+
+
+def sayt() -> str:
+    # Xatlardagi havolalar shu manzilga olib boradi
+    return os.environ.get("KELAJAGIM_SAYT", "https://kelajagim.uz").rstrip("/")

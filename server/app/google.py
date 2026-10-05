@@ -61,10 +61,10 @@ async def qaytish(request: Request, code: str = "", state: str = "", conn=Depend
     if uid is None and email:
         # admin CLI orqali email bilan oldindan yaratilgan yozuv — birinchi kirishda bog'lanadi
         uid = (await conn.execute(text(
-            "update users set google_sub = :s where id = (select id from users where lower(email) = :e "
+            "update users set google_sub = :s, email_tasdiq = true where id = (select id from users where lower(email) = :e "
             "and google_sub is null and login is null order by id limit 1) returning id"), {"s": sub, "e": email})).scalar()
     if uid is None:
-        uid = (await conn.execute(text("insert into users(google_sub, email) values (:s, :e) returning id"),
+        uid = (await conn.execute(text("insert into users(google_sub, email, email_tasdiq) values (:s, :e, true) returning id"),
                                   {"s": sub, "e": email})).scalar()
     elif email:
         await conn.execute(text("update users set email = :e where id = :i"), {"e": email, "i": uid})

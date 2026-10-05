@@ -10,6 +10,7 @@ from . import config
 from .admin import router as admin_router
 from .cheklov import Cheklov
 from .db import baza_tirikmi, make_engine
+from .pochta import yubor as pochta_yubor
 from .google import foydalanuvchi as google_foydalanuvchi, router as google_router
 from .hisob import router as hisob_router
 from .progress import router as progress_router
@@ -32,6 +33,8 @@ def create_app(db_url: str | None = None) -> FastAPI:
     app.state.cheklov_login = Cheklov(10, 15 * 60)
     app.state.cheklov_ip = Cheklov(30, 15 * 60)
     app.state.google = google_foydalanuvchi  # testlarda soxta Google bilan almashtiriladi
+    app.state.pochta = pochta_yubor  # testlarda soxta pochta bilan almashtiriladi
+    app.state.cheklov_xat = Cheklov(3, 15 * 60)  # bitta emailga 15 daqiqada ko'pi bilan 3 ta xat
 
     @app.middleware("http")
     async def origin_tekshir(request: Request, call_next):

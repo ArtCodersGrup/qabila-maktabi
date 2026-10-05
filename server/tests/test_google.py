@@ -32,7 +32,7 @@ def mijoz(info):
 def test_sozlama(toza, monkeypatch):
     monkeypatch.delenv("GOOGLE_CLIENT_ID", raising=False)
     with mijoz({}) as c:
-        assert c.get("/api/hisob/sozlama").json() == {"google": False}
+        assert c.get("/api/hisob/sozlama").json()["google"] is False
         assert c.get("/api/hisob/google").status_code == 503
 
 
@@ -47,7 +47,7 @@ def oqim(c):
 
 def test_google_yangi_foydalanuvchi(toza, google_env):
     with mijoz({"sub": "g-777", "email": "bola@gmail.com", "email_verified": True}) as c:
-        assert c.get("/api/hisob/sozlama").json() == {"google": True}
+        assert c.get("/api/hisob/sozlama").json()["google"] is True
         state = oqim(c)
         r = c.get("/api/hisob/google/qaytish", params={"code": "yaxshi-kod", "state": state})
         assert r.status_code == 302 and r.headers["location"] == "/kirish/"
