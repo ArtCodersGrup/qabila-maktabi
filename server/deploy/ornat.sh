@@ -2,6 +2,7 @@
 # Serverda root sifatida (deploy.sh chaqiradi). Qayta ishga tushirsa ham xavfsiz.
 # Boshqa loyihalarga tegmaydi: faqat kelajagim foydalanuvchisi, bazasi, servisi va nginx fayli.
 set -euo pipefail
+export LC_ALL=C.UTF-8  # Mac'dan kelgan LC_CTYPE=UTF-8 serverda yo'q — perl/psql ogohlantirmasin
 ROOT=/srv/kelajagim
 API=$ROOT/api
 cd /tmp  # postgres foydalanuvchisi /root ga kira olmaydi
