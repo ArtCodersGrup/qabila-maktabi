@@ -9,7 +9,7 @@ Naqsh — «Togʻga chiqish» va «Yozuv poygasi» xonalari: oʻqituvchi qurilma
 
 ## Qoidalar
 
-- **Raund:** har raundda hamma tirik bola **8 soniyada bitta satr** yozadi (49-oʻyindagi buyruqlar: `move`, `back`, `left`, `right`, `fire`, `reload`, `scan`, `radar`, `hp`, `ammo`; satrda koʻpi bilan 8 harakat). Hamma yuborsa yoki vaqt tugasa — doskada raund bajariladi.
+- **Raund:** har raundda hamma tirik bola **8 soniyada bitta satr** yozadi (49-oʻyindagi buyruqlar: `move`, `back`, `left`, `right`, `fire`, `reload`, `scan`, `radar`, `hp`, `ammo`; satrda koʻpi bilan 8 harakat). Hamma yuborsa yoki vaqt tugasa — doskada raund bajariladi; keyingi raund **2 soniya tanaffusdan** keyin boshlanadi.
 - **Bir vaqtda bajarilish:** harakatlar **navbatma-navbat** qoʻyiladi: avval har bolaning 1-harakati, keyin 2-si… Bolalar tartibi — **kim oldin yuborgan** (tez bosgan yutadi; ikkovida bittadan jon qolib bir-biriga otsa, birinchi yuborgan otib yutadi). Yuborgach maydon keyingi raundgacha qulflanadi; birinchi yuborilgan satr hisobga olinadi (muallif qarori 2026-10-05). Satr yubormagan bola shu raundda turadi.
 - **Hamma bir xil holatga qarab yozadi:** `scan()` / `radar()` raund **boshidagi** holatni koʻradi (bola yozayotganda raqiblar ham yozyapti).
 - **Jon 3, oʻq 3, koʻrish masofasi teng** — tank dueli kabi adolatli. Tanklar maydon chetlarida simmetrik joylarda tugʻiladi, oʻrtada 2–3 toʻsiq.

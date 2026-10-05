@@ -10,6 +10,7 @@
   const MAX_ODAM = 8;
   const MIN_ODAM = 2;
   const RAUND_SONIYA = 8;
+  const TANAFFUS_SONIYA = 2; // raund bajarilgach, keyingisi boshlanguncha (natijani ko'rib olish uchun)
   const JANG_DAQIQA = 5; // jang raundlar soni bilan emas, umumiy vaqt bilan tugaydi (muallif qarori)
   const JON = 3;
   const UZOQ = 300; // hammaga teng — bolalar orasida ustunlik bo'lmasin
@@ -208,7 +209,7 @@
   }
 
   const api = {
-    MAX_ODAM, MIN_ODAM, RAUND_SONIYA, JANG_DAQIQA, JON, UZOQ, HARAKAT_NOMLARI, QAHRAMONLAR, JOYLAR, TOSIQLAR,
+    MAX_ODAM, MIN_ODAM, RAUND_SONIYA, TANAFFUS_SONIYA, JANG_DAQIQA, JON, UZOQ, HARAKAT_NOMLARI, QAHRAMONLAR, JOYLAR, TOSIQLAR,
     qahById, markazga, maydon, nusxa, tank, tiriklar, argument, yozibOl, harakatlarToza, raundniBajar, tekshir, vaqtTugadi,
     reyting, golib, tartibYasa, holatPaketi, holatniQoy, natijaPaketi, natijaniOch,
   };

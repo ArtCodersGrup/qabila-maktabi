@@ -115,6 +115,7 @@
     let jangTugaydi = 0; // jang shu paytda tugaydi (JANG_DAQIQA)
     const jangQoldi = () => Math.max(0, Math.ceil((jangTugaydi - Date.now()) / 1000));
     let bajarilyapti = false;
+    let tanaffus = false; // raundlar orasidagi tanaffus
     let koz = null;
     let taymer = null;
     let room = null;
@@ -226,7 +227,7 @@
 
     function jangChiz() {
       if (!m || !jadval) return;
-      sarlavha.textContent = m.tugadi ? "Jang tugadi" : bajarilyapti ? `${m.raund}-raund bajarilmoqda…` : `${m.raund + 1}-raund · ⏱ ${Math.max(0, qoldi)} s · jang ${mmss(jangQoldi())}`;
+      sarlavha.textContent = m.tugadi ? "Jang tugadi" : tanaffus ? `Keyingi raund ${X.TANAFFUS_SONIYA} soniyadan keyin…` : bajarilyapti ? `${m.raund}-raund bajarilmoqda…` : `${m.raund + 1}-raund · ⏱ ${Math.max(0, qoldi)} s · jang ${mmss(jangQoldi())}`;
       jadval.innerHTML = "";
       for (const t of m.tanklar) {
         const holat = !t.tirik ? "yiqildi" : harakatlar[t.id] ? `✓ ${kelish.indexOf(t.id) + 1}-boʻlib yubordi` : "yozyapti…";
@@ -247,6 +248,13 @@
       jangChiz();
       const yozuv = X.raundniBajar(m, tartib, harakatlar);
       await koz.oyna(yozuv);
+      if (!m.tugadi && jangQoldi() > 0) {
+        tanaffus = true;
+        jangChiz();
+        await ui.sleep(X.TANAFFUS_SONIYA * 1000);
+        tanaffus = false;
+        if (!m || m.tugadi) return; // tanaffusda "To'xtatish" bosilgan
+      }
       if (!m.tugadi && jangQoldi() <= 0) X.vaqtTugadi(m);
       if (m.tugadi) jangTugadi();
       else raundBoshla();
