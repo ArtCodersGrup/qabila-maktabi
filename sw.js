@@ -1,6 +1,6 @@
 // Offline rejim: sayt fayllari keshlanadi. Bola saytni bir marta ochsa, keyin internetsiz ham oʻynay oladi.
 // Yangi fayl qoʻshilsa, FILES roʻyxatiga ham qoʻshiladi — buni bosh/tests/offline.test.js tekshiradi.
-const VERSION = "v86";
+const VERSION = "v87";
 const CACHE = "qabila-maktabi-" + VERSION;
 
 const FILES = [
@@ -13,9 +13,11 @@ const FILES = [
   "bosh/icon-512.png",
   "bosh/js/bosh-art.js",
   "bosh/js/bosh.js",
+  "bosh/js/hisob-tugma.js",
   "oyinlar/umumiy/css/asos.css",
   "oyinlar/umumiy/css/cpp.css",
   "oyinlar/umumiy/css/dastur.css",
+  "oyinlar/umumiy/css/hisob.css",
   "oyinlar/umumiy/css/kod.css",
   "oyinlar/umumiy/css/mantiq.css",
   "oyinlar/umumiy/css/onlayn.css",
@@ -28,6 +30,7 @@ const FILES = [
   "oyinlar/umumiy/js/cpp.js",
   "oyinlar/umumiy/js/dastur-ui.js",
   "oyinlar/umumiy/js/dastur.js",
+  "oyinlar/umumiy/js/hisob.js",
   "oyinlar/umumiy/js/jang-ui.js",
   "oyinlar/umumiy/js/jang.js",
   "oyinlar/umumiy/js/kod-mashq.js",
@@ -778,6 +781,7 @@ self.addEventListener("fetch", (event) => {
   if (request.method !== "GET") return;
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
+  if (url.pathname.startsWith("/api/")) return; // server javoblari (kirish holati, xonalar) hech qachon keshlanmaydi
   event.respondWith(
     // ignoreSearch: ?bosqich=2 kabi so'rov satri bilan ochilgan o'yin ham keshdagi sahifasini topadi
     // (aks holda internetsiz rejimda o'yin o'rniga bosh sahifa chiqardi)

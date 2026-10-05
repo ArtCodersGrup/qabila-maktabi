@@ -1,0 +1,31 @@
+/* Kirish va admin sahifalari (asos.css tokenlari ustida). Telefonda 360px dan, kompyuterda markazda tor ustun. */
+.hisob-app { min-height: 100vh; min-height: 100dvh; padding: 16px; display: flex; justify-content: center; }
+.hisob { width: 100%; max-width: 440px; display: flex; flex-direction: column; gap: var(--s4); padding-top: var(--s4); }
+.hisob.keng { max-width: 760px; }
+.hisob-bosh { align-self: flex-start; font-weight: 800; color: var(--asosiy-matn); text-decoration: none; min-height: 48px; display: inline-flex; align-items: center; }
+.hisob-h1 { margin: 0; font-size: var(--t3); font-weight: 900; line-height: 1.15; }
+.hisob-izoh { margin: 0; font-size: var(--t0); font-weight: 600; color: var(--matn-2); }
+.hisob-salom { margin: 0; font-size: var(--t2); font-weight: 900; }
+.hisob-rol { margin: 0; font-size: var(--t0); font-weight: 700; color: var(--matn-3); overflow-wrap: anywhere; }
+.hisob-form { display: flex; flex-direction: column; gap: var(--s3); padding: var(--s4); border: 2px solid var(--chiziq); border-radius: var(--r-l); background: var(--yuza); }
+.hisob-maydon { display: flex; flex-direction: column; gap: 6px; font-size: var(--t0); font-weight: 800; }
+.hisob-input {
+  min-height: 52px; padding: 10px 14px; border: 2px solid var(--chiziq-kuchli); border-radius: var(--r-m);
+  background: var(--yuza-2); font: inherit; font-size: var(--t1); font-weight: 700; color: var(--matn);
+}
+.hisob-input:focus-visible { outline: 3px solid var(--asosiy); outline-offset: 1px; }
+.hisob-xato { margin: 0; min-height: 1.4em; font-size: var(--t0); font-weight: 800; color: var(--yana-matn); }
+.hisob-xato:empty { min-height: 0; }
+.hisob-yoki { margin: 0; text-align: center; font-size: var(--t-1); font-weight: 800; color: var(--matn-3); }
+.hisob-tugmalar { display: flex; flex-wrap: wrap; gap: var(--s3); }
+.hisob-tugmalar .btn { flex: 1 1 160px; text-decoration: none; }
+.hisob .btn { text-decoration: none; }
+.hisob-karta { display: flex; flex-direction: column; gap: var(--s2); padding: var(--s4); border: 2px solid var(--chiziq); border-radius: var(--r-l); background: var(--yuza); }
+.hisob-karta.eslatma { background: var(--sariq-och); border-color: var(--sariq); }
+.hisob-qator { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s3); }
+.hisob-qator-nom { font-size: var(--t0); font-weight: 900; overflow-wrap: anywhere; }
+.hisob-qator-izoh { font-size: var(--t-1); font-weight: 700; color: var(--matn-3); overflow-wrap: anywhere; }
+.hisob-raqamlar { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: var(--s3); }
+.hisob-raqam { padding: var(--s3); border-radius: var(--r-m); background: var(--panel); text-align: center; }
+.hisob-raqam b { display: block; font-size: var(--t3); font-weight: 900; }
+.hisob-raqam span { font-size: var(--t-1); font-weight: 800; color: var(--matn-3); }
