@@ -7,8 +7,10 @@ from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from . import config
+from .admin import router as admin_router
 from .cheklov import Cheklov
 from .db import baza_tirikmi, make_engine
+from .google import foydalanuvchi as google_foydalanuvchi, router as google_router
 from .hisob import router as hisob_router
 from .xonalar import Boshqaruvchi, router as xonalar_router
 
@@ -27,6 +29,7 @@ def create_app(db_url: str | None = None) -> FastAPI:
     app.state.xonalar = Boshqaruvchi()
     app.state.cheklov_login = Cheklov(10, 15 * 60)
     app.state.cheklov_ip = Cheklov(30, 15 * 60)
+    app.state.google = google_foydalanuvchi  # testlarda soxta Google bilan almashtiriladi
 
     @app.middleware("http")
     async def origin_tekshir(request: Request, call_next):
@@ -38,6 +41,8 @@ def create_app(db_url: str | None = None) -> FastAPI:
 
     app.include_router(xonalar_router)
     app.include_router(hisob_router)
+    app.include_router(google_router)
+    app.include_router(admin_router)
 
     @app.get("/api/salomat")
     async def salomat(response: Response):
