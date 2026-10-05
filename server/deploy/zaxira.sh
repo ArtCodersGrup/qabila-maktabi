@@ -1,6 +1,7 @@
 #!/bin/bash
 # Baza zaxirasi: /srv/kelajagim/zaxira/kelajagim-YYYY-MM-DD.dump, 14 kundan eskisi o'chiriladi.
 set -euo pipefail
+umask 077  # zaxirada bolalar ma'lumoti bo'ladi — faqat egasi o'qiydi
 set -a; . /srv/kelajagim/api.env; set +a
 DIR=/srv/kelajagim/zaxira
 cd "$DIR"  # o'qib bo'lmaydigan papkadan (masalan /root) chaqirilsa ham ishlasin

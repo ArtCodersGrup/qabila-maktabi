@@ -54,7 +54,7 @@ fi
 
 # 6. Tekshiruv: API javob beryaptimi
 for i in $(seq 1 20); do
-  if curl -fsS http://127.0.0.1:8100/api/salomat; then echo; echo "API tayyor"; exit 0; fi
+  if curl -fsS http://127.0.0.1:8100/api/salomat 2>/dev/null; then echo; echo "API tayyor"; exit 0; fi
   sleep 1
 done
 echo "API javob bermadi: journalctl -u kelajagim-api -n 50" >&2
