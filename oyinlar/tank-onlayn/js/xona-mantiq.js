@@ -10,7 +10,7 @@
   const MAX_ODAM = 8;
   const MIN_ODAM = 2;
   const RAUND_SONIYA = 5;
-  const MAX_RAUND = 20;
+  const JANG_DAQIQA = 5; // jang raundlar soni bilan emas, umumiy vaqt bilan tugaydi (muallif qarori)
   const JON = 3;
   const UZOQ = 300; // hammaga teng — bolalar orasida ustunlik bo'lmasin
   const HARAKAT_NOMLARI = ["move", "back", "left", "right", "fire", "reload"];
@@ -118,9 +118,13 @@
     return m.yozuv.slice(bosh);
   }
 
-  // Jang tugadimi: bitta (yoki hech kim) qoldi yoki raundlar tugadi
+  // Jang tugadimi: bitta (yoki hech kim) qoldi. Vaqtni doska kuzatadi — tugasa vaqtTugadi() chaqiradi.
   function tekshir(m) {
-    if (tiriklar(m).length <= 1 || m.raund >= MAX_RAUND) m.tugadi = "tugadi";
+    if (tiriklar(m).length <= 1) m.tugadi = "tugadi";
+    return m.tugadi;
+  }
+  function vaqtTugadi(m) {
+    if (!m.tugadi) m.tugadi = "tugadi";
     return m.tugadi;
   }
 
@@ -157,11 +161,12 @@
 
   // ---------- Tarmoq paketlari (faqat sonlar, mantiq va qisqa kalitlar) ----------
   // Holat: oxirida (tugadi) ids reyting tartibida — server natijani shundan yozadi
-  function holatPaketi(m, qoldi) {
+  // jq — jang tugashiga qolgan soniya
+  function holatPaketi(m, qoldi, jq) {
     const ids = m.tugadi ? reyting(m) : m.tanklar.map((t) => t.id);
     const tk = ids.map((id) => tank(m, id));
     return {
-      r: m.raund, qoldi: Math.max(0, Math.round(qoldi || 0)), tugadi: m.tugadi ? 1 : 0, golib: (m.tugadi && golib(m)) || "",
+      r: m.raund, qoldi: Math.max(0, Math.round(qoldi || 0)), jq: Math.max(0, Math.round(jq || 0)), tugadi: m.tugadi ? 1 : 0, golib: (m.tugadi && golib(m)) || "",
       ids, qah: tk.map((t) => t.qah), x: tk.map((t) => t.x), y: tk.map((t) => t.y), b: tk.map((t) => t.burchak),
       jon: tk.map((t) => t.jon), oq: tk.map((t) => t.oq), tirik: tk.map((t) => (t.tirik ? 1 : 0)), tg: tk.map((t) => m.tg[t.id] || 0),
     };
@@ -197,8 +202,8 @@
   }
 
   const api = {
-    MAX_ODAM, MIN_ODAM, RAUND_SONIYA, MAX_RAUND, JON, UZOQ, HARAKAT_NOMLARI, QAHRAMONLAR, JOYLAR, TOSIQLAR,
-    qahById, markazga, maydon, nusxa, tank, tiriklar, argument, yozibOl, harakatlarToza, raundniBajar, tekshir,
+    MAX_ODAM, MIN_ODAM, RAUND_SONIYA, JANG_DAQIQA, JON, UZOQ, HARAKAT_NOMLARI, QAHRAMONLAR, JOYLAR, TOSIQLAR,
+    qahById, markazga, maydon, nusxa, tank, tiriklar, argument, yozibOl, harakatlarToza, raundniBajar, tekshir, vaqtTugadi,
     reyting, golib, tartibYasa, holatPaketi, holatniQoy, natijaPaketi, natijaniOch,
   };
 

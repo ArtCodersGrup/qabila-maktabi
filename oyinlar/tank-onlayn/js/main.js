@@ -31,6 +31,7 @@
       { b: "ammo", izoh: "oʻqing soni" },
     ] },
   ];
+  const mmss = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
   const HOST_JIM = 9000; // shuncha vaqt doskadan xabar kelmasa — uzildi
 
   // ---------- Sahifa: ovoz va bosh tugma ----------
@@ -83,7 +84,7 @@
     el.append(
       h("a", { class: "back-link", href: SITE_HOME, text: "◀︎ Barcha oʻyinlar" }),
       h("h1", { class: "to-sarlavha", text: "Tank jangi — onlayn" }),
-      izoh("Har raundda hamma bola 5 soniyada bitta satr yozadi, keyin doskada hammasi birga bajariladi. Oxirgi tirik qolgan — gʻolib."),
+      izoh(`Jang ${X.JANG_DAQIQA} daqiqa. Har raundda hamma bola ${X.RAUND_SONIYA} soniyada bitta satr yozadi, keyin doskada hammasi birga bajariladi. Oxirgi tirik qolgan yoki vaqt tugaganda joni koʻp tank — gʻolib.`),
       h("div", { class: "to-buyruqlar" }, ...BUYRUQLAR.map((b) => h("span", { class: "td-buyruq", text: b + (["move", "back", "left", "right"].includes(b) ? "(n)" : "()") }))),
       tugmalar(
         bor ? ui.button("Xona ochish (oʻqituvchi)", () => hostBoshla(), "big") : null,
@@ -110,6 +111,8 @@
     let m = null; // jang ketyapti
     let harakatlar = {};
     let qoldi = 0;
+    let jangTugaydi = 0; // jang shu paytda tugaydi (JANG_DAQIQA)
+    const jangQoldi = () => Math.max(0, Math.ceil((jangTugaydi - Date.now()) / 1000));
     let bajarilyapti = false;
     let koz = null;
     let taymer = null;
@@ -180,8 +183,9 @@
     taymer = setInterval(() => {
       if (!m) { lobbiYubor(); return; }
       if (bajarilyapti || m.tugadi) return;
+      if (jangQoldi() <= 0) { X.vaqtTugadi(m); jangTugadi(); return; }
       qoldi -= 1;
-      room.send("holat", X.holatPaketi(m, qoldi));
+      room.send("holat", X.holatPaketi(m, qoldi, jangQoldi()));
       jangChiz();
       if (qoldi <= 0) raundYakuni();
     }, 1000);
@@ -193,6 +197,7 @@
     function jangBoshla() {
       if (odamlar.length < X.MIN_ODAM) return;
       m = X.maydon(odamlar);
+      jangTugaydi = Date.now() + X.JANG_DAQIQA * 60000;
       tugaganKorsatildi = false;
       QK.probe.m = m;
       el.innerHTML = "";
@@ -211,13 +216,13 @@
       harakatlar = {};
       qoldi = X.RAUND_SONIYA;
       bajarilyapti = false;
-      room.send("holat", X.holatPaketi(m, qoldi));
+      room.send("holat", X.holatPaketi(m, qoldi, jangQoldi()));
       jangChiz();
     }
 
     function jangChiz() {
       if (!m || !jadval) return;
-      sarlavha.textContent = m.tugadi ? "Jang tugadi" : bajarilyapti ? `${m.raund}-raund bajarilmoqda…` : `${m.raund + 1}-raund · ⏱ ${Math.max(0, qoldi)} s`;
+      sarlavha.textContent = m.tugadi ? "Jang tugadi" : bajarilyapti ? `${m.raund}-raund bajarilmoqda…` : `${m.raund + 1}-raund · ⏱ ${Math.max(0, qoldi)} s · jang ${mmss(jangQoldi())}`;
       jadval.innerHTML = "";
       for (const t of m.tanklar) {
         const holat = !t.tirik ? "yiqildi" : harakatlar[t.id] ? "✓ yubordi" : "yozyapti…";
@@ -238,6 +243,7 @@
       jangChiz();
       const yozuv = X.raundniBajar(m, tartib, harakatlar);
       await koz.oyna(yozuv);
+      if (!m.tugadi && jangQoldi() <= 0) X.vaqtTugadi(m);
       if (m.tugadi) jangTugadi();
       else raundBoshla();
     }
@@ -462,7 +468,7 @@
         panel.yoz(tirik ? `— ${raund}-raund: bitta satr yoz va Enter bos —` : "Tanking yiqildi — endi tomoshabinsan. Jangni kuzatib tur.", "izoh");
       }
       QK.probe.raund = raund;
-      sarlavha.textContent = `${raund}-raund · ⏱ ${p.qoldi} s` + (X.tank(m, me).tirik ? (yuborildi ? " · ✓ yuborildi" : "") : " · tomoshabin");
+      sarlavha.textContent = `${raund}-raund · ⏱ ${p.qoldi} s` + (typeof p.jq === "number" ? ` · jang ${mmss(p.jq)}` : "") + (X.tank(m, me).tirik ? (yuborildi ? " · ✓ yuborildi" : "") : " · tomoshabin");
     }
 
     async function natijaKeldi(p) {

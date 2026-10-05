@@ -13,7 +13,7 @@ Naqsh — «Togʻga chiqish» va «Yozuv poygasi» xonalari: oʻqituvchi qurilma
 - **Bir vaqtda bajarilish:** harakatlar **navbatma-navbat** qoʻyiladi: avval har bolaning 1-harakati, keyin 2-si… Bolalar tartibi har raundda tasodifiy (hech kim doim birinchi boʻlmasin). Satr yubormagan bola shu raundda turadi.
 - **Hamma bir xil holatga qarab yozadi:** `scan()` / `radar()` raund **boshidagi** holatni koʻradi (bola yozayotganda raqiblar ham yozyapti).
 - **Jon 3, oʻq 3, koʻrish masofasi teng** — tank dueli kabi adolatli. Tanklar maydon chetlarida simmetrik joylarda tugʻiladi, oʻrtada 2–3 toʻsiq.
-- **Gʻolib** — oxirgi tirik qolgan. 20 raunddan keyin: joni koʻp, teng boʻlsa — koʻp tekkazgan; yana teng boʻlsa — durang.
+- **Gʻolib** — oxirgi tirik qolgan. **Jang 5 daqiqa** (raundlar soni cheklanmagan, muallif qarori 2026-10-05). Vaqt tugaganda: joni koʻp, teng boʻlsa — koʻp tekkazgan; yana teng boʻlsa — durang.
 - **Yiqilgan bola** — tomoshabin: maydonni kuzatadi, keyingi jangda qatnashadi.
 
 ## Tarmoq (erkin matn yoʻq)
@@ -39,5 +39,5 @@ Oʻqituvchi sinf uchun ochsa (`QK.sinfTanlov`), jang tugaganda natija «Xonalar�
 
 ## Testlar
 
-- Jang mantigʻi (Node): tugʻilish joylari simmetrik va toʻsiqqa tushmaydi; harakatlarni yozib olish real holatni oʻzgartirmaydi; navbatma-navbat bajarish; gʻolib va durang qoidalari; 20 raund chegarasi.
+- Jang mantigʻi (Node): tugʻilish joylari simmetrik va toʻsiqqa tushmaydi; harakatlarni yozib olish real holatni oʻzgartirmaydi; navbatma-navbat bajarish; gʻolib va durang qoidalari; vaqt tugashi.
 - Brauzerda: oʻqituvchi + 3 bola, bir nechta raund, kimdir yiqiladi (tomoshabin), gʻolib aniqlanadi; sinf natijasi panelda.

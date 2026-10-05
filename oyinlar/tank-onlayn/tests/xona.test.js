@@ -83,7 +83,7 @@ test("raund navbatma-navbat bajariladi: hammaning 1-harakati, keyin 2-si", () =>
   assert.deepEqual(y2.map((y) => y.t + ":" + y.id), ["burul:o0", "yur:o1", "yur:o0"]);
 });
 
-test("yiqilish, g'olib, reyting va 20 raund chegarasi", () => {
+test("yiqilish, g'olib, reyting va vaqt tugashi", () => {
   const m = yuzmaYuz(X.maydon(oyinchilar(3)), "o0", "o1");
   for (let k = 0; k < 3 && !m.tugadi; k++) X.raundniBajar(m, ["o0", "o1", "o2"], { o0: [{ h: "fire", a: 0 }] });
   assert.equal(X.tank(m, "o1").tirik, false, "o0 qarshisidagi o1 ni uch marta urdi");
@@ -91,12 +91,13 @@ test("yiqilish, g'olib, reyting va 20 raund chegarasi", () => {
   assert.equal(m.tg.o0, 3);
   assert.equal(m.tugadi, null, "ikki tank tirik — jang davom etadi");
   assert.deepEqual(X.reyting(m).slice(-1), ["o1"]);
-  for (let k = 0; k < X.MAX_RAUND && !m.tugadi; k++) X.raundniBajar(m, ["o0", "o2"], {});
+  for (let k = 0; k < 50; k++) X.raundniBajar(m, ["o0", "o2"], {});
+  assert.equal(m.tugadi, null, "raundlar soni jangni tugatmaydi");
+  X.vaqtTugadi(m);
   assert.equal(m.tugadi, "tugadi");
-  assert.equal(m.raund, X.MAX_RAUND);
   assert.equal(X.golib(m), "o0", "joni teng, lekin ko'proq tekkazgan");
   const d = X.maydon(oyinchilar(2));
-  for (let k = 0; k < X.MAX_RAUND; k++) X.raundniBajar(d, ["o0", "o1"], {});
+  X.vaqtTugadi(d);
   assert.equal(X.golib(d), null, "hammasi teng — durang");
 });
 
@@ -123,7 +124,7 @@ test("paketlar onlayn xabar tekshiruvidan o'tadi va holat qayta tiklanadi", () =
 test("oxirgi holat paketida ids reyting tartibida (server natijani shundan yozadi)", () => {
   const m = yuzmaYuz(X.maydon(oyinchilar(3)), "o0", "o1");
   for (let k = 0; k < 3; k++) X.raundniBajar(m, ["o0", "o1", "o2"], { o0: [{ h: "fire", a: 0 }] });
-  for (let k = 0; k < X.MAX_RAUND && !m.tugadi; k++) X.raundniBajar(m, ["o0"], {});
+  X.vaqtTugadi(m);
   const p = X.holatPaketi(m, 0);
   assert.equal(p.tugadi, 1);
   assert.deepEqual(p.ids, X.reyting(m));
