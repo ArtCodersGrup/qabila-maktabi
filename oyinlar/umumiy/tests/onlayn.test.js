@@ -54,6 +54,8 @@ test("server manzili: o'z domenimiz va lokal sinovda — o'sha server, fayldan/L
   assert.equal(O.serverUrl({ protocol: "http:", hostname: "192.168.1.5", host: "192.168.1.5:8000" }), "wss://kelajagim.uz");
   assert.equal(O.serverUrl(undefined), "wss://kelajagim.uz");
   assert.equal(O.xonaUrl("wss://kelajagim.uz", "tog", "4827", "k7f3a9", "player"), "wss://kelajagim.uz/api/ws/xona/tog/4827?key=k7f3a9&role=player");
+  assert.equal(O.xonaUrl("wss://kelajagim.uz", "tog", "4827", "host", "host", 12), "wss://kelajagim.uz/api/ws/xona/tog/4827?key=host&role=host&sinf=12");
+  assert.equal(O.xonaUrl("wss://kelajagim.uz", "tog", "4827", "host", "host", "1&x=2"), "wss://kelajagim.uz/api/ws/xona/tog/4827?key=host&role=host");
   const src = require("node:fs").readFileSync(require("node:path").join(__dirname, "../js/onlayn.js"), "utf8");
   assert.ok(!/supabase|sb_publishable_|service_role|sb_secret_/.test(src), "Supabase qoldig'i yo'q");
 });

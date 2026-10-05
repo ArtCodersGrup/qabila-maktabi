@@ -28,11 +28,18 @@
 
   // ================= O'QITUVCHI =================
   function host(qayt) {
-    E.turTanlash({ onPick: (tur) => lobbi(tur, qayt), orqaga: qayt });
+    E.turTanlash({
+      onPick: async (tur) => {
+        // Kirgan o'qituvchi — natijalar qaysi sinfga yozilsin (boshqalar uchun so'ralmaydi)
+        const sinf = QK.sinfTanlov ? await QK.sinfTanlov(E) : null;
+        lobbi(tur, qayt, sinf);
+      },
+      orqaga: qayt,
+    });
     ui.bubble("elder", "Matnni tanlang — keyin xona kodi chiqadi.");
   }
 
-  function lobbi(tur, qayt) {
+  function lobbi(tur, qayt, sinf) {
     const code = onlayn.makeCode();
     const turi = P.turById(tur);
     let odamlar = []; // [{ id, qahramon }]
@@ -45,6 +52,7 @@
 
     const holati = h("div", { class: "net-status", text: "⏳ Xona ochilmoqda…" });
     const royxat = h("div", { class: "lobbi-royxat" });
+    const sinfIzoh = h("p", { class: "tog-note", text: sinf ? `Natijalar «${sinf.nom}» sinfiga yoziladi.` : "" });
     QK.probe = { rejim: "host", code, odamlar, tur };
     const chiqish = () => { if (room) room.leave(); clearInterval(timer); qayt(); };
     kutishEkran();
@@ -56,6 +64,7 @@
         h("p", { class: "tog-note", text: `${turi.nom} — ${T.togById(turi.tog).nom}` }),
         h("div", { class: "code-lead", text: "Xona kodi:" }),
         h("div", { class: "code-big", text: code }),
+        sinf ? sinfIzoh : null,
         holati, royxat);
       lobbiKorsat();
     }
@@ -209,8 +218,9 @@
     }
 
     room = onlayn.xona({
-      kind: KIND, code, me: "host", role: "host", types: PR.TYPES,
+      kind: KIND, code, me: "host", role: "host", types: PR.TYPES, sinf: sinf && sinf.id,
       on: {
+        sinf(ok) { if (!ok) sinfIzoh.textContent = "⚠ Natijalarni sinfga yozib boʻlmadi (qayta kiring). Oʻyin baribir ishlaydi."; },
         status(s) {
           QK.probe.status = s;
           if (s === "ready") {

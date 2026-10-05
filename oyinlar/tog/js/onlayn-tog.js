@@ -62,15 +62,17 @@
       izoh: "Bolalarga shu mavzulardan savol keladi. Qiyinligi balandlikka qarab oshadi.",
       tanlangan: mavzulariniOl(),
       orqaga: () => host(qayt),
-      onDavom: (mavzular) => {
+      onDavom: async (mavzular) => {
         mavzulariniSaqla(mavzular);
-        lobbi(togId, qayt, mavzular);
+        // Kirgan o'qituvchi — natijalar qaysi sinfga yozilsin (boshqalar uchun so'ralmaydi)
+        const sinf = QK.sinfTanlov ? await QK.sinfTanlov(E) : null;
+        lobbi(togId, qayt, mavzular, sinf);
       },
     });
     ui.bubble("elder", "Bugun qaysi mavzulardan soʻraymiz?");
   }
 
-  function lobbi(togId, qayt, mavzular) {
+  function lobbi(togId, qayt, mavzular, sinf) {
     const code = onlayn.makeCode();
     let odamlar = []; // [{ id, qahramon }]
     let state = null; // o'yin boshlangach — hisob shu yerda
@@ -81,10 +83,12 @@
     const el = E.box(false);
     const royxat = h("div", { class: "lobbi-royxat" });
     const holati = h("div", { class: "net-status", text: "⏳ Xona ochilmoqda…" });
+    const sinfIzoh = h("p", { class: "tog-note", text: sinf ? `Natijalar «${sinf.nom}» sinfiga yoziladi.` : "" });
     el.append(
       h("h1", { class: "game-title", text: T.togById(togId).nom }),
       h("div", { class: "code-lead", text: "Xona kodi:" }),
       h("div", { class: "code-big", text: code }),
+      sinf ? sinfIzoh : null,
       holati, royxat);
     QK.probe = { rejim: "host", code, odamlar, tog: togId };
 
@@ -210,8 +214,9 @@
     }
 
     room = onlayn.xona({
-      kind: KIND, code, me: "host", role: "host", types: P.TYPES,
+      kind: KIND, code, me: "host", role: "host", types: P.TYPES, sinf: sinf && sinf.id,
       on: {
+        sinf(ok) { if (!ok) sinfIzoh.textContent = "⚠ Natijalarni sinfga yozib boʻlmadi (qayta kiring). Oʻyin baribir ishlaydi."; },
         status(s) {
           QK.probe.status = s;
           if (s === "ready") {

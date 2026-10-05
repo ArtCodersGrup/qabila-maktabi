@@ -63,8 +63,9 @@
     }
     return SERVER;
   }
-  const xonaUrl = (base, kind, code, key, role) =>
-    `${base}/api/ws/xona/${kind}/${code}?key=${encodeURIComponent(key)}&role=${role}`;
+  // sinf — o'qituvchi xonani sinfi uchun ochsa (natija saqlanadi); server egasini cookie orqali tekshiradi
+  const xonaUrl = (base, kind, code, key, role, sinf) =>
+    `${base}/api/ws/xona/${kind}/${code}?key=${encodeURIComponent(key)}&role=${role}` + (Number.isInteger(Number(sinf)) && Number(sinf) > 0 ? `&sinf=${Number(sinf)}` : "");
 
   // ---------- Server bilan aloqa ----------
   const available = () => typeof root.WebSocket === "function";
@@ -124,7 +125,7 @@
       let d;
       try { d = JSON.parse(ev.data); } catch (e) { return; }
       if (!d || typeof d !== "object") return;
-      if (d.t === "kirdi") { kirdi = true; clearTimeout(timer); h.kirdi(); }
+      if (d.t === "kirdi") { kirdi = true; clearTimeout(timer); h.kirdi(d); }
       else if (d.t === "rad") { yop(); h.rad(String(d.sabab)); }
       else if (d.t === "odamlar" && Array.isArray(d.keys)) h.odamlar(d.keys.filter(kimlik), son(d.at) ? d.at : null);
       else if (d.t === "msg") h.xabar(d.payload);
@@ -193,15 +194,18 @@
   // Bitta boshlovchi ("host" — o'qituvchi qurilmasi) va 12 tagacha o'yinchi.
   // Boshlovchi o'yin holatini o'zi hisoblaydi va tarqatadi; o'yinchilar faqat javobini yuboradi.
   // me — o'yinchining yashirin raqami (ism emas!), role — "host" yoki "player".
-  // on: { status(s), peers(ids, hostBor), message(msg) }
+  // on: { status(s), peers(ids, hostBor), message(msg), sinf(bog'landimi) }; sinf — ixtiyoriy sinf id (faqat boshlovchi)
   // status: "connecting" | "ready" | "missing" | "full" | "error"
-  function xona({ kind, code, me, role, types, on }) {
+  function xona({ kind, code, me, role, types, on, sinf }) {
     const key = role === "host" ? HOST : me;
     let closed = false;
     const emit = (s) => { if (!closed && on.status) on.status(s); };
     emit("connecting");
-    const c = ulan(xonaUrl(baza(), kind, code, key, role === "host" ? "host" : "player"), {
-      kirdi() { emit("ready"); },
+    const c = ulan(xonaUrl(baza(), kind, code, key, role === "host" ? "host" : "player", role === "host" ? sinf : null), {
+      kirdi(d) {
+        emit("ready");
+        if (role === "host" && sinf && on.sinf && !closed) on.sinf(!!d.sinf);
+      },
       rad(sabab) { emit(["missing", "full"].includes(sabab) ? sabab : "error"); closed = true; },
       odamlar(keys) {
         if (!closed && on.peers) on.peers(keys.filter((k) => k !== HOST), keys.includes(HOST));

@@ -290,10 +290,74 @@
   }
 
   // ---------- Xonalar (onlayn o'yin natijalari) ----------
-  function xonalar() {
+  const TOGLAR = { chimyon: "Chimyon", hazrati: "Hazrati Sulton", pomir: "Pomir", himolay: "Himolay" };
+  const MATNLAR = { home: "Asosiy qator", words: "Soʻzlar", proverb: "Maqol" };
+  const oyinNomi = (n) => n.tur === "tog"
+    ? "Togʻga chiqish" + (TOGLAR[n.meta.tog] ? " · " + TOGLAR[n.meta.tog] : "")
+    : "Yozuv poygasi" + (MATNLAR[n.meta.tur] ? " · " + MATNLAR[n.meta.tur] : "");
+  const vaqt = (iso) => { const d = new Date(iso); return B.qachon(iso) + ", " + String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0"); };
+
+  let xonaFiltr = 0; // 0 — hamma sinflar
+  async function xonalar() {
+    const [bolim, id] = B.yol();
+    if (bolim === "xonalar" && id) return xonaNatija(Number(id));
+    const sar = B.sarlavha({ matn: "Xonalar", izoh: "Sinf uchun ochilgan onlayn oʻyinlar natijalari — oxirgilari tepada" });
+    Q.sahifa(sar, yuklanmoqda());
+    const [s, r] = await Promise.all([H.sinf.royxat(), H.sinf.natijalar(xonaFiltr)]);
+    if (!s.ok || !r.ok) return Q.sahifa(sar, xatoBlok((s.ok ? r : s).xato, xonalar));
+    const kids = [sar];
+    if (s.sinflar.length > 1) {
+      const seg = h("div", { class: "bq-segment", role: "group", "aria-label": "Sinf" });
+      for (const [sid, nom] of [[0, "Hammasi"], ...s.sinflar.map((x) => [x.id, x.nom])]) {
+        const b = h("button", { type: "button", "aria-pressed": String(xonaFiltr === sid), text: nom });
+        b.addEventListener("click", () => { xonaFiltr = sid; xonalar(); });
+        seg.append(b);
+      }
+      kids.push(h("div", { class: "bq-asboblar" }, seg));
+    }
+    const p = B.panel("Oʻyinlar", r.natijalar.length);
+    if (!r.natijalar.length) {
+      p.append(B.bosh("xona", "Hali natija yoʻq. «Togʻga chiqish» yoki «Yozuv poygasi»da xona ochayotganda sinfni tanlang — oʻyin tugagach natija shu yerga yoziladi.",
+        h("a", { class: "btn secondary sm", href: ILDIZ + "oyinlar/tog/", text: "Togʻga chiqish" })));
+    } else {
+      p.append(h("ul", { class: "bq-royxat" }, ...r.natijalar.map((n) => h("li", {},
+        h("a", { class: "bq-qator", href: "#xonalar/" + n.id },
+          h("span", { class: "bq-stat-ikon", html: ikon(n.tur === "tog" ? "xona" : "oyinlar") }),
+          h("div", { class: "bq-qator-matn" },
+            h("div", { class: "bq-qator-nom", text: oyinNomi(n) }),
+            h("div", { class: "bq-qator-izoh", text: `${n.sinf_nom} · ${n.soni} oʻyinchi · ${vaqt(n.tugagan)}` })),
+          n.golib ? h("span", { class: "bq-rol student", text: "🏆 " + n.golib }) : null,
+          h("span", { class: "bq-oq", html: ikon("keyingi") }))))));
+    }
+    kids.push(p);
+    Q.sahifa(...kids);
+  }
+
+  async function xonaNatija(id) {
+    const orqaga = { nom: "Xonalar", href: "#xonalar" };
+    Q.sahifa(B.sarlavha({ matn: "Natija", orqaga }), yuklanmoqda());
+    const r = await H.sinf.natija(id);
+    if (!r.ok) return Q.sahifa(B.sarlavha({ matn: "Natija", orqaga }), xatoBlok(r.xato));
+    const n = r.natija;
+    const tog = n.tur === "tog";
+    const ustunlar = tog ? ["Oʻrin", "Oʻquvchi", "Pogʻona", "Toʻgʻri", "Xato"] : ["Oʻrin", "Oʻquvchi", "Tezlik", "Aniqlik", "Vaqt"];
+    const MEDAL = ["🥇", "🥈", "🥉"];
+    const tb = h("tbody");
+    for (const o of n.oyinchilar) {
+      const ism = o.ism || "Mehmon";
+      const qiymatlar = tog
+        ? [String(o.pogona) + (o.chiqdi ? " (chiqdi)" : ""), String(o.togri), String(o.xato)]
+        : [o.cpm + " belgi/daq", o.aniq + "%", (o.ms / 1000).toFixed(1) + " s"];
+      tb.append(h("tr", {},
+        h("td", { class: "son", "data-nom": "Oʻrin", text: (MEDAL[o.orin - 1] || "") + " " + o.orin }),
+        h("td", { class: "asosiy" }, h("div", { class: "bq-kim" }, B.avatar(ism, true),
+          h("div", { class: "bq-kim-matn" }, h("b", { text: ism }), o.ism ? null : h("span", { text: "kirmagan yoki sinfda emas" })))),
+        ...qiymatlar.map((v, i) => h("td", { class: "son", "data-nom": ustunlar[i + 2], text: v }))));
+    }
     Q.sahifa(
-      B.sarlavha({ matn: "Xonalar", izoh: "Sinf uchun ochilgan onlayn oʻyinlar natijalari" }),
-      B.panel("Natijalar", null, B.bosh("xona", "Tez orada: «Togʻga chiqish» yoki «Yozuv poygasi» xonasini sinf uchun ochsangiz, natijalar shu yerda sana boʻyicha saqlanadi.")));
+      B.sarlavha({ matn: oyinNomi(n), orqaga, izoh: `${n.sinf_nom} · ${vaqt(n.tugagan)} · ${n.oyinchilar.length} oʻyinchi` }),
+      B.panel("Reyting", null, h("table", { class: "bq-jadval" },
+        h("thead", {}, h("tr", {}, ...ustunlar.map((t) => h("th", { text: t })))), tb)));
   }
 
   boshla();

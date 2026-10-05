@@ -242,7 +242,8 @@ textarea.bq-input { min-height: 180px; resize: vertical; line-height: 1.5; }
   /* Jadval → kartalar: har qator alohida karta, ustun nomi chapda */
   .bq-jadval thead { display: none; }
   .bq-jadval, .bq-jadval tbody, .bq-jadval tr, .bq-jadval td { display: block; width: 100%; }
-  .bq-jadval tr { padding: 12px 14px; border-bottom: 1px solid var(--chiziq); }
+  .bq-jadval tr { display: flex; flex-direction: column; padding: 12px 14px; border-bottom: 1px solid var(--chiziq); }
+  .bq-jadval td.asosiy { order: -1; }  /* kartada ism har doim tepada */
   .bq-jadval tbody tr:last-child { border-bottom: 0; }
   .bq-jadval td { display: flex; justify-content: space-between; align-items: center; gap: var(--s3); padding: 4px 0; border: 0; }
   .bq-jadval td[data-nom]::before { content: attr(data-nom); font-size: 13px; font-weight: 800; color: var(--matn-3); }

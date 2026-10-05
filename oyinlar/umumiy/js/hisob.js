@@ -165,6 +165,8 @@
       progress: (id) => sorov("/api/sinflar/" + Number(id) + "/progress"),
       qoshil: (kod) => sorov("/api/sinflar/qoshil", { kod }),
       meniki: () => sorov("/api/sinflar/meniki"),
+      natijalar: (sinf) => sorov("/api/sinflar/natijalar" + (sinf ? "?sinf=" + Number(sinf) : "")),
+      natija: (id) => sorov("/api/sinflar/natija/" + Number(id)),
     },
     admin: {
       sorovlar: () => sorov("/api/admin/sorovlar"),
