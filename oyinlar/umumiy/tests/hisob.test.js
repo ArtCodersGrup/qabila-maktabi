@@ -43,3 +43,29 @@ test("maxfiy narsa saqlanmaydi: localStorage da faqat ism va rol", () => {
   assert.ok(!/localStorage\.setItem\([^)]*parol/i.test(src));
   assert.match(src, /JSON\.stringify\(\{ ism: [^}]*rol: [^}]*\}\)/);
 });
+
+test("progress kalitlari: bosqichli o'yinlar, masalalar, rekord — sozlamalar emas", () => {
+  const d = {
+    "rim-toshi:v1": JSON.stringify({ done: [true, false], stars: [3, 0], hard: [false, false], muted: false }),
+    "tog:v1": JSON.stringify({ done: [], stars: [], hard: [], muted: true }),
+    "masalalar:holat:v1": JSON.stringify({ yigindi: { foiz: 50 } }),
+    "on-barmoq:rekord": "120",
+    "qabila:toifa:v1": "kichik",
+    "qabila:hisob:v1": JSON.stringify({ ism: "Ali K.", rol: "student" }),
+    "masalalar:filtr:v1": JSON.stringify({ daraja: "oson" }),
+    "buzuq:v1": "{",
+  };
+  const keys = Object.keys(d);
+  const store = { length: keys.length, key: (i) => keys[i], getItem: (k) => d[k] };
+  assert.deepEqual(H.progressKalitlari(store).sort(), ["masalalar:holat:v1", "on-barmoq:rekord", "rim-toshi:v1"]);
+});
+
+test("storage.js: kirgan bo'lsa saqlanganini navbatga qo'yadi, masalalar va o'n barmoq ham", () => {
+  const st = oqi("oyinlar/umumiy/js/storage.js");
+  assert.match(st, /navbatga\(key\)/);
+  assert.match(st, /keepalive: true/);
+  assert.match(st, /\/api\/progress/);
+  assert.match(oqi("oyinlar/masalalar/js/holat.js"), /navbatga\(kalit\)/);
+  assert.match(oqi("oyinlar/23-on-barmoq/js/typing-ui.js"), /navbatga\(BEST_KEY\)/);
+  assert.ok(skriptlar("oyinlar/masalalar/index.html").includes("../umumiy/js/storage.js"));
+});

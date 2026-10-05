@@ -315,5 +315,5 @@
 
   root.QK = root.QK || {};
   root.QK.bosh = { TOIFALAR, SECTIONS, GAMES, CONTESTS, MASHQLAR, MODES, mos, toifaById, oyinlar, yoshYorligi, number, render };
-  if (root.document) render();
+  if (root.document && root.document.getElementById("list")) render(); // o'qituvchi paneli faqat katalogni oladi
 })(window);

@@ -12,7 +12,14 @@
   yoz(H.saqlangan());
   top.prepend(a);
   H.men().then((r) => {
-    if (r.ok) yoz(r.user);
+    if (r.ok) {
+      yoz(r.user);
+      // Boshqa qurilmadagi yulduzlar shu yerga ham kelsin. Mehmon progressi bo'lsa — kirish sahifasida so'raladi.
+      const u = r.user;
+      if (!u.parol_almashtirsin && (H.egasi() === u.id || !H.mehmonBor())) {
+        H.sinxron(u.id).then((s) => { if (s.ok && root.QK.bosh) root.QK.bosh.render(); });
+      }
+    }
     else if (r.holat === 401) yoz(null);
   });
 })(window);

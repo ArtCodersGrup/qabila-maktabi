@@ -178,6 +178,7 @@
     if (!(cpm > best())) return false;
     try {
       root.localStorage.setItem(BEST_KEY, JSON.stringify(cpm));
+      if (root.QK && root.QK.storage && root.QK.storage.navbatga) root.QK.storage.navbatga(BEST_KEY);
     } catch (e) {
       // Saqlab bo'lmadi — o'yin baribir ishlaydi
     }

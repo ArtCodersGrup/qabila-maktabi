@@ -28,6 +28,7 @@
     zaxira[kalit] = data;
     try {
       if (root.localStorage) root.localStorage.setItem(kalit, JSON.stringify(data));
+      if (root.QK && root.QK.storage && root.QK.storage.navbatga) root.QK.storage.navbatga(kalit);
     } catch (e) {
       // Saqlanmadi — muhim emas
     }
