@@ -406,3 +406,36 @@ button:disabled { cursor: default; opacity: 0.45; }
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ================= Kattalar ko'rinishi (5–8 va 9–11) — VAQTINCHALIK =================
+   Shart: <html data-toifa="orta|yuqori"> va data-maskot YO'Q (qog'oz/baraban ishlatadigan o'yin bolalar
+   ko'rinishida qoladi). O'yinlarda atribut faylda yozilgan (bosh/tools/toifa-yoz.js), bosh sahifa va asboblarda
+   umumiy/js/toifa.js qo'yadi. Bu bo'lim faqat bolalarcha belgilarni olib tashlaydi: qum fon, dumaloq shrift,
+   qahramonlar, pufak dumi. 3D qirra va radius o'zgarmaydi — o'yinlarning o'z CSS'larida qattiq yozilgan.
+   Haqiqiy dizayn — 5–8 bosqichida (docs/superpowers/specs/2026-10-06-uch-toifa-ramka-design.md). */
+:root[data-toifa]:not([data-toifa="boshlangich"]):not([data-maskot]) {
+  --fon: #FBFAF7; --matn: #1E2230; --pufak: #FFFFFF;
+  --matn-2: #55524A; --matn-3: #6A665C;
+  --yuza: #FFFFFF; --yuza-2: #F6F4EE; --panel: #F1EEE6;
+  --chiziq: #DAD6CB; --chiziq-kuchli: #8B8676; --soya: #DAD6CB; --oq-qora: #DAD6CB;
+}
+:root[data-toifa="yuqori"]:not([data-maskot]) {
+  --asosiy: #33408A; --asosiy-qora: #232D63; --asosiy-matn: #33408A; --asosiy-och: #E8EAF6;
+}
+:root[data-toifa]:not([data-toifa="boshlangich"]):not([data-maskot]) body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+/* Qahramonlar yo'q: ko'rsatma — oddiy panel; yotiq holatda chap ustunning tepasida */
+:root[data-toifa]:not([data-toifa="boshlangich"]):not([data-maskot]) .zone-stage .actor { display: none; }
+:root[data-toifa]:not([data-toifa="boshlangich"]):not([data-maskot]) .zone-stage {
+  grid-template-columns: minmax(0, 1fr); grid-template-areas: "bubble"; align-content: start;
+}
+:root[data-toifa]:not([data-toifa="boshlangich"]):not([data-maskot]) .bubble { border-width: 1px; box-shadow: none; font-weight: 600; }
+:root[data-toifa]:not([data-toifa="boshlangich"]):not([data-maskot]) .bubble::after { display: none; }
+/* Ikki ovoz: oqsoqol — asosiy matn (yorliqsiz), shogird gapi — och ko'k panel va "Shogird" yozuvi */
+:root[data-toifa]:not([data-toifa="boshlangich"]):not([data-maskot]) .bubble.from-apprentice::before {
+  content: "Shogird"; display: block; margin-bottom: 2px; font-size: var(--t-1); font-weight: 800; color: var(--matn-2);
+}
+:root[data-toifa]:not([data-toifa="boshlangich"]):not([data-maskot]) .bubble.from-apprentice:not(.ok):not(.yana) {
+  background: var(--asosiy-och); border-color: var(--asosiy);
+}

@@ -70,3 +70,15 @@ test("xotira yopiq bo'lsa xato tashlamaydi", () => {
   T.qolla();
   assert.ok(!("data-toifa" in attrs));
 });
+
+// ui.js: kattalar ko'rinishi sharti asos.css dagi selektor bilan bir xil
+test("ui.kattalar: orta/yuqori va data-maskot yo'q", () => {
+  const win = { QK: {} };
+  loadScript(path.join(__dirname, "../js/ui.js"), win);
+  const el = (attrs) => ({ getAttribute: (k) => (k in attrs ? attrs[k] : null), hasAttribute: (k) => k in attrs });
+  assert.equal(win.QK.ui.kattalar(el({})), false);
+  assert.equal(win.QK.ui.kattalar(el({ "data-toifa": "boshlangich" })), false);
+  assert.equal(win.QK.ui.kattalar(el({ "data-toifa": "orta" })), true);
+  assert.equal(win.QK.ui.kattalar(el({ "data-toifa": "yuqori" })), true);
+  assert.equal(win.QK.ui.kattalar(el({ "data-toifa": "orta", "data-maskot": "" })), false);
+});

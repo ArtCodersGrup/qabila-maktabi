@@ -78,6 +78,13 @@
     if (name === "happy") celebrate(who === "elder");
   }
 
+  // Kattalar ko'rinishi (5–8, 9–11): shart asos.css oxiridagi bo'lim selektori bilan bir xil
+  function kattalar(el) {
+    const html = el || document.documentElement;
+    const t = html.getAttribute("data-toifa");
+    return !!t && t !== "boshlangich" && !html.hasAttribute("data-maskot");
+  }
+
   // Tantana: konfeti (shogird — kichik, oqsoqol — katta + ✓). Ish zonasini to'smaydi (pointer-events: none),
   // reduced-motion da avtomatik o'chadi. Hamma o'yin pose(x, "happy") ni chaqiradi — alohida ulash shart emas.
   let lastParty = 0;
@@ -87,6 +94,13 @@
     const now = Date.now();
     if (!big && now - lastParty < 400) return; // bir vaqtda ikki chaqiruv — bitta konfeti
     lastParty = now;
+    if (kattalar()) { // konfeti yo'q — faqat katta ✓
+      if (big && !host.querySelector(".ok-belgi")) {
+        host.append(h("div", { class: "ok-belgi", "aria-hidden": "true", text: "✓" }));
+        setTimeout(() => host.querySelectorAll(".ok-belgi").forEach((e) => e.remove()), 1000);
+      }
+      return;
+    }
     const box = h("div", { class: "tantana", "aria-hidden": "true" });
     const colors = ["var(--c0)", "var(--c1)", "var(--c2)", "var(--c3)", "var(--sariq)"];
     const n = big ? 22 : 10;
@@ -465,7 +479,7 @@
   QK.ui = {
     newRun, onCleanup, settle, sleep, h, button,
     work, control, clearWork, clearKeep, clearControl, setCompact,
-    celebrate, stars, stageCard, finalCard,
+    celebrate, kattalar, stars, stageCard, finalCard,
     pose, resetPoses, paper, raisePaper,
     bubble, say, tile, wordChip, lettersLine, toast, sup,
     buildWords, askNumber, counter, choice, setProgress, hideProgress,
