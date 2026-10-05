@@ -170,6 +170,10 @@
       sorovlar: () => sorov("/api/admin/sorovlar"),
       qaror: (id, qaror) => sorov("/api/admin/sorov/" + Number(id), { qaror }),
       statistika: () => sorov("/api/admin/statistika"),
+      oqituvchilar: () => sorov("/api/admin/oqituvchilar"),
+      rol: (id, rol) => sorov("/api/admin/rol/" + Number(id), { rol }),
+      foydalanuvchilar: (q, rol, sahifa) =>
+        sorov("/api/admin/foydalanuvchilar?" + new URLSearchParams({ q: q || "", rol: rol || "", sahifa: String(sahifa || 0) })),
     },
   };
 

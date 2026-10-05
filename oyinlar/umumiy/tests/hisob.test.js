@@ -26,11 +26,13 @@ test("service worker /api/ ni keshlamaydi", () => {
 });
 
 test("sahifalar: kirish, admin, bosh sahifa tugmasi", () => {
-  for (const [f, oxirgi] of [["kirish/index.html", "kirish.js"], ["admin/index.html", "admin.js"]]) {
-    const s = skriptlar(f);
-    assert.deepEqual(s, ["../oyinlar/umumiy/js/hisob.js", oxirgi], f);
-    assert.match(oqi(f), /oyinlar\/umumiy\/css\/asos\.css/);
-    assert.match(oqi(f), /oyinlar\/umumiy\/css\/hisob\.css/);
+  assert.deepEqual(skriptlar("kirish/index.html"), ["../oyinlar/umumiy/js/hisob.js", "kirish.js"]);
+  assert.match(oqi("kirish/index.html"), /oyinlar\/umumiy\/css\/hisob\.css/);
+  // Boshqaruv sahifalari umumiy qobiqda (boshqaruv.js + boshqaruv.css)
+  assert.deepEqual(skriptlar("admin/index.html"), ["../oyinlar/umumiy/js/hisob.js", "../oyinlar/umumiy/js/boshqaruv.js", "admin.js"]);
+  for (const f of ["admin/index.html", "oqituvchi/panel/index.html"]) {
+    assert.match(oqi(f), /oyinlar\/umumiy\/css\/asos\.css/, f);
+    assert.match(oqi(f), /oyinlar\/umumiy\/css\/boshqaruv\.css/, f);
   }
   const bosh = skriptlar("index.html");
   assert.ok(bosh.indexOf("oyinlar/umumiy/js/hisob.js") >= 0);
@@ -72,7 +74,7 @@ test("storage.js: kirgan bo'lsa saqlanganini navbatga qo'yadi, masalalar va o'n 
 
 test("o'qituvchi paneli: skriptlar va sinf hisobi", () => {
   assert.deepEqual(skriptlar("oqituvchi/panel/index.html"), [
-    "../../oyinlar/umumiy/js/storage.js", "../../bosh/js/bosh.js", "../../oyinlar/umumiy/js/hisob.js", "panel.js"]);
+    "../../oyinlar/umumiy/js/storage.js", "../../bosh/js/bosh.js", "../../oyinlar/umumiy/js/hisob.js", "../../oyinlar/umumiy/js/boshqaruv.js", "panel.js"]);
   const P = require("../../../oqituvchi/panel/panel.js");
   const GAMES = [{ topic: "kod", key: "a:v1", stages: 3 }, { topic: "kod", key: "b:v1", stages: 2 }, { topic: "ai", key: "c:v1", stages: 3 }];
   const SECTIONS = [{ id: "kod", title: "Kodlash" }, { id: "ai", title: "AI" }, { id: "bosh", title: "Bo'sh" }];
@@ -88,4 +90,5 @@ test("o'qituvchi paneli: skriptlar va sinf hisobi", () => {
   assert.equal(h.rekord, 140);
   assert.equal(h.masalalar, 2);
   assert.equal(h.foiz, 63); // 5 / 8 bosqich
+  assert.equal(h.tugagan, 5);
 });

@@ -157,17 +157,23 @@
       h("p", { class: "hisob-salom", text: `Salom, ${u.ism}!` }),
       h("p", { class: "hisob-rol", text: H.ROLLAR[u.rol] + (u.login ? " · login: " + u.login : u.email ? " · " + u.email : "") }),
     ];
-    if (u.rol === "admin") kids.push(h("a", { class: "btn big", href: "../admin/", text: "Admin paneli" }));
-    if (u.rol === "teacher" || u.rol === "admin") kids.push(h("a", { class: "btn big", href: "../oqituvchi/panel/", text: "Oʻqituvchi paneli" }));
+    // Har rolga bitta asosiy tugma, qolganlari ikkinchi darajali
+    if (u.rol === "admin") {
+      kids.push(h("div", { class: "hisob-tugmalar" },
+        h("a", { class: "btn big", href: "../admin/", text: "Admin paneli" }),
+        h("a", { class: "btn secondary big", href: "../oqituvchi/panel/", text: "Oʻqituvchi paneli" })));
+    }
+    if (u.rol === "teacher") kids.push(h("a", { class: "btn big", href: "../oqituvchi/panel/", text: "Oʻqituvchi paneli" }));
     if (u.rol === "student" && !u.login) {
       if (u.oqituvchi_sorov === "kutilmoqda") kids.push(h("div", { class: "hisob-karta eslatma" }, h("p", { class: "hisob-izoh", text: "Oʻqituvchi boʻlish soʻrovingizni admin koʻrib chiqyapti." })));
       else if (u.oqituvchi_sorov === "rad") kids.push(h("div", { class: "hisob-karta" }, h("p", { class: "hisob-izoh", text: "Oʻqituvchi boʻlish soʻrovi rad etildi. Savol boʻlsa, sayt muallifiga yozing." })));
       else kids.push(tugma("Men oʻqituvchiman", () => sorovEkrani(u), "secondary"));
     }
     if (u.rol === "student") kids.push(sinflarim());
-    const pastki = [tugma("Barcha oʻyinlar", () => { root.location.href = "../"; })];
-    if (u.parol_bor) pastki.push(tugma("Parolni almashtirish", () => parolEkrani(false, u), "secondary"));
-    pastki.push(tugma("Chiqish", chiqish, "secondary"));
+    // O'quvchi uchun asosiy amal — o'ynash; boshqalarga — ikkinchi darajali
+    const pastki = [tugma("Barcha oʻyinlar", () => { root.location.href = "../"; }, u.rol === "student" ? "" : "secondary")];
+    if (u.parol_bor) pastki.push(tugma("Parolni almashtirish", () => parolEkrani(false, u), "secondary sm"));
+    pastki.push(tugma("Chiqish", chiqish, "secondary sm"));
     ekran("Mening akkauntim", ...kids, h("div", { class: "hisob-tugmalar" }, ...pastki));
   }
 
