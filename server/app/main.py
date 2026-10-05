@@ -13,6 +13,7 @@ from .db import baza_tirikmi, make_engine
 from .google import foydalanuvchi as google_foydalanuvchi, router as google_router
 from .hisob import router as hisob_router
 from .progress import router as progress_router
+from .sinflar import router as sinflar_router
 from .xonalar import Boshqaruvchi, router as xonalar_router
 
 XAVFSIZ = ("GET", "HEAD", "OPTIONS")
@@ -45,6 +46,7 @@ def create_app(db_url: str | None = None) -> FastAPI:
     app.include_router(google_router)
     app.include_router(admin_router)
     app.include_router(progress_router)
+    app.include_router(sinflar_router)
 
     @app.get("/api/salomat")
     async def salomat(response: Response):
