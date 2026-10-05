@@ -45,6 +45,27 @@
 .to-tg { font-size: 14px; }
 .to-holat { grid-column: 2 / -1; font-size: 13px; color: var(--matn-3); }
 .to-men { display: flex; align-items: center; gap: 8px; font-weight: 900; }
+/* Bola: o'z tankining kartasi — jon va o'qlar */
+.to-men-karta { display: flex; flex-direction: column; gap: 6px; padding: 10px 14px; border-radius: var(--r-m); background: var(--yuza); border: 2px solid var(--chiziq); }
+.to-men-karta.olgan { opacity: 0.55; }
+.to-men-qator { display: grid; grid-template-columns: 34px 1fr auto; align-items: center; gap: 8px; font-weight: 800; }
+.to-men-nom { font-size: 14px; color: var(--matn-3); }
+.to-men-belgilar { display: flex; align-items: center; gap: 7px; }
+.to-men-belgilar .yurak { width: 15px; height: 15px; margin: 0 3px; }
+.to-men-belgilar .oq { width: 9px; height: 18px; }
+.to-men-belgilar .bosh { background: transparent; border: 2px dashed var(--chiziq); }
+.to-men-son { font-variant-numeric: tabular-nums; font-size: 14px; }
+
+/* Bola: buyruqlar guruhlab, bosiladigan tugmalar */
+.tk-guruhlar { display: flex; flex-direction: column; gap: 8px; }
+.tk-guruh { display: flex; flex-direction: column; gap: 4px; }
+.tk-guruh-nom { font-size: 12px; font-weight: 900; letter-spacing: 0.04em; text-transform: uppercase; color: var(--matn-3); }
+.tk-guruh-royxat { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; }
+.tk-amal { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; min-height: 44px; padding: 5px 9px; border: 1px solid var(--chiziq); border-radius: 8px; background: #F3EFE3; color: #4A4636; font: inherit; text-align: left; cursor: pointer; }
+.tk-amal:hover { border-color: #4A4636; }
+.tk-amal:active { transform: translateY(1px); }
+.tk-amal code { font-family: var(--kod-shrift); font-size: 14px; font-weight: 800; }
+.tk-amal span { font-size: 12px; color: var(--matn-3); }
 .tk-tank.men .tk-tana { stroke: #F0C040; stroke-width: 6; }
 
 /* Natija */

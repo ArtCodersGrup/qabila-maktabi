@@ -130,15 +130,36 @@
   }
 
   // ---------- Buyruq satri ----------
-  function buyruqPaneli(host, { buyruqlar, onSatr }) {
+  // guruhlar (ixtiyoriy): [{ nom, buyruqlar: [{ b, son, izoh }] }] — buyruqlar guruhlab ko'rsatiladi
+  // va bosilganda satrga qo'shiladi (son belgilangan holda — ustidan yozish mumkin).
+  function buyruqPaneli(host, { buyruqlar, guruhlar, onSatr }) {
     const el = h("div", { class: "tk-panel" });
     const tarix = h("div", { class: "tk-tarix" });
-    const yordam = h("div", { class: "tk-yordam" },
-      ...buyruqlar.map((b) => h("span", { class: "tk-buyruq", text: b + (b === "fire" || b === "reload" || b === "scan" || b === "radar" || b === "hp" || b === "ammo" ? "()" : "(n)") })));
     const maydon = h("textarea", {
       class: "tk-kiritish", rows: "2", spellcheck: "false", autocapitalize: "off", autocorrect: "off",
       placeholder: "buyruq yozing va Enter bosing", "aria-label": "Buyruq",
     });
+    const qosh = ({ b, son }) => {
+      if (maydon.disabled) return;
+      const oldin = maydon.value.replace(/\s+$/, "");
+      const bosh = oldin ? oldin + "\n" : "";
+      maydon.value = `${bosh}${b}(${son == null ? "" : son})`;
+      maydon.focus();
+      const n = maydon.value.length;
+      if (son == null) maydon.setSelectionRange(n, n);
+      else maydon.setSelectionRange(n - 1 - String(son).length, n - 1);
+    };
+    const yordam = guruhlar
+      ? h("div", { class: "tk-guruhlar" }, ...guruhlar.map((g) => h("div", { class: "tk-guruh" },
+        h("div", { class: "tk-guruh-nom", text: g.nom }),
+        h("div", { class: "tk-guruh-royxat" }, ...g.buyruqlar.map((q) => {
+          const tugma = h("button", { type: "button", class: "tk-amal", title: q.izoh },
+            h("code", { text: `${q.b}(${q.son == null ? "" : "n"})` }), h("span", { text: q.izoh }));
+          tugma.addEventListener("click", () => qosh(q));
+          return tugma;
+        })))))
+      : h("div", { class: "tk-yordam" },
+        ...buyruqlar.map((b) => h("span", { class: "tk-buyruq", text: b + (b === "fire" || b === "reload" || b === "scan" || b === "radar" || b === "hp" || b === "ammo" ? "()" : "(n)") })));
     el.append(yordam, tarix, maydon);
     host.append(el);
 

@@ -12,6 +12,25 @@
   const KIND = "tank";
   const TYPES = ["lobbi", "holat", "natija", "kirdi", "harakat"];
   const BUYRUQLAR = ["move", "back", "left", "right", "fire", "reload", "scan", "radar", "hp", "ammo"];
+  // Bola ekranidagi buyruqlar: guruhlab, qisqa izoh bilan; bosilganda satrga qo'shiladi
+  const GURUHLAR = [
+    { nom: "Harakat", buyruqlar: [
+      { b: "move", son: 50, izoh: "oldinga yur" },
+      { b: "back", son: 50, izoh: "orqaga yur" },
+      { b: "left", son: 90, izoh: "chapga buril" },
+      { b: "right", son: 90, izoh: "oʻngga buril" },
+    ] },
+    { nom: "Jang", buyruqlar: [
+      { b: "fire", izoh: "oʻq uz" },
+      { b: "reload", izoh: "oʻq toʻldir" },
+    ] },
+    { nom: "Maʼlumot", buyruqlar: [
+      { b: "scan", izoh: "oldingdagi masofa" },
+      { b: "radar", izoh: "dushmanga burchak" },
+      { b: "hp", izoh: "joning soni" },
+      { b: "ammo", izoh: "oʻqing soni" },
+    ] },
+  ];
   const HOST_JIM = 9000; // shuncha vaqt doskadan xabar kelmasa — uzildi
 
   // ---------- Sahifa: ovoz va bosh tugma ----------
@@ -318,6 +337,24 @@
     // Jang ekrani: maydon, raund va (tirik bo'lsa) buyruq satri
     let sarlavha = null;
     let panel = null;
+    let menKarta = null;
+    // O'z tankining kartasi: rang, jon (yurak) va o'qlar — to'la/bo'sh holatda
+    function menChiz() {
+      if (!menKarta || !m) return;
+      const t = X.tank(m, me);
+      if (!t) return;
+      const qator = (nom, bor, jami, klass) => h("div", { class: "to-men-qator" },
+        h("span", { class: "to-men-nom", text: nom }),
+        h("span", { class: "to-men-belgilar", "aria-label": `${nom}: ${bor} / ${jami}` },
+          ...Array.from({ length: jami }, (_, k) => h("span", { class: klass + (k < bor ? "" : " bosh") }))),
+        h("span", { class: "to-men-son", text: `${bor}/${jami}` }));
+      menKarta.innerHTML = "";
+      menKarta.classList.toggle("olgan", !t.tirik);
+      menKarta.append(
+        h("div", { class: "to-men" }, h("span", { class: "to-rang", style: `background:${t.rang}` }), t.tirik ? "Sening tanking" : "Tanking yiqildi"),
+        qator("Jon", Math.max(0, t.jon), X.JON, "yurak"),
+        qator("Oʻq", Math.max(0, t.oq), QK.jang.OQ, "oq"));
+    }
     function jangEkrani() {
       rejim = "jang";
       const e = sahifa();
@@ -329,10 +366,12 @@
       e.append(sarlavha, ikki);
       for (const t of m.tanklar) t.men = t.id === me;
       koz = jangUi.maydonKorinishi(chap, m);
-      const men = X.tank(m, me);
-      ong.append(h("div", { class: "to-men" }, h("span", { class: "to-rang", style: `background:${men.rang}` }), "Sening tanking"));
+      menKarta = h("div", { class: "to-men-karta" });
+      ong.append(menKarta);
+      menChiz();
       panel = jangUi.buyruqPaneli(ong, {
         buyruqlar: BUYRUQLAR,
+        guruhlar: GURUHLAR,
         onSatr: async (kod, yoz) => {
           if (yuborildi) { yoz("Bu raundda satr yuborilgan. Keyingi raundni kut.", "izoh"); return; }
           if (!X.tank(m, me).tirik) return;
@@ -413,6 +452,7 @@
         X.holatniQoy(m, p);
         koz.chiz();
       }
+      menChiz();
       if (p.tugadi) { if (rejim !== "natija") natijaEkrani(p); return; }
       if (p.r + 1 !== raund) {
         raund = p.r + 1;
@@ -431,6 +471,7 @@
       sarlavha.textContent = `${raund}-raund bajarilmoqda…`;
       const yozuv = X.raundniBajar(m, tartib, harakatlar);
       await koz.oyna(yozuv);
+      menChiz();
     }
 
     // Doska jim qolsa — uzilgan deb aytamiz
