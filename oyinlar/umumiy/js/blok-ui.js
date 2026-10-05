@@ -167,7 +167,7 @@
     }
 
     chiz();
-    return {
+    const api = {
       el, dastur, fn,
       soni: () => B.soni(dastur, fn),
       qosh(turi) {
@@ -212,6 +212,8 @@
       qulfla(on) { qulflangan = on !== false; chiz(); },
       chiz,
     };
+    QK.quruvchi = api; // tekshirish uchun (avtomatik o'ynash skripti yechimni shu orqali qo'yadi)
+    return api;
   }
 
   // ---------- Blok tugmalari (pastki qator) ----------
@@ -285,6 +287,7 @@
       if (qutiApi) qutiApi.set(null);
       const tez = r.iz.length > 40 ? 110 : 300;
       for (const e of r.iz) {
+        if (!m.view.el.isConnected) return natijalar; // keyingi vazifa ochildi — eski animatsiya to'xtaydi
         if (e.tur === "yur") {
           m.view.set(e.at);
           sound.play("tak");

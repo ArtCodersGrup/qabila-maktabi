@@ -101,7 +101,7 @@
 .bk-kod-raqam { flex: none; width: 2.2em; color: #8F8A7E; text-align: right; padding-right: 0.8em; user-select: none; }
 .bk-kod-soz { color: #9CD3FF; }
 .bk-kod-tahrir {
-  min-height: 30px; padding: 0 6px; font: inherit; color: #FFE08A; cursor: pointer;
+  min-height: 44px; min-width: 48px; padding: 0 6px; font: inherit; color: #FFE08A; cursor: pointer;
   background: #3A3A4C; border: 2px dashed #FFE08A; border-radius: 6px;
 }
 .bk-kod-tahrir:active { transform: translateY(1px); }

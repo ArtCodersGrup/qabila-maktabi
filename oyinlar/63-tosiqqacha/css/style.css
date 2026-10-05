@@ -1,0 +1,13 @@
+/* Toʻsiqqacha — faqat shu o'yinga xos uslublar.
+   Blok quruvchi va maydonlar: ../../umumiy/css/blok.css, ../../umumiy/css/dastur.css */
+
+.story { display: flex; flex-direction: column; align-items: center; gap: var(--s3); width: 100%; }
+.story-art { width: min(250px, 70vw); align-self: center; }
+.story-art.wide { width: min(320px, 86vw); }
+.story-art.small { width: min(200px, 54vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 18px; font-weight: 800; text-align: center; }
+
+@media (max-width: 520px) {
+  .summary { font-size: 16px; }
+}

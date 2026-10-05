@@ -29,6 +29,10 @@ Tartib — bosh sahifadagidek: osondan qiyinga, oldingi oʻyinga tayanadiganlari
 | Robot yoʻli | `26-robot-yoli` | 8–11 | Robotga buyruq berish: algoritm, tartibning ahamiyati, dasturni oʻqish va izdan tiklash |
 | Robot aqlli boʻldi | `47-robot-aqlli` | 8–11 | Takror va agar bloklari: bitta dastur ikki xil maydonda ishlaydi |
 | Xato ovi | `53-xato-ovi` | 8–11 | Tayyor dasturdagi xatoni topish va tuzatish; ortiqcha qadamlarni qisqartirish |
+| Oʻz buyrugʻim | `62-oz-buyrugim` | 8–11 | Funksiya: ★ buyrugʻini yasash va chaqirish; tor yoʻlda takrorlanadigan naqsh |
+| Toʻsiqqacha | `63-tosiqqacha` | 8–11 | While: «boʻsh ekan takrorla» va «gulxanga yetguncha» — uzunlik oldindan nomaʼlum |
+| Robot sanaydi | `64-robot-sanaydi` | 8–11 | Oʻzgaruvchi: qadam = 0, qadam + 1, takror qadam marta |
+| Bloklardan Pythonga | `65-blokdan-pythonga` | 10–16 | Bloklar ↔ Python: oʻqish, bosib tuzatish, tarjima qilish |
 | **Python: dasturlash** | | | |
 | Birinchi buyruq | `27-birinchi-buyruq` | 12–16 💻 | print: birinchi kod, qoʻshtirnoq ichi va tashqarisi, xato xabarini oʻqish |
 | Sonlar ustaxonasi | `28-sonlar-ustaxonasi` | 12–16 💻 | `//` va `%` (nechtadan tegdi, nechtasi ortdi), `/` doim kasr, amallar tartibi, daraja |

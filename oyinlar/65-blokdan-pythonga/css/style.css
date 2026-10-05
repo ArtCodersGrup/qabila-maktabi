@@ -1,0 +1,29 @@
+/* Bloklardan Pythonga — faqat shu o'yinga xos uslublar.
+   Quruvchi va Python ko'rinishi: ../../umumiy/css/blok.css, maydon: ../../umumiy/css/dastur.css */
+
+.story { display: flex; flex-direction: column; align-items: center; gap: var(--s3); width: 100%; }
+.story-art { width: min(250px, 70vw); align-self: center; }
+.story-art.wide { width: min(320px, 86vw); }
+.story-art.small { width: min(200px, 54vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 18px; font-weight: 800; text-align: center; }
+.summary code { font-family: ui-monospace, Menlo, Consolas, monospace; font-weight: 700; }
+
+/* Tahrir qismlari barmoq uchun kattaroq (QOIDALAR §3: ≥ 48 px; umumiy blok.css da 30 px) */
+.bk-kod-tahrir { min-height: 44px; min-width: 48px; margin: 2px 0; }
+
+/* ---------- Python lug'ati (yordamchi jadval) ---------- */
+.py-lugat {
+  display: flex; flex-direction: column; gap: var(--s1); width: min(560px, 96%);
+  padding: var(--s2) var(--s3); background: var(--yuza); border: 2px dashed var(--chiziq-kuchli); border-radius: var(--r-m);
+}
+.py-lugat-qator { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; font-size: 16px; }
+.py-lugat-kod { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 15px; font-weight: 700; color: var(--asosiy-matn); }
+.py-lugat-mano { font-weight: 700; color: var(--matn-2); }
+.py-lugat-mano::before { content: "— "; color: var(--matn-3); }
+
+@media (max-width: 520px) {
+  .summary { font-size: 16px; }
+  .py-lugat-qator { font-size: 15px; }
+  .py-lugat-kod { font-size: 14px; }
+}
