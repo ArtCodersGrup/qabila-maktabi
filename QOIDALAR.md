@@ -31,6 +31,8 @@ O'yin **telefon/planshetda ham, kompyuterda ham** ishlaydi. Avval barmoq uchun l
 
 **Istisno — klaviatura bloki** (23-o'yindan): bu o'yinlar haqiqiy klaviaturani o'rgatadi, shuning uchun **kompyuter** (yoki klaviatura ulangan planshet) uchun. Bosh sahifada kartasida 💻 belgisi (`GAMES` da `pc: true`), telefonda ochilsa — ogohlantirish. Ekran baribir 360 px ga sig'adi.
 
+**Istisno — sichqoncha o'yini** («Chaqqon sichqoncha»): u sichqonchaning o'zini o'rgatadi — ikki marta bosish, o'ng tugma va **sudrab olib borish**. Shuning uchun **kompyuter** uchun (💻, `pc: true`), telefonda ochilsa — ogohlantirish; "sudrash o'rniga bosish" qoidasi faqat shu o'yinda amal qilmaydi.
+
 **Istisno — Python bloki** (27-o'yindan): bola klaviaturada haqiqiy kod yozadi, shuning uchun bu blok ham **kompyuter** uchun (💻, `pc: true`). Telefonda ochilsa — ogohlantirish. "Natijani top" kabi o'qish masalalari telefonda ham ishlaydi va 360 px ga sig'adi.
 
 ## 4. O'qitish tamoyillari

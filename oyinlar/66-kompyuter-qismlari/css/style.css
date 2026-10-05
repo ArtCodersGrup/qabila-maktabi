@@ -1,0 +1,170 @@
+/* Kompyuter qismlari — faqat shu o'yinga xos uslublar (prefiks .kq-). */
+
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(250px, 70vw); align-self: center; }
+.story-art.small { width: min(170px, 46vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 18px; font-weight: 800; text-align: center; }
+
+.kq-savol { font-size: 20px; font-weight: 800; text-align: center; line-height: 1.35; max-width: 560px; margin: 0 auto; }
+
+/* ---------- Qism rasmi ---------- */
+.kq-surat { width: 100%; height: 68px; }
+.kq-surat svg { display: block; width: 100%; height: 100%; }
+.kq-surat.katta { height: 120px; }
+
+/* ---------- Rasm-tugma (variant) ---------- */
+/* Telefonda 2 ustun: 18 px li nom ("Sichqoncha", "Tizim bloki") 3 ustunga sig'maydi */
+.kq-variantlar { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; width: 100%; max-width: 440px; margin: 0 auto; }
+.kq-rasm {
+  --qirra: var(--oq-qora);
+  position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  min-width: 48px; min-height: 84px; padding: 8px;
+  border: 2px solid var(--chiziq-kuchli); border-radius: var(--r-l); background: var(--yuza); color: var(--matn);
+  box-shadow: 0 4px 0 var(--qirra); transition: transform 0.08s ease, box-shadow 0.08s ease;
+}
+.kq-rasm:active { transform: translateY(4px); box-shadow: 0 0 0 var(--qirra); }
+.kq-rasm:disabled { opacity: 1; }
+.kq-nom { font-size: 18px; font-weight: 800; line-height: 1.2; text-align: center; overflow-wrap: anywhere; }
+
+/* Holat rang bilan ham, belgi bilan ham ko'rinadi (QOIDALAR §6): ✓ — belgilangan/to'g'ri, ↻ — yana o'yla */
+.kq-rasm.belgilangan { --qirra: var(--asosiy-qora); border-color: var(--asosiy); background: var(--asosiy-och); }
+.kq-rasm.togri { --qirra: var(--togri-qora); border-color: var(--togri); background: var(--togri-och); }
+.kq-rasm.yana { border-style: dashed; border-color: var(--yana-qora); background: var(--yana-och); }
+.kq-rasm.belgilangan::after, .kq-rasm.togri::after, .kq-rasm.yana::after {
+  content: "✓"; position: absolute; top: 6px; right: 6px; width: 26px; height: 26px; border-radius: 50%;
+  display: grid; place-items: center; background: var(--asosiy); color: #fff; font-size: 16px; font-weight: 900; line-height: 1;
+}
+.kq-rasm.togri::after { background: var(--togri); }
+.kq-rasm.yana::after { content: "↻"; background: var(--yana); color: var(--matn); }
+/* 6 variantli to'plam (3 qator): telefonda bitta ekranga sig'ishi uchun rasm pastroq */
+.kq-variantlar.n6 .kq-rasm { min-height: 72px; padding: 6px; }
+.kq-variantlar.n6 .kq-surat { height: 50px; }
+/* Tomoniga o'tib ketgan qurilma (2-bosqich ko'rsatishi) */
+.kq-rasm.olindi { opacity: 0.3; box-shadow: none; border-style: dashed; }
+
+/* ---------- Yozuvli javoblar ---------- */
+.kq-javoblar { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 520px; margin: 0 auto; }
+.kq-javoblar.ikki { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.kq-javoblar .btn.wide { width: 100%; padding-left: 12px; padding-right: 12px; }
+.btn.kq-yana { --qirra: var(--yana-qora); background: var(--yana-och); color: var(--matn); box-shadow: 0 4px 0 var(--qirra), inset 0 0 0 2px var(--yana); }
+.btn.kq-yana::before { content: "↻"; }
+
+/* Ko'p tanlov (yozuvli): [katak] matn */
+.kq-belgilar, .kq-qadamlar { display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 520px; margin: 0 auto; }
+.kq-belgi, .kq-qadam {
+  --qirra: var(--oq-qora);
+  display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 8px 12px;
+  border: 2px solid var(--chiziq-kuchli); border-radius: var(--r-m); background: var(--yuza); color: var(--matn);
+  font-size: 18px; font-weight: 800; line-height: 1.25; text-align: left;
+  box-shadow: 0 3px 0 var(--qirra); transition: transform 0.08s ease, box-shadow 0.08s ease;
+}
+.kq-belgi:active, .kq-qadam:active { transform: translateY(3px); box-shadow: 0 0 0 var(--qirra); }
+.kq-belgi:disabled, .kq-qadam:disabled { opacity: 1; }
+.kq-katak {
+  flex: none; width: 30px; height: 30px; border: 2.5px solid var(--chiziq-kuchli); border-radius: var(--r-s);
+  display: grid; place-items: center; background: var(--yuza-2); color: #fff; font-size: 18px; font-weight: 900; line-height: 1;
+}
+.kq-belgi.belgilangan, .kq-qadam.tanlangan { --qirra: var(--asosiy-qora); border-color: var(--asosiy); background: var(--asosiy-och); }
+.kq-belgi.belgilangan .kq-katak { border-color: var(--asosiy-qora); background: var(--asosiy); }
+.kq-belgi.togri, .kq-qadam.togri { --qirra: var(--togri-qora); border-color: var(--togri); background: var(--togri-och); }
+.kq-belgi.togri .kq-katak { border-color: var(--togri-qora); background: var(--togri); }
+.kq-belgi.belgilangan .kq-katak::before, .kq-belgi.togri .kq-katak::before { content: "✓"; }
+
+/* Tartiblash kartasi: doirada navbat raqami (bo'sh — hali tanlanmagan) */
+.kq-raqam {
+  flex: none; width: 32px; height: 32px; border: 2.5px dashed var(--chiziq-kuchli); border-radius: 50%;
+  display: grid; place-items: center; background: var(--yuza-2); font-size: 18px; font-weight: 900; line-height: 1;
+}
+.kq-qadam.tanlangan .kq-raqam { border-style: solid; border-color: var(--asosiy-qora); background: var(--asosiy); color: #fff; }
+.kq-qadam.togri .kq-raqam { border-style: solid; border-color: var(--togri-qora); background: var(--togri); color: #fff; }
+
+/* Yechim: to'g'ri qurilma rasmi va nomi yonma-yon */
+.kq-yechim { display: flex; align-items: center; justify-content: center; gap: 12px; }
+.kq-yechim .kq-surat { flex: none; width: 84px; height: 64px; }
+
+/* ---------- Stol ustidagi kompyuter (kirish va 1-bosqich) ---------- */
+/* Nisbat 320 : 270 — game-art.js dagi STOL bilan bir xil; qismlar foizli joyda turadi */
+.kq-stol {
+  position: relative; width: 100%; max-width: 480px; margin: 0 auto; overflow: hidden;
+  border: 2px solid var(--chiziq); border-radius: var(--r-l); background: var(--asosiy-och);
+}
+.kq-stol::before { content: ""; display: block; padding-top: 84.375%; }
+.kq-stol-fon, .kq-stol-fon svg, .kq-joy svg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+.kq-joy { position: absolute; display: block; min-width: 48px; min-height: 48px; margin: 0; padding: 0; border: 0; border-radius: var(--r-m); background: transparent; }
+button.kq-joy { transition: transform 0.08s ease; }
+button.kq-joy:active { transform: translateY(2px); }
+/* Hali bosilmagan qism — to'q sariq nuqta, bosilgani — ✓ */
+button.kq-joy::after {
+  content: ""; position: absolute; top: 0; right: 0; width: 14px; height: 14px; border-radius: 50%;
+  display: grid; place-items: center; background: var(--yana); border: 2px solid var(--yuza);
+  color: #fff; font-size: 13px; font-weight: 900; line-height: 1;
+}
+button.kq-joy.topildi::after { content: "✓"; width: 22px; height: 22px; background: var(--togri); }
+button.kq-joy.tanlangan { background: rgba(255, 255, 255, 0.6); box-shadow: 0 0 0 3px var(--asosiy); }
+.kq-sanoq {
+  position: absolute; top: 6px; right: 6px; padding: 0 10px; border: 2px solid var(--chiziq); border-radius: var(--r-pill);
+  background: var(--yuza); font-size: 18px; font-weight: 900; font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Kiritish → kompyuter → chiqarish (2-bosqich ko'rsatishi) ---------- */
+.kq-oqim { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 6px; width: 100%; max-width: 460px; margin: 0 auto; }
+.kq-tomon { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 6px; border: 2px solid var(--c0); border-radius: var(--r-m); background: var(--asosiy-och); }
+.kq-tomon.chiqarish { border-color: var(--c3); background: #EFE7FA; }
+.kq-tomon-nom { font-size: 18px; font-weight: 900; line-height: 1.2; white-space: nowrap; }
+.kq-uyalar { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; width: 100%; }
+.kq-uya { height: 48px; padding: 3px; border: 2px dashed var(--chiziq-kuchli); border-radius: var(--r-s); background: var(--yuza); }
+.kq-uya.toldi { border-style: solid; border-color: var(--chiziq); }
+.kq-uya .kq-surat { height: 100%; animation: kq-kel 0.35s ease-out; }
+.kq-markaz .kq-surat { width: 48px; height: 76px; }
+.kq-patnis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; width: 100%; max-width: 440px; margin: 0 auto; }
+.kq-patnis .kq-rasm { min-height: 64px; padding: 6px; }
+.kq-patnis .kq-surat { height: 46px; }
+
+/* ---------- O'yinchoq ekran (3-bosqich ko'rsatishi) ---------- */
+.kq-ekran { width: min(100%, 340px); margin: 0 auto; }
+.kq-ekran-yuz {
+  position: relative; display: flex; flex-direction: column; height: 196px; overflow: hidden;
+  border: 8px solid var(--matn); border-radius: var(--r-l); background: var(--asosiy-och); transition: background 0.4s;
+}
+.kq-ekran-oyoq { width: 84px; height: 14px; margin: 0 auto; border-radius: 0 0 var(--r-s) var(--r-s); background: var(--chiziq-kuchli); }
+.kq-oyna { margin: 8px 8px 0; border: 2px solid var(--matn); border-radius: var(--r-s); background: var(--yuza); overflow: hidden; animation: kq-kel 0.3s ease-out; }
+.kq-oyna[hidden], .kq-menyu[hidden] { display: none; }
+.kq-oyna-sarlavha { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 2px 8px; background: var(--asosiy); color: #fff; font-size: 18px; font-weight: 800; }
+.kq-holat { padding: 0 8px; border-radius: var(--r-pill); background: var(--yana); color: var(--matn); }
+.kq-holat.ok { background: var(--togri-och); color: var(--togri-matn); }
+.kq-oyna-rasm { display: grid; place-items: center; padding: 4px; }
+.kq-oyna-rasm svg { display: block; width: auto; height: 84px; }
+.kq-panel { display: flex; align-items: center; margin-top: auto; padding: 3px 6px; background: var(--matn); }
+.kq-pusk { padding: 0 10px; border-radius: 6px; background: var(--asosiy); color: #fff; font-size: 18px; font-weight: 800; }
+.kq-menyu {
+  position: absolute; left: 6px; bottom: 38px; padding: 6px 12px; border: 2px solid var(--matn); border-radius: var(--r-s);
+  background: var(--yuza); font-size: 18px; font-weight: 800; animation: kq-kel 0.25s ease-out;
+}
+.kq-ochmoqda { display: none; }
+.kq-ekran.ochmoqda .kq-oyna, .kq-ekran.ochmoqda .kq-menyu, .kq-ekran.ochmoqda .kq-panel { display: none; }
+.kq-ekran.ochmoqda .kq-ochmoqda { display: grid; place-items: center; flex: 1; font-size: 20px; font-weight: 800; color: var(--asosiy-matn); }
+/* O'chiq ekran: qorong'i, ichidagi hamma narsa ko'rinmaydi */
+.kq-ekran.ochiq-emas .kq-ekran-yuz { background: var(--matn); }
+.kq-ekran.ochiq-emas .kq-ekran-yuz > * { visibility: hidden; }
+
+@keyframes kq-kel { from { transform: scale(0.6); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* Sichqoncha bor qurilmada — yorishadi (faqat bezak; telefonda hech narsa o'zgarmaydi) */
+@media (hover: hover) and (pointer: fine) {
+  .kq-rasm:not(:disabled):hover, .kq-belgi:not(:disabled):hover, .kq-qadam:not(:disabled):hover, button.kq-joy:hover { filter: brightness(1.05); }
+}
+
+/* Keng ekran: 4 variant bir qatorda, 6 variant — 3 ustunda */
+@media (min-width: 900px) {
+  .kq-variantlar.n4 { grid-template-columns: repeat(4, minmax(0, 1fr)); max-width: 640px; }
+  .kq-variantlar.n6 { grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: 540px; }
+  .kq-variantlar.n6 .kq-rasm { min-height: 84px; padding: 8px; }
+  .kq-variantlar.n6 .kq-surat { height: 68px; }
+}
+
+/* Mashq qutisi (kod.css dagi bilan bir xil — bu o'yin kod yozmaydi, shuning uchun o'sha fayl ulanmaydi) */
+.pbox { display: flex; flex-direction: column; align-items: stretch; gap: 12px; width: 100%; max-width: 640px; margin: 0 auto; }
+.pbox .note { font-size: 19px; font-weight: 800; color: var(--asosiy-matn); text-align: center; }
+.pbox .answer { font-size: 20px; font-weight: 900; color: var(--togri-matn); text-align: center; }
+@media (max-width: 420px) { .pbox { gap: 8px; } .pbox .note { font-size: 18px; } }

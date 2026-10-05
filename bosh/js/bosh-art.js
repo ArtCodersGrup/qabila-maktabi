@@ -704,7 +704,40 @@
   <path d="M44 36 h8" stroke="#F08A24" stroke-width="3.5" stroke-linecap="round"/>
   <path d="M46 45 h6" stroke="#1A9E77" stroke-width="3.5" stroke-linecap="round"/>`);
 
-  const ICONS = { musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, bolish, qutilar2, ayri, charx, zina, qator, dastgoh, minora, ikkiyol, sxema, lupa, saralash, osish, daraxt, qator3, jamoa, paskal, kaptar, tezkor, robotaql, mantiqkod, tank, tankduel, varaq, cpp, cpptur, cppsikl, cppmassiv, qulf, izqulf, qarmoq, bolaklar, manzil, tugunlar, yolqulf, xatoovi, yulduzbuy, tosiqqacha, sanoq, blokpy, poyga, yozuv, onlayn, tog };
+  // 66-o'yin: kompyuter qismlari — monitor va tizim bloki
+  const qismlar = svg(`
+  <rect x="4" y="10" width="38" height="28" rx="4" fill="#FFFFFF" stroke="${INK}" stroke-width="3"/>
+  <rect x="9" y="15" width="28" height="18" rx="2" fill="#D8E6FB"/>
+  <path d="M23 38 v8 M14 48 h18" stroke="${INK}" stroke-width="3.5" stroke-linecap="round"/>
+  <rect x="47" y="10" width="13" height="40" rx="3" fill="#F3EFE3" stroke="${INK}" stroke-width="3"/>
+  <circle cx="53.5" cy="18" r="2.5" fill="#1A9E77"/>
+  <path d="M51 27 h5 M51 33 h5" stroke="${INK}" stroke-width="2.5" stroke-linecap="round"/>`);
+
+  // 67-o'yin: sichqoncha — chap tugmasi bo'yalgan
+  const sichqoncha = svg(`
+  <path d="M32 9 q0 -6 9 -6" fill="none" stroke="${INK}" stroke-width="3" stroke-linecap="round"/>
+  <rect x="17" y="9" width="30" height="48" rx="15" fill="#FFFFFF" stroke="${INK}" stroke-width="3"/>
+  <path d="M32 10.5 V29 H18.5 V24 a13.5 13.5 0 0 1 13.5 -13.5 z" fill="#2F6FDE"/>
+  <path d="M17 29 H47 M32 9 V29" stroke="${INK}" stroke-width="3"/>
+  <rect x="29" y="14" width="6" height="10" rx="3" fill="#F08A24" stroke="${INK}" stroke-width="2"/>`);
+
+  // 68-o'yin: ekran va oynalar — ikki ustma-ust oyna, oldingisi faol
+  const oynalar = svg(`
+  <rect x="5" y="7" width="38" height="30" rx="4" fill="#FFFFFF" stroke="${INK}" stroke-width="3"/>
+  <path d="M5 16 h38" stroke="${INK}" stroke-width="3"/>
+  <rect x="21" y="24" width="38" height="32" rx="4" fill="#FFFFFF" stroke="${INK}" stroke-width="3"/>
+  <path d="M21 34 v-6 a4 4 0 0 1 4 -4 h30 a4 4 0 0 1 4 4 v6 z" fill="#2F6FDE" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M50 27 l4 4 M54 27 l-4 4" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M28 42 h20 M28 49 h12" stroke="#C9D3E3" stroke-width="3.5" stroke-linecap="round"/>`);
+
+  // 69-o'yin: fayl va papka — papkadan varaq chiqib turibdi
+  const papka = svg(`
+  <rect x="33" y="7" width="20" height="20" rx="2.5" fill="#FFFFFF" stroke="${INK}" stroke-width="2.5"/>
+  <path d="M38 13 h10 M38 18 h10" stroke="#2F6FDE" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M4 19 a4 4 0 0 1 4 -4 h15 l6 7 h27 a4 4 0 0 1 4 4 v25 a4 4 0 0 1 -4 4 H8 a4 4 0 0 1 -4 -4 z" fill="#F0C040" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M4 31 h56" stroke="${INK}" stroke-width="3"/>`);
+
+  const ICONS = { qismlar, sichqoncha, oynalar, papka, musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, bolish, qutilar2, ayri, charx, zina, qator, dastgoh, minora, ikkiyol, sxema, lupa, saralash, osish, daraxt, qator3, jamoa, paskal, kaptar, tezkor, robotaql, mantiqkod, tank, tankduel, varaq, cpp, cpptur, cppsikl, cppmassiv, qulf, izqulf, qarmoq, bolaklar, manzil, tugunlar, yolqulf, xatoovi, yulduzbuy, tosiqqacha, sanoq, blokpy, poyga, yozuv, onlayn, tog };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";

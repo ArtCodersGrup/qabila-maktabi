@@ -1,0 +1,184 @@
+/* Fayl va papka — faqat shu o'yinga xos uslublar (prefiks .fp-).
+   Oyna va belgilarning asosi — umumiy/css/stol.css (.oyna, .oyna-sarlavha, .oyna-ichi, .stol-belgi). */
+
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(250px, 70vw); align-self: center; }
+.story-art.wide { width: min(320px, 84vw); }
+.story-art.small { width: min(180px, 50vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 17px; font-weight: 800; text-align: center; }
+
+/* ---------- «Fayllar» oynasi ---------- */
+/* stol.css da .oyna ish stoli ustida absolyut turadi; bu o'yinda oyna yolg'iz — ish zonasida oddiy blok,
+   balandligi ichidagiga qarab (asboblar tor ekranda ikki qatorga o'tadi, nom chiplari ochiladi). */
+.fp-oyna.oyna { position: relative; width: 100%; margin-bottom: 4px; /* soya ish zonasida kesilmasin */ }
+.fp-oyna .oyna-sarlavha { min-height: 40px; }
+
+/* Asboblar qatori: belgi + qisqa yozuv, har tugma ≥ 48 px; sig'masa keyingi qatorga o'tadi (kesilmaydi) */
+.fp-asboblar {
+  flex: none; display: flex; flex-wrap: wrap; gap: 6px; padding: 6px;
+  background: var(--panel); border-bottom: 2px solid var(--chiziq);
+}
+.fp-asbob {
+  flex: 1 1 88px; max-width: 170px; min-height: 48px; padding: 4px 6px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 5px;
+  border: 2px solid var(--chiziq-kuchli); border-radius: var(--r-m); background: var(--yuza);
+  font-size: 15px; font-weight: 800; line-height: 1.15; color: var(--matn); text-align: left;
+  box-shadow: 0 3px 0 var(--oq-qora); transition: transform 0.08s, box-shadow 0.08s;
+}
+.fp-asbob[hidden] { display: none; }
+.fp-asbob svg { flex: none; width: 22px; height: 22px; }
+.fp-asbob-yozuv { display: flex; flex-direction: column; }
+.fp-tezkor { font-size: 12px; font-weight: 700; color: var(--matn-2); white-space: nowrap; }
+.fp-asbob:not(:disabled):active { transform: translateY(3px); box-shadow: 0 0 0 var(--oq-qora); }
+.fp-asbob.yoniq { background: var(--sariq-och); border-color: var(--matn); }
+/* Hozir ishlamaydigan asbob: xira emas — uzuq chiziqli va kulrang (QOIDALAR §6) */
+.fp-asbob:disabled { opacity: 1; background: transparent; border-style: dashed; border-color: var(--chiziq-kuchli); color: var(--matn-3); box-shadow: none; }
+.fp-asbob:disabled .fp-tezkor { color: var(--matn-3); }
+
+/* Nom chiplari: «Yangi papka» va «Nomla» bosilganda — tayyor nomlardan tanlanadi, harf terilmaydi */
+.fp-nomlar {
+  flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 6px 8px 8px;
+  background: var(--sariq-och); border-bottom: 2px solid var(--chiziq);
+}
+.fp-nomlar[hidden] { display: none; }
+.fp-nomlar-sarlavha { width: 100%; font-size: 15px; font-weight: 800; }
+.fp-chip {
+  min-width: 48px; min-height: 48px; padding: 6px 14px;
+  border: 2px solid var(--asosiy); border-radius: var(--r-pill); background: var(--yuza);
+  font-size: 18px; font-weight: 800; color: var(--asosiy-matn);
+  box-shadow: 0 3px 0 var(--asosiy-qora); transition: transform 0.08s, box-shadow 0.08s;
+}
+.fp-chip.bekor { border-color: var(--chiziq-kuchli); color: var(--matn-2); box-shadow: 0 3px 0 var(--oq-qora); }
+.fp-chip:active { transform: translateY(3px); box-shadow: none; }
+
+/* Yo'l satri: Kompyuter › Hujjatlar › Rasmlar */
+.fp-yol {
+  flex: none; padding: 6px 10px; background: var(--yuza-2); border-bottom: 2px solid var(--chiziq);
+  font-size: 16px; font-weight: 800; line-height: 1.3; color: var(--matn-2); overflow-wrap: anywhere;
+}
+.fp-yol-ajrat { color: var(--matn-3); }
+.fp-yol-nom.joriy { color: var(--asosiy-matn); }
+
+/* Ichidagilar: belgi + nom, kataklarga teriladi */
+.fp-oyna .fp-ichi { position: relative; flex: none; min-height: 164px; padding: 8px; overflow: hidden; }
+.fp-royxat { display: grid; grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); gap: 6px 4px; align-content: start; }
+.fp-royxat .stol-belgi {
+  width: 100%; min-height: 76px; padding: 6px 2px; font-size: 15px; cursor: pointer;
+  transition: transform 0.08s, background 0.15s;
+}
+.fp-royxat .stol-belgi svg { width: 44px; height: 44px; }
+.fp-royxat .stol-belgi:active { transform: translateY(2px); }
+.fp-royxat .stol-belgi.tanlangan { background: var(--asosiy-och); border-color: var(--asosiy); }
+/* Kesilgan narsa qo'yilguncha joyida turadi — xira va uzuq chiziqli */
+.fp-royxat .stol-belgi.fp-kesilgan { opacity: 0.5; border-style: dashed; border-color: var(--chiziq-kuchli); }
+/* Yechimda ko'rsatiladigan fayl: yashil hoshiya + ✓ (faqat rang emas) */
+.fp-royxat .stol-belgi.fp-yechim { position: relative; background: var(--togri-och); border-color: var(--togri); }
+.fp-royxat .stol-belgi.fp-yechim::after {
+  content: "✓"; position: absolute; top: 2px; right: 4px; width: 22px; height: 22px; border-radius: 50%;
+  display: grid; place-items: center; background: var(--togri); color: #fff; font-size: 14px; font-weight: 900;
+}
+.fp-toxtagan .stol-belgi { cursor: default; }
+.fp-nom { display: block; max-width: 100%; }
+.fp-kengaytma { white-space: nowrap; color: var(--asosiy-matn); }
+.fp-bosh { grid-column: 1 / -1; padding: 28px 8px; text-align: center; font-size: 16px; font-weight: 700; color: var(--matn-3); }
+
+/* Ochilgan fayl: oyna ichini qisqa vaqt to'sib turadi (bosilsa yopiladi) */
+.fp-ochiq {
+  position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  background: var(--yuza); cursor: pointer; animation: fp-och 0.25s ease-out;
+}
+.fp-ochiq-rasm { width: 96px; }
+.fp-ochiq-rasm svg { display: block; width: 100%; height: auto; }
+.fp-ochiq-nom { font-size: 20px; font-weight: 900; }
+.fp-ochiq-izoh { font-size: 15px; font-weight: 700; color: var(--matn-2); }
+
+/* Pastki qator: bufer holati va savat */
+.fp-past {
+  flex: none; display: flex; align-items: center; gap: 8px; min-height: 40px; padding: 4px 6px 4px 10px;
+  background: var(--panel); border-top: 2px solid var(--chiziq);
+}
+.fp-past[hidden] { display: none; }
+.fp-holat { flex: 1; min-width: 0; font-size: 15px; font-weight: 700; color: var(--matn-2); overflow-wrap: anywhere; }
+.fp-savat {
+  flex: none; min-width: 48px; min-height: 48px; padding: 2px 12px 2px 6px;
+  display: inline-flex; align-items: center; gap: 4px;
+  border: 2px solid var(--chiziq-kuchli); border-radius: var(--r-m); background: var(--yuza);
+  font-size: 15px; font-weight: 800; color: var(--matn);
+  box-shadow: 0 3px 0 var(--oq-qora); transition: transform 0.08s, box-shadow 0.08s;
+}
+.fp-savat svg { flex: none; width: 36px; height: 36px; }
+.fp-savat:not(:disabled):active { transform: translateY(3px); box-shadow: none; }
+.fp-savat.faol { background: var(--asosiy-och); border-color: var(--asosiy); }
+.fp-savat:disabled { opacity: 1; border-style: dashed; color: var(--matn-3); box-shadow: none; }
+
+@media (hover: hover) and (pointer: fine) {
+  .fp-asbob:not(:disabled):hover, .fp-chip:hover, .fp-savat:not(:disabled):hover { filter: brightness(1.05); }
+  .fp-oyna:not(.fp-toxtagan) .fp-royxat .stol-belgi:not(.tanlangan):not(.fp-yechim):hover { background: var(--yuza-2); }
+}
+
+/* ---------- Mashq ekranlari ---------- */
+/* Maslahat va yechim joyi — oyna tepasida; bo'sh bo'lsa joy olmaydi */
+.fp-ust { display: flex; flex-direction: column; gap: 8px; }
+.fp-ust:empty { display: none; }
+
+/* «Bu nima?» savoli: fayl kartasi */
+.fp-karta {
+  align-self: center; display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 200px; padding: 16px 24px;
+  border: 2px solid var(--chiziq); border-radius: var(--r-l); background: var(--yuza); box-shadow: 0 4px 0 var(--oq-qora);
+}
+.fp-karta-rasm { width: 88px; }
+.fp-karta-rasm svg { display: block; width: 100%; height: auto; }
+.fp-karta-nom { font-size: 26px; font-weight: 900; text-align: center; overflow-wrap: anywhere; }
+
+/* Maslahat jadvali: tur belgisi va nom oxiri */
+.fp-jadval { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.fp-jadval-katak {
+  display: flex; flex-direction: column; align-items: center; min-width: 68px; padding: 6px 8px;
+  border: 2px solid var(--chiziq); border-radius: var(--r-m); background: var(--yuza);
+  font-size: 18px; font-weight: 900; color: var(--asosiy-matn);
+}
+.fp-jadval-katak svg { width: 40px; height: 40px; }
+
+/* Javob tugmalari */
+.fp-javoblar { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 520px; margin: 0 auto; }
+.fp-javoblar.ikki { display: grid; grid-template-columns: 1fr 1fr; }
+.fp-javoblar .btn.wide { width: 100%; }
+.fp-javoblar.yol { gap: 8px; }
+.fp-javoblar.yol .btn { min-height: 48px; padding: 8px 12px; font-size: 17px; }
+
+/* Yechim ro'yxati: papka (yoki savat) va ichidagi fayllar */
+.fp-yechim-royxat {
+  display: flex; flex-direction: column; gap: 6px; padding: 8px 10px;
+  border: 2px solid var(--togri); border-radius: var(--r-m); background: var(--togri-och);
+}
+.fp-qator { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; }
+.fp-qator-nom { display: inline-flex; align-items: center; gap: 4px; font-size: 16px; font-weight: 900; color: var(--togri-matn); }
+.fp-qator-nom svg { flex: none; width: 28px; height: 28px; }
+.fp-fayl {
+  display: inline-flex; align-items: center; gap: 2px; padding: 2px 10px 2px 4px;
+  border: 2px solid var(--chiziq); border-radius: var(--r-pill); background: var(--yuza);
+  font-size: 15px; font-weight: 800;
+}
+.fp-fayl svg { flex: none; width: 24px; height: 24px; }
+.fp-fayl .fp-nom { display: inline; }
+.fp-fayl.bosh { padding: 2px 10px; border-style: dashed; color: var(--matn-3); }
+
+@keyframes fp-och { from { transform: scale(0.85); opacity: 0; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .fp-ochiq { animation: none; } }
+
+/* Mashq qutisi (kod.css dagi bilan bir xil — bu o'yin kod yozmaydi, shuning uchun o'sha fayl ulanmaydi) */
+.pbox { display: flex; flex-direction: column; align-items: stretch; gap: 12px; width: 100%; max-width: 640px; margin: 0 auto; }
+.pbox .note { font-size: 19px; font-weight: 800; color: var(--asosiy-matn); text-align: center; }
+.pbox .answer { font-size: 20px; font-weight: 900; color: var(--togri-matn); text-align: center; overflow-wrap: anywhere; }
+@media (max-width: 420px) {
+  .pbox { gap: 8px; }
+  .pbox .note { font-size: 18px; }
+  .fp-karta-nom { font-size: 24px; }
+}
+
+/* Past bo'yli tik ekran (kichik telefon): oynaga joy kerak — mashqda qahramonlar yashirinadi, pufak qoladi
+   (asos.css qo'llanmali o'yinlarda ham shunday qiladi) */
+@media (orientation: portrait) and (max-height: 740px) {
+  #play.compact .actor { display: none; }
+}

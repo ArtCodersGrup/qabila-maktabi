@@ -4,7 +4,7 @@
 // toifa — o'yin qaysi sinf guruhiga tegishli: boshlangich (1–4), orta (5–8), yuqori (9–11).
 // Har o'yin AYNAN BITTA toifada. Asbob va musobaqalarda toifalar: [...] — ular bir nechtasida ko'rinadi.
 // O'yin toifasi o'zgarsa yoki yangi o'yin qo'shilsa: node bosh/tools/toifa-yoz.js (sahifadagi data-toifa ni yozadi).
-// pc: true — o'yinga haqiqiy klaviatura kerak (kartada 💻 belgisi).
+// pc: true — o'yinga kompyuter kerak: haqiqiy klaviatura yoki sichqoncha (kartada 💻 belgisi).
 (function (root) {
   "use strict";
 
@@ -20,6 +20,7 @@
   // Bo'limlar tartibi — o'rganish yo'li: osondan qiyinga, oldingi o'yinga tayanadiganlari keyin
   // (masalan, 25-papka 11- va 20-papkalarga tayanadi). Kartadagi raqam — shu tartibdagi o'rni (number).
   const SECTIONS = [
+    { id: "tanishuv", title: "Kompyuter bilan tanishuv", note: "Qismlar, sichqoncha, oynalar va fayllar" },
     { id: "klaviatura", title: "Klaviatura", note: "Tez va toʻgʻri yozishni oʻrganamiz" },
     { id: "dastur", title: "Algoritm va dasturlash", note: "Robotga buyruq beramiz: yoʻl va tartib" },
     { id: "python", title: "Python: dasturlash", note: "Haqiqiy kod yozamiz: printdan funksiyagacha" },
@@ -101,6 +102,10 @@
     { n: 50, topic: "xavfsizlik", dir: "50-parol-kuchi", title: "Parol kuchi", desc: "Nechta variant bor va kompyuter qancha vaqtda topadi", key: "parol-kuchi:v1", stages: 3, toifa: "orta", icon: "qulf" },
     { n: 51, topic: "xavfsizlik", dir: "51-bir-tomonlama-qulf", title: "Bir tomonlama qulf", desc: "Sayt parolni emas, uning izini saqlaydi", key: "bir-tomonlama-qulf:v1", stages: 3, toifa: "orta", icon: "izqulf" },
     { n: 52, topic: "xavfsizlik", dir: "52-firibgar-xat", title: "Firibgar xat", desc: "Soxta xatni belgilaridan va manzilidan tanish", key: "firibgar-xat:v1", stages: 3, toifa: "orta", icon: "qarmoq" },
+    { n: 66, topic: "tanishuv", dir: "66-kompyuter-qismlari", title: "Kompyuter qismlari", desc: "Monitor, klaviatura, sichqoncha: nima kiritadi, nima chiqaradi", key: "kompyuter-qismlari:v1", stages: 3, toifa: "boshlangich", icon: "qismlar" },
+    { n: 67, topic: "tanishuv", dir: "67-chaqqon-sichqoncha", title: "Chaqqon sichqoncha", desc: "Bosish, ikki marta bosish, oʻng tugma va sudrab olib borish", key: "chaqqon-sichqoncha:v1", stages: 3, toifa: "boshlangich", icon: "sichqoncha", pc: true },
+    { n: 68, topic: "tanishuv", dir: "68-ekran-va-oynalar", title: "Ekran va oynalar", desc: "Ish stoli, belgilar va oyna tugmalari: ochish, yopish, yoyish", key: "ekran-va-oynalar:v1", stages: 3, toifa: "boshlangich", icon: "oynalar" },
+    { n: 69, topic: "tanishuv", dir: "69-fayl-va-papka", title: "Fayl va papka", desc: "Faylni topish, papkaga joylash, nusxa olish va savat", key: "fayl-va-papka:v1", stages: 3, toifa: "boshlangich", icon: "papka" },
   ];
 
   // Mashqlar — o'yin emas: masalalar ro'yxati (qidiruv, filtr, sahifalash). Bosqichi yo'q,
@@ -167,7 +172,7 @@
     { sec: "var(--c2)", och: "var(--togri-och)" },
     { sec: "var(--c3)", och: "#EEE6F8" },
   ];
-  const pcBelgi = () => h("span", { class: "bosh-pc", title: "Klaviatura kerak", "aria-label": "Klaviatura kerak", text: "💻" });
+  const pcBelgi = () => h("span", { class: "bosh-pc", title: "Kompyuter kerak", "aria-label": "Kompyuter kerak", text: "💻" });
 
   // davom — "Davom et" kartasi (ro'yxat tepasida, keyingi tugallanmagan o'yin)
   function card(game, toifa, davom) {

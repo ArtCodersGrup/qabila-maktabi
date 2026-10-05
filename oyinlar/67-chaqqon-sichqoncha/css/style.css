@@ -1,0 +1,120 @@
+/* Chaqqon sichqoncha — faqat shu o'yinga xos uslublar (maydon — .maydon, qolgani .cs- prefiksi bilan). */
+
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(250px, 70vw); align-self: center; }
+.story-art.kichik { width: min(110px, 30vw); }
+.story-art.sichqon { width: min(120px, 32vw); } /* sichqoncha rasmi tik — torroq turadi */
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 18px; font-weight: 800; text-align: center; }
+.cs-juft { display: flex; align-items: center; justify-content: center; gap: var(--s5); }
+
+/* Vazifa matni va yonidagi sandiq belgisi */
+.cs-savol {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--s2);
+  max-width: 600px; margin: 0 auto; font-size: var(--t1); font-weight: 800; line-height: 1.35; text-align: center;
+}
+.cs-belgi { flex: none; width: 34px; height: 34px; }
+.cs-belgi svg { display: block; width: 100%; height: 100%; }
+
+/* Pufakdagi kichik rasm (maslahat): narsa namunasi yoki kerakli tugmasi belgilangan sichqoncha */
+.cs-namuna { flex: none; display: inline-block; width: 48px; height: 48px; }
+.cs-namuna svg { display: block; width: 100%; height: 100%; }
+
+/* ---------- Maydon ---------- */
+/* Nisbiy o'lchamli quti: eni 100 % (ko'pi 640 px), nisbati 4:3. Ichidagi hamma narsa foizli koordinatada.
+   Past ekranda (noutbuk) bo'yi sig'ishi uchun eni ekran balandligidan ham cheklanadi. */
+.maydon {
+  position: relative; align-self: center; flex: none;
+  width: 100%; max-width: 640px;
+  max-width: min(640px, max(280px, calc((100vh - 250px) * 4 / 3)));
+  max-width: min(640px, max(280px, calc((100dvh - 250px) * 4 / 3)));
+  background: var(--yuza); border: 3px solid var(--chiziq); border-radius: var(--r-l);
+  overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none;
+}
+/* Tik ekranda qahramonlar va pufak tepada turadi — maydonga kamroq bo'y qoladi */
+@media (orientation: portrait) {
+  .maydon {
+    max-width: min(640px, max(280px, calc((100vh - 400px) * 4 / 3)));
+    max-width: min(640px, max(280px, calc((100dvh - 400px) * 4 / 3)));
+  }
+}
+/* Nisbat 4:3 — shu bilan (aspect-ratio emas): hoshiya ichidagi yuza aynan 4:3 chiqadi (mantiq shunga tayanadi)
+   va eski brauzerda ham ishlaydi. Foizli padding quti ENIDAN olinadi: bo'yi = enining 75 % i. */
+.maydon::before { content: ""; display: block; padding-top: 75%; }
+
+/* "Ko'rsatish" qismida chap tepa burchakdagi sichqoncha rasmi */
+.cs-yordam { position: absolute; left: 3%; top: 4%; width: 15%; pointer-events: none; }
+.cs-yordam svg { display: block; width: 100%; height: auto; }
+
+/* ---------- Maydondagi narsalar (joyi va o'lchami — JS dan, foizda) ---------- */
+.cs-narsa, .cs-sandiq, .cs-savat { position: absolute; margin: 0; padding: 0; border: 0; background: none; color: inherit; }
+.cs-narsa svg, .cs-sandiq svg, .cs-savat svg { display: block; width: 100%; height: 100%; pointer-events: none; }
+.cs-narsa { z-index: 3; border-radius: 50%; }
+.cs-sandiq { z-index: 3; border-radius: 14%; }
+
+button.cs-narsa, .cs-sandiq { cursor: pointer; transition: transform 0.1s ease, box-shadow 0.15s ease, filter 0.15s ease; }
+button.cs-narsa:active { transform: scale(0.92); }
+.cs-sandiq:active { transform: translateY(3px); }
+button.cs-narsa:disabled { opacity: 1; cursor: default; }
+@media (hover: hover) and (pointer: fine) {
+  button.cs-narsa:not(:disabled):hover, .cs-sandiq:hover { filter: brightness(1.06); }
+}
+
+/* Terilgan nishon: kattalashib yo'qoladi */
+.cs-narsa.terildi { animation: cs-ter 0.3s ease-out forwards; pointer-events: none; }
+
+/* Tanlangan sandiq (bitta bosish): halqa va och fon */
+.cs-sandiq.tanlangan { background: var(--asosiy-och); box-shadow: 0 0 0 4px var(--asosiy); }
+
+/* "Yana urin": silkinadi, to'q sariq halqa va ↻ belgisi (rang + belgi) */
+.cs-narsa.yana, .cs-sandiq.yana { animation: cs-silkit 0.35s; box-shadow: 0 0 0 4px var(--yana); }
+/* Yechim: yashil halqa va ✓ belgisi */
+.cs-narsa.yorit, .cs-sandiq.yorit { box-shadow: 0 0 0 4px var(--togri), 0 0 0 9px var(--togri-och); animation: cs-yorit 0.5s 2; }
+.cs-narsa.yana::after, .cs-sandiq.yana::after, .cs-narsa.yorit::after, .cs-sandiq.yorit::after {
+  position: absolute; right: -4px; top: -4px; z-index: 1; width: 28px; height: 28px; border-radius: 50%;
+  display: grid; place-items: center; font-size: 18px; font-weight: 900; line-height: 1;
+}
+.cs-narsa.yana::after, .cs-sandiq.yana::after { content: "↻"; background: var(--yana); color: var(--matn); }
+.cs-narsa.yorit::after, .cs-sandiq.yorit::after { content: "✓"; background: var(--togri); color: #fff; }
+
+/* ---------- O'ng tugma menyusi ---------- */
+.cs-menyu {
+  position: absolute; left: 4px; top: 4px; z-index: 8; display: flex; flex-direction: column; gap: 2px;
+  min-width: 136px; padding: 6px; border-radius: var(--r-m);
+  background: var(--yuza); border: 2px solid var(--chiziq-kuchli); box-shadow: 0 4px 0 var(--oq-qora);
+  animation: pop 0.2s;
+}
+.cs-amal {
+  min-height: 48px; padding: 8px 16px; border: 0; border-radius: var(--r-s);
+  background: var(--yuza); color: var(--matn); font-size: var(--t0); font-weight: 800; text-align: left; white-space: nowrap;
+}
+.cs-amal:active { background: var(--asosiy-och); transform: translateY(2px); }
+@media (hover: hover) and (pointer: fine) {
+  .cs-amal:hover { background: var(--asosiy-och); }
+}
+
+/* ---------- Savat va sudraladigan narsa ---------- */
+.cs-savat { z-index: 2; border-radius: var(--r-m); pointer-events: none; transition: background 0.15s ease, box-shadow 0.15s ease; }
+.cs-savat.ustida { background: var(--asosiy-och); box-shadow: 0 0 0 3px var(--asosiy); }
+.cs-narsa.sudra {
+  cursor: grab; touch-action: none;
+  transition: left 0.3s ease, top 0.3s ease, width 0.3s ease, height 0.3s ease;
+}
+.cs-narsa.sudralmoqda { z-index: 6; cursor: grabbing; transition: none; transform: scale(1.12); filter: drop-shadow(0 5px 0 var(--soya)); }
+/* Savatga tushgan narsa savat chetining ortida turadi va endi surilmaydi */
+.cs-narsa.joylandi { z-index: 1; cursor: default; }
+.cs-narsa.joylandi.yorit { z-index: 4; }
+
+@keyframes cs-ter { to { transform: scale(1.35); opacity: 0; } }
+@keyframes cs-silkit { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+@keyframes cs-yorit { 50% { transform: scale(1.08); } }
+
+/* Mashq qutisi (kod.css dagi bilan bir xil — bu o'yin kod yozmaydi, shuning uchun o'sha fayl ulanmaydi) */
+.pbox { display: flex; flex-direction: column; align-items: stretch; gap: 12px; width: 100%; max-width: 640px; margin: 0 auto; }
+.pbox .answer { font-size: var(--t1); font-weight: 900; color: var(--togri-matn); text-align: center; }
+@media (max-width: 420px) {
+  .pbox { gap: 8px; }
+  .cs-savol { font-size: var(--t0); }
+  .cs-menyu { min-width: 120px; padding: 4px; }
+  .cs-amal { padding: 8px 12px; }
+}
