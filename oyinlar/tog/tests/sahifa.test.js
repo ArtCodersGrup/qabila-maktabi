@@ -16,7 +16,7 @@ test("skriptlar bor va tartibi to'g'ri", () => {
     assert.ok(at(f) >= 0 && at(f) < at("js/main.js"), f);
   }
   assert.ok(at("../umumiy/js/art.js") < at("js/game-art.js"), "game-art art.js ga qo'shiladi");
-  assert.ok(at("../umumiy/js/supabase.min.js") < at("../umumiy/js/onlayn.js"), "kutubxona onlayn qatlamdan oldin");
+  assert.ok(at("../umumiy/js/onlayn.js") >= 0 && !scripts.some((f) => /supabase/.test(f)), "onlayn qatlam bor, Supabase yo'q");
   assert.ok(at("../umumiy/js/onlayn.js") < at("js/onlayn-tog.js"));
   assert.ok(at("js/ekran.js") < at("js/mashq.js") && at("js/ekran.js") < at("js/onlayn-tog.js"));
   assert.equal(scripts[scripts.length - 1], "js/main.js", "menyu oxirida ishga tushadi");
@@ -34,9 +34,9 @@ test("mashq rejimi internetsiz ishlaydi", () => {
   // Mashq onlayn qatlamga umuman tegmaydi — internet yo'qligi unga halal bermaydi
   const mashq = oqi("js/mashq.js").replace(/\/\/.*$/gm, "");
   assert.ok(!/onlayn|supabase|room|\.send\(/i.test(mashq), "mashq faqat o'zida hisoblaydi");
-  // Kutubxona keshda bor, shuning uchun sahifa internetsiz ham ochiladi
+  // Sahifa fayllari keshda bor, shuning uchun internetsiz ham ochiladi
   const sw = fs.readFileSync(path.join(__dirname, "../../../sw.js"), "utf8");
-  for (const f of ["oyinlar/umumiy/js/supabase.min.js", "oyinlar/tog/js/main.js", "oyinlar/tog/js/ekran.js", "oyinlar/tog/js/protokol.js", "oyinlar/tog/js/onlayn-tog.js", "oyinlar/umumiy/css/onlayn.css"]) {
+  for (const f of ["oyinlar/umumiy/js/onlayn.js", "oyinlar/tog/js/main.js", "oyinlar/tog/js/ekran.js", "oyinlar/tog/js/protokol.js", "oyinlar/tog/js/onlayn-tog.js", "oyinlar/umumiy/css/onlayn.css"]) {
     assert.ok(sw.includes(`"${f}"`), `keshda yo'q: ${f}`);
   }
   assert.ok(scripts.includes("../umumiy/js/offline.js"), "offline.js");

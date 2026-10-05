@@ -41,14 +41,26 @@ test("presence: kim ulangan, xona to'lami, ochilgan vaqti", () => {
   assert.deepEqual(two.sides, ["left", "right"]);
   assert.equal(O.roomInfo({ left: [{ at: 5 }], right: [{}, {}] }).extra, true, "bir tomonda ikki kishi");
   assert.equal(O.CODE_TTL, 600000);
-  // Bazadagi xonalar.turi check ro'yxati bilan bir xil bo'lishi shart
+  // server/app/xona_qoidalari.py dagi KINDS bilan bir xil (pytest tekshiradi)
   assert.deepEqual(O.KINDS, ["sinov", "poyga", "savol", "tog"]);
-  assert.ok(O.HOST_WAIT >= 3000, "sekin tarmoqda xona egasi kech ko'rinadi");
+  assert.ok(O.HOST_WAIT >= 3000, "sekin tarmoqda server javobi kech keladi");
 });
 
-test("sozlama: faqat ommaviy kalit, maxfiy kalit yo'q", () => {
-  assert.match(O.CONFIG.url, /^https:\/\/[a-z0-9]+\.supabase\.co$/);
-  assert.ok(!/service_role|sb_secret_/.test(O.CONFIG.key), "maxfiy kalit saytga yozilmaydi");
+test("server manzili: o'z domenimiz va lokal sinovda — o'sha server, fayldan/LAN dan — kelajagim.uz", () => {
+  assert.equal(O.serverUrl({ protocol: "https:", hostname: "kelajagim.uz", host: "kelajagim.uz" }), "wss://kelajagim.uz");
+  assert.equal(O.serverUrl({ protocol: "https:", hostname: "www.kelajagim.uz", host: "www.kelajagim.uz" }), "wss://www.kelajagim.uz");
+  assert.equal(O.serverUrl({ protocol: "http:", hostname: "localhost", host: "localhost:8199" }), "ws://localhost:8199");
+  assert.equal(O.serverUrl({ protocol: "file:", hostname: "", host: "" }), "wss://kelajagim.uz");
+  assert.equal(O.serverUrl({ protocol: "http:", hostname: "192.168.1.5", host: "192.168.1.5:8000" }), "wss://kelajagim.uz");
+  assert.equal(O.serverUrl(undefined), "wss://kelajagim.uz");
+  assert.equal(O.xonaUrl("wss://kelajagim.uz", "tog", "4827", "k7f3a9", "player"), "wss://kelajagim.uz/api/ws/xona/tog/4827?key=k7f3a9&role=player");
   const src = require("node:fs").readFileSync(require("node:path").join(__dirname, "../js/onlayn.js"), "utf8");
-  assert.ok(!/service_role|sb_secret_/.test(src));
+  assert.ok(!/supabase|sb_publishable_|service_role|sb_secret_/.test(src), "Supabase qoldig'i yo'q");
+});
+
+test("ikki kishilik xona holati server ro'yxatidan", () => {
+  assert.deepEqual(O.juftHolat(["left"], 5), { sides: ["left"], full: false, hostAt: 5, extra: false });
+  assert.deepEqual(O.juftHolat(["left", "right"], 5), { sides: ["left", "right"], full: true, hostAt: 5, extra: false });
+  assert.deepEqual(O.juftHolat(["right"], 5), { sides: ["right"], full: false, hostAt: null, extra: false });
+  assert.deepEqual(O.juftHolat(["left", "begona"], 5).sides, ["left"]);
 });

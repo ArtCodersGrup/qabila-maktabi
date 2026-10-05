@@ -1,4 +1,4 @@
-// Aloqa sinovi sahifasi: skriptlar mavjud, kutubxona onlayn qatlamdan oldin, ommaviy kalit qo'yilgan.
+// Aloqa sinovi sahifasi: skriptlar mavjud, onlayn qatlam sahifa skriptidan oldin, Supabase yo'q.
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const path = require("node:path");
@@ -9,13 +9,13 @@ test("index.html: skriptlar bor va tartibi to'g'ri", () => {
   const scripts = [...html.matchAll(/<script src="([^"]+)"/g)].map((m) => m[1]);
   for (const f of scripts) assert.ok(fs.existsSync(path.join(__dirname, "..", f)), f);
   const at = (f) => scripts.indexOf(f);
-  assert.ok(at("../umumiy/js/supabase.min.js") >= 0 && at("../umumiy/js/supabase.min.js") < at("../umumiy/js/onlayn.js"));
+  assert.ok(!scripts.some((f) => /supabase/.test(f)), "Supabase kutubxonasi yo'q");
+  assert.ok(at("../umumiy/js/onlayn.js") >= 0);
   assert.ok(at("../umumiy/js/onlayn.js") < at("js/sinov.js"));
   assert.equal(scripts[scripts.length - 1], "js/sinov.js");
 });
 
-test("onlayn.js: ommaviy kalit qo'yilgan (bo'sh joy emas)", () => {
+test("onlayn.js: o'z serverimizga ulanadi", () => {
   const O = require("../../umumiy/js/onlayn.js");
-  assert.ok(!O.CONFIG.key.startsWith("__"), "kalit hali qo'yilmagan");
-  assert.match(O.CONFIG.key, /^(sb_publishable_|eyJ)/);
+  assert.equal(O.SERVER, "wss://kelajagim.uz");
 });

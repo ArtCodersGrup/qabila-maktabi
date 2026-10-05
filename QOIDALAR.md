@@ -127,9 +127,9 @@ Agar `ʻ` belgisi to'g'ri chiqmasa, tizim shrifti ishlatiladi.
 
 - Oddiy **HTML + CSS + JavaScript**, grafika — **SVG**.
 - Kutubxona, yig'ish (build) va o'rnatish **yo'q**.
-  **Istisno — onlayn musobaqalar** (2026-09-22, muallif roziligi): `umumiy/js/supabase.min.js` (supabase-js, MIT, versiyasi qotirilgan, o'zgartirilmagan). Faqat onlayn sahifalar ulaydi; o'yinlar va bitta ekrandagi musobaqalar busiz, internetsiz ishlaydi.
+  **Onlayn qism** (2026-10-05): kutubxona yo'q — brauzerning o'z `WebSocket`i va o'z serverimiz (`server/`, FastAPI, kelajagim.uz/api). O'yinlar va bitta ekrandagi musobaqalar serversiz, internetsiz ishlaydi.
 - Skriptlar oddiy `<script>` bilan ulanadi (modul emas). Shunda `index.html` ni ikki marta bosib ochish mumkin.
-- O'yin ishlashi uchun **internet kerak emas**. Faqat **onlayn musobaqalar** (`oyinlar/onlayn/` va keyingilari) internet bilan ishlaydi: Supabase Realtime, ism va chat yo'q, faqat 4 xonali xona kodi; saytga faqat ommaviy kalit yoziladi.
+- O'yin ishlashi uchun **internet kerak emas**. Faqat **onlayn musobaqalar** (`oyinlar/onlayn/` va keyingilari) internet bilan ishlaydi: o'z serverimiz (WebSocket), ism va chat yo'q, faqat 4 xonali xona kodi; xabarlarni server ham tekshiradi.
 - Brauzer xotirasi (`localStorage`) faqat qulaylik uchun: tugagan bosqichlar va ovoz tanlovi. U ishlamasa ham o'yin to'liq ishlaydi.
 - Bolaning yozgan kodi **hech qachon** `eval` yoki `new Function` bilan bajarilmaydi. Python kodi `umumiy/js/python/` dagi o'z talqinchimizda bajariladi — u ham kutubxona emas, o'zimiz yozgan kod.
 - Hisob-kitob (mantiq) kodi ekran kodidan **alohida faylda** bo'ladi va avtomatik testlar bilan tekshiriladi.

@@ -16,7 +16,7 @@ test("hamma fayl mavjud, main.js oxirida", () => {
 test("qayta ishlatilgan qismlar ulangan: yozish, tog' va onlayn xona", () => {
   for (const f of ["../23-on-barmoq/js/typing.js", "../23-on-barmoq/js/typing-ui.js", "../23-on-barmoq/js/typing-play.js",
     "../tog/js/tog.js", "../tog/js/game-art.js", "../tog/js/tog-ui.js",
-    "../umumiy/js/onlayn.js", "../umumiy/js/supabase.min.js", "../umumiy/js/offline.js"]) {
+    "../umumiy/js/onlayn.js", "../umumiy/js/offline.js"]) {
     assert.ok(scripts.includes(f), f);
   }
   for (const f of ["../tog/css/style.css", "../23-on-barmoq/css/style.css", "../umumiy/css/onlayn.css"]) {
@@ -24,7 +24,7 @@ test("qayta ishlatilgan qismlar ulangan: yozish, tog' va onlayn xona", () => {
   }
 });
 
-test("tartib: mantiq ekrandan oldin, supabase onlayndan oldin", () => {
+test("tartib: mantiq ekrandan oldin, onlayn qatlam sahifadan oldin", () => {
   const oldin = (a, b) => assert.ok(scripts.indexOf(a) < scripts.indexOf(b), `${a} < ${b}`);
   oldin("../23-on-barmoq/js/typing.js", "js/poyga.js");
   oldin("../tog/js/tog.js", "js/poyga.js");
@@ -33,7 +33,6 @@ test("tartib: mantiq ekrandan oldin, supabase onlayndan oldin", () => {
   oldin("../umumiy/js/ui.js", "../23-on-barmoq/js/typing-ui.js");
   oldin("../tog/js/game-art.js", "../tog/js/tog-ui.js");
   oldin("js/ekran.js", "js/onlayn-poyga.js");
-  oldin("../umumiy/js/supabase.min.js", "../umumiy/js/onlayn.js");
   oldin("../umumiy/js/onlayn.js", "js/onlayn-poyga.js");
 });
 
