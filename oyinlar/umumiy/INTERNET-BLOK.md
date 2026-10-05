@@ -1,6 +1,7 @@
 # Internet bloki — reja
 
-**Holat (2026-10-01):** reja yozildi, muallif qaroriga qoʻyildi.
+**Holat (2026-10-05):** muallif qarori — 4 oʻyin, ikkala yosh toifasi (A — 8–11, B–D — 10–16), boʻlim «Parol va xavfsizlik» dan oldin.
+Papkalar: 58 «Xabar boʻlaklari», 59 «Qabila manzillari», 60 «Paket yoʻli», 61 «Qulfli yoʻl» — har birining `DIZAYN.md` si yozildi.
 
 Muallif tanlagan yoʻnalishlardan biri (2026-10-01): *«Internet qanday ishlaydi»* bloki.
 
