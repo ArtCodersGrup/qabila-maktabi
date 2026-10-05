@@ -12,7 +12,7 @@ Har bir o'yin bitta mavzuni o'rgatadi. O'yinlar bittadan, alohida qilinadi. Ular
 
 ## 2. Kim uchun
 
-- **Yosh:** 8–12 (asosiy). Ayrim bloklar kattaroq yosh uchun: sanoq tizimlari va mantiq — 10–12, **Python: dasturlash — 12–16**. Bunday bloklarda yosh o'yin kartasida yozib qo'yiladi (`GAMES` da `age`).
+- **Uch toifa, sinf bo'yicha** (2026-10-06): **1–4-sinf** — kompyuter boshlang'ich ko'nikmalari (amalda 2–4-sinf: bola o'qiy oladi), **5–8-sinf** — chuqurlashtirilgan informatika, **9–11-sinf** — olimpiada dasturlash. Har toifaning ko'rinishi va ohangi o'ziga xos; kattaroq o'quvchiga bolalarcha maskot, konfeti va haddan tashqari sodda tushuntirish berilmaydi. Shu fayldagi matn, o'lcham va uslub qoidalari (§4–§6) — **1–4 toifasi** uchun; 5–8 va 9–11 qoidalari o'z bosqichida yoziladi.
 - **Til:** o'zbek tili, lotin yozuvi.
   - Ekrandagi matnda to'g'ri belgilar ishlatiladi: `oʻ`, `gʻ` (ʻ — U+02BB), tutuq belgisi `ʼ` (U+02BC).
   - Bolaga **"sen"** deb murojaat qilinadi.
@@ -159,8 +159,10 @@ Information/
 - Bir nechta o'yinga kerak bo'lgan kod `oyinlar/umumiy/` papkasida turadi. U yerga faqat **kamida 2 ta o'yin** ishlatadigan kod chiqariladi; bitta o'yinga xos narsa o'z papkasida qoladi.
 - `umumiy/` dagi kod o'zgarsa, **barcha o'yinlarning** testlari ishga tushiriladi.
 - Yangi o'yin tayyor bo'lgach, **bosh sahifadagi ro'yxatga** qo'shiladi (`bosh/js/bosh.js` dagi `GAMES`); `node --test bosh/tests/*.test.js` buni tekshiradi.
-- **Bosh sahifadagi tartib** — o'rganish yo'li: osondan qiyinga, boshqa o'yinga tayanadigan o'yin undan keyin (`SECTIONS` tartibi). Kartadagi raqam — **tanlangan yosh toifasi ichidagi** o'rni, papka raqami emas (papka nomlari o'zgarmaydi).
-- **Yosh toifalari:** har o'yinda `yosh: [min, max]` bor. Bola kirishda yoshini tanlaydi va oralig'i mos kelgan o'yinlarnigina ko'radi. Oraliq ikkala toifa bilan kesishsa, o'yin ikkalasida ham chiqadi — bitta mavzu ikki yoshga xizmat qilishi mumkin.
+- **Bosh sahifadagi tartib** — o'rganish yo'li: osondan qiyinga, boshqa o'yinga tayanadigan o'yin undan keyin (`SECTIONS` tartibi). Kartadagi raqam — **tanlangan toifa ichidagi** o'rni, papka raqami emas (papka nomlari o'zgarmaydi).
+- **Toifalar:** har o'yinda `toifa` bor — `boshlangich` (1–4-sinf), `orta` (5–8) yoki `yuqori` (9–11). **Har o'yin aynan bitta toifada**: kattaroq o'quvchi kichiklar o'yinini o'z ro'yxatida ko'rmaydi. O'quvchi kirishda sinfini tanlaydi va bosh sahifadagi almashtirgich bilan xohlagan toifasiga o'tadi (akkaunt bitta, progress yo'qolmaydi). Asbob va musobaqalar (masalalar, shpargalka, poyga…) o'yin emas — ularda `toifalar: [...]`, bir nechta toifada ko'rinadi.
+- **Ko'rinish `<html>` atributlaridan olinadi:** `data-toifa` — o'yin sahifasida **faylga yozilgan** (o'yinning o'z toifasi), bosh sahifa va asboblarda `umumiy/js/toifa.js` o'quvchi tanlovidan qo'yadi. Kattalar ko'rinishi (5–8, 9–11): qahramonlar yo'q, ko'rsatma — oddiy panel, shogird gapi "Shogird" yozuvi bilan, konfeti o'rniga ✓ (`asos.css` oxiridagi bo'lim). O'yin toifasi o'zgarsa yoki yangi o'yin qo'shilsa: `node bosh/tools/toifa-yoz.js`.
+- **`data-maskot`:** shogirdning qog'ozi yoki barabanini ishlatadigan o'yin (`ui.paper("…")`, `ui.raisePaper`, `"drum"`) qahramonsiz tushunarsiz — u toifasidan qat'i nazar bolalar ko'rinishida qoladi. Shuning uchun **5–8 va 9–11 o'yinlarida qog'oz va baraban ishlatilmaydi**.
 - O'yin ichida boshqa o'yinga havola **nom bilan** yoziladi: «Qabila chiroqlari» o'yinidagi chiroqlarni esla. **Raqam bilan yozilmaydi** — raqam toifaga bog'liq. `bosh/tests/bosh.test.js` ikkalasini ham tekshiradi: raqamli havola qolmaganini va «…» ichidagi nom haqiqiy o'yinga tegishli ekanini.
 - Yangi **blok** qo'shilsa, `SECTIONS` ga o'rganish yo'li bo'yicha o'z o'rniga qo'yiladi. Raqamlar o'z-o'zidan suriladi — boshqa faylga tegilmaydi.
 - **Musobaqalar** (o'yin emas, bosqichi yo'q) — bosh sahifada `CONTESTS`, ikki guruh: **bitta ekranda** (`oyinlar/musobaqa/` savol-javob, `oyinlar/poyga/` tez yozish poygasi) va **onlayn** (`oyinlar/onlayn/` aloqa sinovi; onlayn o'yinlar keyin qo'shiladi).

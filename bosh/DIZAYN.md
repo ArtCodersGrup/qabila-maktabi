@@ -60,3 +60,15 @@ Bolalar "oson va zerikarli" deyishgan; dizayn tanqidi (`hisobotlar/2026-10-02-2-
 - **Bo'limlar**: rang tasmasi (c0…c3 aylanma) va `2/4` hisobi.
 - **Musobaqalar va mashqlar** — ixcham gorizontal qator, ro'yxat **oxirida**; "Hammasi" (o'qituvchi) toifasida musobaqalar tepada qoladi.
 - Yulduzlar va qiyin rejim holati `QK.storage` dan o'qiladi (`{done, stars, hard}`).
+
+## 2026-10-06: uch toifa (sinf bo'yicha)
+
+7-sinf o'quvchisi "bolacha ekan, o'ta oson ekan" dedi; oldingi yosh toifalari (8–11 / 12–16) kesishar edi — kattalar ro'yxatining yarmi kichiklar bilan umumiy bo'lgan. Spec: `docs/superpowers/specs/2026-10-06-uch-toifa-ramka-design.md`.
+
+- **Toifalar:** 1–4-sinf, 5–8-sinf, 9–11-sinf va "Hammasi" (o'qituvchi). Har o'yin **aynan bitta** toifada (`GAMES` da `toifa`); asbob va musobaqalarda `toifalar: [...]`.
+- **Kirish:** tanlov yo'q bo'lsa — "Nechanchi sinfda oʻqiysan?" ekrani (uchta katta tugma + kichik "Hammasi").
+- **Almashtirgich** — sarlavha ostida doim ko'rinadi (`1–4-sinf | 5–8-sinf | 9–11-sinf` + "Hammasi"), bir bosishda o'tadi. Tanlov `qabila:toifa:v2` da (`umumiy/js/toifa.js`); akkauntga yozilmaydi, progress esa o'yin bo'yicha saqlanadi.
+- **Sarlavha toifaga qarab:** "Qabila maktabi" / "5–8-sinf informatikasi" / "Olimpiada dasturlash".
+- **Kartada yosh belgisi yo'q.** Faqat "Hammasi" da kartada toifa yorlig'i (`1–4`, `5–8`, `9–11`) turadi.
+- **Kattalar ko'rinishi (5–8, 9–11) — vaqtinchalik:** qahramonlar va pufak yo'q, oq-iliq fon, tizim shrifti; 9–11 da asosiy rang to'q ko'k. Sahifa ko'rinishini `<head>` dagi `toifa.js` chizishdan oldin qo'yadi. Haqiqiy dizayn — 5–8 bosqichida.
+

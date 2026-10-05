@@ -600,7 +600,7 @@ Eksportga `kattalar` qoʻshiladi.
   - §9: "Yosh toifalari" bandi → "Toifalar": har oʻyinda `toifa`, **aynan bitta toifada**; asbob va musobaqada `toifalar`; yangi oʻyin qoʻshilgach `node bosh/tools/toifa-yoz.js`; koʻrinish `<html data-toifa>` + `data-maskot` dan; kattalar oʻyinida `ui.paper` ga matn yozilmaydi (aks holda oʻyin bolalar koʻrinishida qoladi).
   - §9 "Bosh sahifadagi tartib" bandida "tanlangan yosh toifasi" → "tanlangan toifa".
 - [ ] **Step 2: `README.md`, `bosh/DIZAYN.md`** — yosh toifalari tilga olingan joylar yangi toifalarga moslanadi; `DIZAYN.md` ga "Toifalar va almashtirgich" boʻlimi (spec'ga havola bilan).
-- [ ] **Step 3:** Run: `python3 bosh/sw-royxat.py --bump` — Expected: `sw.js: … ta yozuv, kesh nomi v101`
+- [ ] **Step 3:** Run: `python3 bosh/sw-royxat.py --bump` — Expected: `sw.js: … ta yozuv, kesh nomi v102`
 - [ ] **Step 4: Toʻliq testlar**
 
 ```bash
@@ -610,4 +610,4 @@ for d in oyinlar/*/; do [ -d "$d/tests" ] && (cd "$d" && node --test tests/*.tes
 Expected: hammasi PASS, `YIQILDI` satri yoʻq.
 
 - [ ] **Step 5: Brauzer koʻrigi (bitta, yakuniy)** — mahalliy serverda: bosh sahifa uch toifada va 360 px da; `27-birinchi-buyruq` (orta), `54-cpp-birinchi-dastur` (yuqori), `01-qabila-kodlari` (maskotli), `masalalar`. Tekshiriladi: gorizontal aylantirish yoʻq, almashtirgich ishlaydi, kattalarda qahramon yoʻq, shogird gapida "Shogird" yozuvi bor.
-- [ ] **Step 6: Commit va push** — `git commit -am "Toifalar: qoidalar va hujjatlar; sw v101"`; `main` ga birlashtirish, `git push`.
+- [ ] **Step 6: Commit va push** — `git commit -am "Toifalar: qoidalar va hujjatlar; sw v102"`; `main` ga birlashtirish, `git push`.
