@@ -1,0 +1,56 @@
+/* O'yinchoq kompyuter: ish stoli, belgilar, vazifalar paneli va oynalar.
+   68 «Ekran va oynalar» va 69 «Fayl va papka» ishlatadi; belgilar — umumiy/js/stol-art.js.
+   Windows odatlari: oyna tugmalari o'ngda tepada (— □ ✕), panel pastda. Bosiladigan hamma narsa ≥ 48 px. */
+.stol {
+  position: relative; width: 100%; max-width: 640px; aspect-ratio: 4 / 3; overflow: hidden;
+  display: flex; flex-direction: column;
+  border: 3px solid var(--matn); border-radius: var(--r-l); background: #CFE6F5;
+}
+/* Tor telefon: ekran tik — oyna va belgilarga joy yetishi uchun */
+@media (max-width: 520px) { .stol { aspect-ratio: 3 / 4; } }
+
+/* Ish stoli yuzasi: belgilar ustun bo'ylab teriladi, oynalar ustida absolyut turadi */
+.stol-yuza {
+  position: relative; flex: 1; min-height: 0; padding: var(--s2);
+  display: flex; flex-flow: column wrap; align-content: flex-start; gap: var(--s1);
+}
+.stol-belgi {
+  width: 80px; min-height: 72px; padding: 4px 2px; border: 2px solid transparent; border-radius: var(--r-m);
+  background: transparent; display: flex; flex-direction: column; align-items: center; gap: 2px;
+  font: inherit; font-size: 13px; font-weight: 800; line-height: 1.15; color: var(--matn); text-align: center;
+  overflow-wrap: anywhere;
+}
+.stol-belgi svg { flex: none; width: 40px; height: 40px; }
+.stol-belgi.tanlangan { background: rgba(255, 255, 255, 0.75); border-color: var(--asosiy); }
+
+/* Vazifalar paneli: «Pusk» va ochiq dasturlar */
+.stol-panel { flex: none; display: flex; align-items: center; gap: 6px; min-height: 56px; padding: 4px 6px; background: var(--matn); }
+.stol-pusk, .stol-panel-tugma {
+  flex: none; min-width: 48px; height: 48px; padding: 4px 8px; border: 2px solid transparent; border-radius: var(--r-s);
+  background: rgba(255, 255, 255, 0.14); display: inline-flex; align-items: center; gap: 6px;
+  font: inherit; font-size: 13px; font-weight: 800; color: #fff;
+}
+.stol-pusk svg, .stol-panel-tugma svg { width: 30px; height: 30px; }
+.stol-panel-tugma.faol { background: rgba(255, 255, 255, 0.34); border-color: #fff; }
+.stol-panel-tugma.kichik { opacity: 0.75; border-style: dashed; border-color: rgba(255, 255, 255, 0.6); }
+
+/* Oyna: sarlavha (belgi, nom, tugmalar) va ichi */
+.oyna {
+  position: absolute; display: flex; flex-direction: column; overflow: hidden;
+  border: 2px solid var(--matn); border-radius: var(--r-m); background: var(--yuza);
+  box-shadow: 0 4px 0 rgba(43, 43, 58, 0.25);
+}
+.oyna-sarlavha {
+  flex: none; display: flex; align-items: center; gap: 6px; min-height: 48px; padding-left: 8px;
+  background: #C9D3E3; color: var(--matn); font-size: 15px; font-weight: 800;
+}
+.oyna.faol .oyna-sarlavha { background: var(--asosiy); color: #fff; }
+.oyna-sarlavha > svg { flex: none; width: 28px; height: 28px; }
+.oyna-nom { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.oyna-tugmalar { flex: none; display: flex; }
+.oyna-tugma { width: 48px; height: 48px; padding: 0; border: 0; background: transparent; color: inherit; font: inherit; font-size: 22px; font-weight: 900; line-height: 1; }
+.oyna-tugma:active { background: rgba(0, 0, 0, 0.15); }
+.oyna-ichi { flex: 1; min-height: 0; overflow: auto; background: var(--yuza); }
+/* Yoyilgan oyna butun yuzani egallaydi; kichraytirilgani ko'rinmaydi (panelda qoladi) */
+.oyna.katta { inset: 0 !important; width: auto !important; height: auto !important; border-radius: 0; }
+.oyna.kichik { display: none; }
