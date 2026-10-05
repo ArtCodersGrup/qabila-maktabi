@@ -31,6 +31,11 @@
     "kod-notogri": "Bunday sinf kodi yoʻq. Oʻqituvchidan qayta soʻrang.",
     allaqachon: "Bu sinfga soʻrov allaqachon yuborilgan.",
     "sinf-toʻla": "Sinf toʻla.",
+    "email-notogri": "Email notoʻgʻri yozilgan. Masalan: ism@gmail.com",
+    "email-band": "Bu email bilan akkaunt bor. «Kirish»ni yoki «Google bilan kirish»ni bosing.",
+    tasdiqlanmagan: "Email hali tasdiqlanmagan. Pochtangizdagi xatdagi havolani bosing.",
+    havola: "Havola eskirgan yoki allaqachon ishlatilgan. Qaytadan soʻrang.",
+    "pochta-yoq": "Xat yuborish hozircha ishlamayapti. Keyinroq urinib koʻring.",
   };
   const xabar = (kod) => XATOLAR[kod] || "Nimadir xato ketdi. Qayta urinib koʻring.";
 
@@ -41,7 +46,7 @@
 
   function ekran(sarlavha, ...kids) {
     box.innerHTML = "";
-    box.append(boshSahifa(), h("h1", { class: "hisob-h1", text: sarlavha }), ...kids);
+    box.append(boshSahifa(), h("h1", { class: "hisob-h1", text: sarlavha }), ...kids.filter(Boolean));
   }
 
   // Forma: yuborilganda tugma o'chadi, xato pastda chiqadi
@@ -65,6 +70,17 @@
     if (!H.mumkin(root.location)) {
       ekran("Kirish", h("p", { class: "hisob-izoh", text: "Akkaunt faqat kelajagim.uz saytida ishlaydi. Oʻyinlar esa kirmasdan ham ishlayveradi." }));
       return;
+    }
+    // Xatdagi havolalar: ?tiklash=<token> — yangi parol; ?tasdiq=1 — email tasdiqlandi
+    const qs = new URLSearchParams(root.location.search);
+    const tiklashToken = qs.get("tiklash");
+    if (tiklashToken) {
+      root.history.replaceState(null, "", root.location.pathname); // token manzil satrida qolmasin
+      return tiklashEkrani(tiklashToken);
+    }
+    if (qs.get("tasdiq")) {
+      root.history.replaceState(null, "", root.location.pathname);
+      eslatma = "✓ Email tasdiqlandi. Xush kelibsiz!";
     }
     ekran("Kirish", h("p", { class: "hisob-izoh", text: "Yuklanmoqda…" }));
     const r = await H.men();
@@ -98,26 +114,115 @@
     profilEkrani(u);
   }
 
+  let eslatma = ""; // profil tepasida bir marta ko'rinadigan xabar
+
+  // Tablar: "Kirish" | "Ro'yxatdan o'tish" (xat yuborish sozlangan bo'lsa)
+  function tablar(faol, s) {
+    if (!(s.ok && s.email)) return null;
+    const t = (nom, id, fn) => h("button", { type: "button", "aria-pressed": String(faol === id), text: nom, onClick: fn });
+    return h("div", { class: "hisob-tablar", role: "group" }, t("Kirish", "kirish", () => kirishEkrani()), t("Roʻyxatdan oʻtish", "royxat", () => royxatEkrani()));
+  }
+  const googleTugma = (s, yozuv) => (s.ok && s.google
+    ? [h("a", { class: "btn secondary big hisob-google", href: "/api/hisob/google", text: "Google bilan kirish" }), h("p", { class: "hisob-yoki", text: yozuv })]
+    : []);
+  let sozlama = null;
+  const sozlamaOl = async () => sozlama || (sozlama = await H.sozlama());
+
   async function kirishEkrani() {
-    const s = await H.sozlama();
-    const login = input({ name: "login", autocomplete: "username", autocapitalize: "none", spellcheck: "false", maxlength: "20" });
+    const s = await sozlamaOl();
+    const login = input({ name: "login", autocomplete: "username", autocapitalize: "none", spellcheck: "false", maxlength: "254" });
     const parol = input({ name: "parol", type: "password", autocomplete: "current-password", maxlength: "72" });
-    const f = forma([maydon("Login", login), maydon("Parol", parol)], "Kirish", async () => {
+    const qayta = h("div", {});
+    const f = forma([maydon("Login yoki email", login), maydon("Parol", parol)], "Kirish", async () => {
+      qayta.innerHTML = "";
       const r = await H.kirish(login.value, parol.value);
       if (r.ok) { keyingi(r.user); return null; }
-      parol.value = "";
-      parol.focus();
+      if (r.xato === "tasdiqlanmagan") qayta.append(qaytaYuborish(login.value));
+      else { parol.value = ""; parol.focus(); }
       return r.xato;
     });
     const xatoKod = new URLSearchParams(root.location.search).get("xato");
     if (xatoKod) f.xato.textContent = xabar(xatoKod);
-    const google = s.ok && s.google
-      ? [h("a", { class: "btn secondary big", href: "/api/hisob/google", text: "Google bilan kirish" }),
-        h("p", { class: "hisob-yoki", text: "yoki oʻqituvchi bergan login bilan" })]
-      : [];
-    ekran("Kirish", ...google, f,
+    const unutdim = h("button", { class: "hisob-havola", type: "button", text: "Parolni unutdingizmi?", onClick: () => unutdimEkrani(login.value) });
+    ekran("Kirish", tablar("kirish", s), ...googleTugma(s, "yoki login / email bilan"), f, qayta, unutdim,
       h("p", { class: "hisob-izoh", text: "Kirmasang ham hamma oʻyin ishlaydi. Kirsang — yulduzlaring boshqa qurilmada ham saqlanadi." }));
     login.focus();
+  }
+
+  function qaytaYuborish(email) {
+    const izoh = h("p", { class: "hisob-izoh" });
+    const b = tugma("Tasdiqlash xatini qayta yuborish", async () => {
+      b.disabled = true;
+      const r = await H.tasdiqQayta(email);
+      izoh.textContent = r.ok ? "Xat yuborildi. Pochtangizni (va «Spam» papkasini) tekshiring." : xabar(r.xato);
+    }, "secondary");
+    return h("div", { class: "hisob-karta" }, b, izoh);
+  }
+
+  async function royxatEkrani() {
+    const s = await sozlamaOl();
+    const ism = input({ autocomplete: "name", maxlength: "40", placeholder: "Ali K." });
+    const email = input({ type: "email", autocomplete: "email", autocapitalize: "none", spellcheck: "false", maxlength: "254", placeholder: "ism@gmail.com" });
+    const parol = input({ type: "password", autocomplete: "new-password", maxlength: "72" });
+    const takror = input({ type: "password", autocomplete: "new-password", maxlength: "72" });
+    const f = forma([maydon("Ismingiz (ism va familiyaning bosh harfi)", ism), maydon("Email", email),
+      maydon("Parol (kamida 6 belgi)", parol), maydon("Parol (yana bir marta)", takror)], "Roʻyxatdan oʻtish", async () => {
+      if (parol.value.length < 6 || parol.value.length > 72) return "parol-qisqa";
+      if (parol.value !== takror.value) return "parol-mos-emas";
+      const r = await H.royxat(email.value, parol.value, ism.value);
+      if (!r.ok) return r.xato;
+      xatYuborildi(r.email);
+      return null;
+    });
+    ekran("Roʻyxatdan oʻtish", tablar("royxat", s), ...googleTugma(s, "yoki email va parol bilan"), f,
+      h("p", { class: "hisob-izoh", text: "Oʻquvchilarga akkauntni odatda oʻqituvchi ochib beradi — unda roʻyxatdan oʻtish shart emas." }));
+    ism.focus();
+  }
+
+  function xatYuborildi(email) {
+    ekran("Pochtangizni tekshiring",
+      h("div", { class: "hisob-karta eslatma" },
+        h("p", { class: "hisob-izoh", text: `${email} manziliga tasdiqlash xati yubordik. Xatdagi havolani bosing — shu bilan akkauntga kirasiz.` })),
+      h("p", { class: "hisob-izoh", text: "Xat kelmadimi? 1–2 daqiqa kuting va «Spam» papkasini ham tekshiring." }),
+      qaytaYuborish(email),
+      tugma("Kirish sahifasiga", () => kirishEkrani(), "secondary"));
+  }
+
+  function unutdimEkrani(oldingi) {
+    const email = input({ type: "email", autocomplete: "email", autocapitalize: "none", spellcheck: "false", maxlength: "254", value: oldingi && oldingi.includes("@") ? oldingi : "" });
+    const f = forma([maydon("Akkauntingiz emaili", email)], "Havola yuborish", async () => {
+      const r = await H.unutdim(email.value);
+      if (!r.ok) return r.xato;
+      ekran("Pochtangizni tekshiring",
+        h("div", { class: "hisob-karta eslatma" }, h("p", { class: "hisob-izoh", text: "Agar bu email bilan akkaunt boʻlsa, unga parolni tiklash havolasi yuborildi. Havola 30 daqiqa amal qiladi." })),
+        tugma("Kirish sahifasiga", () => kirishEkrani(), "secondary"));
+      return null;
+    });
+    ekran("Parolni tiklash",
+      h("div", { class: "hisob-karta" },
+        h("p", { class: "hisob-qator-nom", text: "Oʻquvchimisan?" }),
+        h("p", { class: "hisob-izoh", text: "Login va parolni oʻqituvching bergan boʻlsa — undan yangi parol soʻra. U senga bir martalik parol beradi, shu bilan kirib, oʻz parolingni qoʻyasan." })),
+      h("div", { class: "hisob-karta" },
+        h("p", { class: "hisob-qator-nom", text: "Google bilan kirganmisiz?" }),
+        h("p", { class: "hisob-izoh", text: "Unda parol kerak emas — «Google bilan kirish» tugmasini bosing." })),
+      h("p", { class: "hisob-qator-nom", text: "Email bilan roʻyxatdan oʻtgan boʻlsangiz:" }),
+      f, tugma("Orqaga", () => kirishEkrani(), "secondary"));
+    email.focus();
+  }
+
+  function tiklashEkrani(token) {
+    const yangi = input({ type: "password", autocomplete: "new-password", maxlength: "72" });
+    const takror = input({ type: "password", autocomplete: "new-password", maxlength: "72" });
+    const f = forma([maydon("Yangi parol", yangi), maydon("Yangi parol (yana bir marta)", takror)], "Saqlash", async () => {
+      if (yangi.value.length < 6 || yangi.value.length > 72) return "parol-qisqa";
+      if (yangi.value !== takror.value) return "parol-mos-emas";
+      const r = await H.tiklash(token, yangi.value);
+      if (r.ok) { eslatma = "✓ Yangi parol saqlandi."; keyingi(r.user); return null; }
+      return r.xato;
+    });
+    ekran("Yangi parol", h("p", { class: "hisob-izoh", text: "Yangi parol qoʻying. Boshqa qurilmalardagi kirishlar yopiladi." }), f,
+      tugma("Kirish sahifasiga", () => kirishEkrani(), "secondary"));
+    yangi.focus();
   }
 
   function parolEkrani(majburiy, u) {
@@ -154,6 +259,7 @@
 
   function profilEkrani(u) {
     const kids = [
+      eslatma ? h("div", { class: "hisob-karta eslatma" }, h("p", { class: "hisob-izoh", text: eslatma })) : null,
       h("p", { class: "hisob-salom", text: `Salom, ${u.ism}!` }),
       h("p", { class: "hisob-rol", text: H.ROLLAR[u.rol] + (u.login ? " · login: " + u.login : u.email ? " · " + u.email : "") }),
     ];
@@ -174,7 +280,8 @@
     const pastki = [tugma("Barcha oʻyinlar", () => { root.location.href = "../"; }, u.rol === "student" ? "" : "secondary")];
     if (u.parol_bor) pastki.push(tugma("Parolni almashtirish", () => parolEkrani(false, u), "secondary sm"));
     pastki.push(tugma("Chiqish", chiqish, "secondary sm"));
-    ekran("Mening akkauntim", ...kids, h("div", { class: "hisob-tugmalar" }, ...pastki));
+    eslatma = "";
+    ekran("Mening akkauntim", ...kids.filter(Boolean), h("div", { class: "hisob-tugmalar" }, ...pastki));
   }
 
   // O'quvchining sinflari va sinf kodi bilan qo'shilish

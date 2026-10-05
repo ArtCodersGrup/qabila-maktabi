@@ -141,6 +141,10 @@
     men: () => userli("/api/hisob/men"),
     sozlama: () => sorov("/api/hisob/sozlama"),
     kirish: (login, parol) => userli("/api/hisob/kirish", { login, parol }),
+    royxat: (email, parol, ism) => sorov("/api/hisob/royxat", { email, parol, ism }),
+    tasdiqQayta: (email) => sorov("/api/hisob/tasdiq-qayta", { email }),
+    unutdim: (email) => sorov("/api/hisob/unutdim", { email }),
+    tiklash: (token, yangi) => userli("/api/hisob/tiklash", { token, yangi }),
     async chiqish() {
       const r = await sorov("/api/hisob/chiqish", {});
       if (r.ok) { eslab(null); tozala(); }

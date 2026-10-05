@@ -34,6 +34,12 @@ def create_app(db_url: str | None = None) -> FastAPI:
     app.state.cheklov_ip = Cheklov(30, 15 * 60)
     app.state.google = google_foydalanuvchi  # testlarda soxta Google bilan almashtiriladi
     app.state.pochta = pochta_yubor  # testlarda soxta pochta bilan almashtiriladi
+    fayl = os.environ.get("KELAJAGIM_POCHTA_FAYL")
+    if fayl:  # faqat lokal sinov: xat yuborilmaydi, faylga yoziladi
+        async def faylga(kimga, mavzu, matn):
+            with open(fayl, "a", encoding="utf-8") as f:
+                f.write(f"KIMGA: {kimga}\nMAVZU: {mavzu}\n{matn}\n=====\n")
+        app.state.pochta = faylga
     app.state.cheklov_xat = Cheklov(3, 15 * 60)  # bitta emailga 15 daqiqada ko'pi bilan 3 ta xat
 
     @app.middleware("http")
