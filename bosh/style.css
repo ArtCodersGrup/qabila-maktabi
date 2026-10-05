@@ -74,25 +74,37 @@
 .bosh-row .bosh-icon { width: 44px; height: 44px; }
 .bosh-row .bosh-state { flex-direction: row; align-items: center; }
 
-/* Yosh tanlash: kirishda bir marta so'raladi, keyin sarlavhadagi tugma bilan almashtiriladi */
-.bosh-yosh { display: flex; flex-direction: column; gap: 12px; }
-.bosh-yosh-btn {
+/* Sinf tanlash: kirishda bir marta so'raladi, keyin sarlavha ostidagi almashtirgich bilan o'zgartiriladi */
+.bosh-sinf { display: flex; flex-direction: column; gap: 12px; }
+.bosh-sinf-btn {
   --qirra: var(--asosiy-qora);
   display: flex; flex-direction: column; gap: 3px; align-items: flex-start; text-align: left;
   min-height: 76px; padding: 14px 18px; border: 3px solid var(--asosiy); border-radius: var(--r-l);
   background: var(--yuza); box-shadow: 0 4px 0 var(--qirra); color: inherit; font: inherit; cursor: pointer;
   transition: transform 0.08s, box-shadow 0.08s;
 }
-.bosh-yosh-btn:active { transform: translateY(4px); box-shadow: 0 0 0 var(--qirra); }
-.bosh-yosh-btn.kichik { --qirra: var(--oq-qora); border: 2px dashed var(--chiziq-kuchli); min-height: 0; padding: 10px 16px; }
-.bosh-yosh-nom { font-size: var(--t2); font-weight: 900; color: var(--asosiy-matn); }
-.bosh-yosh-btn.kichik .bosh-yosh-nom { font-size: var(--t0); color: var(--matn-3); }
-.bosh-yosh-izoh { font-size: var(--t0); font-weight: 600; color: var(--matn-2); }
-.bosh-yosh-soni { font-size: var(--t-1); font-weight: 800; color: var(--matn-3); }
-.bosh-almash {
-  min-height: 40px; padding: 4px 14px; border: 2px solid var(--asosiy); border-radius: var(--r-pill);
-  background: var(--yuza); font: inherit; font-size: var(--t0); font-weight: 800; color: var(--asosiy-matn); cursor: pointer;
+.bosh-sinf-btn:active { transform: translateY(4px); box-shadow: 0 0 0 var(--qirra); }
+.bosh-sinf-btn.kichik { --qirra: var(--oq-qora); border: 2px dashed var(--chiziq-kuchli); min-height: 0; padding: 10px 16px; }
+.bosh-sinf-nom { font-size: var(--t2); font-weight: 900; color: var(--asosiy-matn); }
+.bosh-sinf-btn.kichik .bosh-sinf-nom { font-size: var(--t0); color: var(--matn-3); }
+.bosh-sinf-izoh { font-size: var(--t0); font-weight: 600; color: var(--matn-2); }
+.bosh-sinf-soni { font-size: var(--t-1); font-weight: 800; color: var(--matn-3); }
+
+/* Toifa almashtirgich: sarlavha ostida doim ko'rinadi; "Hammasi" — o'qituvchi uchun, alohida */
+.bosh-toifa-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); }
+.bosh-toifa { display: inline-flex; border: 2px solid var(--chiziq-kuchli); border-radius: var(--r-pill); background: var(--yuza); overflow: hidden; }
+.bosh-toifa-btn {
+  min-height: 48px; padding: 6px 12px; border: 0; border-left: 2px solid var(--chiziq); background: transparent;
+  font: inherit; font-size: var(--t-1); font-weight: 800; color: var(--matn-2); white-space: nowrap;
 }
+.bosh-toifa-btn:first-child { border-left: 0; }
+.bosh-toifa-btn[aria-pressed="true"] { background: var(--asosiy); color: #fff; }
+.bosh-toifa-hamma {
+  min-height: 48px; padding: 6px 12px; border: 2px dashed var(--chiziq-kuchli); border-radius: var(--r-pill); background: transparent;
+  font: inherit; font-size: var(--t-1); font-weight: 800; color: var(--matn-3);
+}
+.bosh-toifa-hamma[aria-pressed="true"] { border-style: solid; border-color: var(--asosiy); color: var(--asosiy-matn); }
+.bosh-toifa-btn:focus-visible { outline-offset: -3px; }
 
 .bosh-foot { font-size: var(--t-1); font-weight: 700; line-height: 1.6; color: var(--matn-2); text-align: center; }
 
@@ -106,7 +118,7 @@
   .bosh-age { display: none; }
 }
 
-/* Akkaunt tugmasi — o'ng yuqorida (bosh/js/hisob-tugma.js); float: sarlavha va "Yosh" tugmasi uni chetlab o'tadi */
+/* Akkaunt tugmasi — o'ng yuqorida (bosh/js/hisob-tugma.js); float: sarlavha va almashtirgich uni chetlab o'tadi */
 .bosh-hisob {
   float: right; margin: 6px 0 4px 10px; max-width: 45%; padding: 8px 14px; line-height: 28px; /* 8+28+8+2·2 = 48px */
   display: inline-block; border: 2px solid var(--chiziq); border-radius: var(--r-pill);

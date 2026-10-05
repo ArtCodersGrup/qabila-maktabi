@@ -52,6 +52,7 @@ const FILES = [
   "oyinlar/umumiy/js/sinf-tanlov.js",
   "oyinlar/umumiy/js/sound.js",
   "oyinlar/umumiy/js/storage.js",
+  "oyinlar/umumiy/js/toifa.js",
   "oyinlar/umumiy/js/ui.js",
   "oyinlar/umumiy/js/cpp/cpp-run.js",
   "oyinlar/umumiy/js/cpp/errors.js",

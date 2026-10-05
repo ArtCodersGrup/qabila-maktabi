@@ -135,19 +135,11 @@
   const oyinlar = (toifa) => SECTIONS.flatMap((sec) => GAMES.filter((g) => g.topic === sec.id && mos(g, toifa)));
   const number = (game, toifa) => oyinlar(toifa).indexOf(game) + 1;
 
-  // Tanlangan toifa brauzer xotirasida saqlanadi; xotira ishlamasa — sahifa baribir ishlaydi
-  const KALIT = "qabila:toifa:v1";
-  function saqlangan() {
-    try {
-      return toifaById(root.localStorage.getItem(KALIT));
-    } catch (e) {
-      return null;
-    }
-  }
+  // Tanlov umumiy/js/toifa.js da saqlanadi (bosh sahifa uni <head> da ulaydi); sahifa ko'rinishi ham o'sha yerda yangilanadi
+  const saqlangan = () => toifaById(root.QK.toifa.oqi());
   function saqla(id) {
-    try {
-      root.localStorage.setItem(KALIT, id);
-    } catch (e) { /* xotira yopiq — tanlov faqat shu sahifada amal qiladi */ }
+    root.QK.toifa.yoz(id);
+    root.QK.toifa.qolla();
   }
 
   function h(tag, props, ...children) {
@@ -197,46 +189,62 @@
       h("span", { class: "bosh-text" },
         h("span", { class: "bosh-name" }, h("span", { class: "bosh-num", text: String(number(game, toifa)) }), h("span", { text: game.title })),
         h("span", { class: "bosh-desc", text: game.desc })),
-      h("span", { class: "bosh-state" }, progress, h("span", { class: "bosh-age", text: toifaYorligi(game) }), game.pc ? pcBelgi() : null));
+      h("span", { class: "bosh-state" }, progress,
+        toifa.id === "hammasi" ? h("span", { class: "bosh-age", text: toifaYorligi(game) }) : null, game.pc ? pcBelgi() : null));
   }
 
-  // Kirish ekrani: bola yoshini tanlaydi. Tanlov saqlanadi va keyin so'ralmaydi.
-  function yoshEkrani(list) {
+  const sarlavha = (matn) => {
+    const el = root.document.querySelector(".bosh-title");
+    if (el) el.textContent = matn;
+  };
+  const tanla = (id) => {
+    saqla(id);
+    render();
+    root.scrollTo({ top: 0 });
+  };
+
+  // Kirish ekrani: o'quvchi sinfini tanlaydi. Tanlov saqlanadi; keyin almashtirgich bilan o'zgartiriladi.
+  function sinfEkrani(list) {
     const bubble = root.document.querySelector(".bubble");
-    if (bubble) bubble.textContent = "Salom! Avval yoshingni ayt — oʻyinlarni sening yoshingga qarab koʻrsataman.";
+    if (bubble) bubble.textContent = "Salom! Nechanchi sinfda oʻqiysan?";
+    sarlavha("Qabila maktabi");
     const sub = root.document.querySelector(".bosh-sub");
     if (sub) sub.textContent = "Informatika oʻyinlari";
     const top = root.document.querySelector(".bosh-top");
     if (top) top.classList.remove("royxat");
-    const tanlov = h("div", { class: "bosh-yosh" });
+    const tanlov = h("div", { class: "bosh-sinf" });
     for (const t of TOIFALAR) {
-      const soni = oyinlar(t).length;
-      tanlov.append(h("button", { class: "bosh-yosh-btn" + (t.id === "hammasi" ? " kichik" : ""), type: "button" },
-        h("span", { class: "bosh-yosh-nom", text: t.title }),
-        h("span", { class: "bosh-yosh-izoh", text: t.note }),
-        h("span", { class: "bosh-yosh-soni", text: soni + " ta oʻyin" })));
-      tanlov.lastChild.addEventListener("click", () => {
-        saqla(t.id);
-        render();
-        root.scrollTo({ top: 0 });
-      });
+      const b = h("button", { class: "bosh-sinf-btn" + (t.id === "hammasi" ? " kichik" : ""), type: "button" },
+        h("span", { class: "bosh-sinf-nom", text: t.title }),
+        h("span", { class: "bosh-sinf-izoh", text: t.note }),
+        h("span", { class: "bosh-sinf-soni", text: oyinlar(t).length + " ta oʻyin" }));
+      b.addEventListener("click", () => tanla(t.id));
+      tanlov.append(b);
     }
     list.append(h("section", { class: "bosh-section" }, tanlov));
+  }
+
+  // Almashtirgich: sarlavha ostida doim ko'rinadi, bir bosishda boshqa toifaga o'tadi
+  function almashtirgich(joriy) {
+    const guruh = h("div", { class: "bosh-toifa", role: "group", "aria-label": "Sinf" });
+    for (const t of TOIFALAR.filter((x) => x.id !== "hammasi")) {
+      const b = h("button", { class: "bosh-toifa-btn", type: "button", "aria-pressed": String(t.id === joriy.id), text: t.title });
+      b.addEventListener("click", () => tanla(t.id));
+      guruh.append(b);
+    }
+    const hamma = h("button", { class: "bosh-toifa-hamma", type: "button", "aria-pressed": String(joriy.id === "hammasi"), text: "Hammasi" });
+    hamma.addEventListener("click", () => tanla("hammasi"));
+    return h("div", { class: "bosh-toifa-qator" }, guruh, hamma);
   }
 
   function royxat(list, toifa) {
     const bubble = root.document.querySelector(".bubble");
     if (bubble) bubble.textContent = "Salom! Qaysi oʻyinni oʻynaymiz?";
+    sarlavha(toifa.sarlavha);
     const sub = root.document.querySelector(".bosh-sub");
     if (sub) {
       sub.innerHTML = "";
-      sub.append(h("span", { text: "Informatika oʻyinlari · " }));
-      const almash = h("button", { class: "bosh-almash", type: "button", text: "Yosh: " + toifa.qisqa + " ▾" });
-      almash.addEventListener("click", () => {
-        saqla("");
-        render();
-      });
-      sub.append(almash);
+      sub.append(almashtirgich(toifa));
     }
     const top = root.document.querySelector(".bosh-top");
     if (top) top.classList.add("royxat");
@@ -305,7 +313,7 @@
           h("span", { class: "bosh-text" },
             h("span", { class: "bosh-name", text: m.title }),
             h("span", { class: "bosh-desc", text: m.desc })),
-          h("span", { class: "bosh-state" }, h("span", { class: "bosh-age", text: toifaYorligi(m) }), m.pc ? pcBelgi() : null))));
+          h("span", { class: "bosh-state" }, m.pc ? pcBelgi() : null))));
       mashq.append(mashqCards);
       list.append(mashq);
     }
@@ -322,7 +330,7 @@
     list.innerHTML = "";
     const toifa = saqlangan();
     if (toifa) royxat(list, toifa);
-    else yoshEkrani(list);
+    else sinfEkrani(list);
   }
 
   root.QK = root.QK || {};
