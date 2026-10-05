@@ -29,3 +29,37 @@
 .hisob-raqam { padding: var(--s3); border-radius: var(--r-m); background: var(--panel); text-align: center; }
 .hisob-raqam b { display: block; font-size: var(--t3); font-weight: 900; }
 .hisob-raqam span { font-size: var(--t-1); font-weight: 800; color: var(--matn-3); }
+
+/* ---------- O'qituvchi paneli ---------- */
+.hisob-bosh-btn { border: 0; background: none; padding: 0; font: inherit; font-weight: 800; cursor: pointer; }
+.hisob-qator-btn { width: 100%; min-height: 64px; padding: var(--s3); border: 2px solid var(--chiziq); border-radius: var(--r-m); background: var(--yuza-2); text-align: left; font: inherit; color: inherit; }
+.sinf-kod-kichik { font-family: ui-monospace, Menlo, monospace; font-size: var(--t1); font-weight: 900; letter-spacing: 2px; color: var(--asosiy-matn); }
+.sinf-kod-karta { align-items: center; text-align: center; }
+.sinf-kod { font-family: ui-monospace, Menlo, monospace; font-size: var(--t4); font-weight: 900; letter-spacing: 6px; color: var(--asosiy-matn); }
+.sinf-jadval-oram { overflow-x: auto; border: 2px solid var(--chiziq); border-radius: var(--r-l); background: var(--yuza); }
+.sinf-jadval { width: 100%; border-collapse: collapse; font-size: var(--t-1); font-weight: 700; }
+.sinf-jadval th, .sinf-jadval td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--chiziq); white-space: nowrap; }
+.sinf-jadval th { background: var(--panel); font-weight: 900; color: var(--matn-2); }
+.sinf-jadval tbody tr { cursor: pointer; }
+.sinf-jadval tbody tr:focus-visible { outline: 3px solid var(--asosiy); outline-offset: -3px; }
+@media (hover: hover) { .sinf-jadval tbody tr:hover { background: var(--asosiy-och); } }
+.sinf-bar { width: 96px; height: 10px; border-radius: var(--r-pill); background: #EAE2CF; overflow: hidden; }
+.sinf-bar span { display: block; height: 100%; background: var(--togri); }
+.sinf-bolim { display: grid; grid-template-columns: 1fr 120px 64px; align-items: center; gap: var(--s3); }
+.sinf-bolim .sinf-bar { width: 100%; }
+.sinf-ismlar { min-height: 200px; resize: vertical; font-size: var(--t0); line-height: 1.5; }
+.kartochkalar { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: var(--s3); }
+.kartochka { display: flex; flex-direction: column; gap: 6px; padding: var(--s4); border: 2px dashed var(--chiziq-kuchli); border-radius: var(--r-m); background: var(--yuza); break-inside: avoid; }
+.kartochka-sayt { font-size: 13px; font-weight: 800; color: var(--matn-3); }
+.kartochka-ism { font-size: var(--t1); font-weight: 900; }
+.kartochka-qator { display: flex; justify-content: space-between; gap: var(--s3); font-size: var(--t0); }
+.kartochka-qator b { font-family: ui-monospace, Menlo, monospace; font-size: var(--t1); letter-spacing: 1px; }
+.kartochka-izoh { font-size: 13px; font-weight: 700; color: var(--matn-3); }
+@media print {
+  body { background: #fff; }
+  .hisob-app { padding: 0; }
+  .hisob { max-width: none; padding: 0; }
+  .hisob-bosh, .hisob-h1, .ekranda { display: none !important; }
+  .kartochkalar { grid-template-columns: repeat(2, 1fr); gap: 8mm; }
+  .kartochka { border-color: #888; }
+}

@@ -28,6 +28,9 @@
     "ism-notogri": "Ism 2–40 harf boʻlsin, masalan: Ali K.",
     "ism-kerak": "Avval ismingizni yozing.",
     google: "Google orqali kirib boʻlmadi. Qayta urinib koʻring.",
+    "kod-notogri": "Bunday sinf kodi yoʻq. Oʻqituvchidan qayta soʻrang.",
+    allaqachon: "Bu sinfga soʻrov allaqachon yuborilgan.",
+    "sinf-toʻla": "Sinf toʻla.",
   };
   const xabar = (kod) => XATOLAR[kod] || "Nimadir xato ketdi. Qayta urinib koʻring.";
 
@@ -76,6 +79,22 @@
   function keyingi(u) {
     if (u.parol_almashtirsin) return parolEkrani(true);
     if (!u.ism) return ismEkrani();
+    sinxronQil(u);
+  }
+
+  // Qurilmada mehmon (kirmagan bola) yulduzlari bo'lsa — bir marta so'raymiz: umumiy kompyuterda
+  // boshqa bolaning yulduzlari bu akkauntga o'tib ketmasin
+  async function sinxronQil(u) {
+    if (H.egasi() !== u.id && H.mehmonBor()) {
+      ekran("Bu yulduzlar seniki?",
+        h("p", { class: "hisob-izoh", text: "Bu qurilmada kirmasdan oʻynalgan oʻyinlar bor. Ularni oʻzing oʻynagan boʻlsang — akkauntingga qoʻshamiz." }),
+        h("div", { class: "hisob-tugmalar" },
+          tugma("Ha, meniki", async () => { await H.sinxron(u.id); profilEkrani(u); }),
+          tugma("Yoʻq, boshqa bolaniki", async () => { H.tozala(); await H.sinxron(u.id); profilEkrani(u); }, "secondary")));
+      return;
+    }
+    if (H.egasi() !== null && H.egasi() !== u.id) H.tozala(); // boshqa akkauntning qoldig'i
+    await H.sinxron(u.id);
     profilEkrani(u);
   }
 
@@ -139,16 +158,45 @@
       h("p", { class: "hisob-rol", text: H.ROLLAR[u.rol] + (u.login ? " · login: " + u.login : u.email ? " · " + u.email : "") }),
     ];
     if (u.rol === "admin") kids.push(h("a", { class: "btn big", href: "../admin/", text: "Admin paneli" }));
-    if (u.rol === "teacher") kids.push(h("div", { class: "hisob-karta eslatma" }, h("p", { class: "hisob-izoh", text: "Oʻqituvchi paneli (sinflar va oʻquvchilar) tez orada shu yerda paydo boʻladi." })));
+    if (u.rol === "teacher" || u.rol === "admin") kids.push(h("a", { class: "btn big", href: "../oqituvchi/panel/", text: "Oʻqituvchi paneli" }));
     if (u.rol === "student" && !u.login) {
       if (u.oqituvchi_sorov === "kutilmoqda") kids.push(h("div", { class: "hisob-karta eslatma" }, h("p", { class: "hisob-izoh", text: "Oʻqituvchi boʻlish soʻrovingizni admin koʻrib chiqyapti." })));
       else if (u.oqituvchi_sorov === "rad") kids.push(h("div", { class: "hisob-karta" }, h("p", { class: "hisob-izoh", text: "Oʻqituvchi boʻlish soʻrovi rad etildi. Savol boʻlsa, sayt muallifiga yozing." })));
       else kids.push(tugma("Men oʻqituvchiman", () => sorovEkrani(u), "secondary"));
     }
+    if (u.rol === "student") kids.push(sinflarim());
     const pastki = [tugma("Barcha oʻyinlar", () => { root.location.href = "../"; })];
     if (u.parol_bor) pastki.push(tugma("Parolni almashtirish", () => parolEkrani(false, u), "secondary"));
     pastki.push(tugma("Chiqish", chiqish, "secondary"));
     ekran("Mening akkauntim", ...kids, h("div", { class: "hisob-tugmalar" }, ...pastki));
+  }
+
+  // O'quvchining sinflari va sinf kodi bilan qo'shilish
+  function sinflarim() {
+    const karta = h("div", { class: "hisob-karta" }, h("p", { class: "hisob-qator-nom", text: "Sinfim" }));
+    const royxat = h("div", {}, h("p", { class: "hisob-izoh", text: "Yuklanmoqda…" }));
+    const kod = input({ maxlength: "6", autocapitalize: "characters", autocomplete: "off", spellcheck: "false", placeholder: "AB3K7Q" });
+    const f = forma([maydon("Sinf kodi (oʻqituvchidan)", kod)], "Qoʻshilish", async () => {
+      const r = await H.sinf.qoshil(kod.value);
+      if (!r.ok) return r.xato;
+      kod.value = "";
+      yangila();
+      return null;
+    });
+    async function yangila() {
+      const r = await H.sinf.meniki();
+      royxat.innerHTML = "";
+      if (!r.ok) return;
+      if (!r.sinflar.length) royxat.append(h("p", { class: "hisob-izoh", text: "Hali sinfga qoʻshilmagansan." }));
+      for (const s of r.sinflar) {
+        royxat.append(h("div", { class: "hisob-qator" },
+          h("div", {}, h("div", { class: "hisob-qator-nom", text: s.nom }), h("div", { class: "hisob-qator-izoh", text: "Oʻqituvchi: " + (s.oqituvchi || "—") })),
+          h("span", { class: "hisob-qator-izoh", text: s.holat === "qabul" ? "✓ aʼzo" : "⏳ kutilmoqda" })));
+      }
+    }
+    yangila();
+    karta.append(royxat, f);
+    return karta;
   }
 
   function sorovEkrani(u) {

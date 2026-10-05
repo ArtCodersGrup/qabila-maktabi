@@ -69,3 +69,23 @@ test("storage.js: kirgan bo'lsa saqlanganini navbatga qo'yadi, masalalar va o'n 
   assert.match(oqi("oyinlar/23-on-barmoq/js/typing-ui.js"), /navbatga\(BEST_KEY\)/);
   assert.ok(skriptlar("oyinlar/masalalar/index.html").includes("../umumiy/js/storage.js"));
 });
+
+test("o'qituvchi paneli: skriptlar va sinf hisobi", () => {
+  assert.deepEqual(skriptlar("oqituvchi/panel/index.html"), [
+    "../../oyinlar/umumiy/js/storage.js", "../../bosh/js/bosh.js", "../../oyinlar/umumiy/js/hisob.js", "panel.js"]);
+  const P = require("../../../oqituvchi/panel/panel.js");
+  const GAMES = [{ topic: "kod", key: "a:v1", stages: 3 }, { topic: "kod", key: "b:v1", stages: 2 }, { topic: "ai", key: "c:v1", stages: 3 }];
+  const SECTIONS = [{ id: "kod", title: "Kodlash" }, { id: "ai", title: "AI" }, { id: "bosh", title: "Bo'sh" }];
+  const h = P.hisobla({
+    "a:v1": { done: [true, true, false], stars: [3, 2, 0], hard: [true, false, false] },
+    "c:v1": { done: [true, true, true], stars: [1, 1, 1], hard: [false, false, false] },
+    "on-barmoq:rekord": 140,
+    "masalalar:holat:v1": { x: { yechilgan: true }, y: { yechilgan: false }, z: { yechilgan: true } },
+  }, GAMES, SECTIONS);
+  assert.deepEqual(h.bolimlar, [{ id: "kod", title: "Kodlash", tugagan: 2, jami: 5 }, { id: "ai", title: "AI", tugagan: 3, jami: 3 }]);
+  assert.equal(h.yulduz, 8);
+  assert.equal(h.qiyin, 1);
+  assert.equal(h.rekord, 140);
+  assert.equal(h.masalalar, 2);
+  assert.equal(h.foiz, 63); // 5 / 8 bosqich
+});
