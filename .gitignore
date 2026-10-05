@@ -13,3 +13,6 @@ testlar/
 
 # Tahlil hisobotlari (xavfsizlik topilmalari bor) — faqat muallif kompyuterida, saytga chiqmaydi
 hisobotlar/
+
+# Server muhiti (FastAPI)
+server/.venv/

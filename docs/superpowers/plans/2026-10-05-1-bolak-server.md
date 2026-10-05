@@ -46,7 +46,7 @@
 ```
 fastapi==0.115.6
 uvicorn[standard]==0.32.1
-sqlalchemy==2.0.36
+sqlalchemy[asyncio]==2.0.36
 psycopg[binary]==3.2.3
 alembic==1.14.0
 ```
