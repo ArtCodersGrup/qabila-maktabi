@@ -70,7 +70,7 @@ Koʻrinishni `<html>` dagi ikki atribut belgilaydi:
   (bolalar) koʻrinishda qoladi**.
 
 Kattalar koʻrinishi faqat shu shartda yoqiladi:
-`:root:is([data-toifa="orta"], [data-toifa="yuqori"]):not([data-maskot])`.
+`data-toifa` — `orta` yoki `yuqori` **va** `data-maskot` yoʻq.
 
 **Oʻyin sahifalarida** ikkala atribut `index.html` ichiga **yozib qoʻyiladi** (oʻyinning oʻz toifasi) —
 JS kutilmaydi, sahifa birinchi chizilishdayoq toʻgʻri koʻrinishda.
@@ -85,19 +85,17 @@ ular hozirgi koʻrinishda qoladi.
 ### Nega `data-maskot` kerak (kodni oʻlchash natijasi)
 
 64 oʻyinning hammasida matn — **ikki ovozli suhbat**: oqsoqol tushuntiradi, shogird savol beradi
-(`ui.say("apprentice", …)`). Bundan tashqari **32 ta oʻyin** (01–26, 51, 52, 58–61) shogirdning
-qogʻozini ishlatadi (`ui.paper(…)`) va matnda uni tilga oladi: "Qogʻozimda 2 yozilgan",
-"Barabanda xabar chalaman". Bu oʻyinlarda qahramonni yashirsak, matn tushunarsiz boʻlib qoladi.
+(`ui.say("apprentice", …)`). Matnda qahramonlar deyarli tilga olinmaydi, shuning uchun ularni
+yashirish mumkin — shogird gapi **"Shogird" yorligʻi** bilan ajratiladi (pastga qarang).
 
-Shuning uchun:
+Istisno — **3 ta oʻyin** shogirdning qogʻozi va barabanini haqiqatan ishlatadi (`ui.paper("2")`,
+`ui.raisePaper`, `"drum"` holati) va matnda tilga oladi ("Qogʻozimda 2 yozilgan", "Barabanda xabar
+chalaman"): **01 Qabila kodlari, 02 Qabila Morzesi, 03 Sezar maktubi**. Qolgan oʻyinlardagi
+`ui.paper("")` — faqat tozalash.
 
-- **`ui.paper` / `ui.raisePaper` ishlatadigan oʻyin `data-maskot` oladi** (32 ta). Ulardan 29 tasi
-  `orta` toifasida — ular **5–8 bosqichida qayta yoziladigan oʻyinlarning aniq roʻyxati**:
-  01, 03, 04, 05, 06–12, 13–16, 17–22, 24, 25, 51, 52, 58–61. Qayta yozilgan oʻyindan `data-maskot`
-  olib tashlanadi — u kattalar koʻrinishiga oʻzi oʻtadi.
-- Qolgan kattalar oʻyinlari (`orta` da 14 ta: 27–34, 36, 37, 48, 49, 50, 65; `yuqori` da 12 ta)
-  qahramonni faqat "ovoz" sifatida ishlatadi. Ularda qahramonlar yashiriladi, shogird gapi esa
-  **"Oʻquvchi" yorligʻi** bilan ajratiladi (pastga qarang).
+Qoida: oʻyin kodi `ui.paper(` ni boʻsh boʻlmagan qiymat bilan, `raisePaper(` ni yoki `"drum"` ni
+ishlatsa — `data-maskot` oladi. `orta` da bular 01 va 03: ular **5–8 bosqichida qayta yoziladi**,
+shunda `data-maskot` olib tashlanadi va oʻyin kattalar koʻrinishiga oʻzi oʻtadi.
 
 ## Kattalar koʻrinishi (vaqtinchalik)
 
@@ -106,10 +104,8 @@ Maqsad — bolalarcha belgilarni olib tashlash; haqiqiy dizayn 5–8 bosqichida.
 | Narsa | 1–4 (hozirgi) | 5–8 | 9–11 |
 |---|---|---|---|
 | Fon | `#FFF6E5` qum | `#FBFAF7` | `#FBFAF7` |
-| Shrift | Nunito | tizim shrifti | tizim shrifti, zichroq (asos 16 px) |
+| Shrift | Nunito | tizim shrifti | tizim shrifti |
 | Asosiy rang | `#2F6FDE` | `#2F6FDE` | `#33408A` |
-| Burchaklar | 8–24 px | 4–12 px | 4–12 px |
-| Tugma va kartalar | 3D qirra | tekis | tekis |
 | Qahramonlar | bor | yoʻq | yoʻq |
 | Koʻrsatma | dumli pufak | dumsiz panel | dumsiz panel |
 | Tantana | konfeti + ✓ | faqat ✓ | faqat ✓ |
@@ -117,26 +113,32 @@ Maqsad — bolalarcha belgilarni olib tashlash; haqiqiy dizayn 5–8 bosqichida.
 Fon oq-iliq tanlandi (sovuq emas): oʻyin CSS'larida iliq kulranglar (`#F3EFE3`, `#6B6558`, `#EFE9DC`)
 qattiq yozilgan — sovuq fonda ular begona koʻrinadi.
 
-Tokenlar (`asos.css`, kattalar selektori ostida):
+**3D qirra va burchak radiusi oʻzgarmaydi.** Oʻyinlarning oʻz CSS'larida 116 ta qirra va 268 ta radius
+qattiq yozilgan; faqat umumiy tugmalarni tekislasak, bir ekranda ikki xil uslub chiqadi. Bu haqiqiy
+dizayn bilan birga (5–8 bosqichi) hal qilinadi.
+
+Kattalar selektori (`asos.css` oxirida alohida boʻlim):
+`:root[data-toifa]:not([data-toifa="boshlangich"]):not([data-maskot])`.
 
 ```
 --fon:#FBFAF7; --matn:#1E2230; --pufak:#FFFFFF; --matn-2:#55524A; --matn-3:#6A665C;
 --yuza:#FFFFFF; --yuza-2:#F6F4EE; --panel:#F1EEE6;
 --chiziq:#DAD6CB; --chiziq-kuchli:#8B8676; --soya:#DAD6CB; --oq-qora:#DAD6CB;
---r-s:4px; --r-m:6px; --r-l:8px; --r-xl:12px;
 ```
 
 `yuqori` qoʻshimcha: `--asosiy:#33408A; --asosiy-qora:#232D63; --asosiy-matn:#33408A;
---asosiy-och:#E8EAF6; --t-1:14px; --t0:16px; --t1:18px; --t2:21px; --t3:26px; --t4:34px`.
+--asosiy-och:#E8EAF6`.
+
+Kontrast (AA): `--matn-3` fonda 5.5:1, `--chiziq-kuchli` oqda 3.6:1.
 
 Komponentlar (shu selektor ostida):
 
-- `.zone-stage .actor`, `.bosh-actors` — yashirin; `.zone-stage` bitta ustun; yotiq holatda koʻrsatma
-  paneli chap ustunning tepasida turadi.
-- `.bubble` — dumsiz (`::after` yoʻq), soyasiz, qalinligi 600.
-- `.bubble.from-apprentice` — och koʻk fon va tepasida kichik **"Oʻquvchi"** yozuvi (`::before`).
+- `body` — `system-ui` shrifti.
+- `.zone-stage .actor`, `.bosh-actors`, bosh sahifadagi pufak — yashirin; `.zone-stage` bitta ustun;
+  yotiq holatda koʻrsatma paneli chap ustunning tepasida turadi.
+- `.bubble` — dumsiz (`::after` yoʻq), soyasiz, chegarasi 1 px, qalinligi 600.
+- `.bubble.from-apprentice` — och koʻk fon va tepasida kichik **"Shogird"** yozuvi (`::before`).
   Oqsoqol gapi yorliqsiz (asosiy ovoz). ✓ / ↻ holatlari ranglari saqlanadi.
-- Tugma, katak, karta, ikonka-tugma — `box-shadow` qirrasiz; bosilganda 1 px tushadi.
 
 `ui.js`: kattalar koʻrinishida `celebrate()` konfeti chizmaydi, katta ✓ qoladi.
 
@@ -184,7 +186,7 @@ Komponentlar (shu selektor ostida):
 - har toifada raqamlar 1 dan ketma-ket, `SECTIONS` tartibida;
 - asbob va musobaqalarda `toifalar` boʻsh emas va faqat mavjud id lar;
 - **har oʻyin `index.html` idagi `data-toifa` katalogdagi `toifa` ga teng**;
-- **`data-maskot` bor ⇔ oʻyin kodi `ui.paper(` yoki `raisePaper(` ni chaqiradi**;
+- **`data-maskot` bor ⇔ oʻyin qogʻoz yoki barabanni ishlatadi** (`bosh/tools/toifa-yoz.js` dagi `maskotKerak`);
 - kattalar koʻrinishidagi oʻyin `theme-color` i `#FBFAF7`.
 
 `oyinlar/umumiy/tests/toifa.test.js`: `oqi()` notoʻgʻri qiymatni rad etadi; `yoz()` → `oqi()`;
@@ -196,7 +198,7 @@ bosh sahifa uch toifada, bittadan oʻyin (kattalar koʻrinishi, `data-maskot`li)
 
 ## Maʼlum cheklovlar
 
-- `orta` dagi 43 oʻyindan 29 tasi 5–8 bosqichigacha bolalar koʻrinishida qoladi. Ramka faqat
-  14 ta `orta` va 12 ta `yuqori` oʻyinini, bosh sahifani va asboblarni kattalar koʻrinishiga oʻtkazadi.
-- Kattalar oʻyinlarida matn ohangi ("sen", qisqa gaplar) oʻzgarmaydi — 5–8 bosqichi.
+- `orta` dagi 43 oʻyindan 2 tasi (01, 03) 5–8 bosqichigacha bolalar koʻrinishida qoladi.
+- Kattalar oʻyinlarida matn ohangi ("sen", qisqa gaplar), ish zonasidagi rasmlar (qabila mavzusi),
+  3D qirra va radius oʻzgarmaydi — 5–8 bosqichi.
 - 9–11 oʻquvchisiga Python asoslari kerak boʻlsa, almashtirgich bilan 5–8 ga oʻtadi.
