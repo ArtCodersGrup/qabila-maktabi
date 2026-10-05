@@ -1,0 +1,62 @@
+/* Qabila manzillari — faqat shu o'yinga xos uslublar (prefiks .qm-). */
+
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(250px, 70vw); align-self: center; }
+.story-art.wide { width: min(320px, 84vw); }
+.story-art.small { width: min(170px, 46vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 17px; font-weight: 800; text-align: center; }
+.qm-haqiqat { font-size: 15px; font-weight: 700; color: var(--matn-2); }
+
+.pbox { display: flex; flex-direction: column; align-items: stretch; gap: 12px; width: 100%; max-width: 640px; margin: 0 auto; }
+.pbox .note { font-size: 19px; font-weight: 800; color: var(--asosiy-matn); text-align: center; }
+.pbox .answer { font-size: 20px; font-weight: 900; color: var(--togri-matn); text-align: center; overflow-wrap: anywhere; }
+
+.qm-savol { font-size: 19px; font-weight: 800; text-align: center; line-height: 1.4; max-width: 560px; margin: 0 auto; }
+.qm-manzil { font-family: ui-monospace, Menlo, Consolas, monospace; font-weight: 800; letter-spacing: 0.5px; }
+
+/* ---------- Uy ---------- */
+.qm-uy {
+  display: inline-flex; flex-direction: column; align-items: center; gap: 4px; min-width: 120px; padding: 8px 10px;
+  background: #fff; border: 2px solid var(--chiziq); border-radius: 12px; font: inherit; color: var(--matn);
+}
+.qm-uy-rasm { width: 64px; }
+.qm-uy-rasm svg { display: block; width: 100%; height: auto; }
+.qm-uy .qm-manzil { font-size: 16px; }
+button.qm-uy { cursor: pointer; min-height: 120px; box-shadow: 0 4px 0 var(--oq-qora); transition: transform 0.08s, box-shadow 0.08s; }
+button.qm-uy:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--oq-qora); }
+button.qm-uy:focus-visible { outline: 3px solid var(--asosiy); outline-offset: 3px; }
+
+/* ---------- Konvert ---------- */
+.qm-konvert {
+  align-self: center; display: inline-flex; align-items: baseline; gap: 8px; padding: 12px 18px;
+  background: #fff; border: 2.5px solid var(--matn); border-radius: 8px; box-shadow: 0 3px 0 var(--oq-qora);
+}
+.qm-konvert-nom { font-size: 15px; font-weight: 800; color: var(--matn-3); }
+.qm-konvert .qm-manzil { font-size: 22px; color: var(--asosiy-matn); }
+
+/* ---------- Daftar ---------- */
+.qm-daftar { display: flex; flex-direction: column; min-width: 0; background: #fff; border: 2px solid var(--chiziq); border-radius: 12px; overflow: hidden; }
+.qm-daftar-nom { padding: 6px 12px; background: var(--sariq-och); font-size: 15px; font-weight: 900; text-align: center; }
+.qm-qator { display: flex; justify-content: space-between; gap: 12px; padding: 6px 12px; border-top: 1px solid var(--chiziq); font-size: 16px; }
+.qm-qator .qm-nom { font-weight: 800; }
+.qm-qator.belgi { background: var(--togri-och); box-shadow: inset 4px 0 0 var(--togri); }
+.qm-zanjir { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.qm-zanjir .qm-qator { flex-direction: column; gap: 0; font-size: 14px; }
+@media (max-width: 560px) { .qm-zanjir { grid-template-columns: 1fr; } .qm-zanjir .qm-qator { flex-direction: row; } }
+.qm-juft { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.qm-blok { display: flex; flex-direction: column; gap: 6px; }
+@media (max-width: 480px) { .qm-juft { grid-template-columns: 1fr; } }
+
+/* ---------- So'rovlar va javon ---------- */
+.qm-ketma, .qm-javon { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px; }
+.qm-chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; background: var(--asosiy-och); font-size: 15px; font-weight: 800; }
+.qm-chip b { display: inline-grid; place-items: center; min-width: 20px; height: 20px; border-radius: 50%; background: var(--asosiy); color: #fff; font-size: 12px; }
+.qm-javon { padding: 8px; border-radius: 12px; background: var(--panel); }
+.qm-javon .qm-chip { background: var(--sariq-och); }
+.qm-javon-nom, .qm-bosh { font-size: 15px; font-weight: 800; color: var(--matn-3); }
+
+.qm-javoblar { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 520px; margin: 0 auto; }
+.qm-javoblar.uylar { flex-direction: row; flex-wrap: wrap; justify-content: center; max-width: 600px; }
+.qm-javoblar .btn.wide { width: 100%; }
+.qm-javoblar .btn.kod { font-family: ui-monospace, Menlo, Consolas, monospace; letter-spacing: 0.5px; }

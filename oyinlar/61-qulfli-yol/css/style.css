@@ -1,0 +1,51 @@
+/* Qulfli yo'l — faqat shu o'yinga xos uslublar (prefiks .qy-). */
+
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(250px, 70vw); align-self: center; }
+.story-art.wide { width: min(320px, 84vw); }
+.story-art.small { width: min(140px, 40vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 17px; font-weight: 800; text-align: center; }
+.qy-haqiqat { font-size: 15px; font-weight: 700; color: var(--matn-2); }
+
+.pbox { display: flex; flex-direction: column; align-items: stretch; gap: 12px; width: 100%; max-width: 640px; margin: 0 auto; }
+.pbox .note { font-size: 19px; font-weight: 800; color: var(--asosiy-matn); text-align: center; overflow-wrap: anywhere; }
+.pbox .answer { font-size: 20px; font-weight: 900; color: var(--togri-matn); text-align: center; overflow-wrap: anywhere; }
+.qy-savol { font-size: 19px; font-weight: 800; text-align: center; line-height: 1.4; max-width: 560px; margin: 0 auto; }
+
+/* ---------- Otkritka va quti ---------- */
+.qy-otkritka, .qy-quti {
+  position: relative; display: flex; gap: 12px; align-items: flex-start; align-self: center; max-width: 100%;
+  padding: 14px 16px; border-radius: 10px; border: 2.5px solid var(--matn); box-shadow: 0 3px 0 var(--oq-qora);
+}
+.qy-otkritka { background: var(--sariq-och); }
+.qy-quti { background: var(--togri-och); border-color: var(--togri-qora); }
+.qy-belgi { flex: none; width: 30px; }
+.qy-belgi svg, .qy-satr-belgi svg, .qy-tugun svg { display: block; width: 100%; height: auto; }
+.qy-maydonlar { display: flex; flex-direction: column; gap: 4px; }
+.qy-maydon { display: flex; gap: 8px; font-size: 18px; }
+.qy-maydon span { color: var(--matn-3); font-weight: 700; }
+.qy-maydon b { font-family: ui-monospace, Menlo, Consolas, monospace; }
+.qy-shifr { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 17px; font-weight: 700; color: var(--togri-qora); overflow-wrap: anywhere; word-break: break-all; }
+
+/* ---------- Yo'l ---------- */
+.qy-yol { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; }
+.qy-uch { padding: 6px 12px; border-radius: 999px; background: var(--asosiy); color: #fff; font-weight: 900; font-size: 15px; }
+.qy-tugun { display: inline-grid; place-items: center; width: 38px; height: 38px; padding: 6px; border-radius: 50%; background: #fff; border: 2.5px solid var(--matn); }
+
+/* ---------- Manzil satri ---------- */
+.qy-satr {
+  display: flex; align-items: center; gap: 10px; width: 100%; min-height: 52px; padding: 10px 14px;
+  border: 2px solid var(--chiziq-kuchli); border-radius: 999px; background: #fff; color: var(--matn);
+  font: inherit; text-align: left;
+}
+.qy-satr-belgi { flex: none; width: 24px; }
+.qy-url { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 16px; font-weight: 700; overflow-wrap: anywhere; word-break: break-all; }
+.qy-satr.ochiq .qy-url { color: var(--matn-2); }
+button.qy-satr { cursor: pointer; box-shadow: 0 4px 0 var(--oq-qora); transition: transform 0.08s, box-shadow 0.08s; }
+button.qy-satr:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--oq-qora); }
+button.qy-satr:focus-visible { outline: 3px solid var(--asosiy); outline-offset: 3px; }
+
+.qy-javoblar { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 560px; margin: 0 auto; }
+.qy-javoblar .btn.wide { width: 100%; }
+.qy-javoblar .btn.kod { font-family: ui-monospace, Menlo, Consolas, monospace; overflow-wrap: anywhere; word-break: break-all; }

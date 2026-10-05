@@ -1,0 +1,76 @@
+/* Xabar bo'laklari — faqat shu o'yinga xos uslublar (prefiks .xb-). */
+
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(250px, 70vw); align-self: center; }
+.story-art.wide { width: min(320px, 84vw); }
+.story-art.small { width: min(160px, 44vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 17px; font-weight: 800; text-align: center; }
+.xb-haqiqat { font-size: 15px; font-weight: 700; color: var(--matn-2); }
+
+.xb-savol { font-size: 19px; font-weight: 800; text-align: center; line-height: 1.4; max-width: 560px; margin: 0 auto; }
+
+/* ---------- Xabar: belgilar kataklarda ---------- */
+.xb-xabar { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; max-width: 560px; margin: 0 auto; }
+.xb-belgi {
+  display: inline-grid; place-items: center; min-width: 30px; height: 38px; padding: 0 4px;
+  border-radius: 8px; font-size: 22px; font-weight: 900;
+}
+.xb-belgi.r0 { background: #D8E6FB; color: #1B4A94; }
+.xb-belgi.r1 { background: #FFE9C7; color: #8A5A10; }
+.xb-belgi.r2 { background: #D7F0E6; color: #116B50; }
+.xb-belgi.r3 { background: #E7DBF7; color: #5B3391; }
+.xb-belgi.bosh, .xb-harf.bosh { color: var(--matn-3); font-weight: 700; }
+.xb-xabar.kichik .xb-belgi { min-width: 24px; height: 30px; font-size: 18px; }
+
+/* ---------- Konvert ---------- */
+.xb-qator { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.xb-konvert {
+  position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+  min-width: 92px; min-height: 64px; padding: 22px 10px 8px;
+  background: #fff; border: 2.5px solid var(--matn); border-radius: 8px;
+  font: inherit; color: var(--matn);
+  animation: xb-kel 0.35s ease-out;
+}
+/* Konvert qopqog'i — burchakdan burchakka "V" */
+.xb-konvert::before {
+  content: ""; position: absolute; left: 6px; right: 6px; top: 0; height: 18px;
+  border-left: 2px solid var(--chiziq-kuchli); border-right: 2px solid var(--chiziq-kuchli);
+  border-bottom: 2px solid var(--chiziq-kuchli); clip-path: polygon(0 0, 100% 0, 50% 100%);
+  background: var(--sariq-och);
+}
+.xb-raqam {
+  position: absolute; top: -12px; right: -10px; min-width: 40px; padding: 2px 8px;
+  border-radius: 999px; background: var(--asosiy); color: #fff; font-size: 15px; font-weight: 900; text-align: center;
+  box-shadow: 0 2px 0 var(--asosiy-qora);
+}
+.xb-ichi { position: relative; display: flex; gap: 2px; }
+.xb-harf { display: inline-grid; place-items: center; min-width: 22px; height: 30px; font-size: 20px; font-weight: 900; }
+.xb-manzil { font-size: 13px; font-weight: 800; color: var(--matn-3); }
+.xb-konvert.kichik { min-width: 76px; min-height: 52px; padding: 18px 8px 6px; }
+.xb-konvert.kichik .xb-harf { min-width: 18px; height: 26px; font-size: 18px; }
+.xb-konvert.yoq { border-style: dashed; border-color: var(--chiziq-kuchli); background: transparent; }
+.xb-konvert.yoq::before { display: none; }
+.xb-konvert.yoq .xb-raqam { background: var(--yana); color: var(--matn); box-shadow: none; }
+.xb-konvert.tanlangan { border-color: var(--togri); box-shadow: 0 0 0 3px var(--togri-och); }
+.xb-konvert.yangi { border-color: var(--togri); animation: xb-kel 0.5s ease-out; }
+
+button.xb-konvert { cursor: pointer; min-height: 72px; box-shadow: 0 4px 0 var(--oq-qora); transition: transform 0.08s, box-shadow 0.08s; }
+button.xb-konvert:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--oq-qora); }
+button.xb-konvert:focus-visible { outline: 3px solid var(--asosiy); outline-offset: 3px; }
+button.xb-konvert.olindi { opacity: 0.35; box-shadow: none; }
+
+.xb-yigilgan { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 6px; min-height: 34px; }
+
+.xb-javoblar { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 520px; margin: 0 auto; }
+.xb-javoblar.konvertlar { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 14px; padding-top: 10px; }
+.xb-javoblar .btn.wide { width: 100%; font-family: ui-monospace, Menlo, Consolas, monospace; letter-spacing: 1px; }
+
+@keyframes xb-kel { from { transform: translateY(-8px); opacity: 0; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .xb-konvert { animation: none; } }
+
+/* Mashq qutisi (kod.css dagi bilan bir xil — bu o'yin kod yozmaydi, shuning uchun o'sha fayl ulanmaydi) */
+.pbox { display: flex; flex-direction: column; align-items: stretch; gap: 12px; width: 100%; max-width: 640px; margin: 0 auto; }
+.pbox .note { font-size: 19px; font-weight: 800; color: var(--asosiy-matn); text-align: center; }
+.pbox .answer { font-size: 20px; font-weight: 900; color: var(--togri-matn); text-align: center; }
+@media (max-width: 420px) { .pbox { gap: 8px; } .pbox .note { font-size: 18px; } }
