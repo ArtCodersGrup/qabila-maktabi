@@ -84,7 +84,7 @@
     el.append(
       h("a", { class: "back-link", href: SITE_HOME, text: "◀︎ Barcha oʻyinlar" }),
       h("h1", { class: "to-sarlavha", text: "Tank jangi — onlayn" }),
-      izoh(`Jang ${X.JANG_DAQIQA} daqiqa. Har raundda hamma bola ${X.RAUND_SONIYA} soniyada bitta satr yozadi, keyin doskada hammasi birga bajariladi. Oxirgi tirik qolgan yoki vaqt tugaganda joni koʻp tank — gʻolib.`),
+      izoh(`Jang ${X.JANG_DAQIQA} daqiqa. Har raundda hamma bola ${X.RAUND_SONIYA} soniyada bitta satr yozadi; kim oldin yuborsa, uning harakati oldin bajariladi. Oxirgi tirik qolgan yoki vaqt tugaganda joni koʻp tank — gʻolib.`),
       h("div", { class: "to-buyruqlar" }, ...BUYRUQLAR.map((b) => h("span", { class: "td-buyruq", text: b + (["move", "back", "left", "right"].includes(b) ? "(n)" : "()") }))),
       tugmalar(
         bor ? ui.button("Xona ochish (oʻqituvchi)", () => hostBoshla(), "big") : null,
@@ -110,6 +110,7 @@
     const odamlar = []; // [{ id, qah }] — "Yangi jang" da shu bolalar xonada qoladi
     let m = null; // jang ketyapti
     let harakatlar = {};
+    let kelish = []; // shu raundda kim qaysi tartibda yubordi
     let qoldi = 0;
     let jangTugaydi = 0; // jang shu paytda tugaydi (JANG_DAQIQA)
     const jangQoldi = () => Math.max(0, Math.ceil((jangTugaydi - Date.now()) / 1000));
@@ -171,7 +172,9 @@
             if (!t || !t.tirik || msg.data.r !== m.raund + 1) return;
             const toza = X.harakatlarToza(msg.data.h, msg.data.a);
             if (!toza) return;
+            if (harakatlar[msg.from]) return; // birinchi yuborilgani hisobga olinadi
             harakatlar[msg.from] = toza;
+            kelish.push(msg.from);
             jangChiz();
             if (X.tiriklar(m).every((id) => harakatlar[id])) raundYakuni();
           }
@@ -214,6 +217,7 @@
 
     function raundBoshla() {
       harakatlar = {};
+      kelish = [];
       qoldi = X.RAUND_SONIYA;
       bajarilyapti = false;
       room.send("holat", X.holatPaketi(m, qoldi, jangQoldi()));
@@ -225,7 +229,7 @@
       sarlavha.textContent = m.tugadi ? "Jang tugadi" : bajarilyapti ? `${m.raund}-raund bajarilmoqda…` : `${m.raund + 1}-raund · ⏱ ${Math.max(0, qoldi)} s · jang ${mmss(jangQoldi())}`;
       jadval.innerHTML = "";
       for (const t of m.tanklar) {
-        const holat = !t.tirik ? "yiqildi" : harakatlar[t.id] ? "✓ yubordi" : "yozyapti…";
+        const holat = !t.tirik ? "yiqildi" : harakatlar[t.id] ? `✓ ${kelish.indexOf(t.id) + 1}-boʻlib yubordi` : "yozyapti…";
         jadval.append(h("div", { class: "to-qator" + (t.tirik ? "" : " olgan") },
           h("span", { class: "to-rang", style: `background:${t.rang}` }),
           h("span", { class: "to-nom", text: X.qahById(t.qah).nom }),
@@ -238,7 +242,7 @@
     async function raundYakuni() {
       if (bajarilyapti || !m || m.tugadi) return;
       bajarilyapti = true;
-      const tartib = X.tartibYasa(m);
+      const tartib = X.tartibYasa(m, kelish);
       room.send("natija", X.natijaPaketi(m, tartib, harakatlar));
       jangChiz();
       const yozuv = X.raundniBajar(m, tartib, harakatlar);
@@ -391,6 +395,7 @@
           if (r.chegaraOshdi) yoz("Bitta satrda 8 ta harakat bajariladi — qolgani hisobga olinmaydi.", "izoh");
           room.send("harakat", { r: raund, h: r.harakatlar.map((q) => q.h), a: r.harakatlar.map((q) => q.a) });
           yuborildi = true;
+          panel.maydon.disabled = true; // yuborildi — keyingi raundgacha qulf
           yoz(`✓ ${raund}-raund uchun yuborildi (${r.harakatlar.length} ta harakat). Boshqalarni kutamiz…`, "izoh");
         },
       });
@@ -465,6 +470,7 @@
         yuborildi = false;
         const tirik = X.tank(m, me).tirik;
         panel.maydon.disabled = !tirik;
+        if (tirik) panel.maydon.focus();
         panel.yoz(tirik ? `— ${raund}-raund: bitta satr yoz va Enter bos —` : "Tanking yiqildi — endi tomoshabinsan. Jangni kuzatib tur.", "izoh");
       }
       QK.probe.raund = raund;

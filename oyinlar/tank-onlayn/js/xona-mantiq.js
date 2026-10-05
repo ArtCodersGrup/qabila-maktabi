@@ -9,7 +9,7 @@
 
   const MAX_ODAM = 8;
   const MIN_ODAM = 2;
-  const RAUND_SONIYA = 5;
+  const RAUND_SONIYA = 8;
   const JANG_DAQIQA = 5; // jang raundlar soni bilan emas, umumiy vaqt bilan tugaydi (muallif qarori)
   const JON = 3;
   const UZOQ = 300; // hammaga teng — bolalar orasida ustunlik bo'lmasin
@@ -157,7 +157,13 @@
     }
     return out;
   }
-  const tartibYasa = (m, r) => aralash(tiriklar(m), r || Math.random);
+  // Tartib: kim oldin yuborgan bo'lsa — o'sha oldin (tez bosgan yutadi; ikkovida bittadan jon qolib,
+  // bir-biriga otsa, birinchi yuborgan otib yutadi). Yubormaganlar oxirida (ularda harakat yo'q).
+  function tartibYasa(m, kelish, r) {
+    const tirik = tiriklar(m);
+    const oldin = (kelish || []).filter((id, i, a) => tirik.includes(id) && a.indexOf(id) === i);
+    return oldin.concat(aralash(tirik.filter((id) => !oldin.includes(id)), r || Math.random));
+  }
 
   // ---------- Tarmoq paketlari (faqat sonlar, mantiq va qisqa kalitlar) ----------
   // Holat: oxirida (tugadi) ids reyting tartibida — server natijani shundan yozadi

@@ -103,7 +103,7 @@ test("yiqilish, g'olib, reyting va vaqt tugashi", () => {
 
 test("paketlar onlayn xabar tekshiruvidan o'tadi va holat qayta tiklanadi", () => {
   const m = X.maydon(oyinchilar(8));
-  const tartib = X.tartibYasa(m, () => 0.3);
+  const tartib = X.tartibYasa(m, [], () => 0.3);
   const harakat = Object.fromEntries(tartib.map((id, i) => [id, [{ h: "left", a: 10 * i }, { h: "move", a: 20 }, { h: "fire", a: 0 }]]));
   const np = X.natijaPaketi(m, tartib, harakat);
   const hp = X.holatPaketi(m, 30);
@@ -129,4 +129,20 @@ test("oxirgi holat paketida ids reyting tartibida (server natijani shundan yozad
   assert.equal(p.tugadi, 1);
   assert.deepEqual(p.ids, X.reyting(m));
   assert.equal(p.golib, "o0");
+});
+
+test("tartib — kim oldin yuborgan; bittadan jon qolib bir-biriga otsa, birinchi yuborgan yutadi", () => {
+  const m = X.maydon(oyinchilar(3));
+  assert.deepEqual(X.tartibYasa(m, ["o2", "o0"], () => 0).slice(0, 2), ["o2", "o0"]);
+  assert.equal(X.tartibYasa(m, ["o2", "o0"], () => 0).length, 3, "yubormagan ham ro'yxatda (oxirida)");
+  for (const [birinchi, ikkinchi] of [["o0", "o1"], ["o1", "o0"]]) {
+    const d = yuzmaYuz(X.maydon(oyinchilar(2)), "o0", "o1");
+    X.tank(d, "o0").jon = 1;
+    X.tank(d, "o1").jon = 1;
+    const otish = { o0: [{ h: "fire", a: 0 }], o1: [{ h: "fire", a: 0 }] };
+    X.raundniBajar(d, X.tartibYasa(d, [birinchi, ikkinchi]), otish);
+    assert.equal(X.tank(d, birinchi).tirik, true, birinchi + " oldin yubordi — tirik");
+    assert.equal(X.tank(d, ikkinchi).tirik, false);
+    assert.equal(X.golib(d), birinchi);
+  }
 });
