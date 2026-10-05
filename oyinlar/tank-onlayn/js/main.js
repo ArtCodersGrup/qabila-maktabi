@@ -64,7 +64,7 @@
     el.append(
       h("a", { class: "back-link", href: SITE_HOME, text: "◀︎ Barcha oʻyinlar" }),
       h("h1", { class: "to-sarlavha", text: "Tank jangi — onlayn" }),
-      izoh("Har raundda hamma bola 30 soniyada bitta satr yozadi, keyin doskada hammasi birga bajariladi. Oxirgi tirik qolgan — gʻolib."),
+      izoh("Har raundda hamma bola 5 soniyada bitta satr yozadi, keyin doskada hammasi birga bajariladi. Oxirgi tirik qolgan — gʻolib."),
       h("div", { class: "to-buyruqlar" }, ...BUYRUQLAR.map((b) => h("span", { class: "td-buyruq", text: b + (["move", "back", "left", "right"].includes(b) ? "(n)" : "()") }))),
       tugmalar(
         bor ? ui.button("Xona ochish (oʻqituvchi)", () => hostBoshla(), "big") : null,

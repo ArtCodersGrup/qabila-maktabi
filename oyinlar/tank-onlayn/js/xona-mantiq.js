@@ -9,7 +9,7 @@
 
   const MAX_ODAM = 8;
   const MIN_ODAM = 2;
-  const RAUND_SONIYA = 30;
+  const RAUND_SONIYA = 5;
   const MAX_RAUND = 20;
   const JON = 3;
   const UZOQ = 300; // hammaga teng — bolalar orasida ustunlik bo'lmasin
