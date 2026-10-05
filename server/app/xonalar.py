@@ -1,11 +1,17 @@
 # Onlayn xonalar: WebSocket orqali presence ("odamlar") va xabar tarqatish. Xonalar shu jarayon xotirasida
 # (uvicorn 1 worker). Server xabarni tekshiradi va "from" ni o'zi qo'yadi — boshqa odam nomidan yozib bo'lmaydi.
 import json
+import logging
 import time
 
 from fastapi import APIRouter, WebSocket
+from sqlalchemy import text
 
+from . import sessiya
 from . import xona_qoidalari as Q
+from .xona_natija import natija_ol
+
+log = logging.getLogger("kelajagim.xonalar")
 
 router = APIRouter()
 
@@ -16,6 +22,9 @@ class Xona:
         self.ochilgan = ochilgan
         self.ochilgan_ms = int(ochilgan * 1000)
         self.odamlar: dict = {}
+        self.sinf_id = None  # o'qituvchi sinf uchun ochgan bo'lsa — natija saqlanadi
+        self.kimlar: dict = {}  # o'yinchi kaliti → {user_id, ism} (faqat shu sinf a'zolari)
+        self.tugadi = False  # oxirgi "holat" paketida o'yin tugaganmi (natija bir marta yoziladi)
 
 
 class Boshqaruvchi:
@@ -86,8 +95,58 @@ async def ping(ws: WebSocket):
     await ws.close()
 
 
+async def _kim(ws: WebSocket):
+    """WebSocket cookie'sidagi sessiya egasi (yoki None). Baza ishlamasa ham xona ishlayveradi."""
+    token = ws.cookies.get(sessiya.COOKIE)
+    if not token:
+        return None
+    try:
+        async with ws.app.state.engine.connect() as conn:
+            return await sessiya.kim(conn, token)
+    except Exception:
+        return None
+
+
+async def _sinf_egasi(ws: WebSocket, u, sinf: str):
+    """O'qituvchi o'z sinfi uchun xona ochyaptimi — sinf id yoki None."""
+    if u is None or not sinf.isdigit() or u["rol"] not in ("teacher", "admin") or u["parol_almashtirsin"]:
+        return None
+    try:
+        async with ws.app.state.engine.connect() as conn:
+            r = (await conn.execute(text("select oqituvchi_id from sinflar where id = :s"), {"s": int(sinf)})).first()
+    except Exception:
+        return None
+    if r is None or (u["rol"] != "admin" and r.oqituvchi_id != u["id"]):
+        return None
+    return int(sinf)
+
+
+async def _azomi(ws: WebSocket, sinf_id: int, user_id: int) -> bool:
+    try:
+        async with ws.app.state.engine.connect() as conn:
+            return (await conn.execute(text("select 1 from sinf_azolari where sinf_id = :s and user_id = :u and holat = 'qabul'"),
+                                       {"s": sinf_id, "u": user_id})).first() is not None
+    except Exception:
+        return False
+
+
+async def _saqla(ws: WebSocket, kind: str, x: Xona, data: dict) -> None:
+    n = natija_ol(kind, data, x.kimlar)
+    if n is None:
+        return
+    meta, rows = n
+    try:
+        async with ws.app.state.engine.connect() as conn:
+            await conn.execute(text("insert into xona_natijalari(sinf_id, tur, meta, oyinchilar) "
+                                    "values (:s, :t, cast(:m as jsonb), cast(:o as jsonb))"),
+                               {"s": x.sinf_id, "t": kind, "m": json.dumps(meta), "o": json.dumps(rows)})
+            await conn.commit()
+    except Exception:
+        log.exception("xona natijasi saqlanmadi")
+
+
 @router.websocket("/api/ws/xona/{kind}/{code}")
-async def xona(ws: WebSocket, kind: str, code: str, key: str = "", role: str = ""):
+async def xona(ws: WebSocket, kind: str, code: str, key: str = "", role: str = "", sinf: str = ""):
     await ws.accept()
     b: Boshqaruvchi = ws.app.state.xonalar
     sabab = Q.ulanish_xatosi(kind, code, key, role)
@@ -99,7 +158,20 @@ async def xona(ws: WebSocket, kind: str, code: str, key: str = "", role: str = "
         await ws.close()
         return
     try:
-        await _yubor(ws, {"t": "kirdi", "at": x.ochilgan_ms})
+        # Sinfga bog'lash (faqat natijasi bor ko'p kishilik o'yinlar) va kirgan bolani tanish
+        if kind in ("tog", "poyga"):
+            if key == Q.HOST and sinf:
+                sid = await _sinf_egasi(ws, await _kim(ws), sinf)
+                if sid is not None:
+                    x.sinf_id = sid
+            elif key != Q.HOST and x.sinf_id is not None:
+                u = await _kim(ws)
+                if u is not None and await _azomi(ws, x.sinf_id, u["id"]):
+                    x.kimlar[key] = {"user_id": u["id"], "ism": u["ism"]}
+        kirdi = {"t": "kirdi", "at": x.ochilgan_ms}
+        if key == Q.HOST:
+            kirdi["sinf"] = x.sinf_id is not None
+        await _yubor(ws, kirdi)
         if eski is not None:
             try:
                 await eski.close(code=4000)
@@ -125,7 +197,14 @@ async def xona(ws: WebSocket, kind: str, code: str, key: str = "", role: str = "
             p = d.get("payload") if isinstance(d, dict) and d.get("t") == "msg" else None
             if not Q.valid_payload(p):
                 continue
-            chiq = {"t": "msg", "payload": {"type": p["type"], "data": p.get("data") or {}, "t": p["t"], "from": key}}
+            data = p.get("data") or {}
+            # O'yin tugadi (0 → 1) — sinf xonasida natija bir marta yoziladi
+            if key == Q.HOST and x.sinf_id is not None and p["type"] == "holat":
+                tugadi = bool(data.get("tugadi"))
+                if tugadi and not x.tugadi:
+                    await _saqla(ws, kind, x, data)
+                x.tugadi = tugadi
+            chiq = {"t": "msg", "payload": {"type": p["type"], "data": data, "t": p["t"], "from": key}}
             for k, o in list(x.odamlar.items()):
                 if o is not ws:
                     await _yubor(o, chiq)

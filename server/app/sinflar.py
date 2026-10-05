@@ -97,6 +97,36 @@ async def meniki(u=Depends(faol), conn=Depends(db)):
     return {"sinflar": [dict(r) for r in rows.mappings()]}
 
 
+# ---------- Xona natijalari (o'qituvchi) — /{sid} dan oldin e'lon qilinadi ----------
+
+def _golib(oyinchilar):
+    birinchi = next((o for o in oyinchilar if o.get("orin") == 1), oyinchilar[0] if oyinchilar else None)
+    return (birinchi.get("ism") or "Mehmon") if birinchi else None
+
+
+@router.get("/natijalar")
+async def natijalar(sinf: int | None = None, u=Depends(oqituvchi), conn=Depends(db)):
+    rows = (await conn.execute(text(
+        "select n.id, n.sinf_id, s.nom as sinf_nom, n.tur, n.meta, n.oyinchilar, n.tugagan "
+        "from xona_natijalari n join sinflar s on s.id = n.sinf_id "
+        "where (s.oqituvchi_id = :u or :admin) and (cast(:s as bigint) is null or n.sinf_id = :s) "
+        "order by n.tugagan desc limit 100"), {"u": u["id"], "admin": u["rol"] == "admin", "s": sinf})).mappings().all()
+    return {"natijalar": [{"id": r["id"], "sinf_id": r["sinf_id"], "sinf_nom": r["sinf_nom"], "tur": r["tur"], "meta": r["meta"],
+                           "tugagan": r["tugagan"].isoformat(), "soni": len(r["oyinchilar"]), "golib": _golib(r["oyinchilar"])}
+                          for r in rows]}
+
+
+@router.get("/natija/{nid}")
+async def natija(nid: int, u=Depends(oqituvchi), conn=Depends(db)):
+    r = (await conn.execute(text(
+        "select n.id, n.sinf_id, s.nom as sinf_nom, s.oqituvchi_id, n.tur, n.meta, n.oyinchilar, n.tugagan "
+        "from xona_natijalari n join sinflar s on s.id = n.sinf_id where n.id = :n"), {"n": nid})).mappings().first()
+    if r is None or (u["rol"] != "admin" and r["oqituvchi_id"] != u["id"]):
+        raise HTTPException(404, "topilmadi")
+    return {"natija": {"id": r["id"], "sinf_id": r["sinf_id"], "sinf_nom": r["sinf_nom"], "tur": r["tur"], "meta": r["meta"],
+                       "tugagan": r["tugagan"].isoformat(), "oyinchilar": r["oyinchilar"]}}
+
+
 # ---------- O'qituvchi ----------
 
 @router.get("")
