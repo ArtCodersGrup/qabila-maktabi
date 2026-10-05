@@ -10,11 +10,13 @@ if [ -n "$(git status --porcelain)" ]; then
   exit 1
 fi
 TMP=$(mktemp -d)
-trap 'rm -rf "$TMP"' EXIT
+# Serverda ufw 22-portni LIMIT qilgan (30 s da 6 ulanish) — hamma buyruq bitta SSH ulanishdan o'tadi
+SSH="ssh -o ControlMaster=auto -o ControlPath=/tmp/kelajagim-%C -o ControlPersist=60"
+trap 'rm -rf "$TMP"; $SSH -O exit "$HOST" 2>/dev/null || true' EXIT
 git archive HEAD | tar -x -C "$TMP"
 
-ssh "$HOST" 'mkdir -p /srv/kelajagim/sayt /srv/kelajagim/api'
-rsync -az --delete --exclude=/server/ --exclude=/docs/ "$TMP"/ "$HOST":/srv/kelajagim/sayt/
-rsync -az --delete --exclude=.venv --exclude=__pycache__ "$TMP/server/" "$HOST":/srv/kelajagim/api/
-ssh "$HOST" 'bash /srv/kelajagim/api/deploy/ornat.sh'
+$SSH "$HOST" 'mkdir -p /srv/kelajagim/sayt /srv/kelajagim/api'
+rsync -e "$SSH" -az --delete --exclude=/server/ --exclude=/docs/ "$TMP"/ "$HOST":/srv/kelajagim/sayt/
+rsync -e "$SSH" -az --delete --exclude=.venv --exclude=__pycache__ "$TMP/server/" "$HOST":/srv/kelajagim/api/
+$SSH "$HOST" 'bash /srv/kelajagim/api/deploy/ornat.sh'
 echo "Deploy tayyor: $(git rev-parse --short HEAD)"

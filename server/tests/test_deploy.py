@@ -29,6 +29,7 @@ def test_saytga_faqat_commit_chiqadi():
     assert "git archive HEAD" in sh
     assert "--exclude=/server/" in sh and "--exclude=/docs/" in sh
     assert "git status --porcelain" in sh
+    assert "ControlMaster=auto" in sh and sh.count('-e "$SSH"') == 2  # ufw LIMIT: bitta ulanish
 
 
 def test_nginx_faqat_bir_marta_va_tekshiruv_bilan():
