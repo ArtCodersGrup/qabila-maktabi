@@ -51,6 +51,11 @@ Tartib — bosh sahifadagidek: osondan qiyinga, oldingi oʻyinga tayanadiganlari
 | Jamoa tanlash | `43-jamoa-tanlash` | 12–16 💻 | `C(n,k)`: bir xil jamoa `k!` marta takrorlanadi; tartib muhimmi degan savol |
 | Paskal uchburchagi | `44-paskal-uchburchagi` | 12–16 💻 | `C(n,k)` ni faqat qoʻshish bilan; simmetriya, qator yigʻindisi `2ⁿ`, juftliklar diagonali |
 | Kaptarxona | `45-kaptarxona` | 12–16 💻 | Dirixle printsipi: `n ÷ k` kafolati, eng yomon holat, nega isbot kerak |
+| **Internet qanday ishlaydi** | | | |
+| Xabar boʻlaklari | `58-xabar-bolaklari` | 8–11 | Xat raqamlangan konvertlarga (paketlarga) boʻlinadi, aralash keladi, yoʻqolgani qayta soʻraladi |
+| Qabila manzillari | `59-qabila-manzillari` | 10–16 | IP manzil (toʻrtta 0–255), DNS daftarlari, kesh va eskirgan javob |
+| Paket yoʻli | `60-paket-yoli` | 10–16 | Tugundan tugunga: eng qisqa yoʻl, uzilgan sim, mijoz va server, navbat |
+| Qulfli yoʻl | `61-qulfli-yol` | 10–16 | Qulf (HTTPS) nimani himoyalaydi; qulfli firibgar saytni manzildan tanish |
 | **Parol va xavfsizlik** | | | |
 | Parol kuchi | `50-parol-kuchi` | 10–16 | Nechta variant bor (`aⁱ`), kompyuter qancha vaqtda topadi, nega uzunlik murakkablikdan kuchli |
 | Bir tomonlama qulf | `51-bir-tomonlama-qulf` | 10–16 | Sayt parolni emas, uning izini (xesh) saqlaydi; toʻqnashuv va tuz |
