@@ -1,0 +1,22 @@
+[Unit]
+Description=kelajagim.uz API (FastAPI/uvicorn)
+After=network.target postgresql.service
+
+[Service]
+User=kelajagim
+Group=kelajagim
+WorkingDirectory=/srv/kelajagim/api
+EnvironmentFile=/srv/kelajagim/api.env
+ExecStart=/srv/kelajagim/api/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8100 --workers 1 --proxy-headers --forwarded-allow-ips 127.0.0.1
+Restart=on-failure
+RestartSec=5
+# Server boshqa loyihalar bilan umumiy: xotira chegarasi va tizimni himoyalash
+MemoryMax=300M
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/srv/kelajagim/api
+
+[Install]
+WantedBy=multi-user.target

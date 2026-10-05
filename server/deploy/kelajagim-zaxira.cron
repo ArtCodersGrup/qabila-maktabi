@@ -1,0 +1,2 @@
+# Har kecha 03:30 — baza zaxirasi (14 kun saqlanadi)
+30 3 * * * kelajagim /srv/kelajagim/api/deploy/zaxira.sh >> /srv/kelajagim/zaxira/zaxira.log 2>&1
