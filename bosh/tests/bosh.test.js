@@ -172,3 +172,19 @@ test("«…» ichidagi o'yin nomlari ro'yxatdagi nomlarga mos", () => {
     }
   }
 });
+
+// Ko'rinish <html> atributlaridan olinadi va o'yin faylida YOZILGAN bo'ladi (JS kutilmaydi).
+// Atributlarni bosh/tools/toifa-yoz.js katalogdan yozadi: node bosh/tools/toifa-yoz.js
+const { maskotKerak, kattami } = require("../tools/toifa-yoz.js");
+
+test("o'yin sahifasi: data-toifa katalogga teng, data-maskot — faqat qog'oz/baraban ishlatadiganlarda", () => {
+  for (const g of GAMES) {
+    const html = fs.readFileSync(path.join(ROOT, "oyinlar", g.dir, "index.html"), "utf8");
+    const teg = html.match(/<html[^>]*>/)[0];
+    assert.equal((teg.match(/data-toifa="([^"]*)"/) || [])[1], g.toifa, g.dir);
+    assert.equal(/\sdata-maskot[\s>]/.test(teg), maskotKerak(g.dir), g.dir + ": data-maskot");
+    assert.match(html, new RegExp('name="theme-color" content="' + (kattami(g) ? "#FBFAF7" : "#FFF6E5") + '"'), g.dir);
+  }
+  const maskotli = GAMES.filter((g) => maskotKerak(g.dir)).map((g) => g.n).sort((a, b) => a - b);
+  assert.deepEqual(maskotli, [1, 2, 3], "qog'oz yoki baraban ishlatadigan o'yinlar");
+});
