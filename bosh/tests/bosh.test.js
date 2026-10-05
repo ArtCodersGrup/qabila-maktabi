@@ -10,7 +10,8 @@ const ROOT = path.join(__dirname, "../..");
 const win = {};
 loadScript(path.join(ROOT, "bosh/js/bosh-art.js"), win);
 loadScript(path.join(ROOT, "bosh/js/bosh.js"), win);
-const { GAMES, SECTIONS, CONTESTS, MASHQLAR, TOIFALAR, mos, oyinlar, yoshYorligi, number } = win.QK.bosh;
+const { GAMES, SECTIONS, CONTESTS, MASHQLAR, TOIFALAR, mos, oyinlar, toifaYorligi, number } = win.QK.bosh;
+const toifa = (id) => TOIFALAR.find((t) => t.id === id);
 
 test("barcha o'yin papkalari ro'yxatda bor va aksincha", () => {
   const dirs = fs.readdirSync(path.join(ROOT, "oyinlar")).filter((d) => /^\d\d-/.test(d));
@@ -66,51 +67,59 @@ test("mashqlar: masalalar ro'yxati alohida bo'limda (o'yin emas — bosqichi yo'
 
 // Kartadagi raqam — TANLANGAN TOIFA ichidagi o'rin, shuning uchun har toifada alohida tekshiriladi
 test("har toifada raqamlar 1 dan ketma-ket, bo'limlar tartibida", () => {
-  for (const toifa of TOIFALAR) {
-    const list = oyinlar(toifa);
-    assert.ok(list.length > 0, toifa.id + ": bitta ham o'yin yo'q");
-    assert.deepEqual(list.map((g) => number(g, toifa)), list.map((g, k) => k + 1), toifa.id);
+  for (const t of TOIFALAR) {
+    const list = oyinlar(t);
+    assert.ok(list.length > 0, t.id + ": bitta ham o'yin yo'q");
+    assert.deepEqual(list.map((g) => number(g, t)), list.map((g, k) => k + 1), t.id);
     // Bo'limlar tartibi saqlanadi
     const tartib = list.map((g) => SECTIONS.findIndex((s) => s.id === g.topic));
-    assert.deepEqual(tartib, [...tartib].sort((a, b) => a - b), toifa.id + ": bo'limlar tartibi buzilgan");
+    assert.deepEqual(tartib, [...tartib].sort((a, b) => a - b), t.id + ": bo'limlar tartibi buzilgan");
   }
-  const kichik = TOIFALAR.find((t) => t.id === "kichik");
-  assert.equal(number(GAMES.find((g) => g.dir === "23-on-barmoq"), kichik), 1, "klaviatura — birinchi");
+  assert.equal(number(GAMES.find((g) => g.dir === "23-on-barmoq"), toifa("boshlangich")), 1, "klaviatura — birinchi");
 });
 
 test("har bo'limda kamida bitta o'yin bor va bo'sh bo'lim ko'rsatilmaydi", () => {
   for (const section of SECTIONS) {
     assert.ok(GAMES.some((g) => g.topic === section.id), section.id);
   }
-  // Toifada bo'sh qolgan bo'lim bor (masalan kattada "Algoritm va dasturlash") — u chizilmasligi kerak
-  const katta = TOIFALAR.find((t) => t.id === "katta");
-  const bosh = SECTIONS.filter((s) => !oyinlar(katta).some((g) => g.topic === s.id));
-  assert.ok(bosh.length > 0, "katta toifada hamma bo'lim to'lgan — filtr ishlamayaptimi?");
+  // Toifada bo'sh qolgan bo'lim bor (masalan 9–11 da "Klaviatura") — u chizilmasligi kerak
+  const bosh = SECTIONS.filter((s) => !oyinlar(toifa("yuqori")).some((g) => g.topic === s.id));
+  assert.ok(bosh.length > 0, "yuqori toifada hamma bo'lim to'lgan — filtr ishlamayaptimi?");
 });
 
-test("yosh oralig'i: har o'yinda bor, to'g'ri va kamida bitta toifaga tushadi", () => {
-  for (const item of [...GAMES, ...MASHQLAR, ...CONTESTS]) {
-    const nom = item.dir;
-    assert.ok(Array.isArray(item.yosh) && item.yosh.length === 2, nom + ": yosh oralig'i yo'q");
-    const [a, b] = item.yosh;
-    assert.ok(Number.isInteger(a) && Number.isInteger(b) && a >= 8 && b <= 16 && a <= b, nom + ": " + item.yosh);
-    assert.ok(TOIFALAR.some((t) => mos(item, t)), nom + ": hech bir toifaga tushmaydi");
+const UCH = ["boshlangich", "orta", "yuqori"];
+
+// Har o'yin AYNAN BITTA toifada (muallif qarori, 2026-10-06): kattaroq o'quvchi kichiklar o'yinini ko'rmaydi
+test("toifa: har o'yin aynan bitta toifada, taqsimot 9 / 43 / 12", () => {
+  for (const g of GAMES) assert.ok(UCH.includes(g.toifa), g.dir + ": " + g.toifa);
+  const soni = (id) => oyinlar(toifa(id)).length;
+  assert.deepEqual(UCH.map(soni), [9, 43, 12]);
+  assert.equal(soni("hammasi"), GAMES.length);
+  const raqamlar = (id) => GAMES.filter((g) => g.toifa === id).map((g) => g.n).sort((a, b) => a - b);
+  assert.deepEqual(raqamlar("boshlangich"), [2, 23, 26, 46, 47, 53, 62, 63, 64]);
+  assert.deepEqual(raqamlar("yuqori"), [38, 39, 40, 41, 42, 43, 44, 45, 54, 55, 56, 57]);
+  // Blok qoidalari: sun'iy intellekt va Python — 5–8; kombinatorika va C++ — 9–11
+  for (const g of GAMES) {
+    if (["ai", "ai2", "python"].includes(g.topic)) assert.equal(g.toifa, "orta", g.dir);
+    if (["kombinatorika", "cpp"].includes(g.topic)) assert.equal(g.toifa, "yuqori", g.dir);
   }
-  // Blok qoidalari: Python/algoritm/kombinatorika — faqat katta toifa
-  for (const game of GAMES) {
-    if (["python", "algoritm", "kombinatorika", "cpp"].includes(game.topic)) assert.deepEqual(game.yosh, [12, 16], game.dir);
-  }
-  assert.equal(yoshYorligi({ yosh: [10, 16] }), "10–16");
+  assert.equal(toifaYorligi(GAMES.find((g) => g.n === 38)), "9–11");
+  assert.equal(toifaYorligi(MASHQLAR[0]), "", "asbobda yorliq yo'q");
 });
 
-// Bitta mavzu ikki toifada bo'lishi mumkin (muallif talabi) — shu haqiqatan ishlayaptimi
-test("ikki toifada turadigan o'yinlar bor va har joyda o'z raqami bilan", () => {
-  const ikkala = GAMES.filter((g) => TOIFALAR.filter((t) => t.id !== "hammasi" && mos(g, t)).length === 2);
-  assert.ok(ikkala.length >= 10, "ikki toifadagi o'yinlar: " + ikkala.length);
-  const [kichik, katta] = [TOIFALAR.find((t) => t.id === "kichik"), TOIFALAR.find((t) => t.id === "katta")];
-  const choti = GAMES.find((g) => g.dir === "17-qabila-choti");
-  assert.ok(mos(choti, kichik) && mos(choti, katta));
-  assert.notEqual(number(choti, kichik), number(choti, katta), "raqam toifaga qarab o'zgarishi kerak");
+// Asbob va musobaqa — o'yin emas: bir nechta toifada ko'rinishi mumkin
+test("asbob va musobaqalar: toifalar ro'yxati bor va to'g'ri", () => {
+  for (const item of [...MASHQLAR, ...CONTESTS]) {
+    assert.ok(Array.isArray(item.toifalar) && item.toifalar.length > 0, item.dir);
+    for (const id of item.toifalar) assert.ok(UCH.includes(id), item.dir + ": " + id);
+    assert.ok(mos(item, toifa("hammasi")), item.dir);
+  }
+  const kim = (dir) => [...MASHQLAR, ...CONTESTS].find((x) => x.dir === dir).toifalar;
+  assert.deepEqual(kim("masalalar"), ["orta", "yuqori"]);
+  assert.deepEqual(kim("cpp-shpargalka"), ["yuqori"]);
+  assert.deepEqual(kim("tank-onlayn"), ["orta", "yuqori"]);
+  assert.deepEqual(kim("tog"), ["boshlangich", "orta"]);
+  assert.deepEqual(kim("poyga"), UCH);
 });
 
 // 💻 — bolaga haqiqiy klaviatura kerak: kod yoki matn teriladigan o'yinlar
@@ -125,7 +134,7 @@ test("💻 belgisi: kod yoziladigan o'yinlarda bor, qolganlarida yo'q", () => {
 });
 
 // O'yin matnidagi havolalar RAQAM emas, NOM bilan yoziladi ("«Izlash» o'yinida ko'rgan eding").
-// Sabab: kartadagi raqam tanlangan toifaga bog'liq, bitta o'yin ikki toifada ikki xil raqamga ega bo'ladi.
+// Sabab: kartadagi raqam tanlangan toifaga bog'liq (o'qituvchining "Hammasi" ro'yxatida u boshqa).
 test("o'yin matnida raqamli havola qolmagan", () => {
   const walk = (dir) => fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
     const p = path.join(dir, e.name);
