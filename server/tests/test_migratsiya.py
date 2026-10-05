@@ -16,5 +16,5 @@ def test_upgrade_head():
     assert r.returncode == 0, r.stderr
     eng = create_engine(TEST_DB)
     with eng.connect() as conn:
-        assert conn.execute(text("select version_num from alembic_version")).scalar() == "0001"
+        assert conn.execute(text("select version_num from alembic_version")).scalar() == "0002"
     eng.dispose()
