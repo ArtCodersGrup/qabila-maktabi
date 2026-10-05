@@ -22,7 +22,9 @@
     box.append(h("a", { class: "hisob-bosh", href: "../kirish/", text: "◀︎ Akkaunt" }), h("h1", { class: "hisob-h1", text: "Admin paneli" }), ...kids);
   }
 
-  const sana = (iso) => new Date(iso).toLocaleDateString("uz-UZ", { day: "numeric", month: "long", year: "numeric" });
+  // Brauzerlar o'zbek oy nomlarini bilmaydi ("2026 M10 5") — o'zimiz yozamiz
+  const OYLAR = ["yanvar", "fevral", "mart", "aprel", "may", "iyun", "iyul", "avgust", "sentabr", "oktabr", "noyabr", "dekabr"];
+  const sana = (iso) => { const d = new Date(iso); return `${d.getDate()}-${OYLAR[d.getMonth()]}, ${d.getFullYear()}`; };
 
   async function yukla() {
     const men = await H.men();
