@@ -1,0 +1,119 @@
+/* 8–11 yosh dasturlash bloki (62–65-o'yinlar): blok quruvchi, funksiya maydonlari, "qadam" qutisi, Python ko'rinishi.
+   Asos: asos.css, maydon: dastur.css. Ekran kodi: umumiy/js/blok-ui.js */
+
+.bk-box { display: flex; flex-direction: column; align-items: center; gap: var(--s3); width: 100%; }
+.bk-note { font-size: 17px; font-weight: 700; text-align: center; max-width: 560px; color: var(--asosiy-matn); }
+.bk-answer { font-size: var(--t0); font-weight: 900; color: var(--togri-matn); text-align: center; animation: pop 0.3s; }
+
+/* ---------- Maydonlar ---------- */
+.bk-maydonlar { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; }
+.bk-maydon { display: flex; flex-direction: column; align-items: center; gap: var(--s1); }
+.bk-maydon-nom { font-size: 14px; font-weight: 800; color: var(--matn-3); }
+/* Katak o'lchami bir xil — tor (2×6) ham, keng (8×3) ham maydon ekrandan chiqmaydi */
+.bk-maydon .field-wrap { --katak: min(42px, 7vw); width: calc(var(--fw) * var(--katak)); }
+.bk-maydon .field { width: 100%; height: auto; max-width: none; }
+
+/* ---------- "qadam" qutisi ---------- */
+.bk-quti {
+  display: inline-flex; align-items: center; gap: var(--s2); padding: 6px 12px;
+  background: var(--sariq-och); border: 3px solid var(--sariq); border-radius: var(--r-m);
+}
+.bk-quti-nom { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: var(--t0); font-weight: 800; }
+.bk-quti-son {
+  min-width: 44px; padding: 2px 8px; font-size: var(--t2); font-weight: 900; text-align: center;
+  background: var(--yuza); border: 2px solid var(--chiziq-kuchli); border-radius: var(--r-s);
+}
+.bk-quti-son.yangi { animation: pop 0.3s; }
+
+/* ---------- Dastur ---------- */
+.bk-dastur { display: flex; flex-direction: column; gap: var(--s2); width: min(560px, 96%); }
+.bk-dastur-nom { font-size: 14px; font-weight: 800; color: var(--matn-3); }
+.bk-ichi { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 48px; }
+.bk-ichi.asos { padding: var(--s2); background: var(--yuza-2); border: 2px solid var(--chiziq); border-radius: var(--r-m); }
+.bk-blok {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 48px; height: 48px; padding: 0 8px; font: inherit; font-size: var(--t2); font-weight: 900; cursor: pointer;
+  background: #D8E6FB; border: 3px solid var(--asosiy); border-radius: 10px; color: #1B4A94;
+}
+.bk-blok:active { transform: translateY(2px); }
+.bk-blok:disabled { cursor: default; transform: none; }
+.bk-blok.chaqir.yulduz { background: var(--yana-och); border-color: var(--yana); color: var(--matn); }
+.bk-blok.chaqir.doira { background: var(--togri-och); border-color: var(--togri); color: var(--togri-qora); }
+.bk-blok.hisob {
+  font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 16px;
+  background: var(--sariq-och); border-color: var(--sariq); color: var(--matn);
+}
+.bk-qamrov { display: flex; flex-direction: column; gap: var(--s1); padding: 6px 8px; border-radius: var(--r-m); border: 3px solid; }
+.bk-qamrov.takror { background: #FFF3DF; border-color: var(--yana); }
+.bk-qamrov.agar { background: #F0E7FA; border-color: var(--c3); }
+.bk-qamrov.toki, .bk-qamrov.gulxangacha { background: var(--togri-och); border-color: var(--togri); }
+.bk-sarlavha { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 15px; font-weight: 800; }
+.bk-qadam {
+  padding: 2px 8px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 15px;
+  background: var(--sariq-och); border: 2px solid var(--sariq); border-radius: var(--r-s);
+}
+.bk-son {
+  min-width: 40px; height: 36px; font: inherit; font-size: var(--t0); font-weight: 900; cursor: pointer;
+  background: var(--yuza); border: 2px solid var(--matn); border-radius: var(--r-s);
+}
+.bk-son:disabled { cursor: default; }
+.bk-ochir {
+  margin-left: auto; width: 32px; height: 32px; font: inherit; font-size: var(--t0); font-weight: 900; cursor: pointer;
+  background: var(--yuza); border: 2px solid var(--chiziq); border-radius: var(--r-s); color: #B4453A;
+}
+.bk-shox { display: flex; align-items: flex-start; gap: 6px; }
+.bk-shox-nom { flex: none; min-width: 64px; padding: 4px 8px; font-size: 13px; font-weight: 800; border-radius: var(--r-s); text-align: center; }
+.bk-shox-nom.ha { background: #D7F0E6; color: #116B50; }
+.bk-shox-nom.aks { background: #F7E2E0; color: #8E3B33; }
+.bk-zona {
+  min-height: 48px; padding: 0 12px; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer;
+  background: transparent; border: 2px dashed var(--chiziq-kuchli); border-radius: 10px; color: var(--matn-3);
+}
+.bk-zona.faol { border-color: var(--asosiy); border-style: solid; background: var(--asosiy-och); color: var(--asosiy-matn); }
+
+/* ---------- Funksiya (★ / ●) maydoni ---------- */
+.bk-fn { display: flex; flex-direction: column; gap: var(--s1); padding: 6px 8px; border: 3px solid var(--yana); border-radius: var(--r-m); background: #FFF8EE; }
+.bk-fn.doira { border-color: var(--togri); background: #F2FBF7; }
+.bk-fn.qulf { border-style: dashed; }
+.bk-fn-nom { display: flex; align-items: center; gap: var(--s2); font-size: 15px; font-weight: 800; }
+.bk-fn-belgi { font-size: var(--t2); line-height: 1; }
+
+/* ---------- Blok tugmalari ---------- */
+.bk-pad { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s2); }
+.bk-pad-btn {
+  min-width: 56px; height: 56px; padding: 0 14px; font: inherit; font-size: var(--t2); font-weight: 900; cursor: pointer;
+  background: var(--yuza); border: 3px solid var(--matn); border-radius: var(--r-m); box-shadow: 0 3px 0 var(--soya);
+}
+.bk-pad-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--soya); }
+.bk-pad-btn.qamrov { font-size: 16px; }
+.bk-pad-btn.fn.yulduz { background: var(--yana-och); border-color: var(--yana-qora); }
+.bk-pad-btn.fn.doira { background: var(--togri-och); border-color: var(--togri-qora); }
+
+/* ---------- Python ko'rinishi ---------- */
+.bk-kod {
+  width: min(560px, 96%); padding: var(--s2) var(--s3); overflow-x: auto;
+  font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 17px; line-height: 1.6;
+  background: #23232F; color: #F4F1EA; border-radius: var(--r-m);
+}
+.bk-kod-qator { display: flex; align-items: center; white-space: pre; min-height: 30px; border-radius: 6px; }
+.bk-kod-qator.belgi { background: #4A4430; }
+.bk-kod-qator.farq { background: #5A3A22; }
+.bk-kod-raqam { flex: none; width: 2.2em; color: #8F8A7E; text-align: right; padding-right: 0.8em; user-select: none; }
+.bk-kod-soz { color: #9CD3FF; }
+.bk-kod-tahrir {
+  min-height: 30px; padding: 0 6px; font: inherit; color: #FFE08A; cursor: pointer;
+  background: #3A3A4C; border: 2px dashed #FFE08A; border-radius: 6px;
+}
+.bk-kod-tahrir:active { transform: translateY(1px); }
+
+/* Bloklar va matn yonma-yon (keng ekranda) */
+.bk-ikki { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: var(--s3); width: 100%; }
+.bk-ikki > * { flex: 1 1 300px; max-width: 560px; }
+
+@media (max-width: 520px) {
+  .bk-maydon .field-wrap { --katak: min(32px, 7vw); }
+  .bk-blok { min-width: 44px; height: 44px; font-size: var(--t1); }
+  .bk-pad-btn { min-width: 50px; height: 50px; font-size: var(--t1); }
+  .bk-pad-btn.qamrov { font-size: 14px; }
+  .bk-kod { font-size: 15px; }
+}
