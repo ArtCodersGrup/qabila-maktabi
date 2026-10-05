@@ -1,6 +1,6 @@
 # Qabila maktabi
 
-**Sayt: https://artcodersgrup.github.io/qabila-maktabi/**
+**Sayt: https://kelajagim.uz** — oʻz serverimizda (nginx + FastAPI). Saytga chiqarish: hammasini commit qilib, `bash server/deploy/deploy.sh` (batafsil: `server/README.md`).
 
 8–12 yoshli bolalarga informatika, kodlash va sunʼiy intellekt qanday ishlashini **2D oʻyinlar orqali koʻrsatuvchi** sayt. Hammasi oʻzbek tilida (lotin yozuvi).
 
