@@ -13,7 +13,7 @@ import sys
 root = pathlib.Path(__file__).resolve().parent.parent
 games = sorted(d.name for d in (root / "oyinlar").iterdir() if d.name[:2].isdigit())
 # Alohida sahifalar: o'yinlar, musobaqalar, masalalar va shpargalka (bosh/tests/offline.test.js dagi pageDirs bilan bir xil)
-pages = games + ["masalalar", "cpp-shpargalka", "musobaqa", "poyga", "tank-duel", "onlayn", "tog", "yozuv-poygasi"]
+pages = games + ["masalalar", "cpp-shpargalka", "musobaqa", "poyga", "tank-duel", "tank-onlayn", "onlayn", "tog", "yozuv-poygasi"]
 
 files = ["./", "index.html", "manifest.json", "bosh/style.css", "bosh/icon.svg", "bosh/icon-192.png", "bosh/icon-512.png"]
 files += sorted(f"bosh/js/{p.name}" for p in (root / "bosh/js").glob("*.js"))

@@ -43,7 +43,10 @@
     const tankEls = {};
     for (const t of m.tanklar) {
       const g = el("g", { class: "tk-tank " + (t.tur === "bola" ? "bola" : "robot") });
-      g.append(el("rect", { x: -J.R, y: -J.R + 2, width: J.R * 2, height: J.R * 2 - 4, rx: 4, class: "tk-tana" }));
+      const tana = el("rect", { x: -J.R, y: -J.R + 2, width: J.R * 2, height: J.R * 2 - 4, rx: 4, class: "tk-tana" });
+      if (t.rang) tana.style.fill = t.rang; // onlayn xona: har bolaning o'z rangi
+      g.append(tana);
+      if (t.men) g.classList.add("men");      // bolaning o'z tanki ajralib tursin
       g.append(el("rect", { x: -J.R - 2, y: -J.R - 2, width: J.R * 2 + 4, height: 5, rx: 2, class: "tk-zanjir" }));
       g.append(el("rect", { x: -J.R - 2, y: J.R - 3, width: J.R * 2 + 4, height: 5, rx: 2, class: "tk-zanjir" }));
       g.append(el("rect", { x: 0, y: -3, width: J.R + 10, height: 6, rx: 2, class: "tk-quvur" }));

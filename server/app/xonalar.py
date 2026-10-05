@@ -159,7 +159,7 @@ async def xona(ws: WebSocket, kind: str, code: str, key: str = "", role: str = "
         return
     try:
         # Sinfga bog'lash (faqat natijasi bor ko'p kishilik o'yinlar) va kirgan bolani tanish
-        if kind in ("tog", "poyga"):
+        if kind in ("tog", "poyga", "tank"):
             if key == Q.HOST and sinf:
                 sid = await _sinf_egasi(ws, await _kim(ws), sinf)
                 if sid is not None:

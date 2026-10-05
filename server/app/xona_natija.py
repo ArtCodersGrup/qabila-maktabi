@@ -6,8 +6,9 @@ from .xona_qoidalari import kimlik
 MAYDONLAR = {
     "tog": {"pog": "pogona", "tgr": "togri", "xat": "xato", "chiq": "chiqdi"},
     "poyga": {"orin": "orin", "cpm": "cpm", "aniq": "aniq", "ms": "ms"},
+    "tank": {"jon": "jon", "tg": "tegdi", "tirik": "tirik"},
 }
-META = {"tog": "tog", "poyga": "tur"}
+META = {"tog": "tog", "poyga": "tur", "tank": None}
 
 
 def natija_ol(kind: str, data: dict, kimlar: dict):
@@ -22,7 +23,7 @@ def natija_ol(kind: str, data: dict, kimlar: dict):
         if not isinstance(v, list) or len(v) != n or not all(isinstance(x, (int, float)) and not isinstance(x, bool) for x in v):
             return None
     meta = {}
-    m = data.get(META[kind])
+    m = data.get(META[kind]) if META[kind] else None
     if isinstance(m, str) and kimlik(m):
         meta[META[kind]] = m
     rows = []
@@ -31,6 +32,6 @@ def natija_ol(kind: str, data: dict, kimlar: dict):
         row = {"user_id": kim.get("user_id"), "ism": kim.get("ism"), "orin": i + 1}
         for k, nom in MAYDONLAR[kind].items():
             v = data[k][i]
-            row[nom] = bool(v) if nom == "chiqdi" else (int(v) if nom == "orin" else round(v))
+            row[nom] = bool(v) if nom in ("chiqdi", "tirik") else (int(v) if nom == "orin" else round(v))
         rows.append(row)
     return meta, rows

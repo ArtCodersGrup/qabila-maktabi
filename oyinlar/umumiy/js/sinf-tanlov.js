@@ -39,7 +39,7 @@
       }
       el.append(tugmalar);
       E.buttons([{ label: "Sinfsiz (natija saqlanmaydi)", onClick: () => tanla(null), secondary: true }]);
-      QK.ui.bubble("elder", "Qaysi sinf oʻynaydi?");
+      if (root.document.getElementById("bubble")) QK.ui.bubble("elder", "Qaysi sinf oʻynaydi?"); // pufak bo'lmagan sahifalar ham bor
     });
   }
 

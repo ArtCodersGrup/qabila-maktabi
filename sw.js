@@ -1,6 +1,6 @@
 // Offline rejim: sayt fayllari keshlanadi. Bola saytni bir marta ochsa, keyin internetsiz ham oʻynay oladi.
 // Yangi fayl qoʻshilsa, FILES roʻyxatiga ham qoʻshiladi — buni bosh/tests/offline.test.js tekshiradi.
-const VERSION = "v93";
+const VERSION = "v95";
 const CACHE = "qabila-maktabi-" + VERSION;
 
 const FILES = [
@@ -779,6 +779,11 @@ const FILES = [
   "oyinlar/tank-duel/css/style.css",
   "oyinlar/tank-duel/js/duel.js",
   "oyinlar/tank-duel/js/main.js",
+  "oyinlar/tank-onlayn/",
+  "oyinlar/tank-onlayn/index.html",
+  "oyinlar/tank-onlayn/css/style.css",
+  "oyinlar/tank-onlayn/js/main.js",
+  "oyinlar/tank-onlayn/js/xona-mantiq.js",
   "oyinlar/onlayn/",
   "oyinlar/onlayn/index.html",
   "oyinlar/onlayn/css/style.css",

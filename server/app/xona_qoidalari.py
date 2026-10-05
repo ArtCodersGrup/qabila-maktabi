@@ -3,7 +3,7 @@
 import math
 import re
 
-KINDS = ("sinov", "poyga", "savol", "tog")
+KINDS = ("sinov", "poyga", "savol", "tog", "tank")
 CODE_TTL_MS = 600_000  # ikki kishilik xona kodi 10 daqiqa amal qiladi
 HOST = "host"
 SIDES = ("left", "right")

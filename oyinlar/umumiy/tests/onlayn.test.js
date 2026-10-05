@@ -42,7 +42,7 @@ test("presence: kim ulangan, xona to'lami, ochilgan vaqti", () => {
   assert.equal(O.roomInfo({ left: [{ at: 5 }], right: [{}, {}] }).extra, true, "bir tomonda ikki kishi");
   assert.equal(O.CODE_TTL, 600000);
   // server/app/xona_qoidalari.py dagi KINDS bilan bir xil (pytest tekshiradi)
-  assert.deepEqual(O.KINDS, ["sinov", "poyga", "savol", "tog"]);
+  assert.deepEqual(O.KINDS, ["sinov", "poyga", "savol", "tog", "tank"]);
   assert.ok(O.HOST_WAIT >= 3000, "sekin tarmoqda server javobi kech keladi");
 });
 

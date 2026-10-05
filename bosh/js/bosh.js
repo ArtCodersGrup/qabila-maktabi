@@ -111,6 +111,7 @@
     { dir: "tank-duel", mode: "offline", title: "Tank dueli", desc: "Ikki oʻquvchi navbat bilan oʻz tankiga kod yozadi: kim gʻolib?", icon: "tankduel", yosh: [12, 16], pc: true },
     { dir: "onlayn", mode: "online", yosh: [8, 16], title: "Aloqa sinovi", desc: "Ikki qurilmani ulab koʻramiz — onlayn musobaqalar uchun tayyorgarlik", icon: "onlayn" },
     { dir: "tog", mode: "online", yosh: [8, 16], title: "Togʻga chiqish", desc: "Savolga javob ber — pogʻona yuqoriga. Qolib ketsang, chiqib ketasan", icon: "tog", badge: "robotlar bilan" },
+    { dir: "tank-onlayn", mode: "online", yosh: [12, 16], title: "Tank jangi — onlayn", desc: "2–8 bola, har raundda bitta satr kod: oxirgi tirik qolgan yutadi", icon: "tankduel", pc: true },
     { dir: "yozuv-poygasi", mode: "online", yosh: [8, 16], title: "Yozuv poygasi", desc: "Hamma bir xil matnni yozadi — yozgan sari togʻga koʻtarilasan", icon: "yozuv", pc: true },
   ];
   const MODES = [

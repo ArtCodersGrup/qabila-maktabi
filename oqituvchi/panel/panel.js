@@ -292,7 +292,7 @@
   // ---------- Xonalar (onlayn o'yin natijalari) ----------
   const TOGLAR = { chimyon: "Chimyon", hazrati: "Hazrati Sulton", pomir: "Pomir", himolay: "Himolay" };
   const MATNLAR = { home: "Asosiy qator", words: "Soʻzlar", proverb: "Maqol" };
-  const oyinNomi = (n) => n.tur === "tog"
+  const oyinNomi = (n) => n.tur === "tank" ? "Tank jangi" : n.tur === "tog"
     ? "Togʻga chiqish" + (TOGLAR[n.meta.tog] ? " · " + TOGLAR[n.meta.tog] : "")
     : "Yozuv poygasi" + (MATNLAR[n.meta.tur] ? " · " + MATNLAR[n.meta.tur] : "");
   const vaqt = (iso) => { const d = new Date(iso); return B.qachon(iso) + ", " + String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0"); };
@@ -340,12 +340,13 @@
     if (!r.ok) return Q.sahifa(B.sarlavha({ matn: "Natija", orqaga }), xatoBlok(r.xato));
     const n = r.natija;
     const tog = n.tur === "tog";
-    const ustunlar = tog ? ["Oʻrin", "Oʻquvchi", "Pogʻona", "Toʻgʻri", "Xato"] : ["Oʻrin", "Oʻquvchi", "Tezlik", "Aniqlik", "Vaqt"];
+    const tank = n.tur === "tank";
+    const ustunlar = tank ? ["Oʻrin", "Oʻquvchi", "Jon", "Tekkazdi"] : tog ? ["Oʻrin", "Oʻquvchi", "Pogʻona", "Toʻgʻri", "Xato"] : ["Oʻrin", "Oʻquvchi", "Tezlik", "Aniqlik", "Vaqt"];
     const MEDAL = ["🥇", "🥈", "🥉"];
     const tb = h("tbody");
     for (const o of n.oyinchilar) {
       const ism = o.ism || "Mehmon";
-      const qiymatlar = tog
+      const qiymatlar = tank ? [o.tirik ? "♥".repeat(o.jon) : "yiqildi", String(o.tegdi)] : tog
         ? [String(o.pogona) + (o.chiqdi ? " (chiqdi)" : ""), String(o.togri), String(o.xato)]
         : [o.cpm + " belgi/daq", o.aniq + "%", (o.ms / 1000).toFixed(1) + " s"];
       tb.append(h("tr", {},

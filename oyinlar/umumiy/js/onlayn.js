@@ -8,7 +8,7 @@
   const CODE_TTL = 10 * 60 * 1000; // xona kodi 10 daqiqa amal qiladi
   const HOST_WAIT = 8000; // serverdan "kirdi"/"rad" javobini shuncha kutamiz (sekin maktab tarmog'i)
   const SIDES = ["left", "right"]; // chap — Oy (xonani ochgan), o'ng — Quyosh (kod bilan kirgan)
-  const KINDS = ["sinov", "poyga", "savol", "tog"]; // server/app/xona_qoidalari.py bilan bir xil
+  const KINDS = ["sinov", "poyga", "savol", "tog", "tank"]; // server/app/xona_qoidalari.py bilan bir xil
   const HOST = "host";
   const MAX_ODAM = 13; // 12 o'yinchi + boshlovchi
 

@@ -37,6 +37,11 @@ def test_natija_ol_tog_va_poyga():
     meta, rows = natija_ol("poyga", poyga, kimlar)
     assert meta == {"tur": "maqol"}
     assert [(r["ism"], r["orin"], r["cpm"]) for r in rows] == [(None, 1, 180), ("Ali K.", 2, 150)]
+    tank = {"ids": ["k2", "k1"], "jon": [2, 0], "tg": [3, 1], "tirik": [1, 0], "tugadi": 1, "golib": "k2"}
+    meta, rows = natija_ol("tank", tank, kimlar)
+    assert meta == {}
+    assert rows == [{"user_id": None, "ism": None, "orin": 1, "jon": 2, "tegdi": 3, "tirik": True},
+                    {"user_id": 7, "ism": "Ali K.", "orin": 2, "jon": 0, "tegdi": 1, "tirik": False}]
     assert natija_ol("sinov", {"ids": ["k1"]}, {}) is None
     assert natija_ol("tog", {"ids": ["k1"], "pog": [1, 2]}, {}) is None  # uzunliklar mos emas
     assert natija_ol("tog", {"ids": []}, {}) is None
