@@ -43,7 +43,7 @@ function yoz() {
     let yangi = eski
       .replace(/<html[^>]*>/, teg)
       .replace(/(<meta name="theme-color" content=")[^"]*(")/, `$1${kattami(game) ? KATTA_FON : BOLA_FON}$2`);
-    // Ko'rinish tanlovi (data-korinish) sahifa chizilishidan oldin qo'yilsin — toifa.js <head> da
+    // toifa.js <head> da — sahifa chizilishidan oldin ishlaydi
     if (!yangi.includes(SKRIPT)) yangi = yangi.replace(/(<meta name="theme-color"[^>]*>\n)/, `$1  ${SKRIPT}\n`);
     if (yangi !== eski) {
       fs.writeFileSync(p, yangi);

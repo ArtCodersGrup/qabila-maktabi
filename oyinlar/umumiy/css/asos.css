@@ -440,109 +440,35 @@ button:disabled { cursor: default; opacity: 0.45; }
   background: var(--asosiy-och); border-color: var(--asosiy);
 }
 
-/* ================= 5–8 ko'rinishi: SINOV VARIANTLARI (2026-10-06) =================
-   Muallif o'quvchilarga ko'rsatib bittasini tanlaydi (sinov sahifasi: /korinish.html). Atribut data-korinish ni
-   umumiy/js/toifa.js qo'yadi (?korinish=… — faqat shu sahifa; tanlov — localStorage qabila:korinish:v1).
-   Faqat 5–8 (orta) va maskotsiz sahifalarda; tanlanmasa — yuqoridagi vaqtinchalik ko'rinish. Tanlangach
-   qolgan ikkitasi o'chiriladi. Ish zonasidagi o'yin rasmlari va 3D qirralar o'zgarmaydi. */
-
-/* ---- Daftar: katakli daftar — fon katak, stolda qizil hoshiya, ko'rsatma siyohda (serif) ---- */
-:root[data-korinish="daftar"][data-toifa="orta"]:not([data-maskot]) {
+/* ================= 5–8-sinf ko'rinishi: «Daftar» (muallif tanlovi, 2026-10-06) =================
+   Katakli maktab daftari: fon — katak, ish stolida qizil hoshiya, ko'rsatma siyoh bilan yozilgandek (serif).
+   Yuqoridagi umumiy kattalar bo'limi ustiga yoziladi: selektor og'irligi teng (0,4,0), bu bo'lim keyin turadi.
+   Ish zonasidagi o'yin rasmlari va 3D qirralar o'zgarmaydi. 9–11 (yuqori) — hozircha umumiy kattalar ko'rinishi. */
+:root[data-toifa="orta"]:not([data-toifa="boshlangich"]):not([data-maskot]) {
   --fon: #FAFAF6; --matn: #1C2230; --matn-2: #4A5163; --matn-3: #5D6475;
   --asosiy: #1F4FA8; --asosiy-qora: #163B80; --asosiy-matn: #1F4FA8; --asosiy-och: #E7EEFA;
   --yuza: #FFFFFF; --yuza-2: #FFFFFF; --panel: #F1F4F9;
   --chiziq: #D3DCE8; --chiziq-kuchli: #7C8698; --soya: #D3DCE8; --oq-qora: #D3DCE8;
   --daftar-serif: "Iowan Old Style", "Charter", Georgia, "Times New Roman", serif;
 }
-:root[data-korinish="daftar"][data-toifa="orta"]:not([data-maskot]) body {
+:root[data-toifa="orta"]:not([data-toifa="boshlangich"]):not([data-maskot]) body {
   background-image: linear-gradient(#DDE6F2 1px, transparent 1px), linear-gradient(90deg, #DDE6F2 1px, transparent 1px);
   background-size: 20px 20px;
 }
-:root[data-korinish="daftar"][data-toifa="orta"]:not([data-maskot]) .bubble, :root[data-korinish="daftar"][data-toifa="orta"]:not([data-maskot]) .bubble.ok, :root[data-korinish="daftar"][data-toifa="orta"]:not([data-maskot]) .bubble.yana {
+:root[data-toifa="orta"]:not([data-toifa="boshlangich"]):not([data-maskot]) .bubble, :root[data-toifa="orta"]:not([data-toifa="boshlangich"]):not([data-maskot]) .bubble.ok, :root[data-toifa="orta"]:not([data-toifa="boshlangich"]):not([data-maskot]) .bubble.yana {
   background: transparent; border: 0; border-left: 3px solid var(--asosiy); border-radius: 0;
   padding: 2px 0 2px 14px; font-family: var(--daftar-serif); font-size: var(--t1); font-weight: 500;
 }
-:root[data-korinish="daftar"][data-toifa="orta"]:not([data-maskot]) .bubble.ok { border-left-color: var(--togri); color: var(--togri-matn); }
-:root[data-korinish="daftar"][data-toifa="orta"]:not([data-maskot]) .bubble.yana { border-left-color: var(--yana); color: var(--yana-matn); }
-:root[data-korinish="daftar"][data-toifa="orta"]:not([data-maskot]) .bubble.from-apprentice:not(.ok):not(.yana) { background: transparent; border-left: 3px dashed #8E5BD0; }
-:root[data-korinish="daftar"][data-toifa="orta"]:not([data-maskot]) .bubble.from-apprentice::before { font-family: system-ui, sans-serif; color: #6A3FA3; }
-:root[data-korinish="daftar"][data-toifa="orta"]:not([data-maskot]) .game-title, :root[data-korinish="daftar"][data-toifa="orta"]:not([data-maskot]) .bosh-title, :root[data-korinish="daftar"][data-toifa="orta"]:not([data-maskot]) .stage-card .sc-title { font-family: var(--daftar-serif); font-weight: 700; }
+:root[data-toifa="orta"]:not([data-toifa="boshlangich"]):not([data-maskot]) .bubble.ok { border-left-color: var(--togri); color: var(--togri-matn); }
+:root[data-toifa="orta"]:not([data-toifa="boshlangich"]):not([data-maskot]) .bubble.yana { border-left-color: var(--yana); color: var(--yana-matn); }
+:root[data-toifa="orta"]:not([data-toifa="boshlangich"]):not([data-maskot]) .bubble.from-apprentice:not(.ok):not(.yana) { background: transparent; border-left: 3px dashed #8E5BD0; }
+:root[data-toifa="orta"]:not([data-toifa="boshlangich"]):not([data-maskot]) .bubble.from-apprentice::before { font-family: system-ui, sans-serif; color: #6A3FA3; }
+:root[data-toifa="orta"]:not([data-toifa="boshlangich"]):not([data-maskot]) .game-title, :root[data-toifa="orta"]:not([data-toifa="boshlangich"]):not([data-maskot]) .bosh-title, :root[data-toifa="orta"]:not([data-toifa="boshlangich"]):not([data-maskot]) .stage-card .sc-title { font-family: var(--daftar-serif); font-weight: 700; }
 @media (orientation: landscape) and (min-width: 900px) {
-  :root[data-korinish="daftar"][data-toifa="orta"]:not([data-maskot]) .zone-work, :root[data-korinish="daftar"][data-toifa="orta"]:not([data-maskot]) .zone-control {
+  :root[data-toifa="orta"]:not([data-toifa="boshlangich"]):not([data-maskot]) .zone-work, :root[data-toifa="orta"]:not([data-toifa="boshlangich"]):not([data-maskot]) .zone-control {
     background-color: #FFFFFF; border-width: 1px; border-color: var(--chiziq);
     background-image: linear-gradient(90deg, transparent 34px, #E9A3A3 34px, #E9A3A3 36px, transparent 36px);
   }
-  :root[data-korinish="daftar"][data-toifa="orta"]:not([data-maskot]) .zone-work { border-radius: var(--r-s) var(--r-s) 0 0; padding-left: 52px; }
-  :root[data-korinish="daftar"][data-toifa="orta"]:not([data-maskot]) .zone-control { border-radius: 0 0 var(--r-s) var(--r-s); }
+  :root[data-toifa="orta"]:not([data-toifa="boshlangich"]):not([data-maskot]) .zone-work { border-radius: var(--r-s) var(--r-s) 0 0; padding-left: 52px; }
+  :root[data-toifa="orta"]:not([data-toifa="boshlangich"]):not([data-maskot]) .zone-control { border-radius: 0 0 var(--r-s) var(--r-s); }
 }
-
-/* ---- Sxema: chizma — ko'rsatma paneli sim bilan stolga ulangan, stol burchaklarida belgilar ---- */
-:root[data-korinish="sxema"][data-toifa="orta"]:not([data-maskot]) {
-  --fon: #EEF1F4; --matn: #15213B; --matn-2: #46536B; --matn-3: #56627A;
-  --asosiy: #1B5FAA; --asosiy-qora: #124477; --asosiy-matn: #17508F; --asosiy-och: #E3EDF8;
-  --yuza: #FFFFFF; --yuza-2: #FFFFFF; --panel: #F5F7F9;
-  --chiziq: #C5CFDA; --chiziq-kuchli: #6F7C90; --soya: #C5CFDA; --oq-qora: #C5CFDA;
-  --signal: #E0A100;
-}
-:root[data-korinish="sxema"][data-toifa="orta"]:not([data-maskot]) body { font-variant-numeric: tabular-nums; }
-:root[data-korinish="sxema"][data-toifa="orta"]:not([data-maskot]) .zone-stage { position: relative; }
-:root[data-korinish="sxema"][data-toifa="orta"]:not([data-maskot]) .bubble {
-  position: relative; border: 1px solid var(--chiziq); border-radius: 3px;
-  box-shadow: inset 4px 0 0 var(--signal); padding-left: 18px; font-weight: 600;
-}
-:root[data-korinish="sxema"][data-toifa="orta"]:not([data-maskot]) .bubble.ok { box-shadow: inset 4px 0 0 var(--togri); }
-:root[data-korinish="sxema"][data-toifa="orta"]:not([data-maskot]) .bubble.yana { box-shadow: inset 4px 0 0 var(--yana); }
-:root[data-korinish="sxema"][data-toifa="orta"]:not([data-maskot]) .bubble.from-apprentice:not(.ok):not(.yana) { background: var(--yuza); border-color: var(--asosiy); box-shadow: inset 4px 0 0 var(--asosiy); }
-/* Sim: tik ekranda pastga, yotiq ekranda o'ngga — stolga ulanadi; uchida tugun */
-:root[data-korinish="sxema"][data-toifa="orta"]:not([data-maskot]) .bubble::after {
-  display: block; content: ""; position: absolute; left: 24px; right: auto; bottom: -12px; top: auto;
-  width: 2px; height: 12px; border: 0; background: var(--signal); transform: none;
-}
-@media (orientation: landscape) {
-  :root[data-korinish="sxema"][data-toifa="orta"]:not([data-maskot]) .zone-stage { overflow: visible; } /* aks holda sim kesiladi */
-  :root[data-korinish="sxema"][data-toifa="orta"]:not([data-maskot]) .bubble::after { left: auto; right: -17px; top: 22px; bottom: auto; width: 17px; height: 2px; }
-}
-:root[data-korinish="sxema"][data-toifa="orta"]:not([data-maskot]) .zone-work, :root[data-korinish="sxema"][data-toifa="orta"]:not([data-maskot]) .zone-control { --b: var(--signal); }
-@media (orientation: landscape) and (min-width: 900px) {
-  :root[data-korinish="sxema"][data-toifa="orta"]:not([data-maskot]) .zone-work, :root[data-korinish="sxema"][data-toifa="orta"]:not([data-maskot]) .zone-control { background-color: #FFFFFF; border-width: 1px; border-color: var(--chiziq); }
-  :root[data-korinish="sxema"][data-toifa="orta"]:not([data-maskot]) .zone-work {
-    border-radius: 3px 3px 0 0;
-    background-image: linear-gradient(var(--b), var(--b)), linear-gradient(var(--b), var(--b)),
-      linear-gradient(var(--b), var(--b)), linear-gradient(var(--b), var(--b));
-    background-repeat: no-repeat;
-    background-size: 16px 2px, 2px 16px, 16px 2px, 2px 16px;
-    background-position: 6px 6px, 6px 6px, calc(100% - 6px) 6px, calc(100% - 6px) 6px;
-  }
-  :root[data-korinish="sxema"][data-toifa="orta"]:not([data-maskot]) .zone-control {
-    border-radius: 0 0 3px 3px;
-    background-image: linear-gradient(var(--b), var(--b)), linear-gradient(var(--b), var(--b)),
-      linear-gradient(var(--b), var(--b)), linear-gradient(var(--b), var(--b));
-    background-repeat: no-repeat;
-    background-size: 16px 2px, 2px 16px, 16px 2px, 2px 16px;
-    background-position: 6px calc(100% - 6px), 6px calc(100% - 6px), calc(100% - 6px) calc(100% - 6px), calc(100% - 6px) calc(100% - 6px);
-  }
-}
-
-/* ---- Doska: sinf doskasi — ko'rsatma yog'och ramkali yashil doskada, bo'r rangida ---- */
-:root[data-korinish="doska"][data-toifa="orta"]:not([data-maskot]) {
-  --fon: #ECE8DF; --matn: #1E2420; --matn-2: #4E5650; --matn-3: #5C635D;
-  --asosiy: #2B5797; --asosiy-qora: #1E3F6F; --asosiy-matn: #2B5797; --asosiy-och: #E5ECF6;
-  --yuza: #FFFFFF; --yuza-2: #FBFAF6; --panel: #F2EFE7;
-  --chiziq: #D3CDBF; --chiziq-kuchli: #857D6C; --soya: #D3CDBF; --oq-qora: #D3CDBF;
-  --doska: #24473B; --bor: #F3F0E6; --ramka: #8A6440;
-}
-:root[data-korinish="doska"][data-toifa="orta"]:not([data-maskot]) .bubble, :root[data-korinish="doska"][data-toifa="orta"]:not([data-maskot]) .bubble.ok, :root[data-korinish="doska"][data-toifa="orta"]:not([data-maskot]) .bubble.yana {
-  background: var(--doska); color: var(--bor); border: 6px solid var(--ramka); border-radius: 6px;
-  box-shadow: inset 0 0 24px rgba(0, 0, 0, 0.25); font-size: var(--t1); font-weight: 600; padding: 14px 18px;
-}
-:root[data-korinish="doska"][data-toifa="orta"]:not([data-maskot]) .bubble.ok { color: #9BE3B8; }
-:root[data-korinish="doska"][data-toifa="orta"]:not([data-maskot]) .bubble.yana { color: #F6C98B; }
-:root[data-korinish="doska"][data-toifa="orta"]:not([data-maskot]) .bubble.from-apprentice:not(.ok):not(.yana) { background: var(--doska); border-color: var(--ramka); }
-:root[data-korinish="doska"][data-toifa="orta"]:not([data-maskot]) .bubble.from-apprentice::before { color: #F2D46B; }
-@media (orientation: landscape) and (min-width: 900px) {
-  :root[data-korinish="doska"][data-toifa="orta"]:not([data-maskot]) .zone-work, :root[data-korinish="doska"][data-toifa="orta"]:not([data-maskot]) .zone-control { background: var(--yuza); border-width: 1px; }
-  :root[data-korinish="doska"][data-toifa="orta"]:not([data-maskot]) .zone-work { border-radius: 6px 6px 0 0; }
-  :root[data-korinish="doska"][data-toifa="orta"]:not([data-maskot]) .zone-control { border-radius: 0 0 6px 6px; }
-}
-:root[data-korinish="doska"][data-toifa="orta"]:not([data-maskot]) .bosh-title { color: var(--doska); }
-

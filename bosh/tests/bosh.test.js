@@ -191,7 +191,8 @@ test("o'yin sahifasi: data-toifa katalogga teng, data-maskot — faqat qog'oz/ba
   assert.deepEqual(maskotli, [1, 2, 3], "qog'oz yoki baraban ishlatadigan o'yinlar");
 });
 
-// Ko'rinish tanlovi (data-korinish) chizishdan oldin qo'yilishi uchun toifa.js har o'yinning <head> ida
+// toifa.js har o'yinning <head> ida, uslublardan oldin (kelajakdagi ko'rinish sozlamalari uchun; hozir faqat
+// yozib qo'yilgan data-toifa ni hurmat qiladi)
 test("o'yin sahifasi: toifa.js <head> da, uslublardan oldin", () => {
   const { SKRIPT } = require("../tools/toifa-yoz.js");
   for (const g of GAMES) {
