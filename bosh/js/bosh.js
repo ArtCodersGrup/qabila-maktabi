@@ -20,7 +20,7 @@
   // Bo'limlar tartibi — o'rganish yo'li: osondan qiyinga, oldingi o'yinga tayanadiganlari keyin
   // (masalan, 25-papka 11- va 20-papkalarga tayanadi). Kartadagi raqam — shu tartibdagi o'rni (number).
   const SECTIONS = [
-    { id: "tanishuv", title: "Kompyuter bilan tanishuv", note: "Qismlar, sichqoncha, oynalar, fayllar va rasm" },
+    { id: "tanishuv", title: "Kompyuter bilan tanishuv", note: "Qismlar, sichqoncha, oynalar, fayl, rasm, matn va sayt" },
     { id: "klaviatura", title: "Klaviatura", note: "Tez va toʻgʻri yozishni oʻrganamiz" },
     { id: "dastur", title: "Algoritm va dasturlash", note: "Robotga buyruq beramiz: yoʻl va tartib" },
     { id: "python", title: "Python: dasturlash", note: "Haqiqiy kod yozamiz: printdan funksiyagacha" },
@@ -107,6 +107,8 @@
     { n: 68, topic: "tanishuv", dir: "68-ekran-va-oynalar", title: "Ekran va oynalar", desc: "Ish stoli, belgilar va oyna tugmalari: ochish, yopish, yoyish", key: "ekran-va-oynalar:v1", stages: 3, toifa: "boshlangich", icon: "oynalar" },
     { n: 69, topic: "tanishuv", dir: "69-fayl-va-papka", title: "Fayl va papka", desc: "Faylni topish, papkaga joylash, nusxa olish va savat", key: "fayl-va-papka:v1", stages: 3, toifa: "boshlangich", icon: "papka" },
     { n: 70, topic: "tanishuv", dir: "70-kichik-rassom", title: "Kichik rassom", desc: "Katakli Paint: asboblar, namunani qadam-qadam chizish, galereya", key: "kichik-rassom:v1", stages: 3, toifa: "boshlangich", icon: "rassom" },
+    { n: 71, topic: "tanishuv", dir: "71-matn-yozamiz", title: "Matn yozamiz", desc: "Matn muharriri: kursor, xatoni tuzatish, qatorlar, belgilash va bezash", key: "matn-yozamiz:v1", stages: 3, toifa: "boshlangich", icon: "muharrir", pc: true },
+    { n: 72, topic: "tanishuv", dir: "72-brauzer-va-sayt", title: "Brauzer va sayt", desc: "Oʻyinchoq internet: manzil, havola, orqaga, qidiruv va xavfsiz yurish", key: "brauzer-va-sayt:v1", stages: 3, toifa: "boshlangich", icon: "brauzer" },
   ];
 
   // Mashqlar — o'yin emas: masalalar ro'yxati (qidiruv, filtr, sahifalash). Bosqichi yo'q,

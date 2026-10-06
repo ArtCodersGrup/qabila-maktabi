@@ -1,0 +1,217 @@
+/* Brauzer va sayt — faqat shu o'yinga xos uslublar (prefiks .br-).
+   Oynaning asosi — umumiy/css/stol.css (.oyna, .oyna-sarlavha, .oyna-ichi). */
+
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(250px, 70vw); align-self: center; }
+.story-art.wide { width: min(320px, 84vw); }
+.story-art.small { width: min(170px, 46vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 17px; font-weight: 800; text-align: center; }
+
+/* ---------- Brauzer oynasi ---------- */
+/* stol.css da .oyna absolyut turadi; bu o'yinda oyna yolg'iz — ish zonasida oddiy blok.
+   Balandligi qat'iy: sahifa ichi aylanadi, oyna ish zonasidan chiqmaydi. */
+.br-oyna.oyna { position: relative; width: 100%; height: clamp(300px, 56dvh, 560px); margin-bottom: 4px; }
+.br-oyna .oyna-sarlavha { min-height: 40px; }
+
+/* Asboblar qatori: ← → ↻, manzil satri, ☆. Tor ekranda manzil ikkinchi qatorga o'tadi */
+.br-asboblar {
+  position: relative; z-index: 3; flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 6px;
+  background: var(--panel); border-bottom: 2px solid var(--chiziq);
+}
+.br-asbob, .br-xatchop {
+  flex: none; min-width: 48px; min-height: 48px; padding: 2px 8px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+  border: 2px solid var(--chiziq-kuchli); border-radius: var(--r-m); background: var(--yuza);
+  font-size: 15px; font-weight: 800; color: var(--matn);
+  box-shadow: 0 3px 0 var(--oq-qora); transition: transform 0.08s, box-shadow 0.08s;
+}
+.br-asbob-belgi { font-size: 22px; font-weight: 900; line-height: 1; }
+.br-xatchop { font-size: 26px; line-height: 1; color: var(--yana-matn); }
+.br-xatchop.yoqilgan { background: var(--sariq-och); border-color: var(--yana); color: var(--yana-matn); }
+.br-asbob:not(:disabled):active, .br-xatchop:not(:disabled):active { transform: translateY(3px); box-shadow: none; }
+/* Hozir ishlamaydigan asbob: xira emas — uzuq chiziqli va kulrang (QOIDALAR §6) */
+.br-asbob:disabled, .br-xatchop:disabled { opacity: 1; background: transparent; border-style: dashed; color: var(--matn-3); box-shadow: none; }
+
+/* Manzil satri: chapida qulf, kompyuterda <input>, telefonda tugma (chiplarni ochadi) */
+.br-manzil {
+  position: relative; flex: 1 1 180px; min-width: 0; min-height: 48px; display: flex; align-items: center; gap: 4px;
+  padding: 0 6px; border: 2px solid var(--chiziq-kuchli); border-radius: var(--r-pill); background: var(--yuza);
+}
+.br-manzil:focus-within { border-color: var(--asosiy); }
+.br-qulf { flex: none; width: 24px; height: 24px; }
+.br-qulf svg { display: block; width: 100%; height: 100%; }
+.br-qulf.yoq { width: 0; }
+.br-manzil-input, .br-manzil-tugma {
+  flex: 1; min-width: 0; min-height: 44px; padding: 0 6px; border: 0; background: transparent;
+  font: inherit; font-size: 18px; font-weight: 800; color: var(--matn); text-align: left;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; user-select: text; -webkit-user-select: text;
+}
+.br-manzil-input:focus { outline: none; }
+.br-manzil-input::placeholder { color: var(--matn-3); font-weight: 600; }
+.br-manzil-input:disabled, .br-manzil-tugma:disabled { opacity: 1; color: var(--matn-2); }
+
+/* Tarixdan takliflar — manzil satri ostida */
+.br-takliflar {
+  position: absolute; left: 0; right: 0; top: calc(100% + 4px); display: flex; flex-direction: column;
+  border: 2px solid var(--chiziq-kuchli); border-radius: var(--r-m); background: var(--yuza);
+  box-shadow: 0 4px 0 var(--oq-qora); overflow: hidden;
+}
+.br-takliflar[hidden] { display: none; }
+.br-taklif {
+  min-height: 48px; padding: 4px 14px; border: 0; border-bottom: 1px solid var(--chiziq); background: var(--yuza);
+  font-size: 17px; font-weight: 700; text-align: left; color: var(--asosiy-matn);
+}
+.br-taklif:last-child { border-bottom: 0; }
+
+/* Telefon: manzil chiplari (klaviatura o'rnida) */
+.br-chiplar {
+  flex: none; display: flex; flex-wrap: wrap; gap: 6px; max-height: 45%; overflow: auto; padding: 6px 8px 8px;
+  background: var(--sariq-och); border-bottom: 2px solid var(--chiziq);
+}
+.br-chiplar[hidden] { display: none; }
+.br-chiplar-sarlavha { width: 100%; font-size: 15px; font-weight: 800; }
+.br-chip {
+  min-width: 48px; min-height: 48px; padding: 6px 14px;
+  border: 2px solid var(--asosiy); border-radius: var(--r-pill); background: var(--yuza);
+  font-size: 17px; font-weight: 800; color: var(--asosiy-matn);
+  box-shadow: 0 3px 0 var(--asosiy-qora); transition: transform 0.08s, box-shadow 0.08s;
+}
+.br-chip.bekor { border-color: var(--chiziq-kuchli); color: var(--matn-2); box-shadow: 0 3px 0 var(--oq-qora); }
+.br-chip.faol { background: var(--asosiy-och); }
+.br-chip:active { transform: translateY(3px); box-shadow: none; }
+
+/* ---------- Sahifa ---------- */
+.br-ichi-wrap { position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.br-oyna .br-ichi { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; }
+.br-sahifa { display: flex; flex-direction: column; gap: 8px; padding: 10px 12px 14px; }
+.br-sarlavha { margin: 0; font-size: 24px; font-weight: 900; line-height: 1.2; }
+.br-rasm { width: min(180px, 52%); align-self: center; }
+.br-rasm svg { display: block; width: 100%; height: auto; }
+.br-gap { margin: 0; font-size: 18px; font-weight: 600; line-height: 1.4; }
+.br-havolalar { display: flex; flex-wrap: wrap; gap: 0 16px; }
+/* Havola: ko'k, tagiga chizilgan; bosiladigan joy ≥ 48 px */
+.br-havola {
+  min-height: 48px; padding: 4px 2px; border: 0; background: transparent;
+  font-size: 19px; font-weight: 800; color: var(--asosiy-matn);
+  text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px;
+}
+.br-havola:active { color: var(--asosiy-qora); }
+.br-yoq { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; padding-top: 8px; }
+
+/* Qidiruv sahifasi */
+.br-qidir { display: flex; align-items: center; gap: 6px; }
+.br-qidir-belgi { flex: none; width: 44px; }
+.br-qidir-belgi svg { display: block; width: 100%; height: auto; }
+.br-qidir-input {
+  flex: 1; min-width: 0; min-height: 48px; padding: 0 14px;
+  border: 2px solid var(--chiziq-kuchli); border-radius: var(--r-pill); background: var(--yuza);
+  font: inherit; font-size: 18px; font-weight: 700; color: var(--matn); user-select: text; -webkit-user-select: text;
+}
+.br-qidir-input:focus { outline: none; border-color: var(--asosiy); }
+.br-qidir-tugma { flex: none; min-height: 48px; }
+.br-qidir-chiplar { display: flex; flex-wrap: wrap; gap: 6px; }
+.br-qidir-izoh { color: var(--matn-2); }
+.br-natijalar { display: flex; flex-direction: column; gap: 8px; }
+.br-natija {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 2px; min-height: 48px; padding: 8px 12px;
+  border: 2px solid var(--chiziq); border-radius: var(--r-m); background: var(--yuza); text-align: left;
+  box-shadow: 0 3px 0 var(--oq-qora);
+}
+.br-natija:active { transform: translateY(2px); box-shadow: none; }
+.br-natija-sarlavha { font-size: 19px; font-weight: 900; color: var(--asosiy-matn); text-decoration: underline; text-underline-offset: 3px; }
+.br-natija-manzil { font-size: 15px; font-weight: 800; color: var(--togri-matn); overflow-wrap: anywhere; }
+.br-natija-gap { font-size: 16px; font-weight: 600; color: var(--matn-2); }
+
+/* Parol / telefon so'rovi */
+.br-soroq {
+  display: flex; flex-direction: column; gap: 8px; padding: 10px; border: 2px dashed var(--chiziq-kuchli);
+  border-radius: var(--r-m); background: var(--yuza-2);
+}
+.br-soroq-yozuv { display: flex; flex-direction: column; gap: 4px; font-size: 17px; font-weight: 800; }
+.br-soroq-maydon {
+  min-height: 48px; padding: 0 12px; border: 2px solid var(--chiziq-kuchli); border-radius: var(--r-m); background: var(--yuza);
+  font: inherit; font-size: 18px; user-select: text; -webkit-user-select: text;
+}
+.br-soroq-tugmalar { display: flex; flex-wrap: wrap; gap: 8px; }
+.br-soroq-yubor, .br-soroq-chiq {
+  flex: 1 1 130px; min-height: 48px; padding: 6px 12px; border-radius: var(--r-m);
+  font-size: 17px; font-weight: 800; transition: transform 0.08s, box-shadow 0.08s;
+}
+.br-soroq-yubor { border: 2px solid var(--chiziq-kuchli); background: var(--yuza); color: var(--matn); box-shadow: 0 3px 0 var(--oq-qora); }
+.br-soroq-chiq { border: 0; background: var(--togri); color: #fff; box-shadow: 0 3px 0 var(--togri-qora); }
+.br-soroq-yubor:active, .br-soroq-chiq:active { transform: translateY(3px); box-shadow: none; }
+
+/* ---------- Qalqib chiquvchi oyna: sariq-to'q sariq, qo'rqitmaydi ---------- */
+.br-parda {
+  position: absolute; inset: 0; z-index: 4; display: grid; place-items: center; padding: 12px;
+  background: rgba(43, 43, 58, 0.25); animation: br-chiq 0.25s ease-out;
+}
+.br-qalqib {
+  width: min(300px, 100%); display: flex; flex-direction: column; gap: 10px; padding: 0 0 14px;
+  border: 3px solid var(--yana); border-radius: var(--r-l); background: var(--sariq-och); box-shadow: 0 6px 0 var(--yana-qora);
+  overflow: hidden; text-align: center;
+}
+.br-qalqib-ust { display: flex; align-items: center; gap: 6px; padding-left: 12px; background: var(--sariq); }
+.br-qalqib-sarlavha { flex: 1; min-width: 0; font-size: 18px; font-weight: 900; color: var(--matn); text-align: left; }
+.br-qalqib-yop {
+  flex: none; width: 48px; height: 48px; border: 0; background: transparent;
+  font-size: 24px; font-weight: 900; color: var(--matn);
+}
+.br-qalqib-yop:active { background: rgba(0, 0, 0, 0.12); }
+.br-qalqib-matn { padding: 0 12px; font-size: 18px; font-weight: 700; }
+.br-qalqib-tugma {
+  align-self: center; min-height: 56px; min-width: 160px; padding: 8px 24px; border: 0; border-radius: var(--r-l);
+  background: var(--yana); color: var(--matn); font-size: 20px; font-weight: 900; box-shadow: 0 4px 0 var(--yana-qora);
+}
+.br-qalqib-tugma:active { transform: translateY(4px); box-shadow: none; }
+
+/* Yechimda yoritilgan joy: yashil halqa + ✓ (faqat rang emas) */
+.br-yorit { position: relative; outline: 4px solid var(--togri); outline-offset: 2px; border-radius: var(--r-m); background-color: var(--togri-och); }
+.br-yorit::after {
+  content: "✓"; position: absolute; top: -10px; right: -10px; width: 22px; height: 22px; border-radius: 50%;
+  display: grid; place-items: center; background: var(--togri); color: #fff; font-size: 14px; font-weight: 900; text-decoration: none;
+}
+.br-gap.br-yorit { padding: 2px 6px; }
+
+.br-toxtagan .br-havola, .br-toxtagan .br-natija, .br-toxtagan .br-chip { cursor: default; }
+
+@media (hover: hover) and (pointer: fine) {
+  .br-asbob:not(:disabled):hover, .br-xatchop:not(:disabled):hover, .br-chip:hover, .br-natija:hover, .br-taklif:hover { filter: brightness(0.97); }
+  .br-havola:hover { color: var(--asosiy-qora); }
+}
+
+/* ---------- Mashq ekranlari ---------- */
+.br-ust { display: flex; flex-direction: column; gap: 8px; }
+.br-ust:empty { display: none; }
+.br-javoblar { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; max-width: 560px; margin: 0 auto; }
+.br-javoblar .btn.wide { width: 100%; min-height: 52px; padding: 8px 12px; font-size: 18px; }
+.br-karta {
+  align-self: center; display: flex; flex-direction: column; align-items: center; gap: 8px; max-width: 460px; padding: 14px 18px;
+  border: 2px solid var(--chiziq); border-radius: var(--r-l); background: var(--yuza); box-shadow: 0 4px 0 var(--oq-qora);
+}
+.br-karta-rasm { width: 120px; }
+.br-karta-rasm svg { display: block; width: 100%; height: auto; }
+.br-karta-matn { font-size: 20px; font-weight: 800; text-align: center; line-height: 1.35; }
+
+/* Mashq qutisi (kod.css dagi bilan bir xil — bu o'yin kod yozmaydi, shuning uchun o'sha fayl ulanmaydi) */
+.pbox { display: flex; flex-direction: column; align-items: stretch; gap: 12px; width: 100%; max-width: 640px; margin: 0 auto; }
+.pbox .note { font-size: 19px; font-weight: 800; color: var(--asosiy-matn); text-align: center; }
+.pbox .answer { font-size: 20px; font-weight: 900; color: var(--togri-matn); text-align: center; overflow-wrap: anywhere; }
+
+@keyframes br-chiq { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: none; } }
+
+/* Tor telefon: asbob yozuvlari yashirinadi (belgi qoladi, aria-label bor), javoblar bir ustunda */
+@media (max-width: 520px) {
+  .br-asbob-yozuv { display: none; }
+  .br-javoblar { grid-template-columns: 1fr; gap: 8px; }
+  .pbox { gap: 8px; }
+  .pbox .note { font-size: 18px; }
+  .br-sarlavha { font-size: 22px; }
+}
+
+/* Past bo'yli tik ekran (kichik telefon): oynaga joy kerak — mashqda qahramonlar yashirinadi, pufak qoladi */
+@media (orientation: portrait) and (max-height: 740px) {
+  #play.compact .actor { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .br-parda { animation: none; } }

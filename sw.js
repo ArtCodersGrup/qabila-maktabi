@@ -1,6 +1,6 @@
 // Offline rejim: sayt fayllari keshlanadi. Bola saytni bir marta ochsa, keyin internetsiz ham oʻynay oladi.
 // Yangi fayl qoʻshilsa, FILES roʻyxatiga ham qoʻshiladi — buni bosh/tests/offline.test.js tekshiradi.
-const VERSION = "v104";
+const VERSION = "v105";
 const CACHE = "qabila-maktabi-" + VERSION;
 
 const FILES = [
@@ -854,6 +854,31 @@ const FILES = [
   "oyinlar/70-kichik-rassom/js/scenes/stage2.js",
   "oyinlar/70-kichik-rassom/js/scenes/stage3.js",
   "oyinlar/70-kichik-rassom/js/taxta.js",
+  "oyinlar/71-matn-yozamiz/",
+  "oyinlar/71-matn-yozamiz/index.html",
+  "oyinlar/71-matn-yozamiz/css/style.css",
+  "oyinlar/71-matn-yozamiz/js/game-art.js",
+  "oyinlar/71-matn-yozamiz/js/hujjatlar.js",
+  "oyinlar/71-matn-yozamiz/js/logic.js",
+  "oyinlar/71-matn-yozamiz/js/main.js",
+  "oyinlar/71-matn-yozamiz/js/muharrir.js",
+  "oyinlar/71-matn-yozamiz/js/scenes/common.js",
+  "oyinlar/71-matn-yozamiz/js/scenes/final.js",
+  "oyinlar/71-matn-yozamiz/js/scenes/stage1.js",
+  "oyinlar/71-matn-yozamiz/js/scenes/stage2.js",
+  "oyinlar/71-matn-yozamiz/js/scenes/stage3.js",
+  "oyinlar/72-brauzer-va-sayt/",
+  "oyinlar/72-brauzer-va-sayt/index.html",
+  "oyinlar/72-brauzer-va-sayt/css/style.css",
+  "oyinlar/72-brauzer-va-sayt/js/brauzer.js",
+  "oyinlar/72-brauzer-va-sayt/js/game-art.js",
+  "oyinlar/72-brauzer-va-sayt/js/logic.js",
+  "oyinlar/72-brauzer-va-sayt/js/main.js",
+  "oyinlar/72-brauzer-va-sayt/js/scenes/common.js",
+  "oyinlar/72-brauzer-va-sayt/js/scenes/final.js",
+  "oyinlar/72-brauzer-va-sayt/js/scenes/stage1.js",
+  "oyinlar/72-brauzer-va-sayt/js/scenes/stage2.js",
+  "oyinlar/72-brauzer-va-sayt/js/scenes/stage3.js",
   "oyinlar/masalalar/",
   "oyinlar/masalalar/index.html",
   "oyinlar/masalalar/css/style.css",

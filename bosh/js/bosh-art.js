@@ -747,7 +747,25 @@
   <path d="M58 20 L40 44" stroke="#8A5A10" stroke-width="4" stroke-linecap="round"/>
   <path d="M38 46 l-6 10 l12 -4 z" fill="#8E5BD0" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/>`);
 
-  const ICONS = { rassom, qismlar, sichqoncha, oynalar, papka, musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, bolish, qutilar2, ayri, charx, zina, qator, dastgoh, minora, ikkiyol, sxema, lupa, saralash, osish, daraxt, qator3, jamoa, paskal, kaptar, tezkor, robotaql, mantiqkod, tank, tankduel, varaq, cpp, cpptur, cppsikl, cppmassiv, qulf, izqulf, qarmoq, bolaklar, manzil, tugunlar, yolqulf, xatoovi, yulduzbuy, tosiqqacha, sanoq, blokpy, poyga, yozuv, onlayn, tog };
+  // 71-o'yin: matn yozamiz — varaq, satrlar va kursor
+  const muharrir = svg(`
+  <rect x="10" y="4" width="44" height="56" rx="5" fill="#FFFFFF" stroke="${INK}" stroke-width="3"/>
+  <path d="M18 16 h20 M18 25 h28 M18 34 h22 M18 43 h14" stroke="#2F6FDE" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M40 16 h8" stroke="#F08A24" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M35 40 v10" stroke="${INK}" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M31 40 h8 M31 50 h8" stroke="${INK}" stroke-width="3" stroke-linecap="round"/>`);
+
+  // 72-o'yin: brauzer va sayt — oyna, manzil satri va yer shari
+  const brauzer = svg(`
+  <rect x="3" y="8" width="58" height="48" rx="5" fill="#FFFFFF" stroke="${INK}" stroke-width="3"/>
+  <path d="M3 22 h58" stroke="${INK}" stroke-width="3"/>
+  <circle cx="11" cy="15" r="2.5" fill="#F08A24"/><circle cx="19" cy="15" r="2.5" fill="#F0C040"/>
+  <rect x="26" y="11" width="30" height="8" rx="4" fill="#E6EEFC" stroke="${INK}" stroke-width="2"/>
+  <circle cx="32" cy="39" r="12" fill="#D8E6FB" stroke="${INK}" stroke-width="3"/>
+  <ellipse cx="32" cy="39" rx="5" ry="12" fill="none" stroke="#2F6FDE" stroke-width="2.5"/>
+  <path d="M20 39 h24 M22 33 h20 M22 45 h20" fill="none" stroke="#2F6FDE" stroke-width="2.5"/>`);
+
+  const ICONS = { muharrir, brauzer, rassom, qismlar, sichqoncha, oynalar, papka, musobaqa, kodlar, morze, sezar: sezar(), chiroq: chiroq(), rim, robot, gap, qutilar, qoida, koz: koz(), tarmoq: tarmoq(), xarita, sandiq: sandiq(), piksel: piksel(), kadr, ombor, choti: choti(), tanga, qop, hisob2, rang16, sayyora, klaviatura, mantiq, zinapoya, yol, buyruq, bolish, qutilar2, ayri, charx, zina, qator, dastgoh, minora, ikkiyol, sxema, lupa, saralash, osish, daraxt, qator3, jamoa, paskal, kaptar, tezkor, robotaql, mantiqkod, tank, tankduel, varaq, cpp, cpptur, cppsikl, cppmassiv, qulf, izqulf, qarmoq, bolaklar, manzil, tugunlar, yolqulf, xatoovi, yulduzbuy, tosiqqacha, sanoq, blokpy, poyga, yozuv, onlayn, tog };
 
   // Ikonka; noma'lum nom — bo'sh satr
   const icon = (name) => ICONS[name] || "";
