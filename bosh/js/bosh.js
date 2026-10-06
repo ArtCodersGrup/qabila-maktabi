@@ -20,7 +20,7 @@
   // Bo'limlar tartibi — o'rganish yo'li: osondan qiyinga, oldingi o'yinga tayanadiganlari keyin
   // (masalan, 25-papka 11- va 20-papkalarga tayanadi). Kartadagi raqam — shu tartibdagi o'rni (number).
   const SECTIONS = [
-    { id: "tanishuv", title: "Kompyuter bilan tanishuv", note: "Qismlar, sichqoncha, oynalar va fayllar" },
+    { id: "tanishuv", title: "Kompyuter bilan tanishuv", note: "Qismlar, sichqoncha, oynalar, fayllar va rasm" },
     { id: "klaviatura", title: "Klaviatura", note: "Tez va toʻgʻri yozishni oʻrganamiz" },
     { id: "dastur", title: "Algoritm va dasturlash", note: "Robotga buyruq beramiz: yoʻl va tartib" },
     { id: "python", title: "Python: dasturlash", note: "Haqiqiy kod yozamiz: printdan funksiyagacha" },
@@ -106,6 +106,7 @@
     { n: 67, topic: "tanishuv", dir: "67-chaqqon-sichqoncha", title: "Chaqqon sichqoncha", desc: "Bosish, ikki marta bosish, oʻng tugma va sudrab olib borish", key: "chaqqon-sichqoncha:v1", stages: 3, toifa: "boshlangich", icon: "sichqoncha", pc: true },
     { n: 68, topic: "tanishuv", dir: "68-ekran-va-oynalar", title: "Ekran va oynalar", desc: "Ish stoli, belgilar va oyna tugmalari: ochish, yopish, yoyish", key: "ekran-va-oynalar:v1", stages: 3, toifa: "boshlangich", icon: "oynalar" },
     { n: 69, topic: "tanishuv", dir: "69-fayl-va-papka", title: "Fayl va papka", desc: "Faylni topish, papkaga joylash, nusxa olish va savat", key: "fayl-va-papka:v1", stages: 3, toifa: "boshlangich", icon: "papka" },
+    { n: 70, topic: "tanishuv", dir: "70-kichik-rassom", title: "Kichik rassom", desc: "Katakli Paint: asboblar, namunani qadam-qadam chizish, galereya", key: "kichik-rassom:v1", stages: 3, toifa: "boshlangich", icon: "rassom" },
   ];
 
   // Mashqlar — o'yin emas: masalalar ro'yxati (qidiruv, filtr, sahifalash). Bosqichi yo'q,

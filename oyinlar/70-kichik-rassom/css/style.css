@@ -1,0 +1,145 @@
+/* Kichik rassom — faqat shu o'yinga xos uslublar (prefiks .kr-). Taxta: canvas 4:3, asboblar paneli, galereya. */
+
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(250px, 70vw); align-self: center; }
+.story-art.wide { width: min(320px, 84vw); }
+.story-art.small { width: min(160px, 44vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 17px; font-weight: 800; text-align: center; }
+
+.kr-savol { font-size: var(--t1); font-weight: 800; text-align: center; line-height: 1.35; max-width: 640px; margin: 0 auto; }
+.kr-savol.kichik { font-size: var(--t0); color: var(--matn-2); margin-top: var(--s3); }
+
+/* ---------- Taxta va panel ---------- */
+.kr-ish { display: flex; flex-direction: column; align-items: center; gap: var(--s3); width: 100%; }
+/* Taxta: eni 100 % (ko'pi 640 px), nisbat 4:3 — foizli padding quti ENIDAN olinadi (bo'yi = 75 %) */
+.kr-taxta {
+  position: relative; flex: none; width: 100%; max-width: 640px;
+  background: #FFFFFF; border: 3px solid var(--chiziq-kuchli); border-radius: var(--r-m);
+  overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
+}
+.kr-taxta::before { content: ""; display: block; padding-top: 75%; }
+.kr-rasm, .kr-ustki { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.kr-ustki { cursor: crosshair; touch-action: none; }
+.kr-ish.qulf .kr-ustki { cursor: default; }
+
+.kr-panel { display: flex; flex-direction: column; gap: var(--s2); width: 100%; max-width: 640px; }
+.kr-asboblar, .kr-palitra, .kr-amallar { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+
+/* Asbob tugmasi: belgi + kichik nom; tanlangani — qalin ko'k ramka, och ko'k fon va ✓ nuqtasi (faqat rang bilan emas) */
+.kr-asbob, .kr-amal {
+  --qirra: var(--oq-qora);
+  position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
+  min-width: 56px; min-height: 56px; padding: 4px 4px 3px; border: 2px solid var(--chiziq); border-radius: var(--r-m);
+  background: var(--yuza); color: var(--matn); box-shadow: 0 3px 0 var(--qirra);
+  transition: transform 0.08s, box-shadow 0.08s;
+}
+.kr-asbob .kr-belgi, .kr-amal .kr-belgi { width: 26px; height: 26px; display: block; }
+.kr-belgi svg { display: block; width: 100%; height: 100%; }
+.kr-nom { font-size: 12px; font-weight: 800; line-height: 1.1; white-space: nowrap; }
+.kr-tez { font-size: 10px; font-weight: 700; color: var(--matn-3); line-height: 1; }
+.kr-asbob[aria-pressed="true"] { border-color: var(--asosiy); background: var(--asosiy-och); color: var(--asosiy-matn); box-shadow: 0 0 0 2px var(--asosiy), 0 3px 0 var(--asosiy-qora); }
+.kr-asbob[aria-pressed="true"]::after {
+  content: "✓"; position: absolute; top: -8px; right: -8px; width: 20px; height: 20px; border-radius: 50%;
+  display: grid; place-items: center; background: var(--asosiy); color: #fff; font-size: 13px; font-weight: 900;
+}
+.kr-asbob:active, .kr-amal:active { transform: translateY(3px); box-shadow: 0 0 0 var(--qirra); }
+.kr-amal:disabled { opacity: 1; background: var(--yuza-2); color: var(--matn-3); border-style: dashed; box-shadow: none; transform: none; }
+@media (hover: hover) and (pointer: fine) {
+  .kr-asbob:not(:disabled):hover, .kr-amal:not(:disabled):hover, .kr-rang:hover { filter: brightness(1.06); }
+}
+
+/* Palitra: 12 rang; tanlangani — qora ramka, oq halqa va ✓ (rang ustida kontrast) */
+.kr-rang {
+  position: relative; width: 48px; height: 48px; padding: 0; border: 2px solid var(--chiziq-kuchli); border-radius: var(--r-m);
+  background: var(--rang); box-shadow: 0 3px 0 var(--oq-qora);
+}
+.kr-rang[aria-pressed="true"] { border-color: var(--matn); box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--matn); }
+.kr-rang[aria-pressed="true"]::after {
+  content: "✓"; position: absolute; inset: 0; display: grid; place-items: center;
+  color: #fff; font-size: 24px; font-weight: 900; text-shadow: 0 0 3px var(--matn), 0 0 3px var(--matn);
+}
+.kr-rang:active { transform: translateY(3px); box-shadow: 0 0 0 var(--oq-qora); }
+
+/* Amallar: bekor, qaytar, tozalash, saqlash — belgi + nom (+ tezkor tugma yozuvi faqat klaviaturali qurilmada) */
+.kr-amal { min-width: 72px; }
+
+/* Holat satri: "toʻrtburchak · koʻk · ichi toʻla" */
+.kr-holat { text-align: center; font-size: var(--t-1); font-weight: 800; color: var(--matn-2); min-height: 20px; }
+
+/* Maslahat: kerakli tugma yonib-o'chadi (to'q sariq halqa va ↻ — rang + belgi) */
+.kr-asbob.yorit, .kr-amal.yorit, .kr-rang.yorit { animation: kr-yorit 0.6s 3; box-shadow: 0 0 0 4px var(--yana), 0 3px 0 var(--yana-qora); }
+.kr-asbob.yorit::before, .kr-amal.yorit::before, .kr-rang.yorit::before {
+  content: "↻"; position: absolute; top: -10px; left: -8px; z-index: 1; width: 22px; height: 22px; border-radius: 50%;
+  display: grid; place-items: center; background: var(--yana); color: var(--matn); font-size: 14px; font-weight: 900;
+}
+@keyframes kr-yorit { 50% { transform: scale(1.08); } }
+
+/* Yotiq keng ekran (kompyuter): panel taxtaning o'ng tomonida — asboblar 2 ustun, ranglar 3 ustun.
+   Taxta eni ekran balandligidan ham cheklanadi (noutbukda sig'sin). */
+@media (orientation: landscape) and (min-width: 900px) {
+  .kr-ish { flex-direction: row; align-items: flex-start; justify-content: center; gap: var(--s4); }
+  /* Taxta panel yonida qolgan joyni oladi (width: 100% emas — aks holda panel bilan birga sig'may chapga chiqib ketadi) */
+  .kr-taxta {
+    flex: 1 1 auto; width: auto; min-width: 240px;
+    max-width: min(640px, max(320px, calc((100vh - 230px) * 4 / 3)));
+    max-width: min(640px, max(320px, calc((100dvh - 230px) * 4 / 3)));
+  }
+  .kr-panel { width: 190px; flex: none; }
+  .kr-asboblar { display: grid; grid-template-columns: repeat(3, 1fr); }
+  .kr-palitra { display: grid; grid-template-columns: repeat(3, 48px); justify-content: center; }
+  .kr-amallar { display: grid; grid-template-columns: repeat(2, 1fr); }
+  .kr-asbob, .kr-amal { min-width: 0; }
+}
+/* Yotiq tor ekran (telefon yotiq): taxta bo'yi sig'sin */
+@media (orientation: landscape) and (max-width: 899px) {
+  .kr-taxta {
+    max-width: min(640px, max(240px, calc((100vh - 120px) * 4 / 3)));
+    max-width: min(640px, max(240px, calc((100dvh - 120px) * 4 / 3)));
+  }
+}
+/* Tik past ekran: taxta ko'rinib turganda qahramonlar yashirinadi (pufak qoladi) — joy taxta va panelga */
+@media (orientation: portrait) and (max-height: 760px) {
+  #play.kr-chizish .actor { display: none; }
+}
+
+/* ---------- Namuna kartalari (3-bosqich tanlovi, galereyadagi namunalar) ---------- */
+.kr-kartalar { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; width: 100%; }
+.kr-karta {
+  --qirra: var(--oq-qora);
+  display: flex; flex-direction: column; align-items: center; gap: 6px; width: 148px; padding: 8px;
+  border: 2px solid var(--chiziq); border-radius: var(--r-l); background: var(--yuza); box-shadow: 0 4px 0 var(--qirra);
+  transition: transform 0.08s, box-shadow 0.08s;
+}
+.kr-karta:active { transform: translateY(4px); box-shadow: 0 0 0 var(--qirra); }
+.kr-karta-nom { font-size: var(--t0); font-weight: 800; }
+.kr-rasmcha { display: block; width: 128px; height: 96px; border: 2px solid var(--chiziq); border-radius: var(--r-s); background: #fff; }
+/* 2-bosqich kirishidagi katta namuna rasmi */
+.kr-namuna-katta { align-self: center; }
+.kr-namuna-katta .kr-rasmcha { width: min(288px, 80vw); height: auto; border-radius: var(--r-m); }
+
+/* ---------- Mening rasmlarim ---------- */
+.kr-galereya { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; width: 100%; }
+.kr-rasm-karta {
+  display: flex; flex-direction: column; align-items: center; gap: 6px; width: 180px; padding: 10px;
+  border: 2px solid var(--chiziq); border-radius: var(--r-l); background: var(--yuza); box-shadow: 0 3px 0 var(--oq-qora);
+}
+.kr-rasm-karta .kr-rasmcha { width: 160px; height: 120px; }
+.kr-rasm-nom { font-weight: 900; }
+.kr-rasm-amallar { display: flex; flex-direction: column; gap: 6px; width: 100%; }
+.kr-rasm-amallar .btn { width: 100%; min-height: 48px; padding: 6px 10px; font-size: var(--t-1); justify-content: flex-start; }
+.kr-rasm-amallar .kr-belgi { width: 22px; height: 22px; flex: none; }
+.kr-bosh { font-weight: 700; color: var(--matn-2); text-align: center; padding: var(--s3); }
+
+/* Mashq qutisi (kod.css dagi bilan bir xil — bu o'yin kod yozmaydi, shuning uchun o'sha fayl ulanmaydi) */
+.pbox { display: flex; flex-direction: column; align-items: stretch; gap: 12px; width: 100%; max-width: 900px; margin: 0 auto; }
+.pbox .answer { font-size: var(--t1); font-weight: 900; color: var(--togri-matn); text-align: center; }
+@media (max-width: 420px) {
+  .pbox { gap: 8px; }
+  .kr-savol { font-size: var(--t0); }
+  .kr-ish { gap: var(--s2); }
+  .kr-asbob, .kr-amal { min-width: 52px; min-height: 52px; }
+  .kr-rasm-karta { width: 156px; }
+  .kr-rasm-karta .kr-rasmcha { width: 128px; height: 96px; }
+}
+@media (prefers-reduced-motion: reduce) { .kr-asbob.yorit, .kr-amal.yorit, .kr-rang.yorit { animation: none; } }

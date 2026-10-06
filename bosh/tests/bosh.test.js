@@ -76,7 +76,7 @@ test("har toifada raqamlar 1 dan ketma-ket, bo'limlar tartibida", () => {
     assert.deepEqual(tartib, [...tartib].sort((a, b) => a - b), t.id + ": bo'limlar tartibi buzilgan");
   }
   assert.equal(number(GAMES.find((g) => g.dir === "66-kompyuter-qismlari"), toifa("boshlangich")), 1, "kompyuter bilan tanishuv — birinchi");
-  assert.equal(number(GAMES.find((g) => g.dir === "23-on-barmoq"), toifa("boshlangich")), 5, "klaviatura — tanishuvdan keyin");
+  assert.equal(number(GAMES.find((g) => g.dir === "23-on-barmoq"), toifa("boshlangich")), 6, "klaviatura — tanishuvdan keyin");
 });
 
 test("har bo'limda kamida bitta o'yin bor va bo'sh bo'lim ko'rsatilmaydi", () => {
@@ -91,13 +91,13 @@ test("har bo'limda kamida bitta o'yin bor va bo'sh bo'lim ko'rsatilmaydi", () =>
 const UCH = ["boshlangich", "orta", "yuqori"];
 
 // Har o'yin AYNAN BITTA toifada (muallif qarori, 2026-10-06): kattaroq o'quvchi kichiklar o'yinini ko'rmaydi
-test("toifa: har o'yin aynan bitta toifada, taqsimot 13 / 43 / 12", () => {
+test("toifa: har o'yin aynan bitta toifada, taqsimot 14 / 43 / 12", () => {
   for (const g of GAMES) assert.ok(UCH.includes(g.toifa), g.dir + ": " + g.toifa);
   const soni = (id) => oyinlar(toifa(id)).length;
-  assert.deepEqual(UCH.map(soni), [13, 43, 12]);
+  assert.deepEqual(UCH.map(soni), [14, 43, 12]);
   assert.equal(soni("hammasi"), GAMES.length);
   const raqamlar = (id) => GAMES.filter((g) => g.toifa === id).map((g) => g.n).sort((a, b) => a - b);
-  assert.deepEqual(raqamlar("boshlangich"), [2, 23, 26, 46, 47, 53, 62, 63, 64, 66, 67, 68, 69]);
+  assert.deepEqual(raqamlar("boshlangich"), [2, 23, 26, 46, 47, 53, 62, 63, 64, 66, 67, 68, 69, 70]);
   assert.deepEqual(raqamlar("yuqori"), [38, 39, 40, 41, 42, 43, 44, 45, 54, 55, 56, 57]);
   // Blok qoidalari: sun'iy intellekt va Python — 5–8; kombinatorika va C++ — 9–11
   for (const g of GAMES) {

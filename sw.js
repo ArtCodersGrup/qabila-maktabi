@@ -1,6 +1,6 @@
 // Offline rejim: sayt fayllari keshlanadi. Bola saytni bir marta ochsa, keyin internetsiz ham oʻynay oladi.
 // Yangi fayl qoʻshilsa, FILES roʻyxatiga ham qoʻshiladi — buni bosh/tests/offline.test.js tekshiradi.
-const VERSION = "v103";
+const VERSION = "v104";
 const CACHE = "qabila-maktabi-" + VERSION;
 
 const FILES = [
@@ -841,6 +841,19 @@ const FILES = [
   "oyinlar/69-fayl-va-papka/js/scenes/stage1.js",
   "oyinlar/69-fayl-va-papka/js/scenes/stage2.js",
   "oyinlar/69-fayl-va-papka/js/scenes/stage3.js",
+  "oyinlar/70-kichik-rassom/",
+  "oyinlar/70-kichik-rassom/index.html",
+  "oyinlar/70-kichik-rassom/css/style.css",
+  "oyinlar/70-kichik-rassom/js/galereya.js",
+  "oyinlar/70-kichik-rassom/js/game-art.js",
+  "oyinlar/70-kichik-rassom/js/logic.js",
+  "oyinlar/70-kichik-rassom/js/main.js",
+  "oyinlar/70-kichik-rassom/js/scenes/common.js",
+  "oyinlar/70-kichik-rassom/js/scenes/final.js",
+  "oyinlar/70-kichik-rassom/js/scenes/stage1.js",
+  "oyinlar/70-kichik-rassom/js/scenes/stage2.js",
+  "oyinlar/70-kichik-rassom/js/scenes/stage3.js",
+  "oyinlar/70-kichik-rassom/js/taxta.js",
   "oyinlar/masalalar/",
   "oyinlar/masalalar/index.html",
   "oyinlar/masalalar/css/style.css",

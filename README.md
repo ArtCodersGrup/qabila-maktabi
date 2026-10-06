@@ -27,6 +27,7 @@ Tartib — bosh sahifadagidek: osondan qiyinga, oldingi oʻyinga tayanadiganlari
 | Chaqqon sichqoncha | `67-chaqqon-sichqoncha` | 1–4 💻 | Sichqoncha: bosish, ikki marta bosish, oʻng tugma menyusi, sudrab olib borish |
 | Ekran va oynalar | `68-ekran-va-oynalar` | 1–4 | Oʻyinchoq kompyuter: ish stoli, belgilar, oynani yopish / kichraytirish / yoyish, «Pusk» menyusi |
 | Fayl va papka | `69-fayl-va-papka` | 1–4 | Fayl turi va yoʻli, papkaga tartiblash, nusxa va kesish, oʻchirish va savat |
+| Kichik rassom | `70-kichik-rassom` | 1–4 | Katakli Paint: qalam, shakllar, chelak; namunani (uy, daraxt…) qadam-qadam chizish; galereya va PNG; Ctrl+Z / Ctrl+S |
 | **Klaviatura** | | | |
 | Oʻn barmoq | `23-on-barmoq` | 1–4 💻 | Klaviaturaga qaramay yozish: asosiy, yuqori va pastki qator, katta harf, aniqlik va tezlik |
 | Tezkor tugmalar | `46-tezkor-tugmalar` | 1–4 💻 | Ctrl + C, V, X, Z; Home/End, Backspace ↔ Delete; haqiqiy matn ustida mashq |

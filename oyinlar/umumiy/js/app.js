@@ -1,6 +1,7 @@
 // O'yin qobig'i: qahramonlar, bosh ekran, bosqichlar oqimi, ovoz tugmasi va ?bosqich=N.
 // Har bir o'yinning main.js i faqat QK.app.start({ title, storageKey, stageTitles }) ni chaqiradi.
-// Sahnalar QK.scenes da: intro(), stage1()..stageN(), stageDone(s, goingOn), finale() (ixtiyoriy), congrats().
+// Sahnalar QK.scenes da: intro(), stage1()..stageN(), stageDone(s, goingOn), finale() (ixtiyoriy), congrats(),
+// qoshimcha({ allDone, home }) (ixtiyoriy — bosh ekranga o'yinning o'z tugmalari).
 // 2026-10-02: yulduzlar (practice statistikasi), bosqich/final kartalari, qiyin rejim (hamma bosqich tugagach).
 (function (root) {
   "use strict";
@@ -76,6 +77,13 @@
         ui.control().append(row, ui.h("div", { class: "hard-note", text: "Qiyin rejim: 7 ta javob, bitta urinish" }));
       } else {
         ui.control().append(ui.button(next === -1 ? "Qayta oʻynash" : "Boshlash", () => play(first), "big"));
+      }
+      // O'yinning o'z qo'shimcha rejimlari (masalan, «Kichik rassom»da erkin chizish): scenes.qoshimcha({ allDone, home })
+      // element qaytarsa — boshqaruv zonasiga qo'shiladi; rejim tugagach o'yin home() ni o'zi chaqiradi.
+      const qoshimcha = root.QK.scenes && root.QK.scenes.qoshimcha;
+      if (typeof qoshimcha === "function") {
+        const el = qoshimcha({ allDone: allDone(), home });
+        if (el) ui.control().append(el);
       }
     }
 
