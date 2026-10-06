@@ -38,8 +38,51 @@
     osc.stop(t0 + dur + 0.02);
   }
 
+  // Shovqin bo'lagi (otish, portlash): oq shovqin + past o'tkazuvchi filtr, balandligi so'nib boradi
+  function shovqin(start, dur, vol, kesish, kesishOxiri) {
+    const t0 = ctx.currentTime + start;
+    const n = Math.floor(ctx.sampleRate * (dur + 0.05));
+    const buf = ctx.createBuffer(1, n, ctx.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    const filtr = ctx.createBiquadFilter();
+    filtr.type = "lowpass";
+    filtr.frequency.setValueAtTime(kesish, t0);
+    filtr.frequency.exponentialRampToValueAtTime(kesishOxiri || 200, t0 + dur);
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(vol, t0);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    src.connect(filtr);
+    filtr.connect(gain);
+    gain.connect(ctx.destination);
+    src.start(t0);
+    src.stop(t0 + dur + 0.05);
+  }
+  // Pastga sirpanadigan nota (tegish, portlash tanasi)
+  function sirpan(f0, f1, start, dur, type, vol) {
+    const t0 = ctx.currentTime + start;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(f0, t0);
+    osc.frequency.exponentialRampToValueAtTime(f1, t0 + dur);
+    gain.gain.setValueAtTime(vol, t0);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(t0);
+    osc.stop(t0 + dur + 0.02);
+  }
+
   const SOUNDS = {
     tap: () => tone(660, 0, 0.06, "triangle", 0.15),
+    // Tank jangi: o'q uzish (qisqa "puf"), tegish (metall "dang"), portlash (uzun gumburlash), yurish (motor "g'ir")
+    fire: () => { shovqin(0, 0.18, 0.5, 2400, 300); sirpan(180, 60, 0, 0.15, "square", 0.25); },
+    hit: () => { shovqin(0, 0.1, 0.35, 5000, 800); tone(1100, 0, 0.08, "square", 0.18); sirpan(900, 300, 0.02, 0.18, "triangle", 0.22); },
+    boom: () => { shovqin(0, 0.6, 0.7, 900, 80); sirpan(120, 35, 0, 0.6, "sine", 0.6); },
+    motor: () => { shovqin(0, 0.3, 0.12, 500, 250); },
     correct: () => {
       tone(523, 0, 0.12, "triangle", 0.25);
       tone(784, 0.1, 0.2, "triangle", 0.25);

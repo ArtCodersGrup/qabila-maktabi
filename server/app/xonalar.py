@@ -1,6 +1,7 @@
 # Onlayn xonalar: WebSocket orqali presence ("odamlar") va xabar tarqatish. Xonalar shu jarayon xotirasida
 # (uvicorn 1 worker). Server xabarni tekshiradi va "from" ni o'zi qo'yadi — boshqa odam nomidan yozib bo'lmaydi.
 import json
+import secrets
 import logging
 import time
 
@@ -25,6 +26,9 @@ class Xona:
         self.sinf_id = None  # o'qituvchi sinf uchun ochgan bo'lsa — natija saqlanadi
         self.kimlar: dict = {}  # o'yinchi kaliti → {user_id, ism} (faqat shu sinf a'zolari)
         self.tugadi = False  # oxirgi "holat" paketida o'yin tugaganmi (natija bir marta yoziladi)
+        # Boshlovchining maxfiy belgisi: aloqa uzilib qayta ulanganda shu belgi bilan o'z o'rnini qaytarib oladi.
+        # Kalit "host" hammaga ma'lum — belgisiz qayta kirish "band" bo'ladi (begona xonani egallab olmasin).
+        self.host_token = secrets.token_urlsafe(12)
 
 
 class Boshqaruvchi:
@@ -32,8 +36,8 @@ class Boshqaruvchi:
         self.soat = soat
         self.xonalar: dict = {}
 
-    def kir(self, kind, code, key, role, ws):
-        """(sabab, xona, eski_ws): sabab None bo'lsa — qabul qilindi."""
+    def kir(self, kind, code, key, role, ws, token=""):
+        """(sabab, xona, eski_ws): sabab None bo'lsa — qabul qilindi. token — boshlovchi qayta ulanganda."""
         juft = role in Q.SIDES
         egasi = role in ("left", "host")
         x = self.xonalar.get((kind, code))
@@ -44,8 +48,14 @@ class Boshqaruvchi:
                     return "xato", None, None
                 x = Xona(juft, self.soat())
                 self.xonalar[(kind, code)] = x
-            elif x.juft != juft or key in x.odamlar:
+            elif x.juft != juft:
                 return "band", None, None
+            elif key in x.odamlar:
+                # Boshlovchi qayta ulandi (eski ulanish hali yopilmagan) — belgisi to'g'ri bo'lsa o'rnini oladi
+                if role == "host" and token and secrets.compare_digest(token, x.host_token):
+                    eski = x.odamlar.get(key)
+                else:
+                    return "band", None, None
         else:
             ega = "left" if juft else Q.HOST
             if x is None or x.juft != juft or ega not in x.odamlar:
@@ -146,13 +156,13 @@ async def _saqla(ws: WebSocket, kind: str, x: Xona, data: dict) -> None:
 
 
 @router.websocket("/api/ws/xona/{kind}/{code}")
-async def xona(ws: WebSocket, kind: str, code: str, key: str = "", role: str = "", sinf: str = ""):
+async def xona(ws: WebSocket, kind: str, code: str, key: str = "", role: str = "", sinf: str = "", token: str = ""):
     await ws.accept()
     b: Boshqaruvchi = ws.app.state.xonalar
     sabab = Q.ulanish_xatosi(kind, code, key, role)
     x = eski = None
     if sabab is None:
-        sabab, x, eski = b.kir(kind, code, key, role, ws)
+        sabab, x, eski = b.kir(kind, code, key, role, ws, token[:64])
     if sabab is not None:
         await _yubor(ws, {"t": "rad", "sabab": sabab})
         await ws.close()
@@ -171,6 +181,7 @@ async def xona(ws: WebSocket, kind: str, code: str, key: str = "", role: str = "
         kirdi = {"t": "kirdi", "at": x.ochilgan_ms}
         if key == Q.HOST:
             kirdi["sinf"] = x.sinf_id is not None
+            kirdi["token"] = x.host_token
         await _yubor(ws, kirdi)
         if eski is not None:
             try:
@@ -193,6 +204,10 @@ async def xona(ws: WebSocket, kind: str, code: str, key: str = "", role: str = "
             try:
                 d = json.loads(matn)
             except ValueError:
+                continue
+            # Qurilma aloqani tekshiradi: ping → pong (maktab tarmog'ida uzilgan ulanishni tez sezish uchun)
+            if isinstance(d, dict) and d.get("t") == "ping":
+                await _yubor(ws, {"t": "pong"})
                 continue
             p = d.get("payload") if isinstance(d, dict) and d.get("t") == "msg" else None
             if not Q.valid_payload(p):

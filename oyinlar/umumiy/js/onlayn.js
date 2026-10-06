@@ -7,6 +7,9 @@
   const SERVER = "wss://kelajagim.uz"; // sahifa fayldan yoki boshqa manzildan ochilganda
   const CODE_TTL = 10 * 60 * 1000; // xona kodi 10 daqiqa amal qiladi
   const HOST_WAIT = 8000; // serverdan "kirdi"/"rad" javobini shuncha kutamiz (sekin maktab tarmog'i)
+  const PING_HAR = 15000; // qurilma shuncha vaqtda bir serverga "ping" yuboradi (server "pong" qaytaradi)
+  const JIMLIK = 40000; // shuncha vaqt serverdan hech narsa kelmasa — ulanish o'lgan deb yopiladi (qayta ulanadi)
+  const QAYTA_KUTISH = [1000, 2000, 3000, 5000, 5000, 5000, 5000]; // qayta ulanish urinishlari orasidagi kutish (~26 s)
   const SIDES = ["left", "right"]; // chap — Oy (xonani ochgan), o'ng — Quyosh (kod bilan kirgan)
   const KINDS = ["sinov", "poyga", "savol", "tog", "tank"]; // server/app/xona_qoidalari.py bilan bir xil
   const HOST = "host";
@@ -64,8 +67,10 @@
     return SERVER;
   }
   // sinf — o'qituvchi xonani sinfi uchun ochsa (natija saqlanadi); server egasini cookie orqali tekshiradi
-  const xonaUrl = (base, kind, code, key, role, sinf) =>
-    `${base}/api/ws/xona/${kind}/${code}?key=${encodeURIComponent(key)}&role=${role}` + (Number.isInteger(Number(sinf)) && Number(sinf) > 0 ? `&sinf=${Number(sinf)}` : "");
+  // token — boshlovchining maxfiy belgisi (server "kirdi" da beradi): uzilib qayta ulanganda o'z o'rnini qaytarib oladi
+  const xonaUrl = (base, kind, code, key, role, sinf, token) =>
+    `${base}/api/ws/xona/${kind}/${code}?key=${encodeURIComponent(key)}&role=${role}` + (Number.isInteger(Number(sinf)) && Number(sinf) > 0 ? `&sinf=${Number(sinf)}` : "")
+    + (token ? `&token=${encodeURIComponent(token)}` : "");
 
   // ---------- Server bilan aloqa ----------
   const available = () => typeof root.WebSocket === "function";
@@ -106,11 +111,20 @@
     let yopildi = false;
     let kirdi = false;
     let timer = null;
+    let pingTimer = null;
+    let jimlikTimer = null;
     function yop() {
       if (yopildi) return;
       yopildi = true;
       clearTimeout(timer);
+      clearInterval(pingTimer);
+      clearTimeout(jimlikTimer);
       try { ws.close(); } catch (e) { /* e'tiborsiz */ }
+    }
+    // Serverdan har xabar qorovulni yangilaydi; uzoq jimlik — ulanish o'lgan (brauzer buni o'zi sezmasligi mumkin)
+    function tirik() {
+      clearTimeout(jimlikTimer);
+      jimlikTimer = setTimeout(() => { if (!yopildi) { yop(); h.uzildi(); } }, JIMLIK);
     }
     try {
       ws = new root.WebSocket(url);
@@ -120,11 +134,18 @@
       return { send() {}, close() {} };
     }
     timer = setTimeout(() => { if (!kirdi) { yop(); h.uzildi(); } }, HOST_WAIT);
+    ws.onopen = () => {
+      if (yopildi) return;
+      tirik();
+      pingTimer = setInterval(() => { if (!yopildi && ws.readyState === 1) ws.send(JSON.stringify({ t: "ping" })); }, PING_HAR);
+    };
     ws.onmessage = (ev) => {
       if (yopildi) return;
+      tirik();
       let d;
       try { d = JSON.parse(ev.data); } catch (e) { return; }
       if (!d || typeof d !== "object") return;
+      if (d.t === "pong") return;
       if (d.t === "kirdi") { kirdi = true; clearTimeout(timer); h.kirdi(d); }
       else if (d.t === "rad") { yop(); h.rad(String(d.sabab)); }
       else if (d.t === "odamlar" && Array.isArray(d.keys)) h.odamlar(d.keys.filter(kimlik), son(d.at) ? d.at : null);
@@ -196,42 +217,79 @@
   // me — o'yinchining yashirin raqami (ism emas!), role — "host" yoki "player".
   // on: { status(s), peers(ids, hostBor), message(msg), sinf(bog'landimi) }; sinf — ixtiyoriy sinf id (faqat boshlovchi)
   // status: "connecting" | "ready" | "missing" | "full" | "error"
+  // Aloqa uzilsa (maktab Wi-Fi, telefon uyquga ketdi) qurilma o'zi qayta ulanadi — o'sha kalit bilan, shuning uchun
+  // server uni o'sha odam deb biladi; boshlovchi "token" bilan o'z o'rnini qaytaradi. Urinishlar tugasa — "error".
+  // status: "connecting" | "ready" | "reconnecting" | "missing" | "full" | "error"
   function xona({ kind, code, me, role, types, on, sinf }) {
     const key = role === "host" ? HOST : me;
+    const hostmi = role === "host";
     let closed = false;
+    let c = null;
+    let token = "";
+    let urinish = 0; // ketma-ket muvaffaqiyatsiz qayta ulanishlar
+    let qaytaTimer = null;
+    let kirganmidik = false; // bir marta kirgan bo'lsak — uzilish vaqtinchalik deb qayta uriniladi
     const emit = (s) => { if (!closed && on.status) on.status(s); };
+
+    function qaytaUrin(sabab) {
+      if (closed) return;
+      if (!kirganmidik || urinish >= QAYTA_KUTISH.length) {
+        closed = true;
+        emit(sabab || "error");
+        return;
+      }
+      if (urinish === 0) emit("reconnecting");
+      const kut = QAYTA_KUTISH[urinish++];
+      qaytaTimer = setTimeout(ochil, kut);
+    }
+
+    function ochil() {
+      if (closed) return;
+      c = ulan(xonaUrl(baza(), kind, code, key, hostmi ? "host" : "player", hostmi ? sinf : null, token), {
+        kirdi(d) {
+          if (closed) return;
+          if (hostmi && typeof d.token === "string") token = d.token;
+          urinish = 0;
+          kirganmidik = true;
+          emit("ready");
+          if (hostmi && sinf && on.sinf) on.sinf(!!d.sinf);
+        },
+        rad(sabab) {
+          // "band" — eski ulanishimiz serverda hali yopilmagan: biroz kutib yana urinamiz; "missing" — xona yo'q (boshlovchi ketgan)
+          if (sabab === "band" && hostmi && kirganmidik) qaytaUrin("error");
+          else if (!kirganmidik || sabab === "missing" || sabab === "full") { closed = true; emit(["missing", "full"].includes(sabab) ? sabab : "error"); }
+          else qaytaUrin("error");
+        },
+        odamlar(keys) {
+          if (!closed && on.peers) on.peers(keys.filter((k) => k !== HOST), keys.includes(HOST));
+        },
+        xabar(p) {
+          if (!closed && validMessage(p, types) && p.from !== key && on.message) on.message(p);
+        },
+        uzildi() { qaytaUrin("error"); },
+      });
+    }
     emit("connecting");
-    const c = ulan(xonaUrl(baza(), kind, code, key, role === "host" ? "host" : "player", role === "host" ? sinf : null), {
-      kirdi(d) {
-        emit("ready");
-        if (role === "host" && sinf && on.sinf && !closed) on.sinf(!!d.sinf);
-      },
-      rad(sabab) { emit(["missing", "full"].includes(sabab) ? sabab : "error"); closed = true; },
-      odamlar(keys) {
-        if (!closed && on.peers) on.peers(keys.filter((k) => k !== HOST), keys.includes(HOST));
-      },
-      xabar(p) {
-        if (!closed && validMessage(p, types) && p.from !== key && on.message) on.message(p);
-      },
-      uzildi() { emit("error"); closed = true; },
-    });
+    ochil();
+
     function close() {
       if (closed) return;
       closed = true;
-      c.close();
+      clearTimeout(qaytaTimer);
+      if (c) c.close();
     }
     return {
       code,
       me: key,
       send(type, data) {
-        if (closed || !types.includes(type)) return;
+        if (closed || !types.includes(type) || !c) return;
         c.send({ type, data: data || {}, t: Date.now() });
       },
       leave: close,
     };
   }
 
-  const api = { SERVER, CODE_TTL, HOST_WAIT, HOST, MAX_ODAM, SIDES, KINDS, xona, makeCode, validCode, channelName, validMessage, roomInfo, juftHolat, serverUrl, xonaUrl, available, ping, join };
+  const api = { SERVER, CODE_TTL, HOST_WAIT, PING_HAR, JIMLIK, QAYTA_KUTISH, HOST, MAX_ODAM, SIDES, KINDS, xona, makeCode, validCode, channelName, validMessage, roomInfo, juftHolat, serverUrl, xonaUrl, available, ping, join };
 
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else {

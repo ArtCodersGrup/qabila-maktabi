@@ -29,13 +29,21 @@ test("tug'ilish: 2–8 bola, maydon ichida, to'siqqa tushmaydi, bir-biriga tegma
 test("harakatlarni yozib olish: asl maydon o'zgarmaydi, harakatlar va argumentlar to'g'ri", () => {
   const m = X.maydon(oyinchilar(3));
   const oldin = JSON.stringify(m);
-  const r = X.yozibOl(m, "o0", "move(50)\nleft(90)\nfire()", py);
+  const r = X.yozibOl(m, "o0", "move(50)", py);
   assert.equal(r.xato, null);
-  assert.deepEqual(r.harakatlar, [{ h: "move", a: 50 }, { h: "left", a: 90 }, { h: "fire", a: 0 }]);
+  assert.deepEqual(r.harakatlar, [{ h: "move", a: 50 }]);
   assert.equal(JSON.stringify(m), oldin, "asl holat o'zgarmadi");
+  // Bir raundda bitta harakat (muallif qarori 2026-10-06): ikkinchisi — xato, hech narsa yuborilmaydi
+  const kop = X.yozibOl(m, "o0", "fire()\nfire()\nfire()", py);
+  assert.ok(kop.xato && /bitta buyruq/.test(kop.xato.text), kop.xato && kop.xato.text);
+  assert.deepEqual(kop.harakatlar, []);
   const sikl = X.yozibOl(m, "o1", "for i in range(20): right(10)", py);
-  assert.equal(sikl.harakatlar.length, 8, "satrda ko'pi bilan 8 harakat");
-  assert.ok(sikl.chegaraOshdi);
+  assert.ok(sikl.xato);
+  assert.deepEqual(sikl.harakatlar, []);
+  // Ma'lumot buyruqlari cheklanmaydi
+  const malumot = X.yozibOl(m, "o0", "print(scan(), radar(), hp(), ammo())\nfire()", py);
+  assert.equal(malumot.xato, null);
+  assert.deepEqual(malumot.harakatlar, [{ h: "fire", a: 0 }]);
   const xato = X.yozibOl(m, "o2", "move(", py);
   assert.ok(xato.xato);
   assert.deepEqual(xato.harakatlar, []);
@@ -52,7 +60,8 @@ test("birinchi tank yiqilgan bo'lsa ham boshqalar harakat yoza oladi", () => {
 });
 
 test("harakatlarni tekshirish: noma'lum nom, uzunlik, son emas — rad etiladi; argument chegaralanadi", () => {
-  assert.deepEqual(X.harakatlarToza(["move", "left"], [50, -30]), [{ h: "move", a: 50 }, { h: "left", a: -30 }]);
+  assert.equal(X.harakatlarToza(["move", "left"], [50, -30]), null, "bir raundda bittadan ko'p — rad");
+  assert.deepEqual(X.harakatlarToza(["left"], [-30]), [{ h: "left", a: -30 }]);
   assert.deepEqual(X.harakatlarToza(["back"], [-40]), [{ h: "back", a: 40 }]);
   assert.deepEqual(X.harakatlarToza(["move"], [99999]), [{ h: "move", a: 600 }]);
   assert.equal(X.harakatlarToza(["scan"], [0]), null);
@@ -62,9 +71,10 @@ test("harakatlarni tekshirish: noma'lum nom, uzunlik, son emas — rad etiladi; 
 });
 
 // Ikki tankni y=100 chizig'iga, 260 birlik oraliqda yuzma-yuz qo'yamiz (to'siqlar y 150–250 da)
+// Ikki tank yuzma-yuz, ochiq yo'lakda: y = 370 — panalar (y ≤ 310) va uchinchi tankning tug'ilish joyi (300, 50) dan tashqarida
 function yuzmaYuz(m, a, b) {
-  Object.assign(X.tank(m, a), { x: 100, y: 100, burchak: 0 });
-  Object.assign(X.tank(m, b), { x: 360, y: 100, burchak: 180 });
+  Object.assign(X.tank(m, a), { x: 100, y: 370, burchak: 0 });
+  Object.assign(X.tank(m, b), { x: 360, y: 370, burchak: 180 });
   return m;
 }
 
@@ -104,13 +114,14 @@ test("yiqilish, g'olib, reyting va vaqt tugashi", () => {
 test("paketlar onlayn xabar tekshiruvidan o'tadi va holat qayta tiklanadi", () => {
   const m = X.maydon(oyinchilar(8));
   const tartib = X.tartibYasa(m, [], () => 0.3);
-  const harakat = Object.fromEntries(tartib.map((id, i) => [id, [{ h: "left", a: 10 * i }, { h: "move", a: 20 }, { h: "fire", a: 0 }]]));
+  // Har bola bitta harakat (bir raundda bitta buyruq)
+  const harakat = Object.fromEntries(tartib.map((id, i) => [id, [i % 3 === 0 ? { h: "left", a: 10 * i } : i % 3 === 1 ? { h: "move", a: 20 } : { h: "fire", a: 0 }]]));
   const np = X.natijaPaketi(m, tartib, harakat);
   const hp = X.holatPaketi(m, 30);
   const tur = ["lobbi", "holat", "natija", "kirdi", "harakat"];
   assert.ok(O.validMessage({ type: "natija", data: np, t: 1, from: "host" }, tur), "natija paketi");
   assert.ok(O.validMessage({ type: "holat", data: hp, t: 1, from: "host" }, tur), "holat paketi");
-  assert.ok(O.validMessage({ type: "harakat", data: { r: 1, h: ["move", "fire"], a: [50, 0] }, t: 1, from: "k7f3a9" }, tur));
+  assert.ok(O.validMessage({ type: "harakat", data: { r: 1, h: ["move"], a: [50] }, t: 1, from: "k7f3a9" }, tur));
   // Bola qurilmasi natija paketidan raundni aynan qayta o'ynaydi
   const nusxa = X.maydon(oyinchilar(8));
   const { tartib: t2, harakatlar } = X.natijaniOch(np);

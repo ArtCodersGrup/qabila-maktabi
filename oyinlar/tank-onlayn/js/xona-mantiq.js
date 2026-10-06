@@ -9,8 +9,9 @@
 
   const MAX_ODAM = 8;
   const MIN_ODAM = 2;
-  const RAUND_SONIYA = 8;
-  const TANAFFUS_SONIYA = 2; // raund bajarilgach, keyingisi boshlanguncha (natijani ko'rib olish uchun)
+  const RAUND_SONIYA = 5; // muallif qarori 2026-10-06: 8 → 5; hamma yuborsa — darhol bajariladi
+  const TANAFFUS_SONIYA = 0; // raundlar orasida tanaffus yo'q (muallif qarori 2026-10-06) — animatsiyaning o'zi natijani ko'rsatadi
+  const MAX_BIR_RAUND = 1; // bir raundda bitta harakat (muallif qarori 2026-10-06): fire() fire() fire() — xato, scan()/radar() cheklanmaydi
   const JANG_DAQIQA = 5; // jang raundlar soni bilan emas, umumiy vaqt bilan tugaydi (muallif qarori)
   const JON = 3;
   const UZOQ = 300; // hammaga teng — bolalar orasida ustunlik bo'lmasin
@@ -31,9 +32,10 @@
 
   // Tug'ilish joylari: chap, o'ng, tepa, past, so'ng burchaklar — n ta bola uchun birinchi n tasi (simmetrik)
   const JOYLAR = [[80, 200], [520, 200], [300, 50], [300, 350], [80, 50], [520, 350], [520, 50], [80, 350]];
-  // Markazda bitta pana: to'g'ri qarama-qarshi tanklar orasini to'sadi, diagonal yo'llar ochiq qoladi
+  // Panalar: markazda bittasi to'g'ri qarama-qarshi tanklar orasini to'sadi, diagonal yo'llar ochiq qoladi;
+  // ikkita kichigi — markazga nisbatan nuqta simmetrik (adolatli), chetdagi tanklarga yashirinish uchun.
   // (jang.js o'qni ham tank kattaligida hisoblaydi — to'siq atrofida 18 birlik zona bor)
-  const TOSIQLAR = [{ x: 280, y: 160, en: 40, bo: 80 }];
+  const TOSIQLAR = [{ x: 280, y: 160, en: 40, bo: 80 }, { x: 150, y: 90, en: 34, bo: 34 }, { x: 416, y: 276, en: 34, bo: 34 }];
   // Markazga qaragan burchak (0° — o'ngga, soat strelkasiga teskari)
   const markazga = (x, y) => Math.round(((Math.atan2(y - 200, 300 - x) * 180) / Math.PI + 360) % 360);
 
@@ -66,7 +68,8 @@
   }
 
   // Bola qurilmasida: satrni holat nusxasida bajarib, harakatlarni yozib olish.
-  // Natija: { xato, chiqish, harakatlar: [{ h, a }], chegaraOshdi }
+  // Natija: { xato, chiqish, harakatlar: [{ h, a }], chegaraOshdi }. Bir raundda bitta harakat — ikkinchisi xato
+  // (urinish sanalmaydi: bola tuzatib qayta yuboradi); scan/radar/hp/ammo — ma'lumot, istalgancha.
   function yozibOl(m, id, kod, py) {
     const k = nusxa(m);
     // jang.js ning bir kishilik "tugadimi" tekshiruvi birinchi "bola" ga qaraydi — nusxada faqat shu bola "bola"
@@ -83,12 +86,19 @@
       };
     }
     const r = py.run(kod, { tashqi: yozuvchi, maxSteps: 50000 });
+    if (!r.error && harakatlar.length > MAX_BIR_RAUND) {
+      const nomlar = harakatlar.map((q) => q.h + "()").join(", ");
+      return {
+        xato: { text: `Bir raundda faqat bitta buyruq. Senda ${harakatlar.length} ta: ${nomlar}.`, hint: "move, back, left, right, fire, reload — bittasi. scan(), radar(), hp(), ammo() — istalgancha." },
+        chiqish: r.output || [], harakatlar: [], chegaraOshdi: false,
+      };
+    }
     return { xato: r.error || null, chiqish: r.output || [], harakatlar: r.error ? [] : harakatlar, chegaraOshdi: holat.chegaraOshdi };
   }
 
-  // Doskada: kelgan harakatlar to'g'rimi (nom ro'yxatda, ko'pi bilan 8 ta, argument son)
+  // Doskada: kelgan harakatlar to'g'rimi (nom ro'yxatda, bir raundda bittadan oshmaydi, argument son)
   function harakatlarToza(h, a) {
-    if (!Array.isArray(h) || !Array.isArray(a) || h.length !== a.length || h.length > J.MAX_HARAKAT) return null;
+    if (!Array.isArray(h) || !Array.isArray(a) || h.length !== a.length || h.length > MAX_BIR_RAUND) return null;
     const out = [];
     for (let i = 0; i < h.length; i++) {
       if (!HARAKAT_NOMLARI.includes(h[i]) || typeof a[i] !== "number" || !Number.isFinite(a[i])) return null;
@@ -209,7 +219,7 @@
   }
 
   const api = {
-    MAX_ODAM, MIN_ODAM, RAUND_SONIYA, TANAFFUS_SONIYA, JANG_DAQIQA, JON, UZOQ, HARAKAT_NOMLARI, QAHRAMONLAR, JOYLAR, TOSIQLAR,
+    MAX_ODAM, MIN_ODAM, RAUND_SONIYA, TANAFFUS_SONIYA, MAX_BIR_RAUND, JANG_DAQIQA, JON, UZOQ, HARAKAT_NOMLARI, QAHRAMONLAR, JOYLAR, TOSIQLAR,
     qahById, markazga, maydon, nusxa, tank, tiriklar, argument, yozibOl, harakatlarToza, raundniBajar, tekshir, vaqtTugadi,
     reyting, golib, tartibYasa, holatPaketi, holatniQoy, natijaPaketi, natijaniOch,
   };

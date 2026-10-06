@@ -9,7 +9,7 @@ Naqsh — «Togʻga chiqish» va «Yozuv poygasi» xonalari: oʻqituvchi qurilma
 
 ## Qoidalar
 
-- **Raund:** har raundda hamma tirik bola **8 soniyada bitta satr** yozadi (49-oʻyindagi buyruqlar: `move`, `back`, `left`, `right`, `fire`, `reload`, `scan`, `radar`, `hp`, `ammo`; satrda koʻpi bilan 8 harakat). Hamma yuborsa yoki vaqt tugasa — doskada raund bajariladi; keyingi raund **2 soniya tanaffusdan** keyin boshlanadi.
+- **Raund:** har raundda hamma tirik bola **5 soniyada bitta buyruq** yozadi (49-oʻyindagi buyruqlar: `move`, `back`, `left`, `right`, `fire`, `reload` — **bittasi**; `scan`, `radar`, `hp`, `ammo` — maʼlumot, istalgancha; `fire() fire()` — xato, yuborilmaydi). Hamma yuborsa yoki vaqt tugasa — doskada raund bajariladi; keyingi raund **tanaffussiz**, animatsiya tugashi bilan boshlanadi (muallif qarori 2026-10-06; avval 8 s, 8 harakat, 2 s tanaffus edi).
 - **Bir vaqtda bajarilish:** harakatlar **navbatma-navbat** qoʻyiladi: avval har bolaning 1-harakati, keyin 2-si… Bolalar tartibi — **kim oldin yuborgan** (tez bosgan yutadi; ikkovida bittadan jon qolib bir-biriga otsa, birinchi yuborgan otib yutadi). Yuborgach maydon keyingi raundgacha qulflanadi; birinchi yuborilgan satr hisobga olinadi (muallif qarori 2026-10-05). Satr yubormagan bola shu raundda turadi.
 - **Hamma bir xil holatga qarab yozadi:** `scan()` / `radar()` raund **boshidagi** holatni koʻradi (bola yozayotganda raqiblar ham yozyapti).
 - **Jon 3, oʻq 3, koʻrish masofasi teng** — tank dueli kabi adolatli. Tanklar maydon chetlarida simmetrik joylarda tugʻiladi, oʻrtada 2–3 toʻsiq.
@@ -41,3 +41,9 @@ Oʻqituvchi sinf uchun ochsa (`QK.sinfTanlov`), jang tugaganda natija «Xonalar�
 
 - Jang mantigʻi (Node): tugʻilish joylari simmetrik va toʻsiqqa tushmaydi; harakatlarni yozib olish real holatni oʻzgartirmaydi; navbatma-navbat bajarish; gʻolib va durang qoidalari; vaqt tugashi.
 - Brauzerda: oʻqituvchi + 3 bola, bir nechta raund, kimdir yiqiladi (tomoshabin), gʻolib aniqlanadi; sinf natijasi panelda.
+
+## Aloqa uzilishi (2026-10-06 tuzatish)
+
+- **Sabab:** doska raund animatsiyasi paytida hech narsa yubormasdi, bola qurilmasi esa 9 s jimlikdan keyin «oʻqituvchi uzildi» deb jangni tugatardi — koʻp bola va koʻp harakatda animatsiya 9 s dan oshardi.
+- **Tuzatish:** doska animatsiya paytida ham har soniyada `holat` yuboradi; bola qorovuli 25 s. `umumiy/js/onlayn.js`: qurilma 15 s da `ping` yuboradi (server `pong`), 40 s jimlik — ulanish yopilib **oʻzi qayta ulanadi** (1, 2, 3, 5… s, ~26 s); bola oʻsha yashirin raqami bilan, doska serverdan olgan maxfiy `token` bilan oʻz oʻrnini qaytaradi. Holat `reconnecting` — ekranda «qayta ulanmoqda…», `ready` — davom.
+- **Xarita:** markazdagi panaga qoʻshimcha ikkita kichik pana (markazga nisbatan nuqta simmetrik). **Grafika:** `jang-ui.js` yangi koʻrinish (qum, katak toʻr, soyali panalar, soyali tank, oʻq izi va olov, tegish halqasi, yiqilgan tank qora va tutun). **Ovoz:** `fire`, `hit`, `boom`, `motor` (`sound.js`).

@@ -32,7 +32,9 @@
     ] },
   ];
   const mmss = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
-  const HOST_JIM = 9000; // shuncha vaqt doskadan xabar kelmasa — uzildi
+  // Doska har soniyada "holat" yuboradi (animatsiya paytida ham). Shuncha vaqt hech narsa kelmasa — doska yo'qolgan.
+  // 2026-10-06 gacha 9 s edi va animatsiya paytida doska jim turardi — uzun raundlarda bolalar "uzildi" deb chiqib ketardi.
+  const HOST_JIM = 25000;
 
   // ---------- Sahifa: ovoz va bosh tugma ----------
   const store = storage.create("tank-onlayn:v1", 0);
@@ -84,7 +86,7 @@
     el.append(
       h("a", { class: "back-link", href: SITE_HOME, text: "◀︎ Barcha oʻyinlar" }),
       h("h1", { class: "to-sarlavha", text: "Tank jangi — onlayn" }),
-      izoh(`Jang ${X.JANG_DAQIQA} daqiqa. Har raundda hamma bola ${X.RAUND_SONIYA} soniyada bitta satr yozadi; kim oldin yuborsa, uning harakati oldin bajariladi. Oxirgi tirik qolgan yoki vaqt tugaganda joni koʻp tank — gʻolib.`),
+      izoh(`Jang ${X.JANG_DAQIQA} daqiqa. Har raundda hamma bola ${X.RAUND_SONIYA} soniyada bitta buyruq yozadi (hamma yozib boʻlsa — darhol bajariladi); kim oldin yuborsa, uning harakati oldin bajariladi. Oxirgi tirik qolgan yoki vaqt tugaganda joni koʻp tank — gʻolib.`),
       h("div", { class: "to-buyruqlar" }, ...BUYRUQLAR.map((b) => h("span", { class: "td-buyruq", text: b + (["move", "back", "left", "right"].includes(b) ? "(n)" : "()") }))),
       tugmalar(
         bor ? ui.button("Xona ochish (oʻqituvchi)", () => hostBoshla(), "big") : null,
@@ -154,8 +156,9 @@
       on: {
         status(s) {
           QK.probe.status = s;
-          if (s === "ready") { lobbiChiz(); lobbiYubor(); }
-          else if (s === "error") { holati.textContent = "✗ Server bilan aloqa uzildi."; holati.classList.add("bad"); }
+          if (s === "ready") { holati.classList.remove("bad"); lobbiChiz(); lobbiYubor(); if (m) room.send("holat", X.holatPaketi(m, qoldi, jangQoldi())); }
+          else if (s === "reconnecting") { holati.textContent = "⚠ Aloqa uzildi — qayta ulanmoqda…"; holati.classList.add("bad"); if (sarlavha && m) sarlavha.textContent = "⚠ Aloqa uzildi — qayta ulanmoqda…"; }
+          else if (s === "error") { holati.textContent = "✗ Server bilan aloqa uzildi. Sahifani yangilab, xonani qayta oching."; holati.classList.add("bad"); if (sarlavha && m) sarlavha.textContent = "✗ Server bilan aloqa uzildi."; }
         },
         sinf(ok) { if (!ok && sinfIzoh) sinfIzoh.textContent = "⚠ Natijani sinfga yozib boʻlmadi (qayta kiring). Jang baribir ishlaydi."; },
         message(msg) {
@@ -186,7 +189,9 @@
     // Lobbida har 2 soniyada ro'yxat qayta yuboriladi (yangi kirganlar va yo'qolgan xabarlar uchun)
     taymer = setInterval(() => {
       if (!m) { lobbiYubor(); return; }
-      if (bajarilyapti || m.tugadi) return;
+      if (m.tugadi) return;
+      // Raund bajarilayotganda ham bolalarga "holat" boradi — bola qurilmasi doskani "jim" deb o'ylamasin
+      if (bajarilyapti) { room.send("holat", X.holatPaketi(m, qoldi, jangQoldi())); return; }
       if (jangQoldi() <= 0) { X.vaqtTugadi(m); jangTugadi(); return; }
       qoldi -= 1;
       room.send("holat", X.holatPaketi(m, qoldi, jangQoldi()));
@@ -227,7 +232,7 @@
 
     function jangChiz() {
       if (!m || !jadval) return;
-      sarlavha.textContent = m.tugadi ? "Jang tugadi" : tanaffus ? `Keyingi raund ${X.TANAFFUS_SONIYA} soniyadan keyin…` : bajarilyapti ? `${m.raund}-raund bajarilmoqda…` : `${m.raund + 1}-raund · ⏱ ${Math.max(0, qoldi)} s · jang ${mmss(jangQoldi())}`;
+      sarlavha.textContent = m.tugadi ? "Jang tugadi" : tanaffus ? "Keyingi raund…" : bajarilyapti ? `${m.raund}-raund bajarilmoqda…` : `${m.raund + 1}-raund · ⏱ ${Math.max(0, qoldi)} s · jang ${mmss(jangQoldi())}`;
       jadval.innerHTML = "";
       for (const t of m.tanklar) {
         const holat = !t.tirik ? "yiqildi" : harakatlar[t.id] ? `✓ ${kelish.indexOf(t.id) + 1}-boʻlib yubordi` : "yozyapti…";
@@ -248,13 +253,14 @@
       jangChiz();
       const yozuv = X.raundniBajar(m, tartib, harakatlar);
       await koz.oyna(yozuv);
-      if (!m.tugadi && jangQoldi() > 0) {
+      if (!m.tugadi && jangQoldi() > 0 && X.TANAFFUS_SONIYA > 0) {
         tanaffus = true;
         jangChiz();
         await ui.sleep(X.TANAFFUS_SONIYA * 1000);
         tanaffus = false;
         if (!m || m.tugadi) return; // tanaffusda "To'xtatish" bosilgan
       }
+      if (!m || m.tugadi) return; // animatsiya paytida "To'xtatish" bosilgan
       if (!m.tugadi && jangQoldi() <= 0) X.vaqtTugadi(m);
       if (m.tugadi) jangTugadi();
       else raundBoshla();
@@ -400,11 +406,11 @@
             return; // xato — urinish sanalmaydi
           }
           for (const s of r.chiqish) yoz(s, "chiqish");
-          if (r.chegaraOshdi) yoz("Bitta satrda 8 ta harakat bajariladi — qolgani hisobga olinmaydi.", "izoh");
+          if (!r.harakatlar.length) { yoz("Harakat yoʻq — move, back, left, right, fire yoki reload dan bittasini yoz.", "izoh"); return; }
           room.send("harakat", { r: raund, h: r.harakatlar.map((q) => q.h), a: r.harakatlar.map((q) => q.a) });
           yuborildi = true;
           panel.maydon.disabled = true; // yuborildi — keyingi raundgacha qulf
-          yoz(`✓ ${raund}-raund uchun yuborildi (${r.harakatlar.length} ta harakat). Boshqalarni kutamiz…`, "izoh");
+          yoz(`✓ ${raund}-raund: ${r.harakatlar[0].h}() yuborildi. Boshqalarni kutamiz…`, "izoh");
         },
       });
     }
@@ -429,8 +435,9 @@
           QK.probe.status = s;
           if (s === "missing") { yop(); xato("Bunday xona topilmadi. Kodni tekshiring."); }
           else if (s === "full") { yop(); xato("Xona toʻla."); }
-          else if (s === "error") { yop(); xato("Server bilan aloqa uzildi."); }
-          else if (s === "ready") holati.textContent = "✓ Xonaga kirdik. Oʻqituvchi ekranini kutamiz…";
+          else if (s === "error") { yop(); xato("Server bilan aloqa uzildi. Sahifani yangilab, kod bilan qayta kir — o'rning saqlanadi."); }
+          else if (s === "reconnecting") { oxirgi = Date.now(); if (sarlavha && rejim === "jang") sarlavha.textContent = "⚠ Aloqa uzildi — qayta ulanmoqda…"; else holati.textContent = "⚠ Aloqa uzildi — qayta ulanmoqda…"; }
+          else if (s === "ready") { oxirgi = Date.now(); holati.textContent = "✓ Xonaga kirdik. Oʻqituvchi ekranini kutamiz…"; }
         },
         message(msg) {
           oxirgi = Date.now();
@@ -478,8 +485,9 @@
         yuborildi = false;
         const tirik = X.tank(m, me).tirik;
         panel.maydon.disabled = !tirik;
-        if (tirik) panel.maydon.focus();
-        panel.yoz(tirik ? `— ${raund}-raund: bitta satr yoz va Enter bos —` : "Tanking yiqildi — endi tomoshabinsan. Jangni kuzatib tur.", "izoh");
+        panel.yoz(tirik ? `— ${raund}-raund: bitta buyruq yoz va Enter bos —` : "Tanking yiqildi — endi tomoshabinsan. Jangni kuzatib tur.", "izoh");
+        // Kursor yozuv maydoniga qaytadi: disabled olib tashlangandan keyin fokus keyingi taktda ishonchli
+        if (tirik) setTimeout(() => { if (rejim === "jang" && !panel.maydon.disabled) panel.maydon.focus({ preventScroll: true }); }, 0);
       }
       QK.probe.raund = raund;
       sarlavha.textContent = `${raund}-raund · ⏱ ${p.qoldi} s` + (typeof p.jq === "number" ? ` · jang ${mmss(p.jq)}` : "") + (X.tank(m, me).tirik ? (yuborildi ? " · ✓ yuborildi" : "") : " · tomoshabin");

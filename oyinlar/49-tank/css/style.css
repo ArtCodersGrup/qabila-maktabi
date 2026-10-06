@@ -16,25 +16,56 @@
 /* ---------- Maydon ---------- */
 .tk-maydon { width: 100%; }
 .tk-svg { display: block; width: 100%; height: auto; border: 3px solid var(--matn); border-radius: 12px; }
-.tk-fon { fill: #F7F2E6; }
-.tk-tosiq { fill: #8A8577; stroke: #2B2B3A; stroke-width: 3; }
+/* Maydon (umumiy/js/jang-ui.js, 2026-10-06 yangi ko'rinish): qum, katak to'ri, dog'lar, soyali panalar */
+.tk-fon { fill: #E9DFC4; }
+.tk-katak { stroke: #D9CDAA; stroke-width: 1; }
+.tk-dog { fill: #DED2B0; opacity: 0.6; }
+.tk-tosiq { fill: #8C7B63; stroke: #3B3128; stroke-width: 2.5; }
+.tk-tosiq-soya { fill: #3B3128; opacity: 0.28; }
+.tk-tosiq-yoruq { fill: #FFFFFF; opacity: 0.22; }
 .tk-belgi { fill: none; stroke: #2F6FDE; stroke-width: 4; stroke-dasharray: 10 8; }
 .tk-belgi-ich { fill: #2F6FDE; }
 .tk-nishon-tashqi { fill: #F6D9D4; stroke: #C0392B; stroke-width: 4; }
 .tk-nishon-ich { fill: #C0392B; }
 .tk-nishon.olgan { opacity: 0.25; }
-.tk-tank { transition: transform 0.33s ease-in-out; }
-.tk-tank.tez { transition: none; }
-.tk-tank.olgan { opacity: 0.3; }
-.tk-tana { fill: #2F6FDE; stroke: #2B2B3A; stroke-width: 3; }
+/* Tank: soya, zanjir, tana (rang + yorug'-soya qatlami), minora, quvur */
+.tk-tank, .tk-tank-soya { transition: transform 0.33s ease-in-out; }
+.tk-tank.tez, .tk-tank-soya.tez { transition: none; }
+.tk-tank-soya { fill: #3B3128; opacity: 0.22; }
+.tk-tank-soya.olgan { opacity: 0.08; }
+.tk-tana { fill: #2F6FDE; stroke: #2B2B3A; stroke-width: 2.5; }
 .tk-tank.robot .tk-tana { fill: #C0392B; }
-.tk-zanjir { fill: #6B6558; stroke: #2B2B3A; stroke-width: 2; }
+.tk-tana-soya { pointer-events: none; }
+.tk-zanjir { fill: #4A4636; stroke: #2B2B3A; stroke-width: 1.5; }
+.tk-zanjir-chiziq { fill: #6B6558; }
 .tk-minora { fill: #1B4A94; stroke: #2B2B3A; stroke-width: 2.5; }
+.tk-lyuk { fill: #FFFFFF; opacity: 0.35; }
 .tk-tank.robot .tk-minora { fill: #8E2B20; }
-.tk-quvur { fill: #1B4A94; stroke: #2B2B3A; stroke-width: 2.5; }
-.tk-tank.robot .tk-quvur { fill: #8E2B20; }
-.tk-oq { stroke: #F08A24; stroke-width: 5; stroke-linecap: round; }
-.tk-portlash { fill: #F08A24; opacity: 0.6; }
+.tk-quvur { fill: #2B2B3A; stroke: #1A1A22; stroke-width: 1.5; }
+.tk-quvur-uchi { fill: #4A4636; stroke: #1A1A22; stroke-width: 1.5; }
+.tk-tank.robot .tk-quvur { fill: #2B2B3A; }
+/* Tegdi — qisqa oq yalt; yiqildi — qora, tutun */
+.tk-tank.tegdi .tk-tana { fill: #FFFFFF !important; }
+.tk-tank.olgan .tk-tana { fill: #4A4636 !important; }
+.tk-tank.olgan .tk-minora, .tk-tank.olgan .tk-quvur, .tk-tank.olgan .tk-zanjir { fill: #35353D; }
+.tk-tank.olgan { opacity: 0.85; }
+.tk-tutun { display: none; }
+.tk-tank.olgan .tk-tutun { display: initial; }
+.tk-tutun-b { fill: #6B6558; opacity: 0; animation: tk-tutun 1.8s ease-out infinite; }
+@keyframes tk-tutun { 0% { opacity: 0.55; transform: translateY(0) scale(0.6); } 100% { opacity: 0; transform: translateY(-34px) scale(1.5); } }
+/* O'q: iz (xira keng + yorug' ingichka), olov, tegish halqasi, chang, portlash */
+.tk-oq { stroke: #FFD166; stroke-width: 3; stroke-linecap: round; }
+.tk-oq-xira { stroke: #F08A24; stroke-width: 9; stroke-linecap: round; opacity: 0.35; }
+.tk-olov { fill: #FFE08A; stroke: #F08A24; stroke-width: 3; }
+.tk-portlash { fill: #F08A24; opacity: 0.75; animation: tk-portlash 0.38s ease-out forwards; }
+.tk-portlash-halqa { fill: none; stroke: #FFFFFF; stroke-width: 3; animation: tk-halqa 0.38s ease-out forwards; }
+.tk-portlash-katta { fill: #F08A24; stroke: #C0392B; stroke-width: 4; animation: tk-katta 0.6s ease-out forwards; }
+.tk-chang { fill: #B8AD92; opacity: 0.7; animation: tk-halqa 0.26s ease-out forwards; }
+@keyframes tk-portlash { from { transform: scale(0.4); opacity: 0.9; } to { transform: scale(1.6); opacity: 0; } }
+@keyframes tk-halqa { from { transform: scale(1); opacity: 0.9; } to { transform: scale(4); opacity: 0; } }
+@keyframes tk-katta { from { transform: scale(0.6); opacity: 1; } to { transform: scale(4.5); opacity: 0; } }
+.tk-portlash, .tk-portlash-halqa, .tk-portlash-katta, .tk-chang, .tk-tutun-b { transform-box: fill-box; transform-origin: center; }
+@media (prefers-reduced-motion: reduce) { .tk-portlash, .tk-portlash-halqa, .tk-portlash-katta, .tk-chang, .tk-tutun-b { animation: none; } }
 
 /* ---------- Jon va o'q ---------- */
 .tk-holat { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }

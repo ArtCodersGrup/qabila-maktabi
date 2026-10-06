@@ -135,3 +135,32 @@ def test_xona_soni_cheklangan():
     for i in range(300):
         assert b.kir("sinov", str(1000 + i), "left", "left", Soxta())[0] is None
     assert b.kir("sinov", "9999", "left", "left", Soxta())[0] == "xato"
+
+
+def test_host_qayta_ulanish_token_bilan():
+    """Boshlovchi uzilib qayta ulansa: belgisi to'g'ri — o'rnini oladi (eski ulanish yopiladi), noto'g'ri — band."""
+    from app.xonalar import Boshqaruvchi
+
+    class Soxta:
+        pass
+
+    b = Boshqaruvchi()
+    a = Soxta()
+    sabab, x, eski = b.kir("tank", "4321", "host", "host", a)
+    assert sabab is None and eski is None
+    assert len(x.host_token) >= 12
+    assert b.kir("tank", "4321", "host", "host", Soxta())[0] == "band"
+    assert b.kir("tank", "4321", "host", "host", Soxta(), "notogri")[0] == "band"
+    yangi = Soxta()
+    sabab, x2, eski = b.kir("tank", "4321", "host", "host", yangi, x.host_token)
+    assert sabab is None and x2 is x and eski is a
+    assert x.odamlar["host"] is yangi
+
+
+def test_ping_pong(c):
+    with c.websocket_connect("/api/ws/xona/tank/4444?key=host&role=host") as h:
+        kirdi = h.receive_json()
+        assert kirdi["t"] == "kirdi" and len(kirdi["token"]) >= 12
+        h.receive_json()  # odamlar
+        h.send_text('{"t":"ping"}')
+        assert h.receive_json() == {"t": "pong"}
