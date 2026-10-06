@@ -822,12 +822,25 @@
     },
   };
 
+  // ---------- Saqlangan mavzu tanlovi ----------
+  // Bola/o'qituvchi tanlagan mavzular qurilmada saqlanadi. Keyin bankka qo'shilgan mavzu o'sha ro'yxatda yo'q —
+  // u o'chiq qolmasligi uchun saqlashda «o'shanda bor edi» ro'yxati ham yoziladi (bilgan). Eski yozuvda bilgan yo'q:
+  // asl 7 mavzu + saqlanganlar bilgan hisoblanadi, qolgani yangi — yoqib qo'yiladi.
+  const ASL_MAVZULAR = ["kod", "ikkilik", "olchov", "sanoq", "ai", "klaviatura", "mantiq"];
+  function tanlovniTikla(saqlangan, bilgan, barcha) {
+    const ids = barcha.map((t) => t.id);
+    const tanlov = (Array.isArray(saqlangan) ? saqlangan : []).filter((id) => ids.includes(id));
+    if (!tanlov.length) return null;
+    const eski = new Set(Array.isArray(bilgan) ? bilgan : ASL_MAVZULAR.concat(tanlov));
+    return tanlov.concat(ids.filter((id) => !eski.has(id) && !tanlov.includes(id)));
+  }
+
   // ---------- Bankka qo'shish ----------
   const KINDS = { faylTuri, yol, nusxa, tanishuvBilim, robotJoy, takror, dasturBilim, paket, ip, internetBilim, kuchli, variant, domen, xavfBilim, pyNatija, pythonBilim, pyRoyxat, izlash, saralash, algoritmBilim, sanash, kombBilim, cppNatija, cppBilim, pyMantiq, pyFunksiya, blokSxema };
   for (const t of TOPICS) if (!S.TOPICS.some((x) => x.id === t.id)) S.TOPICS.push(t);
   for (const [k, v] of Object.entries(KINDS)) if (!S.KINDS[k]) S.KINDS[k] = v;
 
-  const api = { TOPICS, KINDS, TANISHUV_BILIM, DASTUR_BILIM, INTERNET_BILIM, XAVF_BILIM, PYTHON_BILIM, ALGORITM_BILIM, KOMB_BILIM, CPP_BILIM };
+  const api = { TOPICS, KINDS, ASL_MAVZULAR, tanlovniTikla, TANISHUV_BILIM, DASTUR_BILIM, INTERNET_BILIM, XAVF_BILIM, PYTHON_BILIM, ALGORITM_BILIM, KOMB_BILIM, CPP_BILIM };
   if (root.QK) root.QK.savollar2 = api;
   if (typeof module !== "undefined" && module.exports) module.exports = api;
 })(typeof window !== "undefined" ? window : globalThis);

@@ -219,3 +219,19 @@ test("yangi mavzular bankda va har darajada savol bor", () => {
     for (const l of [1, 2, 3]) assert.ok(S.kindsOf(t.id, l).length > 0, `${t.id}/${l}`);
   }
 });
+
+// Saqlangan tanlov: keyin qo'shilgan mavzu o'chiq qolmasin (muallif: "yangi savollar ko'rinmayapti")
+test("tanlovniTikla: eski ro'yxatga yangi mavzular qo'shiladi, o'chirilgani o'chiq qoladi", () => {
+  const barcha = S.TOPICS;
+  const yangilar = barcha.map((t) => t.id).filter((id) => !S2.ASL_MAVZULAR.includes(id));
+  // Eski yozuv (bilgan yo'q): asl 7 tadan 2 tasi tanlangan — yangilarning hammasi qo'shiladi
+  assert.deepEqual(S2.tanlovniTikla(["kod", "mantiq"], undefined, barcha), ["kod", "mantiq", ...yangilar]);
+  // Yangi yozuv: bola "python"ni ataylab o'chirgan, keyin hech narsa qo'shilmagan — o'chiq qoladi
+  const bilgan = barcha.map((t) => t.id);
+  assert.deepEqual(S2.tanlovniTikla(["kod", "cpp"], bilgan, barcha), ["kod", "cpp"]);
+  // Yangi yozuv, keyin bitta mavzu qo'shilgan — faqat o'sha qo'shiladi
+  assert.deepEqual(S2.tanlovniTikla(["kod"], bilgan.filter((id) => id !== "cpp"), barcha), ["kod", "cpp"]);
+  // Noma'lum id lar tashlanadi; bo'sh — null (chaqiruvchi hammasini oladi)
+  assert.equal(S2.tanlovniTikla(["yoq"], bilgan, barcha), null);
+  assert.equal(S2.tanlovniTikla(null, null, barcha), null);
+});

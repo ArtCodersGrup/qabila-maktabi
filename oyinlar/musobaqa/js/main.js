@@ -17,7 +17,9 @@
     try {
       const s = JSON.parse(root.localStorage.getItem(KEY));
       if (!s) return d;
-      const topics = Array.isArray(s.topics) ? s.topics.filter((t) => savollar.TOPICS.some((x) => x.id === t)) : [];
+      // Keyin qo'shilgan mavzular o'chiq qolmasin (savollar-2.js, tanlovniTikla)
+      const topics = (root.QK.savollar2 ? root.QK.savollar2.tanlovniTikla(s.topics, s.bilgan, savollar.TOPICS) : null)
+        || (Array.isArray(s.topics) ? s.topics.filter((t) => savollar.TOPICS.some((x) => x.id === t)) : []);
       const levels = Array.isArray(s.levels) ? s.levels.filter((l) => savollar.LEVELS.some((x) => x.id === l)) : [];
       return {
         topics: topics.length ? topics : d.topics,
@@ -32,7 +34,7 @@
 
   function save() {
     try {
-      root.localStorage.setItem(KEY, JSON.stringify(settings));
+      root.localStorage.setItem(KEY, JSON.stringify(Object.assign({}, settings, { bilgan: savollar.TOPICS.map((t) => t.id) })));
     } catch (e) {
       // Saqlab bo'lmadi (maxfiy rejim va h.k.) — musobaqa baribir ishlaydi
     }

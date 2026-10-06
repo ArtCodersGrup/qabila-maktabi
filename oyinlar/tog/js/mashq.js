@@ -12,15 +12,17 @@
   // Tanlangan mavzular eslab qolinadi (umumiy storage.js faqat done/muted ni saqlaydi)
   function mavzulariniOl() {
     try {
+      // Eski yozuv — ro'yxat, yangisi — { tanlangan, bilgan }; keyin qo'shilgan mavzular yoqib qo'yiladi
       const bor = JSON.parse(root.localStorage.getItem(XOTIRA) || "null");
-      return Array.isArray(bor) && bor.length ? bor : null;
+      const tanlangan = Array.isArray(bor) ? bor : bor && bor.tanlangan;
+      return QK.savollar2.tanlovniTikla(tanlangan, bor && bor.bilgan, QK.savollar.TOPICS);
     } catch (e) {
       return null;
     }
   }
   function mavzulariniSaqla(list) {
     try {
-      root.localStorage.setItem(XOTIRA, JSON.stringify(list));
+      root.localStorage.setItem(XOTIRA, JSON.stringify({ tanlangan: list, bilgan: QK.savollar.TOPICS.map((t) => t.id) }));
     } catch (e) {
       // saqlab boʻlmadi — oʻyin baribir ishlaydi
     }
