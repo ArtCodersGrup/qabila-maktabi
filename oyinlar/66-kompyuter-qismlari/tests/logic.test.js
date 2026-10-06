@@ -527,7 +527,9 @@ test("index.html: toifa, fon rangi, skriptlar tartibi va fayllar mavjudligi", ()
   assert.ok(html.includes('<html lang="uz" data-toifa="boshlangich">'));
   assert.ok(html.includes('<meta name="theme-color" content="#FFF6E5">'));
   const skriptlar = [...html.matchAll(/<script src="([^"]+)"><\/script>/g)].map((m) => m[1]);
+  // <head> dagi toifa.js (ko'rinish tanlovi) — bosh/tools/toifa-yoz.js qo'yadi
   assert.deepEqual(skriptlar, [
+    "../umumiy/js/toifa.js",
     "js/logic.js", "../umumiy/js/storage.js", "../umumiy/js/sound.js", "../umumiy/js/art.js", "js/game-art.js",
     "../umumiy/js/ui.js", "../umumiy/js/app.js", "../umumiy/js/practice.js",
     "js/scenes/common.js", "js/scenes/stage1.js", "js/scenes/stage2.js", "js/scenes/stage3.js", "js/scenes/final.js",
