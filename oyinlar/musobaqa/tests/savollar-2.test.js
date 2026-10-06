@@ -143,6 +143,29 @@ const JAVOB = {
     for (let i = +m[2]; i < +m[3]; i++) s = m[4] === "*" ? s * i : s + i;
     return String(s);
   },
+  pyMantiq: (q) => {
+    const d = q.data;
+    let v = d.qiymat.length === 1 ? d.qiymat[0] : d.ops[0] === "and" ? d.qiymat[0] && d.qiymat[1] : d.qiymat[0] || d.qiymat[1];
+    // qiymatlarni ham mustaqil tekshiramiz
+    d.qism.forEach((t, i) => {
+      const [a, op, b] = t.split(" ");
+      assert.equal(op === ">" ? +a > +b : op === "<" ? +a < +b : +a === +b, d.qiymat[i], q.key);
+    });
+    if (d.not) v = !v;
+    return v ? "True" : "False";
+  },
+  pyFunksiya: (q) => {
+    const { k, q: c, x, y, tur } = q.data;
+    const f = (t) => t * k + c;
+    return String(tur === "bir" ? f(x) : f(x) + f(y));
+  },
+  blokSxema: (q) => {
+    const d = q.data;
+    if (d.tur === "chiziqli") return String((d.x + d.a) * d.b);
+    let v = d.x, n = 0;
+    while (v < d.ch) { v = d.amal === "+" ? v + d.k : v * d.k; n++; }
+    return String(d.soraydi === "takror" ? n : v);
+  },
   pyNatija: (q) => {
     const chiqish = pythonBajar(q.blocks.find((b) => b.type === "code").text);
     return /necha marta/.test(q.text) ? String(chiqish.length) : chiqish.join("");

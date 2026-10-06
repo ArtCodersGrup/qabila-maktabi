@@ -726,8 +726,84 @@
   ];
   const cppBilim = bilim("cpp", CPP_BILIM);
 
+
+  // Python: mantiq (48) — True/False, and/or/not
+  const pyMantiq = {
+    topic: "python",
+    levels: [1, 2, 3],
+    make(level, rng) {
+      const tak = () => {
+        const a = ri(rng, 1, 20);
+        const b = ri(rng, 1, 20);
+        const op = pick(rng, [">", "<", "=="]);
+        const v = op === ">" ? a > b : op === "<" ? a < b : a === b;
+        return { t: `${a} ${op} ${b}`, v };
+      };
+      const p1 = tak();
+      if (level === 1) return { id: p1.t, data: { qism: [p1.t], ops: [], qiymat: [p1.v] }, text: "Bu kod ekranga nima chiqaradi?", blocks: [code(`print(${p1.t})`)], input: choice(["True", "False"]), answer: p1.v ? "True" : "False", explain: `${p1.t} — ${p1.v ? "rost (True)" : "yolgʻon (False)"}.` };
+      const p2 = tak();
+      const op = pick(rng, ["and", "or"]);
+      const not = level === 3 && rng() < 0.6;
+      let v = op === "and" ? p1.v && p2.v : p1.v || p2.v;
+      if (not) v = !v;
+      const ifoda = `${not ? "not (" : ""}${p1.t} ${op} ${p2.t}${not ? ")" : ""}`;
+      return {
+        id: ifoda, data: { qism: [p1.t, p2.t], ops: [op], not, qiymat: [p1.v, p2.v] },
+        text: "Bu kod ekranga nima chiqaradi?", blocks: [code(`print(${ifoda})`)],
+        input: choice(["True", "False"]), answer: v ? "True" : "False",
+        explain: `${p1.v} ${op} ${p2.v} = ${not ? !v : v}${not ? `; not → ${v}` : ""}. and — ikkalasi True boʻlsa; or — bittasi yetadi.`,
+      };
+    },
+  };
+
+  // Python: funksiya (34) — def, parametr, return
+  const pyFunksiya = {
+    topic: "python",
+    levels: [2, 3],
+    make(level, rng) {
+      const k = ri(rng, 2, 5);
+      const q = ri(rng, 0, 9);
+      const x = ri(rng, 1, 9);
+      if (level === 2) {
+        return { id: `f${k}-${q}-${x}`, data: { k, q, x, tur: "bir" }, text: "Bu kod ekranga nima chiqaradi?", blocks: [code(`def f(x):\n    return x * ${k} + ${q}\n\nprint(f(${x}))`)], input: num(3), answer: String(x * k + q), explain: `f(${x}) = ${x} × ${k} + ${q} = ${x * k + q}.` };
+      }
+      const y = ri(rng, 1, 9);
+      const fx = x * k + q;
+      const fy = y * k + q;
+      return { id: `ff${k}-${q}-${x}-${y}`, data: { k, q, x, y, tur: "ikki" }, text: "Bu kod ekranga nima chiqaradi?", blocks: [code(`def f(x):\n    return x * ${k} + ${q}\n\nprint(f(${x}) + f(${y}))`)], input: num(3), answer: String(fx + fy), explain: `f(${x}) = ${fx}, f(${y}) = ${fy}; ${fx} + ${fy} = ${fx + fy}.` };
+    },
+  };
+
+  // Blok-sxema (37): son boshlang'ich qiymatdan shart bajarilguncha o'zgaradi — nima chiqadi
+  const blokSxema = {
+    topic: "algoritm",
+    levels: [1, 2, 3],
+    make(level, rng) {
+      if (level === 1) {
+        const x = ri(rng, 1, 9);
+        const a = ri(rng, 2, 9);
+        const b = ri(rng, 2, 5);
+        return { id: `c${x}-${a}-${b}`, data: { x, a, b, tur: "chiziqli" }, text: "Blok-sxema boʻyicha yur. Oxirida nima chiqadi?", blocks: [lines([`⬭ Boshlash`, `▭ x = ${x}`, `▭ x = x + ${a}`, `▭ x = x × ${b}`, `▱ x ni chiqar`, `⬭ Tugash`])], input: num(3), answer: String((x + a) * b), explain: `${x} + ${a} = ${x + a}, × ${b} = ${(x + a) * b}.` };
+      }
+      const x = ri(rng, 1, 5);
+      const k = level === 2 ? ri(rng, 2, 4) : ri(rng, 2, 3);
+      const ch = level === 2 ? ri(rng, 10, 40) : ri(rng, 50, 200);
+      const amal = level === 2 ? "+" : "×";
+      let v = x, n = 0;
+      while (v < ch) { v = amal === "+" ? v + k : v * k; n++; }
+      const soraydi = level === 3 && rng() < 0.5 ? "takror" : "qiymat";
+      return {
+        id: `s${x}${amal}${k}<${ch}${soraydi}`, data: { x, k, ch, amal, soraydi },
+        text: soraydi === "takror" ? "Blok-sxemada «x < …?» savoli necha marta «Ha» javobini oladi?" : "Blok-sxema boʻyicha yur. Oxirida nima chiqadi?",
+        blocks: [lines([`⬭ Boshlash`, `▭ x = ${x}`, `◇ x < ${ch} ?  Ha → ▭ x = x ${amal} ${k}, yana ◇ ga qayt`, `  Yoʻq → ▱ x ni chiqar → ⬭ Tugash`])],
+        input: num(3), answer: String(soraydi === "takror" ? n : v),
+        explain: soraydi === "takror" ? `x ${n} marta oʻzgardi, keyin x = ${v} va shart yolgʻon.` : `x ${ch} dan kichik ekan, ${amal === "+" ? "qoʻshamiz" : "koʻpaytiramiz"}: oxirida ${v}.`,
+      };
+    },
+  };
+
   // ---------- Bankka qo'shish ----------
-  const KINDS = { faylTuri, yol, nusxa, tanishuvBilim, robotJoy, takror, dasturBilim, paket, ip, internetBilim, kuchli, variant, domen, xavfBilim, pyNatija, pythonBilim, pyRoyxat, izlash, saralash, algoritmBilim, sanash, kombBilim, cppNatija, cppBilim };
+  const KINDS = { faylTuri, yol, nusxa, tanishuvBilim, robotJoy, takror, dasturBilim, paket, ip, internetBilim, kuchli, variant, domen, xavfBilim, pyNatija, pythonBilim, pyRoyxat, izlash, saralash, algoritmBilim, sanash, kombBilim, cppNatija, cppBilim, pyMantiq, pyFunksiya, blokSxema };
   for (const t of TOPICS) if (!S.TOPICS.some((x) => x.id === t.id)) S.TOPICS.push(t);
   for (const [k, v] of Object.entries(KINDS)) if (!S.KINDS[k]) S.KINDS[k] = v;
 
