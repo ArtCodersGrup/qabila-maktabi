@@ -23,6 +23,8 @@ qiladi** (bosadi, ochadi, yopadi, koʻchiradi), nomini oʻyin keyin aytadi (QOID
 | 68 | `68-ekran-va-oynalar` | Ekran va oynalar | `ekran-va-oynalar:v1` | ikkalasi | ish stoli, belgi, oyna tugmalari, bir nechta oyna |
 | 69 | `69-fayl-va-papka` | Fayl va papka | `fayl-va-papka:v1` | ikkalasi | fayl turi, papka, yoʻl, koʻchirish, nusxa, savat |
 | 70 | `70-kichik-rassom` | Kichik rassom | `kichik-rassom:v1` | ikkalasi | katakli Paint: asboblar, namuna qadam-qadam, galereya, tezkor tugmalar (B blokidan oldinga olindi, 2026-10-06) |
+| 71 | `71-matn-yozamiz` | Matn yozamiz | `matn-yozamiz:v1` | 💻 | matn muharriri: kursor, tuzatish, qatorlar, belgilash va bezash, saqlash |
+| 72 | `72-brauzer-va-sayt` | Brauzer va sayt | `brauzer-va-sayt:v1` | ikkalasi | oʻyinchoq internet: manzil, havola, orqaga, qidiruv, xavfsiz yurish |
 
 Hammasi `toifa: "boshlangich"`, 3 bosqich, yangi boʻlim **`tanishuv`** — «Kompyuter bilan tanishuv»
 (`SECTIONS` da birinchi, klaviaturadan oldin). Tartib — oʻrganish yoʻli: avval qismlar (sichqoncha —
@@ -264,6 +266,88 @@ Namunalar galereyasi ham shu yerda — istalgan namunani qayta chizish mumkin.
 
 **Oʻquv maqsadlari:** bola Paint asboblarini (qalam, shakllar, chelak, oʻchirgʻich) ishlatadi; rangni
 tanlaydi; rasmni qadam-qadam namunadan chizadi; xatoni bekor qiladi (`Ctrl+Z`); rasmni saqlaydi.
+
+## 71 — Matn yozamiz (💻)
+
+**Bosqichlar:** `["Kursor va tuzatish", "Qatorlar va belgilar", "Belgilash va bezash"]`. Kompyuter uchun
+(`pc: true`): haqiqiy klaviatura kerak — boshida `ui.keyboardCheck`. «Tezkor tugmalar» oʻyini (46)
+Ctrl+C/V/X/Z, Home/End, Backspace ↔ Delete ni chuqur oʻrgatadi — bu oʻyin ularni **takrorlamaydi**,
+balki matn muharririda ishlashni oʻrgatadi: kursorni sichqoncha bilan qoʻyish, xatoni tuzatish, katta
+harf, yangi qator, belgilash va bezash, hujjatni saqlash.
+
+**Oʻyinchoq muharrir** — `stol` qatlamining oynasida («Matn» dasturi): asboblar qatori (bosqichga qarab:
+**Qalin**, **Kursiv**, rang, Saqlash), matn maydoni. 1–2-bosqichda maydon — oddiy `<textarea>` (haqiqiy
+kursor, belgilash va tugmalar — brauzerniki), 3-bosqichda `contenteditable` (qalin/kursiv/rang —
+`document.execCommand`, Chrome va Safari'da ishlaydi; shrift ≥ 20 px).
+
+**Tekshirish — matn tengligi:** vazifada `boshlangich` matn va `kutilgan` matn; bola «Tayyor»ni bosganda
+(yoki Enter — 1-bosqichda emas) joriy matn kutilganga teng boʻlsa — toʻgʻri. Taqqoslashda oxirgi
+boʻsh joylar va qator oxiridagi boʻsh joylar hisobga olinmaydi; `oʻ`/`gʻ` uchun `'`, `ʼ`, `‘`, `’`
+ham qabul qilinadi (klaviaturada ʻ terish qiyin — bu **ataylab** yumshoq). 3-bosqichda — DOM
+tekshiruvi: kutilgan soʻz `<b>`/`<strong>` (yoki `<i>`/`<em>`, `color`) ichida, boshqa soʻzlar emas.
+
+1. **Kursor va tuzatish.** Koʻrsatish: soʻz ichiga sichqoncha bilan bosib kursor qoʻyish; `Backspace`
+   chapdagini, `Delete` oʻngdagini oʻchiradi (bir gap); `Shift` + harf — katta harf. Mashq (`tuzat`):
+   matnda bitta xato — harf yetishmaydi / ortiqcha harf / notoʻgʻri harf / gap boshi kichik harf —
+   bola tuzatadi (tier 0 — bitta xato va xato soʻz ajratib koʻrsatilgan; tier 1 — xato koʻrsatilmaydi;
+   tier 2 — ikki xato). Matnlar banki: 2–4-sinf uchun qisqa gaplar (hayvonlar, maktab, oila).
+2. **Qatorlar va belgilar.** Nom: `Enter` — yangi qator; `Boʻsh joy`; nuqta va vergul (klaviaturada
+   qayerda). Mashq: `qator` — bir qatorda yozilgan 2–4 qatorli sheʼr/roʻyxatni qatorlarga ajrat;
+   `sarlavha` — sarlavhani alohida qatorga; `belgi` — tushib qolgan nuqta/vergulni qoʻy (tier bilan
+   qatorlar soni 2 → 3 → 4).
+3. **Belgilash va bezash.** Koʻrsatish: soʻzni ikki marta bosib belgilash; sudrab belgilash; belgilangan
+   soʻzga **Qalin** / *Kursiv* / rang. Mashq (`beza`): "«Bahor» soʻzini qalin qil", "sarlavhani
+   koʻk qil", "ikkinchi gapni kursiv qil" (tier: 1 soʻz → sarlavha/gap → ikki buyruq). Oxirida
+   **Saqlash**: nom chiplardan («Sheʼr», «Xat», «Roʻyxat») → «Hujjatlar» roʻyxatida koʻrinadi
+   (`localStorage` `matn-yozamiz:hujjatlar:v1`, 10 tagacha; faqat shu qurilmada).
+
+Maslahat (1-xato): qaysi *turdagi* xato ekani ("bir harf yetishmaydi", "nuqta yoʻq", "katta harf")
+yoki asbob nomi — joyini aytmaydi; tier 0 da xato soʻz yoritiladi. Yechim (2-xato): kutilgan matn
+koʻrsatiladi va bola uni koʻchiradi (yangi misol emas — matn vazifasida bu tabiiy).
+
+**Oʻquv maqsadlari:** bola kursorni kerakli joyga qoʻyadi; harf qoʻshadi va oʻchiradi; katta harf va
+tinish belgilarini teradi; `Enter` bilan qator ochadi; soʻzni belgilaydi va qalin/kursiv/rangli qiladi;
+hujjatni nomlab saqlaydi.
+
+---
+
+## 72 — Brauzer va sayt
+
+**Bosqichlar:** `["Manzil va havola", "Qidiruv", "Xavfsiz yurish"]`. Telefon va kompyuter.
+
+**Oʻyinchoq brauzer** — `stol` oynasida («Internet»): yuqorida **← Orqaga**, **→ Oldinga**,
+**↻ Yangilash**, **manzil satri** (qulf belgisi bilan), ⭐ xatcho'p; pastda sahifa. Internet —
+**oʻyinchoq**: 8–10 ta soxta sayt (`qabila.uz`, `hayvonlar.uz`, `maktab.uz`, `ertaklar.uz`,
+`obhavo.uz`, `qidiruv.uz` …), har sahifada sarlavha, qisqa matn (2–4 gap, 2–4-sinf uchun), rasm
+(SVG) va **havolalar** (koʻk, tagiga chizilgan). Sahifalar bankda (`logic.js`), tasodifiy emas; mashq
+vazifalari tasodifiy. Manzil terish: kompyuterda haqiqiy terish (manzil satri `<input>`, tarixdan
+taklif), telefonda — chiplar (bir xil koʻrinish, chiplar klaviatura oʻrnida).
+
+**Mantiq** (sof): sayt banki, `oching(manzil)`, `havola(id)`, `orqaga`/`oldinga` (tarix),
+`qidir(soʻz)` → natijalar (sahifa matnidan soʻz boʻyicha), tekshiruvlar.
+
+1. **Manzil va havola.** Nom: *brauzer*, *sayt*, *manzil*, *havola*. Koʻrsatish: manzilni yoz/tanla →
+   sayt ochildi; havolani bos → boshqa sahifa; «Orqaga» → qaytdi. Mashq: `manzil` — "«hayvonlar.uz»
+   saytini och" (noto'g'ri sayt — xato); `havola` — "Shu sahifadagi «Tuyalar» havolasini bos";
+   `orqaga` — "Avvalgi sahifaga qayt" (tier: 1 → 2 qadam; tier 2 — "«ertaklar.uz» ga kir, undagi
+   «Zumrad» havolasini och" — ikki qadam).
+2. **Qidiruv.** `qidiruv.uz` — qidiruv satri: soʻz yozilsa (telefonda chiplardan), natijalar roʻyxati
+   (sarlavha + manzil + 1 gap). Mashq — **xazina ovi**: savol ("Tuya choʻlda necha kun suvsiz yura
+   oladi?") → bola qidiradi, sahifani ochadi, javobni topadi va 4 variantdan tanlaydi. Tier: javob
+   birinchi natijada → ikkinchi-uchinchida → sahifa ichidagi havoladan keyin. Qidiruv soʻzi aniq
+   boʻlmasa natija chiqmaydi — oqsoqol: "qisqaroq, asosiy soʻzni yoz".
+3. **Xavfsiz yurish.** Koʻrsatish: sahifada toʻsatdan **qalqib chiquvchi oyna** ("Siz yutdingiz!
+   Bosing!") — toʻgʻri ish: ✕ bilan yopish; sayt **parol yoki telefon** soʻrasa — yozmaslik, chiqib
+   ketish, kattaga aytish. Mashq: `qalqib` — oyna chiqdi: ✕ ni bos (ichidagi tugma — xato);
+   `soroq` — sayt ism/parol/telefon soʻrayapti: «Chiqib ketaman» (yozish — xato); `savol` — 4
+   variantli vaziyat ("Notanish odam chatda manzilingni soʻradi. Nima qilasan?"). Tier aralash.
+   Qulf belgisi (HTTPS) 5–8 dagi «Qulfli yoʻl»da — bu yerda faqat "qulf bor — yaxshi" deb koʻrsatiladi.
+
+Maslahat (1-xato): "manzil satri yuqorida", "havola — koʻk, tagiga chizilgan", "✕ oynaning burchagida" —
+joyni koʻrsatadi, javobni (qaysi variant) aytmaydi. Yechim (2-xato): kerakli joy yoritiladi.
+
+**Oʻquv maqsadlari:** bola manzilni terib saytni ochadi; havola va «Orqaga»ni ishlatadi; qidiruvdan
+soʻz bilan foydalanib javob topadi; qalqib chiquvchi oynani yopadi; parol va telefonni yozmaydi.
 
 ## Ulash (blok oxirida, bitta qadam)
 
