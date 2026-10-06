@@ -1,6 +1,6 @@
 // Offline rejim: sayt fayllari keshlanadi. Bola saytni bir marta ochsa, keyin internetsiz ham oʻynay oladi.
 // Yangi fayl qoʻshilsa, FILES roʻyxatiga ham qoʻshiladi — buni bosh/tests/offline.test.js tekshiradi.
-const VERSION = "v107";
+const VERSION = "v108";
 const CACHE = "qabila-maktabi-" + VERSION;
 
 const FILES = [
@@ -898,6 +898,7 @@ const FILES = [
   "oyinlar/musobaqa/js/maydon.js",
   "oyinlar/musobaqa/js/musobaqa-art.js",
   "oyinlar/musobaqa/js/musobaqa.js",
+  "oyinlar/musobaqa/js/savollar-2.js",
   "oyinlar/musobaqa/js/savollar.js",
   "oyinlar/poyga/",
   "oyinlar/poyga/index.html",

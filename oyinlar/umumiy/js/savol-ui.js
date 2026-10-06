@@ -49,6 +49,8 @@
         b.items.forEach(([l, code]) => row.append(h("span", null, h("b", { text: l }), morseGroup(code))));
         return row;
       }
+      case "code": // Python kodi: satrlar va otstup saqlanadi (musobaqa savollari-2)
+        return h("pre", { class: "q-code", text: b.text });
       case "lines": {
         const list = h("ul", { class: "q-lines" });
         b.items.forEach((line) => list.append(h("li", { text: line })));

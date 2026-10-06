@@ -6,6 +6,7 @@
 .q-places span { min-width: 1ch; }
 .q-lines { margin: 0; padding: 0; list-style: none; font-size: 19px; font-weight: 700; }
 .q-lines li { padding: 1px 0; }
+.q-code { margin: 0; max-width: 100%; overflow-x: auto; padding: 10px 14px; border-radius: 10px; background: #1F2430; color: #F2F4F8; font: 600 18px/1.45 ui-monospace, Menlo, Consolas, monospace; text-align: left; white-space: pre; user-select: text; }
 .q-strip { display: flex; flex-wrap: wrap; justify-content: center; gap: 3px; max-width: 520px; }
 .q-strip span {
   min-width: 26px; height: 28px; padding: 0 3px; border-radius: 6px; background: var(--fon);

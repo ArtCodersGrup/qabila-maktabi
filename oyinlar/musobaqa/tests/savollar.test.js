@@ -8,7 +8,7 @@ const win = {};
 for (const f of [
   "../../umumiy/js/sanoq.js", "../../05-rim-toshi/js/roman.js", "../../03-sezar-maktubi/js/caesar.js",
   "../../02-qabila-morzesi/js/morse.js", "../../11-kop-qatlamli-tarmoq/js/neural.js", "../../12-ai-xaritasi/js/atlas.js",
-  "../../13-bayt-sandigi/js/bytes.js", "../../16-xotira-ombori/js/units.js", "../../23-on-barmoq/js/typing.js", "../../24-mantiq-kalitlari/js/logic.js", "../../25-zinapoya-chirogi/js/gates.js", "../js/savollar.js",
+  "../../13-bayt-sandigi/js/bytes.js", "../../16-xotira-ombori/js/units.js", "../../23-on-barmoq/js/typing.js", "../../24-mantiq-kalitlari/js/logic.js", "../../25-zinapoya-chirogi/js/gates.js", "../js/savollar.js", "../js/savollar-2.js",
 ]) loadScript(path.join(__dirname, f), win);
 const { savollar: S, sanoq, roman, caesar, morse, neural, units, typing, logic, gates } = win.QK;
 
@@ -267,8 +267,10 @@ const ANSWER = {
 };
 
 test("har turdagi javob mustaqil hisobga mos", () => {
-  assert.deepEqual(Object.keys(ANSWER).sort(), Object.keys(S.KINDS).sort(), "har tur uchun tekshiruv bor");
-  for (const q of allQuestions()) assert.equal(q.answer, String(ANSWER[q.kind](q)), `${q.key}: ${q.text}`);
+  // savollar-2.js turlari o'z testida tekshiriladi (tests/savollar-2.test.js)
+  const ikkinchi = new Set(Object.keys(win.QK.savollar2.KINDS));
+  assert.deepEqual(Object.keys(ANSWER).sort(), Object.keys(S.KINDS).filter((k) => !ikkinchi.has(k)).sort(), "har tur uchun tekshiruv bor");
+  for (const q of allQuestions()) if (!ikkinchi.has(q.kind)) assert.equal(q.answer, String(ANSWER[q.kind](q)), `${q.key}: ${q.text}`);
 });
 
 test("qiyinlik chegaralari: sonlar va xonalar DIZAYN jadvaliga mos", () => {
