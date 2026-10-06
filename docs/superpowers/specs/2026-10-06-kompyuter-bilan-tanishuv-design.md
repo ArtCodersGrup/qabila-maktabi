@@ -22,6 +22,7 @@ qiladi** (bosadi, ochadi, yopadi, koʻchiradi), nomini oʻyin keyin aytadi (QOID
 | 67 | `67-chaqqon-sichqoncha` | Chaqqon sichqoncha | `chaqqon-sichqoncha:v1` | 💻 | bosish, ikki marta bosish, oʻng tugma, sudrash |
 | 68 | `68-ekran-va-oynalar` | Ekran va oynalar | `ekran-va-oynalar:v1` | ikkalasi | ish stoli, belgi, oyna tugmalari, bir nechta oyna |
 | 69 | `69-fayl-va-papka` | Fayl va papka | `fayl-va-papka:v1` | ikkalasi | fayl turi, papka, yoʻl, koʻchirish, nusxa, savat |
+| 70 | `70-kichik-rassom` | Kichik rassom | `kichik-rassom:v1` | ikkalasi | katakli Paint: asboblar, namuna qadam-qadam, galereya, tezkor tugmalar (B blokidan oldinga olindi, 2026-10-06) |
 
 Hammasi `toifa: "boshlangich"`, 3 bosqich, yangi boʻlim **`tanishuv`** — «Kompyuter bilan tanishuv»
 (`SECTIONS` da birinchi, klaviaturadan oldin). Tartib — oʻrganish yoʻli: avval qismlar (sichqoncha —
@@ -206,11 +207,70 @@ savatdan qaytaradi.
 
 ---
 
+## 70 — Kichik rassom (muallif qarori 2026-10-06: Paint birinchi, Matn va Brauzer keyin)
+
+**Bosqichlar:** `["Asboblar", "Uy chizamiz", "Galereya"]`. Telefon va kompyuter; chizish — sudrash bilan
+(sichqoncha oʻyinidagi kabi QOIDALAR §3 dan istisno; barmoq ham ishlaydi, `touch-action: none`).
+
+**Nega katakli:** erkin chizilgan rasmni kompyuter baholay olmaydi; kataklarda shakl aniq tekshiriladi,
+"kvadratlardan uy" shunga mos. Shuning uchun ikki qism: **darslar** (3 bosqich, tekshiriladi, yulduz)
+va **erkin chizish** (baho yoʻq, rasm galereyaga saqlanadi) — hamma bosqich tugagach ochiladi.
+
+**Maydon:** 32 × 24 katak, `<canvas>` (chizish yuzasi; bezak rasmlar hamon SVG). Katak rangi — palitra
+indeksi yoki boʻsh. Eni 100 % (koʻpi 640 px), 360 px da katak ≈ 10 px.
+
+**Asboblar:** qalam, oʻchirgʻich, chiziq, toʻrtburchak, doira (ellips), uchburchak (uchi tepada, asosi
+pastda), chelak (4-qoʻshni toʻldirish), «ichi toʻla» tugmasi (shakllar uchun), 12 rang, bekor, qaytar,
+tozalash, saqlash. Shakl — bosib sudrab, qoʻyib yuborilganda chiziladi; sudrash paytida och koʻrinishi
+(preview) koʻrinadi. Tarix: 50 qadam.
+
+**Palitra (12):** qora `#2B2B3A`, kulrang `#978B76`, qizil `#C0392B`, toʻq sariq `#F08A24`, sariq `#F0C040`,
+yashil `#1A9E77`, och yashil `#8FD3A8`, koʻk `#2F6FDE`, och koʻk `#8DB4F2`, binafsha `#8E5BD0`,
+jigarrang `#8A5A10`, pushti `#F4A7C0`. Oq — oʻchirgʻich (boʻsh katak).
+
+**Mantiq** (`logic.js`, sof): rasterlash (`chiziq` — Brezenxem, `tortburchak`, `ellips`, `uchburchak`,
+ichi toʻla / boʻsh), `toldir` (flood), qalam/oʻchirgʻich, tarix (bekor/qaytar), `kodla`/`och`
+(galereya uchun qisqa satr — run-length), qadam tekshiruvi, namunalar.
+
+**Namuna (dars) formati:** `{ id, nom, qadamlar: [{ matn, asbob, rang, toliq, a: [x, y], b: [x, y] }] }` —
+har qadam bitta shakl (qalam qadami — kataklar roʻyxati). Kutilgan kataklar qadamdan rasterlanadi.
+Namunalar (6): **uy** (devor → tom → eshik → deraza → tutun, 5 qadam), daraxt, quyosh, mashina, kema,
+robot (5–6 qadam). Hammasi 32 × 24 ga sigʻadi, kataklari boʻsh emas, qadamlar yigʻindisi tayyor rasm.
+
+1. **Asboblar.** Koʻrsatish: qalam bilan chiziq tort, toʻrtburchak chiz, chelak bilan toʻldir, bekor qil —
+   har biri bola oʻzi qilgach nomlanadi. Mashq (`asbob` turi): "Koʻk toʻrtburchak chiz", "Sariq doira
+   chiz (ichi toʻla)", "Yashil chiziq tort", "Doirani qizilga toʻldir" (maydonda tayyor doira bor),
+   "Oxirgi ishni bekor qil". Tekshirish — **harakat jurnali** boʻyicha: ishlatilgan asbob, rang, «ichi
+   toʻla» va oʻlcham (shakl ≥ 3 × 3 katak) kutilganga mos; toʻldirishda doira ichi aynan shu rangga
+   oʻzgargan. Tier: 0 — asbob + rang; 1 — + ichi toʻla / boʻsh; 2 — oʻlcham talabi ("kamida 6 katak eni").
+2. **Uy chizamiz.** Namuna «uy» qadam-qadam: har qadamda maydonda **soya** (kutilgan kataklar och
+   rangda) va koʻrsatma ("Devor: koʻk toʻrtburchak chiz"). Qadam kataklarining ≥ 85 % i toʻgʻri rangda
+   va qadam tashqarisida boʻyalgan ortiqcha kataklar kutilganning ≤ 15 % i — qadam bajarildi (har
+   chizishdan keyin oʻzi tekshiriladi; «Tayyor» tugmasi ham bor — bosilganda mos boʻlmasa, xato).
+   `practice.exercises({ need: qadamlar soni })` — har qadam bitta javob.
+3. **Galereya.** Bola namunani oʻzi tanlaydi (daraxt, quyosh, mashina, kema, robot — rasmchalari
+   bilan), qadam-qadam chizadi. Kompyuterda tezkor tugmalar: `Ctrl+Z` bekor, `Ctrl+Y` qaytar, `Ctrl+S`
+   saqlash, `Ctrl+N` yangi (`preventDefault`; Mac'da `Cmd`); tugmalarda kichik yozuv (faqat
+   `!ui.touchOnly()`). Koʻrsatishda bola ataylab notoʻgʻri chizib, `Ctrl+Z` bilan qaytaradi.
+   Qiyin rejim: soya yoʻq, moslik ≥ 90 %.
+
+Xato: 1-xato — soya aniqroq + "Asbob: toʻrtburchak, rang: koʻk" maslahati (joyni aytmaydi); 2-xato — qadam
+oʻzi chiziladi (animatsiya bilan), keyingi qadamga oʻtiladi.
+
+**Hamma bosqich tugagach** oʻyin bosh ekranida: **Erkin chizish** (toʻliq asboblar, saqlash) va
+**Mening rasmlarim** (saqlangan rasmlar, 20 tagacha, `localStorage` `kichik-rassom:galereya:v1` —
+akkauntga sinxronlanmaydi; har rasmni **PNG yuklab olish** — canvas ×12, `<a download>`; oʻchirish).
+Namunalar galereyasi ham shu yerda — istalgan namunani qayta chizish mumkin.
+
+**Oʻquv maqsadlari:** bola Paint asboblarini (qalam, shakllar, chelak, oʻchirgʻich) ishlatadi; rangni
+tanlaydi; rasmni qadam-qadam namunadan chizadi; xatoni bekor qiladi (`Ctrl+Z`); rasmni saqlaydi.
+
 ## Ulash (blok oxirida, bitta qadam)
 
 - `bosh/js/bosh.js`: `SECTIONS` boshiga `{ id: "tanishuv", title: "Kompyuter bilan tanishuv", note:
   "Qismlar, sichqoncha, oynalar va fayllar" }`; `GAMES` ga 4 satr (`icon`: `qismlar`, `sichqoncha`,
   `oynalar`, `papka`; 67 da `pc: true`); 💻 belgisi yozuvi "Klaviatura kerak" → "Kompyuter kerak".
+  70 uchun: 5-satr (`icon`: `rassom`), boʻlim izohi "…fayllar va rasm".
 - `bosh/js/bosh-art.js`: 4 ikonka. `bosh/tests/bosh.test.js`: taqsimot 13 / 43 / 12, birinchi oʻyin —
   «Kompyuter qismlari», 💻 roʻyxatiga `67-chaqqon-sichqoncha`.
 - `node bosh/tools/toifa-yoz.js`, `python3 bosh/sw-royxat.py --bump`, `README.md` jadvali, QOIDALAR §3
