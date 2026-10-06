@@ -1,4 +1,4 @@
-// Musobaqa savollari — 2-qism (2026-10-06): saytga keyin qo'shilgan bloklar uchun 5 mavzu.
+// Musobaqa savollari — 2-qism (2026-10-06): saytga keyin qo'shilgan bloklar uchun 8 mavzu.
 // savollar.js dan KEYIN ulanadi va uning TOPICS / KINDS ro'yxatiga qo'shadi — Savol-javob ham, Tog' ham
 // ularni o'zi oladi. Har mavzu va har qiyinlikda kamida bitta generator bor (takrorsiz 15+ raund).
 // Ekran bilan ishlamaydi, Node'da test qilinadi (tests/savollar.test.js).
@@ -50,6 +50,9 @@
     { id: "internet", title: "Internet" },
     { id: "xavfsizlik", title: "Parol va xavfsizlik" },
     { id: "python", title: "Python" },
+    { id: "algoritm", title: "Izlash va saralash" },
+    { id: "kombinatorika", title: "Kombinatorika" },
+    { id: "cpp", title: "C++" },
   ];
 
   // ======================================================================
@@ -518,12 +521,217 @@
   ];
   const pythonBilim = bilim("python", PYTHON_BILIM);
 
+
+  // Python: ro'yxat va satr — indeks 0 dan, len, kesish
+  const pyRoyxat = {
+    topic: "python",
+    levels: [2, 3],
+    make(level, rng) {
+      const n = ri(rng, 4, 6);
+      const a = Array.from({ length: n }, () => ri(rng, 1, 30));
+      const roy = `[${a.join(", ")}]`;
+      if (level === 2) {
+        const i = ri(rng, 0, n - 1);
+        return { id: `i${roy}${i}`, data: { a, i, tur: "indeks" }, text: "Bu kod ekranga nima chiqaradi?", blocks: [code(`a = ${roy}\nprint(a[${i}])`)], input: num(2), answer: String(a[i]), explain: `Indeks 0 dan boshlanadi: a[${i}] — ${i + 1}-element, ${a[i]}.` };
+      }
+      const tur = pick(rng, ["kesish", "oxirgi", "yigindi"]);
+      if (tur === "oxirgi") return { id: `o${roy}`, data: { a, tur }, text: "Bu kod ekranga nima chiqaradi?", blocks: [code(`a = ${roy}\nprint(a[-1] + len(a))`)], input: num(2), answer: String(a[n - 1] + n), explain: `a[-1] — oxirgisi (${a[n - 1]}), len(a) = ${n}: ${a[n - 1] + n}.` };
+      if (tur === "yigindi") {
+        const j = ri(rng, 1, n - 1);
+        return { id: `y${roy}${j}`, data: { a, j, tur }, text: "Bu kod ekranga nima chiqaradi?", blocks: [code(`a = ${roy}\nprint(a[0] + a[${j}])`)], input: num(2), answer: String(a[0] + a[j]), explain: `a[0] = ${a[0]}, a[${j}] = ${a[j]}: ${a[0] + a[j]}.` };
+      }
+      const i = ri(rng, 0, n - 3);
+      const j = ri(rng, i + 2, n);
+      const javob = `[${a.slice(i, j).join(", ")}]`;
+      const xato = [`[${a.slice(i, j + 1).join(", ")}]`, `[${a.slice(i + 1, j + 1).join(", ")}]`, `[${a.slice(i + 1, j).join(", ")}]`, `[${a.slice(i, j - 1).join(", ")}]`];
+      return { id: `k${roy}${i}${j}`, data: { a, i, j, tur }, text: "Bu kod ekranga nima chiqaradi?", blocks: [code(`a = ${roy}\nprint(a[${i}:${j}])`)], input: choice(withOptions(rng, javob, xato)), answer: javob, explain: `a[${i}:${j}] — ${i}-indeksdan ${j}-indeksgacha, ${j} kirmaydi.` };
+    },
+  };
+
+  // ======================================================================
+  // 6. Izlash va saralash (36–40)
+  // ======================================================================
+  const ikkilikSavollar = (n) => Math.floor(Math.log2(n)) + 1;
+  const izlash = {
+    topic: "algoritm",
+    levels: [1, 2, 3],
+    make(level, rng) {
+      if (level === 1) {
+        const n = ri(rng, 5, 60);
+        return { id: `ch${n}`, data: { n, tur: "chiziqli" }, text: `Tartiblanmagan ${n} ta kartochkadan bittasini birma-bir qarab izlaymiz. Eng yomon holatda nechta kartochkani ochamiz?`, input: num(2), answer: String(n), explain: `Chiziqli izlash: kerakli kartochka eng oxirida boʻlishi mumkin — ${n} ta.` };
+      }
+      const n = level === 2 ? pick(rng, [7, 15, 16, 20, 31, 32, 50, 63, 64, 100]) : ri(rng, 101, 5000);
+      const javob = ikkilikSavollar(n);
+      return { id: `ik${n}`, data: { n, tur: "ikkilik" }, text: `1 dan ${n} gacha son oʻyladim. Har savolga «kattaroq», «kichikroq» yoki «topding» deyman. Har safar yarmini tashlasang, eng koʻpi bilan nechta savolda topasan?`, input: num(2), answer: String(javob), explain: `Har savol oraliqni ikkiga boʻladi: ${2 ** (javob - 1)} ≤ ${n} < ${2 ** javob}, demak ${javob} ta savol.` };
+    },
+  };
+
+  // Pufakcha saralash: bitta o'tish (2) va almashinuvlar soni (3)
+  function birOtish(a) {
+    const b = a.slice();
+    for (let i = 0; i + 1 < b.length; i++) if (b[i] > b[i + 1]) [b[i], b[i + 1]] = [b[i + 1], b[i]];
+    return b;
+  }
+  function almashinuvlar(a) {
+    let n = 0;
+    for (let i = 0; i < a.length; i++) for (let j = i + 1; j < a.length; j++) if (a[i] > a[j]) n++;
+    return n;
+  }
+  const saralash = {
+    topic: "algoritm",
+    levels: [1, 2, 3],
+    make(level, rng) {
+      const n = level === 1 ? 3 : level === 2 ? 4 : 5;
+      let a;
+      do { a = shuffle(rng, Array.from({ length: 9 }, (_, k) => k + 1)).slice(0, n); } while (almashinuvlar(a) === 0 || (level === 2 && birOtish(a).join() === a.slice().sort((x, y) => x - y).join()));
+      if (level === 3) {
+        const javob = almashinuvlar(a);
+        return { id: `alm${a.join("")}`, data: { a, tur: "almashinuv" }, text: "Pufakcha saralash qoʻshni sonlarni almashtiradi. Bu roʻyxat tartiblanguncha jami nechta almashinuv boʻladi?", blocks: [big(a.join("  "))], input: num(2), answer: String(javob), explain: `Har «notoʻgʻri juftlik» (kattasi oldinda) bitta almashinuv: ${javob} ta.` };
+      }
+      if (level === 1) {
+        const javob = Math.max(...a);
+        return { id: `max${a.join("")}`, data: { a, tur: "oxiri" }, text: "Pufakcha saralashning 1-oʻtishidan keyin roʻyxat oxirida qaysi son turadi?", blocks: [big(a.join("  "))], input: num(1), answer: String(javob), explain: `Har oʻtishda eng kattasi «suzib» oxiriga chiqadi: ${javob}.` };
+      }
+      const javob = birOtish(a).join(" ");
+      const tartib = a.slice().sort((x, y) => x - y).join(" ");
+      const xato = [tartib, a.join(" "), birOtish(birOtish(a)).join(" "), a.slice().reverse().join(" ")];
+      return { id: `ot${a.join("")}`, data: { a, tur: "otish" }, text: "Pufakcha saralashning 1-oʻtishidan keyin roʻyxat qanday boʻladi?", blocks: [big(a.join("  "))], input: choice(withOptions(rng, javob, xato)), answer: javob, explain: "Chapdan oʻngga: qoʻshni juftlikda kattasi oldinda boʻlsa — almashtiriladi." };
+    },
+  };
+
+  const ALGORITM_BILIM = [
+    [1, "Tartiblangan roʻyxatda tez izlash usuli?", "Ikkilik izlash (yarmiga boʻlish)", ["Tasodifiy tanlash", "Faqat oxiridan qarash", "Hech qanday"]],
+    [1, "Saralash nima?", "Narsalarni tartibga keltirish", ["Narsalarni oʻchirish", "Narsalarni sanash", "Narsalarni yashirish"]],
+    [1, "Ikkilik izlash qachon ishlaydi?", "Roʻyxat tartiblangan boʻlsa", ["Har doim", "Roʻyxat boʻsh boʻlsa", "Faqat 10 ta son boʻlsa"]],
+    [1, "Algoritmning qaysi xossasi «har qadam aniq» degani?", "Aniqlik", ["Tezlik", "Rang", "Uzunlik"]],
+    [2, "n 10 marta oshsa, O(n) algoritm qadami necha marta oshadi?", "10 marta", ["100 marta", "1 marta", "2 marta"]],
+    [2, "n 10 marta oshsa, O(n²) algoritm qadami necha marta oshadi?", "100 marta", ["10 marta", "20 marta", "1000 marta"]],
+    [2, "Qaysi biri tezroq oʻsadi?", "O(n²)", ["O(n)", "O(log n)", "O(1)"]],
+    [2, "Pufakcha saralash nimani almashtiradi?", "Qoʻshni ikki elementni", ["Birinchi va oxirgisini", "Tasodifiy ikkitasini", "Hech nimani"]],
+    [3, "Ikkilik izlash qadamlari qanday oʻsadi?", "O(log n)", ["O(n)", "O(n²)", "O(1)"]],
+    [3, "Tanlash saralashida har oʻtishda nima qilinadi?", "Eng kichigi topilib oldinga qoʻyiladi", ["Qoʻshnilar almashadi", "Roʻyxat ikkiga boʻlinadi", "Hech nima"]],
+    [3, "Roʻyxat allaqachon tartiblangan boʻlsa, pufakcha saralash nechta almashinuv qiladi?", "0", ["1", "n", "n²"]],
+    [3, "Massivning birinchi elementini olish qanday oʻsadi?", "O(1)", ["O(n)", "O(log n)", "O(n²)"]],
+  ];
+  const algoritmBilim = bilim("algoritm", ALGORITM_BILIM);
+
+  // ======================================================================
+  // 7. Kombinatorika (41–45)
+  // ======================================================================
+  const fakt = (n) => (n <= 1 ? 1 : n * fakt(n - 1));
+  const C = (n, k) => fakt(n) / (fakt(k) * fakt(n - k));
+  const sanash = {
+    topic: "kombinatorika",
+    levels: [1, 2, 3],
+    make(level, rng) {
+      if (level === 1) {
+        const a = ri(rng, 2, 6);
+        const b = ri(rng, 2, 6);
+        const va = rng() < 0.6;
+        const javob = va ? a * b : a + b;
+        return {
+          id: `${va ? "va" : "yoki"}${a}-${b}`, data: { a, b, va, tur: "qoida" },
+          text: va ? `${a} xil koʻylak VA ${b} xil shim bor. Nechta xil kiyinish mumkin?` : `Ichimlikka ${a} xil sharbat YOKI ${b} xil choydan bittasini tanlaysan. Nechta xil tanlov bor?`,
+          input: num(2), answer: String(javob), explain: va ? `VA — koʻpaytiramiz: ${a} × ${b} = ${javob}.` : `YOKI — qoʻshamiz: ${a} + ${b} = ${javob}.`,
+        };
+      }
+      if (level === 2) {
+        const r = rng();
+        if (r < 0.4) {
+          const [a, b, c] = [ri(rng, 2, 5), ri(rng, 2, 5), ri(rng, 2, 4)];
+          return { id: `uch${a}-${b}-${c}`, data: { a, b, c, tur: "uchVa" }, text: `Nonushtaga ${a} xil non, ${b} xil sharbat VA ${c} xil meva bor. Har biridan bittadan olsang, nechta xil nonushta boʻladi?`, input: num(3), answer: String(a * b * c), explain: `${a} × ${b} × ${c} = ${a * b * c}.` };
+        }
+        if (r < 0.65) {
+          const n = ri(rng, 3, 7);
+          return { id: `f${n}`, data: { n, tur: "faktorial" }, text: `${n} ta doʻst qatorga necha xil turishi mumkin?`, input: num(4), answer: String(fakt(n)), explain: `${n}! = ${Array.from({ length: n }, (_, k) => n - k).join(" × ")} = ${fakt(n)}.` };
+        }
+        const n = ri(rng, 4, 10);
+        const k = pick(rng, [2, 3]);
+        const javob = fakt(n) / fakt(n - k);
+        const yozuv = Array.from({ length: k }, (_, i) => n - i).join(" × ");
+        return { id: `a${n}-${k}`, data: { n, k, tur: "joylash" }, text: k === 2 ? `${n} kishidan 1-oʻrin va 2-oʻrin necha xil berilishi mumkin?` : `${n} kishidan oltin, kumush va bronza medallar necha xil berilishi mumkin?`, input: num(3), answer: String(javob), explain: `Tartib muhim: ${yozuv} = ${javob}.` };
+      }
+      const tur = pick(rng, ["jamoa", "kaptar"]);
+      if (tur === "jamoa") {
+        const n = ri(rng, 5, 10);
+        const k = ri(rng, 2, 3);
+        return { id: `c${n}-${k}`, data: { n, k, tur }, text: `${n} oʻquvchidan ${k} kishilik jamoa necha xil tanlanadi? (tartib muhim emas)`, input: num(3), answer: String(C(n, k)), explain: `C(${n}, ${k}) = ${n}${k === 3 ? ` × ${n - 1} × ${n - 2}` : ` × ${n - 1}`} : ${fakt(k)} = ${C(n, k)}.` };
+      }
+      const k = ri(rng, 3, 9);
+      const n = k * ri(rng, 1, 4) + ri(rng, 1, k - 1);
+      const javob = Math.ceil(n / k);
+      return { id: `k${n}-${k}`, data: { n, k, tur }, text: `${n} ta kaptar ${k} ta uyaga kirdi. Qaysidir uyada KAMIDA nechta kaptar bor?`, input: num(2), answer: String(javob), explain: `Dirixle: ${n} : ${k} = ${Math.floor(n / k)}, qoldiq ${n % k} — demak kamida ${javob}.` };
+    },
+  };
+
+  const KOMB_BILIM = [
+    [1, "«VA» boʻlsa variantlar qanday hisoblanadi?", "Koʻpaytiriladi", ["Qoʻshiladi", "Ayiriladi", "Boʻlinadi"]],
+    [1, "«YOKI» boʻlsa variantlar qanday hisoblanadi?", "Qoʻshiladi", ["Koʻpaytiriladi", "Ayiriladi", "Boʻlinadi"]],
+    [1, "Tanga 2 marta tashlansa nechta natija boʻladi?", "4", ["2", "3", "6"]],
+    [1, "Kubik 1 marta tashlansa nechta natija boʻladi?", "6", ["2", "4", "12"]],
+    [2, "3! nechaga teng?", "6", ["3", "9", "1"]],
+    [2, "Qachon tartib muhim?", "Oʻrinlar taqsimlanganda", ["Jamoa tanlanganda", "Savatga meva solganda", "Hech qachon"]],
+    [2, "Paskal uchburchagidagi son qanday topiladi?", "Ustidagi ikki son qoʻshiladi", ["Ustidagi son ikkiga koʻpaytiriladi", "Tasodifiy", "Doim 1"]],
+    [2, "0! nechaga teng?", "1", ["0", "10", "Yoʻq"]],
+    [3, "C(5, 2) nechaga teng?", "10", ["20", "5", "25"]],
+    [3, "Paskal uchburchagining n-qatoridagi sonlar yigʻindisi?", "2ⁿ", ["n²", "n!", "2n"]],
+    [3, "13 kishi boʻlsa, tugʻilgan oyi bir xil ikki kishi bormi?", "Albatta bor", ["Albatta yoʻq", "Balki", "Faqat 12 boʻlsa"], "12 oy — 12 uya, 13 kishi — kaptar: Dirixle."],
+    [3, "C(n, k) va C(n, n − k) qanday bogʻliq?", "Teng", ["Birinchisi katta", "Ikkinchisi katta", "Bogʻliq emas"]],
+  ];
+  const kombBilim = bilim("kombinatorika", KOMB_BILIM);
+
+  // ======================================================================
+  // 8. C++ (54–57)
+  // ======================================================================
+  const cppNatija = {
+    topic: "cpp",
+    levels: [1, 2, 3],
+    make(level, rng) {
+      if (level === 1) {
+        const a = ri(rng, 2, 30);
+        const b = ri(rng, 2, 9);
+        const amal = pick(rng, ["+", "*"]);
+        const javob = amal === "+" ? a + b : a * b;
+        return { id: `${a}${amal}${b}`, data: { a, b, amal }, text: "Bu C++ kodi ekranga nima chiqaradi?", blocks: [code(`int a = ${a}, b = ${b};\ncout << a ${amal} b;`)], input: num(3), answer: String(javob), explain: `${a} ${amal === "*" ? "×" : "+"} ${b} = ${javob}.` };
+      }
+      if (level === 2) {
+        const a = ri(rng, 7, 60);
+        const b = ri(rng, 2, 9);
+        const amal = pick(rng, ["/", "%"]);
+        const javob = amal === "/" ? Math.trunc(a / b) : a % b;
+        return { id: `${a}${amal}${b}`, data: { a, b, amal }, text: "Bu C++ kodi ekranga nima chiqaradi?", blocks: [code(`int a = ${a}, b = ${b};\ncout << a ${amal} b;`)], input: num(2), answer: String(javob), explain: amal === "/" ? `Ikkalasi int — butun boʻlish: ${a} / ${b} = ${javob} (kasr tashlanadi).` : `Qoldiq: ${a} = ${b} × ${Math.trunc(a / b)} + ${javob}.` };
+      }
+      const kop = rng() < 0.4; // ko'paytma 1 dan boshlanadi — 0 ga ko'paytirib yubormaslik uchun
+      const a = ri(rng, kop ? 1 : 0, 4);
+      const b = a + ri(rng, 2, kop ? 4 : 6);
+      let s = kop ? 1 : 0;
+      for (let i = a; i < b; i++) s = kop ? s * i : s + i;
+      return { id: `${kop ? "k" : "y"}${a}-${b}`, data: { a, b, amal: kop ? "*" : "+" }, text: "Bu C++ kodi ekranga nima chiqaradi?", blocks: [code(`int s = ${kop ? 1 : 0};\nfor (int i = ${a}; i < ${b}; i++) s ${kop ? "*=" : "+="} i;\ncout << s;`)], input: num(4), answer: String(s), explain: `${Array.from({ length: b - a }, (_, k) => a + k).join(kop ? " × " : " + ")} = ${s} (${b} kirmaydi).` };
+    },
+  };
+
+  const CPP_BILIM = [
+    [1, "C++ da ekranga chiqaradigan buyruq?", "cout", ["cin", "print", "int"]],
+    [1, "C++ da har buyruq oxiriga nima qoʻyiladi?", "Nuqtali vergul (;)", ["Nuqta (.)", "Vergul (,)", "Hech narsa"]],
+    [1, "C++ da klaviaturadan son oʻqiydigan buyruq?", "cin", ["cout", "input", "read"]],
+    [1, "Butun son turi qaysi?", "int", ["string", "char", "bool"]],
+    [2, "C++ da blok nima bilan belgilanadi?", "Jingalak qavs { }", ["Otstup", "Kvadrat qavs [ ]", "Qoʻshtirnoq"]],
+    [2, "int ga sigʻmaydigan katta son uchun qaysi tur?", "long long", ["char", "bool", "short"]],
+    [2, "C++ da 7 / 2 (ikkalasi int) nechaga teng?", "3", ["3.5", "4", "2"]],
+    [2, "«==» C++ da nima qiladi?", "Tengligini tekshiradi", ["Qiymat beradi", "Qoʻshadi", "Chiqaradi"]],
+    [3, "int ning eng katta qiymati taxminan qancha?", "2 milliard", ["1 million", "65 ming", "10 milliard"], "2 147 483 647 — undan oshsa «toshib ketadi»."],
+    [3, "for (int i = 0; i < n; i++) — sikl necha marta ishlaydi?", "n marta", ["n + 1 marta", "n − 1 marta", "1 marta"]],
+    [3, "Massivni tartiblaydigan tayyor funksiya?", "sort", ["order", "len", "append"]],
+    [3, "Nega olimpiadada C++ ishlatiladi?", "Tez ishlaydi", ["Qisqa yoziladi", "Rangli", "Faqat u bor"]],
+  ];
+  const cppBilim = bilim("cpp", CPP_BILIM);
+
   // ---------- Bankka qo'shish ----------
-  const KINDS = { faylTuri, yol, nusxa, tanishuvBilim, robotJoy, takror, dasturBilim, paket, ip, internetBilim, kuchli, variant, domen, xavfBilim, pyNatija, pythonBilim };
+  const KINDS = { faylTuri, yol, nusxa, tanishuvBilim, robotJoy, takror, dasturBilim, paket, ip, internetBilim, kuchli, variant, domen, xavfBilim, pyNatija, pythonBilim, pyRoyxat, izlash, saralash, algoritmBilim, sanash, kombBilim, cppNatija, cppBilim };
   for (const t of TOPICS) if (!S.TOPICS.some((x) => x.id === t.id)) S.TOPICS.push(t);
   for (const [k, v] of Object.entries(KINDS)) if (!S.KINDS[k]) S.KINDS[k] = v;
 
-  const api = { TOPICS, KINDS, TANISHUV_BILIM, DASTUR_BILIM, INTERNET_BILIM, XAVF_BILIM, PYTHON_BILIM };
+  const api = { TOPICS, KINDS, TANISHUV_BILIM, DASTUR_BILIM, INTERNET_BILIM, XAVF_BILIM, PYTHON_BILIM, ALGORITM_BILIM, KOMB_BILIM, CPP_BILIM };
   if (root.QK) root.QK.savollar2 = api;
   if (typeof module !== "undefined" && module.exports) module.exports = api;
 })(typeof window !== "undefined" ? window : globalThis);

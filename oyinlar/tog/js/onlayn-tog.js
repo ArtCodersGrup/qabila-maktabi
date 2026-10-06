@@ -27,6 +27,14 @@
   }
 
   const MAVZU_XOTIRA = "tog:mavzu:v1";
+  const QIY_XOTIRA = "tog:qiyinlik:v1";
+  function qiyinlikOl() {
+    try { const v = Number(root.localStorage.getItem(QIY_XOTIRA)); return [1, 2, 3].includes(v) ? v : 0; } catch (e) { return 0; }
+  }
+  function qiyinlikSaqla(v) {
+    try { root.localStorage.setItem(QIY_XOTIRA, String(v)); } catch (e) { /* saqlab bo'lmadi */ }
+  }
+
   function mavzulariniOl() {
     try {
       const bor = JSON.parse(root.localStorage.getItem(MAVZU_XOTIRA) || "null");
@@ -59,15 +67,17 @@
 
   function mavzuTanlash(togId, qayt) {
     E.mavzular({
-      izoh: "Bolalarga shu mavzulardan savol keladi. Qiyinligi balandlikka qarab oshadi.",
+      izoh: "Bolalarga shu mavzulardan savol keladi. Qiyinlikni tanlang — yoki balandlikka qarab oshib borsin.",
       tanlangan: mavzulariniOl(),
+      qiyinlik: qiyinlikOl(),
       orqaga: () => host(qayt),
-      onDavom: async (mavzular) => {
+      onDavom: async (mavzular, qiyinlik) => {
         mavzulariniSaqla(mavzular);
+        qiyinlikSaqla(qiyinlik);
         const sozlama = await sozlamaTanlash();
         // Kirgan o'qituvchi — natijalar qaysi sinfga yozilsin (boshqalar uchun so'ralmaydi)
         const sinf = QK.sinfTanlov ? await QK.sinfTanlov(E) : null;
-        lobbi(togId, qayt, mavzular, sinf, sozlama);
+        lobbi(togId, qayt, mavzular, sinf, sozlama, qiyinlik);
       },
     });
     ui.bubble("elder", "Bugun qaysi mavzulardan soʻraymiz?");
@@ -114,7 +124,7 @@
   }
   const sozlamaMatni = (s) => `Savollar: ${s.birXil ? "hammaga bir xil" : "har kimga har xil"} · Orqada qolganlar: ${s.chiqish ? "chiqib ketadi" : "chiqmaydi"}`;
 
-  function lobbi(togId, qayt, mavzular, sinf, sozlama) {
+  function lobbi(togId, qayt, mavzular, sinf, sozlama, qiyinlik) {
     const qoidalar = sozlama || sozlamaOl();
     const code = onlayn.makeCode();
     let odamlar = []; // [{ id, qahramon }]
@@ -170,7 +180,7 @@
 
     function oyin() {
       state = T.create({
-        tog: togId, players: odamlar, now: Date.now(), mavzular,
+        tog: togId, players: odamlar, now: Date.now(), mavzular, qiyinlik,
         qoida: qoidalar.chiqish ? "chegara" : "yoq",
         urug: qoidalar.birXil ? 1 + Math.floor(Math.random() * 4294967294) : 0, // har o'yinda yangi urug'
       });

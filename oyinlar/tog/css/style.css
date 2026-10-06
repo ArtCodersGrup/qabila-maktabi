@@ -184,3 +184,8 @@
 .tog-sozlama { display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 560px; margin: 0 auto; }
 .tog-sozlama-nom { font-size: 17px; font-weight: 900; color: var(--matn-2); }
 .menyu-karta.tanlangan { border-color: var(--togri); background: var(--togri-och); box-shadow: 0 4px 0 var(--togri-qora); }
+
+/* Mavzu ekrani: qiyinlik tanlovi (bittasi tanlanadi) */
+.tog-kichik-sarlavha { margin: var(--s3) 0 0; font-size: var(--t1); font-weight: 900; text-align: center; }
+.tog-qiyinlik { justify-content: center; }
+

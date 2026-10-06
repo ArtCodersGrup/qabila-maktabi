@@ -62,7 +62,15 @@
   }
 
   // ---------- Mavzu tanlash ----------
-  function mavzular({ sarlavha, izoh, tanlangan, onDavom, orqaga }) {
+  // Qiyinlik: 0 — balandlikka qarab (pastda oson, tepada qiyin), 1–3 — butun o'yin bitta qiyinlikda
+  const QIYINLIKLAR = [
+    { id: 0, title: "Balandlikka qarab" },
+    { id: 1, title: "Oson" },
+    { id: 2, title: "Oʻrta" },
+    { id: 3, title: "Qiyin" },
+  ];
+
+  function mavzular({ sarlavha, izoh, tanlangan, qiyinlik, onDavom, orqaga }) {
     const el = box(false);
     el.append(
       h("h1", { class: "game-title", text: sarlavha || "Qaysi mavzudan savol beramiz?" }),
@@ -89,8 +97,24 @@
       tugmalar.forEach((x) => x.setAttribute("aria-pressed", "true"));
     });
     box2.append(hammasi);
+    let qiy = QIYINLIKLAR.some((q) => q.id === qiyinlik) ? qiyinlik : 0;
+    const qatorQiy = h("div", { class: "chips tog-qiyinlik", role: "group", "aria-label": "Qiyinlik" });
+    const qTugmalar = QIYINLIKLAR.map((q) => {
+      const b = h("button", { class: "chip", type: "button", text: q.title, "aria-pressed": String(q.id === qiy) });
+      b.addEventListener("click", () => {
+        sound.play("tap");
+        qiy = q.id;
+        qTugmalar.forEach((x, k) => x.setAttribute("aria-pressed", String(QIYINLIKLAR[k].id === qiy)));
+      });
+      qatorQiy.append(b);
+      return b;
+    });
+    // Qiyinlik — mavzulardan oldin: mavzular ko'p, ro'yxat ostida ko'rinmay qolmasin
+    el.insertBefore(h("h2", { class: "tog-kichik-sarlavha", text: "Qiyinlik" }), box2);
+    el.insertBefore(qatorQiy, box2);
+    el.insertBefore(h("h2", { class: "tog-kichik-sarlavha", text: "Mavzular" }), box2);
     buttons([
-      { label: "Davom etish", onClick: () => onDavom(tanlov.slice()) },
+      { label: "Davom etish", onClick: () => onDavom(tanlov.slice(), qiy) },
       orqaga ? { label: "Orqaga", onClick: orqaga, secondary: true } : null,
     ]);
     return el;
@@ -140,7 +164,7 @@
   // ---------- O'yin maydoni ----------
   // holat() — hozirgi holat (mashqda o'zimiznikidan, onlaynda boshlovchi paketidan).
   // javob(ok) — javobni qayerga berish. meId yo'q bo'lsa — kuzatuvchi ekrani (o'qituvchi doskasi).
-  function oyin(el, { togId, meId, holat, javob, kuzatuvchi, mavzular: tanlangan }) {
+  function oyin(el, { togId, meId, holat, javob, kuzatuvchi, mavzular: tanlangan, qiyinlik: qiyinlikTanlangan }) {
     const t = T.togById(togId);
     const soat = h("div", { class: "tog-soat" });
     const maydon = h("div", { class: "tog-maydon" });
@@ -167,7 +191,8 @@
       if (me.pogona !== urinishPog) { urinishPog = me.pogona; urinish = 0; } else urinish++;
       const s = holat();
       const rng = s && s.urug ? T.urugRng(s.urug, me.pogona, urinish) : null; // bir balandlikda — bir xil savol
-      joriy = nextQ(T.daraja(t, me.pogona), joriy, tanlangan, rng);
+      const qiyinlik = (s && s.qiyinlik) || qiyinlikTanlangan || 0; // qat'iy tanlangan bo'lsa — o'sha, aks holda balandlik
+      joriy = nextQ(qiyinlik || T.daraja(t, me.pogona), joriy, tanlangan, rng);
       QK.probe = Object.assign(QK.probe || {}, { savol: joriy, savolPog: me.pogona, urinish });
       togUi.savol(pastki, joriy);
       savolUi.answerPad(joriy, (value) => {
@@ -235,5 +260,5 @@
     return el;
   }
 
-  QK.togEkran = { SITE_HOME, box, buttons, nextQ, qahramonlar, toglar, mavzular, oyin, natija };
+  QK.togEkran = { SITE_HOME, box, buttons, nextQ, qahramonlar, toglar, mavzular, oyin, natija, QIYINLIKLAR };
 })(window);

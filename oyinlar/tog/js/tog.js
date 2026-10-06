@@ -65,12 +65,14 @@
   }
 
   // urug: 0 — har kimga har xil savol, aks holda — bir balandlikda bir xil
-  function create({ tog, players, now, daqiqa, qoida, boshlanish, bekat, mavzular, urug }) {
+  // qiyinlik: 0 — balandlikka qarab (daraja()), 1–3 — butun o'yin shu qiyinlikda
+  function create({ tog, players, now, daqiqa, qoida, boshlanish, bekat, mavzular, urug, qiyinlik }) {
     const t = togById(tog);
     const minutes = daqiqa || t.daqiqa;
     const state = {
       tog: t.id,
       mavzular: Array.isArray(mavzular) && mavzular.length ? mavzular.slice() : null, // null — hamma mavzu
+      qiyinlik: [1, 2, 3].includes(qiyinlik) ? qiyinlik : 0,
       boshlandi: now,
       tugaydi: now + minutes * 60000,
       pogona: t.pogona,

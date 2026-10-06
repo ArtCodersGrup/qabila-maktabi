@@ -30,6 +30,7 @@
     return {
       tog: s.tog,
       mav: s.mavzular || [],
+      qiy: s.qiyinlik || 0, // 0 — balandlikka qarab
       ids: r.map((p) => p.id),
       qah: r.map((p) => p.qahramon),
       pog: r.map((p) => p.pogona),
@@ -58,7 +59,8 @@
     if (p.sabab && !SABABLAR.includes(p.sabab)) return false;
     if (p.urug !== undefined && !(Number.isInteger(p.urug) && p.urug >= 0 && p.urug < 4294967296)) return false;
     if (p.qoida !== undefined && !T.QOIDALAR.includes(p.qoida)) return false;
-    if (p.mav && (!Array.isArray(p.mav) || p.mav.length > 16 || !p.mav.every((v) => typeof v === "string"))) return false;
+    if (p.mav && (!Array.isArray(p.mav) || p.mav.length > 24 || !p.mav.every((v) => typeof v === "string"))) return false;
+    if (p.qiy !== undefined && ![0, 1, 2, 3].includes(p.qiy)) return false;
     return !!T.TOGLAR.find((t) => t.id === p.tog);
   }
 
@@ -71,6 +73,7 @@
     const s = {
       tog: t.id,
       mavzular: Array.isArray(p.mav) && p.mav.length ? p.mav.slice() : null,
+      qiyinlik: [1, 2, 3].includes(p.qiy) ? p.qiy : 0,
       pogona: t.pogona,
       chegara: t.chegara,
       boshlanish: 0.5,

@@ -140,7 +140,7 @@ test("mavzular ham uzatiladi: bola oʻqituvchi tanlagan mavzudan savol oladi", (
   assert.deepEqual(P.paket(hammasi, now).mav, []);
   assert.equal(P.holat(P.paket(hammasi, now), now).mavzular, null);
   // Buzuq mavzu roʻyxati rad etiladi
-  assert.equal(P.yaxshiPaket(Object.assign({}, p, { mav: new Array(17).fill("x") })), false);
+  assert.equal(P.yaxshiPaket(Object.assign({}, p, { mav: new Array(25).fill("x") })), false);
   assert.equal(P.yaxshiPaket(Object.assign({}, p, { mav: [1, 2] })), false);
 });
 
@@ -161,4 +161,19 @@ test("paket urug' va qoidani yetkazadi; noto'g'ri qiymat rad etiladi", () => {
   delete eski.urug; delete eski.qoida;
   assert.ok(P.yaxshiPaket(eski), "eski versiyadagi paket ham qabul qilinadi");
   assert.equal(P.holat(eski, 0).urug, 0);
+});
+
+test("qiyinlik ham uzatiladi: 0 — balandlikka qarab, 1–3 — qat'iy; buzuq qiymat rad etiladi", () => {
+  const now = 1000000;
+  const players = [{ id: "a", qahramon: "qizil" }, { id: "b", qahramon: "kok" }];
+  const s = T.create({ tog: T.TOGLAR[0].id, players, now, qiyinlik: 3 });
+  const p = P.paket(s, now);
+  assert.equal(p.qiy, 3);
+  assert.equal(P.yaxshiPaket(p), true);
+  assert.equal(P.holat(p, now).qiyinlik, 3);
+  const auto = P.paket(T.create({ tog: T.TOGLAR[0].id, players, now }), now);
+  assert.equal(auto.qiy, 0);
+  assert.equal(P.holat(auto, now).qiyinlik, 0);
+  assert.equal(T.create({ tog: T.TOGLAR[0].id, players, now, qiyinlik: 7 }).qiyinlik, 0);
+  assert.equal(P.yaxshiPaket(Object.assign({}, p, { qiy: 5 })), false);
 });

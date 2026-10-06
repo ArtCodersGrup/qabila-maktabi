@@ -99,6 +99,50 @@ const JAVOB = {
   kuchli: (q) => q.input.options.slice().sort((a, b) => b.length - a.length)[0],
   variant: (q) => String(q.data.a ** q.data.n),
   domen: (q) => q.data.manzil.split(".").slice(-2).join("."),
+  pyRoyxat: (q) => {
+    const { a, i, j, tur } = q.data;
+    if (tur === "indeks") return String(a[i]);
+    if (tur === "oxirgi") return String(a[a.length - 1] + a.length);
+    if (tur === "yigindi") return String(a[0] + a[j]);
+    return `[${a.slice(i, j).join(", ")}]`;
+  },
+  izlash: (q) => (q.data.tur === "chiziqli" ? String(q.data.n) : String(Math.ceil(Math.log2(q.data.n + 1)))),
+  saralash: (q) => {
+    const a = q.data.a;
+    if (q.data.tur === "oxiri") return String(Math.max(...a));
+    if (q.data.tur === "almashinuv") {
+      // haqiqiy pufakcha saralash bilan sanaymiz
+      const b = a.slice();
+      let n = 0;
+      for (let o = 0; o < b.length; o++) for (let i = 0; i + 1 < b.length - o; i++) if (b[i] > b[i + 1]) { [b[i], b[i + 1]] = [b[i + 1], b[i]]; n++; }
+      return String(n);
+    }
+    const b = a.slice();
+    for (let i = 0; i + 1 < b.length; i++) if (b[i] > b[i + 1]) [b[i], b[i + 1]] = [b[i + 1], b[i]];
+    return b.join(" ");
+  },
+  sanash: (q) => {
+    const d = q.data;
+    const f = (n) => (n <= 1 ? 1 : n * f(n - 1));
+    if (d.tur === "qoida") return String(d.va ? d.a * d.b : d.a + d.b);
+    if (d.tur === "uchVa") return String(d.a * d.b * d.c);
+    if (d.tur === "faktorial") return String(f(d.n));
+    if (d.tur === "joylash") return String(f(d.n) / f(d.n - d.k));
+    if (d.tur === "jamoa") return String(f(d.n) / f(d.k) / f(d.n - d.k));
+    return String(Math.floor((d.n - 1) / d.k) + 1);
+  },
+  cppNatija: (q) => {
+    const kod = q.blocks.find((b) => b.type === "code").text;
+    let m = kod.match(/int a = (\d+), b = (\d+);\ncout << a (.) b;/);
+    if (m) {
+      const [a, b, op] = [+m[1], +m[2], m[3]];
+      return String({ "+": a + b, "*": a * b, "/": Math.trunc(a / b), "%": a % b }[op]);
+    }
+    m = kod.match(/int s = (\d+);\nfor \(int i = (\d+); i < (\d+); i\+\+\) s (.)= i;/);
+    let s = +m[1];
+    for (let i = +m[2]; i < +m[3]; i++) s = m[4] === "*" ? s * i : s + i;
+    return String(s);
+  },
   pyNatija: (q) => {
     const chiqish = pythonBajar(q.blocks.find((b) => b.type === "code").text);
     return /necha marta/.test(q.text) ? String(chiqish.length) : chiqish.join("");
@@ -107,7 +151,7 @@ const JAVOB = {
 
 test("har yangi tur uchun mustaqil tekshiruv yoki bilim ro'yxati bor", () => {
   const bilimlar = Object.keys(S2.KINDS).filter((k) => !JAVOB[k]);
-  assert.deepEqual(bilimlar.sort(), ["dasturBilim", "internetBilim", "pythonBilim", "tanishuvBilim", "xavfBilim"]);
+  assert.deepEqual(bilimlar.sort(), ["algoritmBilim", "cppBilim", "dasturBilim", "internetBilim", "kombBilim", "pythonBilim", "tanishuvBilim", "xavfBilim"]);
 });
 
 test("generatorlar: javob mustaqil hisobga teng, savol hech qachon bo'sh emas", () => {
@@ -129,7 +173,7 @@ test("kuchli parol — eng uzuni va yagona", () => {
 });
 
 test("bilim ro'yxatlari: har darajada kamida 4 savol, 4 variant, javob variantlarda takrorlanmaydi", () => {
-  for (const [nom, royxat] of Object.entries({ TANISHUV_BILIM: S2.TANISHUV_BILIM, DASTUR_BILIM: S2.DASTUR_BILIM, INTERNET_BILIM: S2.INTERNET_BILIM, XAVF_BILIM: S2.XAVF_BILIM, PYTHON_BILIM: S2.PYTHON_BILIM })) {
+  for (const [nom, royxat] of Object.entries({ TANISHUV_BILIM: S2.TANISHUV_BILIM, DASTUR_BILIM: S2.DASTUR_BILIM, INTERNET_BILIM: S2.INTERNET_BILIM, XAVF_BILIM: S2.XAVF_BILIM, PYTHON_BILIM: S2.PYTHON_BILIM, ALGORITM_BILIM: S2.ALGORITM_BILIM, KOMB_BILIM: S2.KOMB_BILIM, CPP_BILIM: S2.CPP_BILIM })) {
     for (const d of [1, 2, 3]) assert.ok(royxat.filter((f) => f[0] === d).length >= 4, `${nom}/${d}`);
     for (const [, savol, javob, xato] of royxat) {
       assert.equal(xato.length, 3, savol);

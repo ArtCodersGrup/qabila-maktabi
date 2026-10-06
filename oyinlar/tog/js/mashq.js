@@ -7,6 +7,7 @@
   const { ui, sound, tog: T, togEkran: E } = QK;
   const MEN = "men";
   const XOTIRA = "tog:mavzu:v1";
+  const QIY_XOTIRA = "tog:qiyinlik:v1";
 
   // Tanlangan mavzular eslab qolinadi (umumiy storage.js faqat done/muted ni saqlaydi)
   function mavzulariniOl() {
@@ -25,6 +26,13 @@
     }
   }
 
+  function qiyinlikOl() {
+    try { const v = Number(root.localStorage.getItem(QIY_XOTIRA)); return [1, 2, 3].includes(v) ? v : 0; } catch (e) { return 0; }
+  }
+  function qiyinlikSaqla(v) {
+    try { root.localStorage.setItem(QIY_XOTIRA, String(v)); } catch (e) { /* saqlab bo'lmadi */ }
+  }
+
   function qahramonTanlash() {
     E.qahramonlar({
       sarlavha: "Togʻga chiqish",
@@ -37,24 +45,26 @@
 
   function mavzuTanlash(qahramon) {
     E.mavzular({
-      izoh: "Savollar shu mavzulardan keladi. Qiyinligi balandlikka qarab oshadi.",
+      izoh: "Savollar shu mavzulardan keladi. Qiyinlikni tanla — yoki balandlikka qarab oshib borsin.",
       tanlangan: mavzulariniOl(),
+      qiyinlik: qiyinlikOl(),
       orqaga: qahramonTanlash,
-      onDavom: (mavzular) => {
+      onDavom: (mavzular, qiyinlik) => {
         mavzulariniSaqla(mavzular);
-        togTanlash(qahramon, mavzular);
+        qiyinlikSaqla(qiyinlik);
+        togTanlash(qahramon, mavzular, qiyinlik);
       },
     });
     ui.bubble("elder", "Qaysi mavzudan savol beray?");
   }
 
-  function togTanlash(qahramon, mavzular) {
-    E.toglar({ onPick: (togId) => oyin(qahramon, togId, mavzular) });
+  function togTanlash(qahramon, mavzular, qiyinlik) {
+    E.toglar({ onPick: (togId) => oyin(qahramon, togId, mavzular, qiyinlik) });
     ui.bubble("elder", "Toʻgʻri javob — bir pogʻona yuqoriga. Baland togʻ — koʻproq savol va koʻproq vaqt.");
     E.buttons([{ label: "Orqaga", onClick: () => mavzuTanlash(qahramon), secondary: true }]);
   }
 
-  function oyin(qahramon, togId, mavzular) {
+  function oyin(qahramon, togId, mavzular, qiyinlik) {
     const t = T.togById(togId);
     // Robotlar: bitta savolga 6–20 soniya, 5–40 % xato; tepaga chiqqan sari sekinlashadi
     const botlar = T.QAHRAMONLAR.filter((q) => q.id !== qahramon).slice(0, 11).map((q, k) => ({
@@ -65,7 +75,7 @@
       keyingi: 1500 + Math.random() * 4000,
     }));
     const players = [{ id: MEN, qahramon }].concat(botlar.map((b) => ({ id: b.id, qahramon: b.qahramon })));
-    const state = T.create({ tog: togId, players, now: Date.now(), mavzular });
+    const state = T.create({ tog: togId, players, now: Date.now(), mavzular, qiyinlik });
     QK.probe = { state, tog: togId, rejim: "mashq" };
 
     const el = E.box(true, "tog-oyin");
@@ -96,7 +106,7 @@
       for (const bot of botlar) {
         if (now < bot.keyingi) continue;
         if (!T.javobBeraOladi(state, bot.id, now)) continue;
-        const daraja = T.daraja(t, state.oyinchilar[bot.id].pogona);
+        const daraja = state.qiyinlik || T.daraja(t, state.oyinchilar[bot.id].pogona);
         const sekinlik = 1 + (daraja - 1) * 0.35;
         T.javob(state, bot.id, Math.random() > bot.xato * (1 + (daraja - 1) * 0.3), now);
         bot.keyingi = now + bot.tezlik * sekinlik * (0.8 + Math.random() * 0.4);
