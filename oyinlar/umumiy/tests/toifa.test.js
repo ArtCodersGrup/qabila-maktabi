@@ -5,7 +5,7 @@ const path = require("node:path");
 const { loadScript } = require("./helpers.js");
 
 // Soxta brauzer: localStorage, <html> atributlari va theme-color meta
-function yasa({ ls = {}, attrs = {}, yopiq = false } = {}) {
+function yasa({ ls = {}, attrs = {}, yopiq = false, search = "" } = {}) {
   const meta = { content: "#FFF6E5", setAttribute(k, v) { this[k] = v; } };
   const el = {
     hasAttribute: (k) => k in attrs,
@@ -18,7 +18,7 @@ function yasa({ ls = {}, attrs = {}, yopiq = false } = {}) {
     setItem: (k, v) => { ls[k] = String(v); },
     removeItem: (k) => { delete ls[k]; },
   };
-  const win = { document: { documentElement: el, querySelector: () => meta } };
+  const win = { document: { documentElement: el, querySelector: () => meta }, location: { search } };
   Object.defineProperty(win, "localStorage", { get() { if (yopiq) throw new Error("yopiq"); return store; } });
   loadScript(path.join(__dirname, "../js/toifa.js"), win);
   return { T: win.QK.toifa, ls, attrs, meta };
@@ -81,4 +81,27 @@ test("ui.kattalar: orta/yuqori va data-maskot yo'q", () => {
   assert.equal(win.QK.ui.kattalar(el({ "data-toifa": "orta" })), true);
   assert.equal(win.QK.ui.kattalar(el({ "data-toifa": "yuqori" })), true);
   assert.equal(win.QK.ui.kattalar(el({ "data-toifa": "orta", "data-maskot": "" })), false);
+});
+
+// 5–8 ko'rinishi sinovi: URL — faqat shu sahifa, tanlov — localStorage
+test("korinish: URL parametri ustun, saqlangan tanlov, asl va noto'g'ri qiymat", () => {
+  const a = yasa({ search: "?korinish=doska", ls: { "qabila:korinish:v1": "daftar" } });
+  assert.equal(a.attrs["data-korinish"], "doska");
+  assert.equal(a.ls["qabila:korinish:v1"], "daftar", "URL tanlovni o'zgartirmaydi");
+  const b = yasa({ ls: { "qabila:korinish:v1": "sxema" } });
+  assert.equal(b.attrs["data-korinish"], "sxema");
+  const c = yasa({ search: "?korinish=asl", ls: { "qabila:korinish:v1": "sxema" } });
+  assert.ok(!("data-korinish" in c.attrs));
+  const d = yasa({ search: "?korinish=yashil" });
+  assert.ok(!("data-korinish" in d.attrs));
+  d.T.korinishYoz("daftar"); d.T.qolla();
+  assert.equal(d.attrs["data-korinish"], "daftar");
+  d.T.korinishYoz("asl"); d.T.qolla();
+  assert.ok(!("data-korinish" in d.attrs));
+});
+
+test("korinish: o'yin sahifasida (data-toifa yozilgan) ham qo'yiladi", () => {
+  const { attrs } = yasa({ attrs: { "data-toifa": "orta" }, ls: { "qabila:korinish:v1": "daftar" } });
+  assert.equal(attrs["data-korinish"], "daftar");
+  assert.equal(attrs["data-toifa"], "orta");
 });

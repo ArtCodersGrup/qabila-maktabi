@@ -11,6 +11,11 @@
   const BOLA_FON = "#FFF6E5";
   const KATTA_FON = "#FBFAF7"; // asos.css dagi kattalar --fon bilan bir xil
 
+  // 5–8 ko'rinishi sinovi (asos.css oxiridagi bo'lim): ?korinish=daftar — faqat shu sahifada ko'rsatadi,
+  // tanlov esa localStorage da (korinish.html sahifasidagi «Shuni tanlayman»). "asl" — hozirgi ko'rinish.
+  const KORINISH_KALIT = "qabila:korinish:v1";
+  const KORINISHLAR = ["daftar", "sxema", "doska"];
+
   const el = root.document ? root.document.documentElement : null;
   const yozilgan = !!(el && el.hasAttribute("data-toifa"));
 
@@ -31,8 +36,41 @@
     } catch (e) { /* xotira yopiq — tanlov faqat shu sahifada amal qiladi */ }
   }
 
+  function korinishOqi() {
+    try {
+      const v = root.localStorage.getItem(KORINISH_KALIT);
+      return KORINISHLAR.includes(v) ? v : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function korinishYoz(id) {
+    try {
+      if (KORINISHLAR.includes(id)) root.localStorage.setItem(KORINISH_KALIT, id);
+      else root.localStorage.removeItem(KORINISH_KALIT);
+    } catch (e) { /* xotira yopiq */ }
+  }
+
+  // URL dagi ?korinish= (faqat shu sahifa) ustun, keyin saqlangan tanlov
+  function korinish() {
+    let p = null;
+    try { p = new URLSearchParams((root.location && root.location.search) || "").get("korinish"); } catch (e) { p = null; }
+    if (p === "asl") return null;
+    if (KORINISHLAR.includes(p)) return p;
+    return korinishOqi();
+  }
+
+  function korinishQoy() {
+    if (!el) return;
+    const k = korinish();
+    if (k) el.setAttribute("data-korinish", k);
+    else el.removeAttribute("data-korinish");
+  }
+
   // "hammasi" va tanlov yo'q — atributsiz, ya'ni bolalar ko'rinishi
   function qolla() {
+    korinishQoy();
     if (!el || yozilgan) return;
     const id = oqi();
     const katta = id === "orta" || id === "yuqori";
@@ -43,6 +81,6 @@
   }
 
   root.QK = root.QK || {};
-  root.QK.toifa = { KALIT, IDS, oqi, yoz, qolla };
+  root.QK.toifa = { KALIT, IDS, oqi, yoz, qolla, KORINISHLAR, korinish, korinishYoz };
   qolla();
 })(window);

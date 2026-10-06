@@ -12,6 +12,7 @@ const { loadScript } = require("../../oyinlar/umumiy/tests/helpers.js");
 const ROOT = path.join(__dirname, "../..");
 const BOLA_FON = "#FFF6E5";
 const KATTA_FON = "#FBFAF7"; // asos.css dagi kattalar --fon bilan bir xil
+const SKRIPT = '<script src="../umumiy/js/toifa.js"></script>';
 
 const jsFayllar = (dir) => (fs.existsSync(dir) ? fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
   const p = path.join(dir, e.name);
@@ -39,9 +40,11 @@ function yoz() {
     const p = path.join(ROOT, "oyinlar", game.dir, "index.html");
     const eski = fs.readFileSync(p, "utf8");
     const teg = `<html lang="uz" data-toifa="${game.toifa}"${maskotKerak(game.dir) ? " data-maskot" : ""}>`;
-    const yangi = eski
+    let yangi = eski
       .replace(/<html[^>]*>/, teg)
       .replace(/(<meta name="theme-color" content=")[^"]*(")/, `$1${kattami(game) ? KATTA_FON : BOLA_FON}$2`);
+    // Ko'rinish tanlovi (data-korinish) sahifa chizilishidan oldin qo'yilsin — toifa.js <head> da
+    if (!yangi.includes(SKRIPT)) yangi = yangi.replace(/(<meta name="theme-color"[^>]*>\n)/, `$1  ${SKRIPT}\n`);
     if (yangi !== eski) {
       fs.writeFileSync(p, yangi);
       soni++;
@@ -50,5 +53,5 @@ function yoz() {
   return soni;
 }
 
-module.exports = { maskotKerak, kattami, yoz };
+module.exports = { maskotKerak, kattami, yoz, SKRIPT };
 if (require.main === module) console.log(`toifa-yoz: ${yoz()} ta fayl yangilandi`);

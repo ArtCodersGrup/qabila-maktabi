@@ -130,3 +130,10 @@
 :root[data-toifa]:not([data-toifa="boshlangich"]):not([data-maskot]) .bosh-actors,
 :root[data-toifa]:not([data-toifa="boshlangich"]):not([data-maskot]) .bosh-top .bubble { display: none; }
 :root[data-toifa]:not([data-toifa="boshlangich"]):not([data-maskot]) .bosh-title { font-weight: 800; }
+
+/* 5–8 sinov variantlari (asos.css oxiridagi bo'lim): bosh sahifada kartalar va bo'lim sarlavhalari */
+:root[data-korinish="daftar"][data-toifa="orta"]:not([data-maskot]) .bosh-card, :root[data-korinish="sxema"][data-toifa="orta"]:not([data-maskot]) .bosh-card { border-width: 1px; }
+:root[data-korinish="daftar"][data-toifa="orta"]:not([data-maskot]) .bosh-h2 { font-family: var(--daftar-serif); }
+:root[data-korinish="sxema"][data-toifa="orta"]:not([data-maskot]) .bosh-h2::before { width: 4px; border-radius: 0; background: var(--signal); }
+:root[data-korinish="doska"][data-toifa="orta"]:not([data-maskot]) .bosh-h2::before { background: var(--doska); }
+

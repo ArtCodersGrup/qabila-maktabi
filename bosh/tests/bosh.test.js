@@ -190,3 +190,14 @@ test("o'yin sahifasi: data-toifa katalogga teng, data-maskot — faqat qog'oz/ba
   const maskotli = GAMES.filter((g) => maskotKerak(g.dir)).map((g) => g.n).sort((a, b) => a - b);
   assert.deepEqual(maskotli, [1, 2, 3], "qog'oz yoki baraban ishlatadigan o'yinlar");
 });
+
+// Ko'rinish tanlovi (data-korinish) chizishdan oldin qo'yilishi uchun toifa.js har o'yinning <head> ida
+test("o'yin sahifasi: toifa.js <head> da, uslublardan oldin", () => {
+  const { SKRIPT } = require("../tools/toifa-yoz.js");
+  for (const g of GAMES) {
+    const html = fs.readFileSync(path.join(ROOT, "oyinlar", g.dir, "index.html"), "utf8");
+    const head = html.slice(0, html.indexOf("</head>"));
+    assert.ok(head.includes(SKRIPT), g.dir);
+    assert.ok(head.indexOf(SKRIPT) < head.indexOf("asos.css"), g.dir + ": toifa.js uslubdan oldin");
+  }
+});

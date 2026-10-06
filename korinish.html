@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>5–8 ko'rinishi: sinov</title>
+  <link rel="icon" href="bosh/icon.svg">
+  <meta name="theme-color" content="#FBFAF7">
+  <script src="oyinlar/umumiy/js/toifa.js"></script>
+  <link rel="stylesheet" href="oyinlar/umumiy/css/asos.css">
+  <style>
+    /* Sinov sahifasi: 5–8 ko'rinishining uch varianti va hozirgisi bitta o'yinda yonma-yon.
+       Bosh sahifadan havola yo'q — muallif o'quvchilarga ko'rsatadi va bittasini tanlaydi. */
+    html { background: #FBFAF7; }
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: #FBFAF7; color: #1E2230; user-select: auto; }
+    .ks { max-width: 1600px; margin: 0 auto; padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+    .ks h1 { margin: 0; font-size: 26px; line-height: 1.2; }
+    .ks p { margin: 0; max-width: 70ch; color: #55524A; font-size: 17px; }
+    .ks-qator { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .ks-qator > span { font-weight: 800; color: #55524A; margin-right: 4px; }
+    .ks-tugma { min-height: 48px; padding: 6px 14px; border: 2px solid #DAD6CB; border-radius: 999px; background: #FFF; font: inherit; font-weight: 700; color: #1E2230; cursor: pointer; }
+    .ks-tugma[aria-pressed="true"] { background: #2F6FDE; border-color: #2F6FDE; color: #FFF; }
+    .ks-varlar { display: flex; flex-wrap: wrap; gap: 20px; }
+    .ks-var { display: flex; flex-direction: column; gap: 8px; }
+    .ks-var h2 { margin: 0; font-size: 20px; display: flex; align-items: baseline; gap: 8px; }
+    .ks-var h2 small { font-size: 15px; font-weight: 600; color: #6A665C; }
+    .ks-oyna { max-width: calc(100vw - 32px); overflow: hidden; border: 2px solid #1E2230; border-radius: 16px; background: #FFF; }
+    .ks-oyna iframe { display: block; border: 0; transform-origin: 0 0; }
+    .ks-var.tanlangan .ks-oyna { border-color: #1A9E77; box-shadow: 0 0 0 4px #DDF3EA; }
+    .ks-tanla { min-height: 48px; border: 0; border-radius: 12px; background: #2F6FDE; color: #FFF; font: inherit; font-weight: 800; cursor: pointer; }
+    .ks-var.tanlangan .ks-tanla { background: #1A9E77; }
+    .ks a { color: #2763CC; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <main class="ks">
+    <h1>5–8-sinf: qaysi ko'rinish?</h1>
+    <p>Bitta o'yin to'rt ko'rinishda. O'quvchilarga ko'rsating, har birida bosib ko'rishsin, keyin ovoz bering. «Shuni tanlayman» — tanlov shu qurilmada saqlanadi va butun saytdagi 5–8 o'yinlariga qo'llanadi.</p>
+    <div class="ks-qator" id="oyinlar"><span>O'yin:</span></div>
+    <div class="ks-qator" id="ekran"><span>Ekran:</span></div>
+    <div class="ks-varlar" id="varlar"></div>
+    <p>Saytning o'zida ko'rish: <a href="index.html">bosh sahifa</a> (5–8-sinfni tanlang). Tanlovni bekor qilish — «Hozirgi» ostidagi tugma.</p>
+  </main>
+  <script>
+    (function () {
+      "use strict";
+      const T = window.QK.toifa;
+      const VARIANTLAR = [
+        { id: "asl", nom: "Hozirgi", izoh: "oddiy, oq" },
+        { id: "daftar", nom: "Daftar", izoh: "katakli daftar" },
+        { id: "sxema", nom: "Sxema", izoh: "chizma va sim" },
+        { id: "doska", nom: "Doska", izoh: "sinf doskasi" },
+      ];
+      // Faqat 5–8 (orta) va maskotsiz o'yinlar — variantlar shularda ishlaydi
+      const OYINLAR = [
+        { dir: "18-tangalar-bozori", nom: "Tangalar bozori" },
+        { dir: "27-birinchi-buyruq", nom: "Birinchi buyruq" },
+        { dir: "50-parol-kuchi", nom: "Parol kuchi" },
+        { dir: "59-qabila-manzillari", nom: "Qabila manzillari" },
+      ];
+      const EKRANLAR = [
+        { id: "telefon", nom: "Telefon", w: 360, h: 720, k: 1 },
+        { id: "kompyuter", nom: "Kompyuter", w: 1200, h: 760, k: 0.42 },
+      ];
+      let oyin = OYINLAR[0];
+      let ekran = EKRANLAR[0];
+      const $ = (id) => document.getElementById(id);
+      const el = (tag, props, ...kids) => { const e = document.createElement(tag); Object.assign(e, props || {}); kids.forEach((k) => k != null && e.append(k)); return e; };
+
+      function tugmalar(host, list, joriy, tanla) {
+        host.querySelectorAll("button").forEach((b) => b.remove());
+        for (const x of list) {
+          const b = el("button", { type: "button", className: "ks-tugma", textContent: x.nom });
+          b.setAttribute("aria-pressed", String(x === joriy));
+          b.addEventListener("click", () => tanla(x));
+          host.append(b);
+        }
+      }
+
+      function chiz() {
+        tugmalar($("oyinlar"), OYINLAR, oyin, (x) => { oyin = x; chiz(); });
+        tugmalar($("ekran"), EKRANLAR, ekran, (x) => { ekran = x; chiz(); });
+        const saqlangan = (() => { try { return localStorage.getItem("qabila:korinish:v1"); } catch (e) { return null; } })() || "asl";
+        const host = $("varlar");
+        host.innerHTML = "";
+        for (const v of VARIANTLAR) {
+          const iframe = el("iframe", { title: v.nom + " ko'rinishi", loading: "lazy" });
+          iframe.src = `oyinlar/${oyin.dir}/index.html?bosqich=1&korinish=${v.id}`;
+          iframe.width = ekran.w; iframe.height = ekran.h;
+          iframe.style.transform = `scale(${ekran.k})`;
+          const oyna = el("div", { className: "ks-oyna" }, iframe);
+          oyna.style.width = Math.round(ekran.w * ekran.k) + "px";
+          oyna.style.height = Math.round(ekran.h * ekran.k) + "px";
+          const tanla = el("button", { type: "button", className: "ks-tanla", textContent: v.id === saqlangan ? "✓ Tanlangan" : "Shuni tanlayman" });
+          tanla.addEventListener("click", () => { T.korinishYoz(v.id); chiz(); });
+          host.append(el("section", { className: "ks-var" + (v.id === saqlangan ? " tanlangan" : "") },
+            el("h2", null, v.nom + " ", el("small", { textContent: v.izoh })), oyna, tanla));
+        }
+      }
+      chiz();
+    })();
+  </script>
+</body>
+</html>
