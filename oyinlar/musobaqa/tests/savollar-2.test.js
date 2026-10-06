@@ -144,6 +144,10 @@ const JAVOB = {
       const [a, b, op] = [+m[1], +m[2], m[3]];
       return String({ "+": a + b, "*": a * b, "/": Math.trunc(a / b), "%": a % b }[op]);
     }
+    m = kod.match(/int x = (\d+);\nwhile \(x < (\d+)\) x \*= (\d+);/);
+    if (m) { let x = +m[1]; while (x < +m[2]) x *= +m[3]; return String(x); }
+    m = kod.match(/int n = 0;\nfor \(int i = (\d+); i <= (\d+); i \+= (\d+)\) n\+\+;/);
+    if (m) { let n = 0; for (let i = +m[1]; i <= +m[2]; i += +m[3]) n++; return String(n); }
     m = kod.match(/int s = (\d+);\nfor \(int i = (\d+); i < (\d+); i\+\+\) s (.)= i;/);
     let s = +m[1];
     for (let i = +m[2]; i < +m[3]; i++) s = m[4] === "*" ? s * i : s + i;

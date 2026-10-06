@@ -37,16 +37,29 @@
   // mavzular — tanlangan mavzular roʻyxati (boʻsh boʻlsa — hammasi).
   // rng berilsa (o'qituvchi "savollar hammaga bir xil" ni tanlagan) — savol shu urug'dan aniq hosil bo'ladi;
   // shunda oldingi savol bilan solishtirilmaydi: oldingi savol bolada har xil bo'lishi mumkin, natija esa bir xil bo'lishi kerak
-  function nextQ(level, prev, mavzular, rng) {
+  // tarix — shu o'yinda berilgan savollar kaliti (Set): ular qayta chiqmaydi, oldingi savol turi ketma-ket takrorlanmaydi.
+  // Urug'li rejimda (hammaga bir xil savol) tarix ishlatilmaydi — aks holda bolalarda savollar har xil bo'lib qoladi.
+  function nextQ(level, prev, mavzular, rng, tarix) {
     const r = rng || Math.random;
     const tanla = (list) => list[Math.floor(r() * list.length)];
     const royxat = (mavzular && mavzular.length ? savollar.TOPICS.filter((t) => mavzular.includes(t.id)) : savollar.TOPICS);
-    for (let k = 0; k < 60; k++) {
+    const ishlatilgan = !rng && tarix ? tarix : null;
+    for (let k = 0; k < 120; k++) {
       const topic = tanla(royxat).id;
-      const kinds = savollar.kindsOf(topic, level);
+      let kinds = savollar.kindsOf(topic, level);
       if (!kinds.length) continue;
-      const q = savollar.make(tanla(kinds), level, r, () => true);
-      if (q && (rng || !prev || q.key !== prev.key)) return q;
+      if (prev && kinds.length > 1 && k < 60) kinds = kinds.filter((x) => x !== prev.kind); // tur almashsin
+      const kind = tanla(kinds);
+      const fresh = ishlatilgan ? (id) => !ishlatilgan.has(`${kind}:${level}:${id}`) : () => true;
+      const q = savollar.make(kind, level, r, fresh);
+      if (!q) continue;
+      if (ishlatilgan && ishlatilgan.has(q.key)) continue;
+      if (rng || !prev || q.key !== prev.key) return q;
+    }
+    // Hamma savol ishlatilgan bo'lsa — tarix tozalanadi (uzoq o'yinda ham savol tugamaydi)
+    if (ishlatilgan && ishlatilgan.size) {
+      ishlatilgan.clear();
+      return nextQ(level, prev, mavzular, rng, tarix);
     }
     // Tanlangan mavzuda shu darajada savol topilmadi — boshqa darajadan beramiz
     for (const daraja of [1, 2, 3]) {
@@ -182,6 +195,7 @@
     let rejim = "";
     const hisob = (me) => me.togri + me.xato;
 
+    const tarix = new Set(); // shu o'yinda berilgan savollar — qaytarilmaydi (nextQ)
     let urinishPog = -1; // urinish raqami shu pog'onada (xatodan keyin yangi savol — boshqa urinish)
     let urinish = 0;
     function savolBer(me) {
@@ -192,7 +206,8 @@
       const s = holat();
       const rng = s && s.urug ? T.urugRng(s.urug, me.pogona, urinish) : null; // bir balandlikda — bir xil savol
       const qiyinlik = (s && s.qiyinlik) || qiyinlikTanlangan || 0; // qat'iy tanlangan bo'lsa — o'sha, aks holda balandlik
-      joriy = nextQ(qiyinlik || T.daraja(t, me.pogona), joriy, tanlangan, rng);
+      joriy = nextQ(qiyinlik || T.daraja(t, me.pogona), joriy, tanlangan, rng, tarix);
+      if (!rng) tarix.add(joriy.key);
       QK.probe = Object.assign(QK.probe || {}, { savol: joriy, savolPog: me.pogona, urinish });
       togUi.savol(pastki, joriy);
       savolUi.answerPad(joriy, (value) => {

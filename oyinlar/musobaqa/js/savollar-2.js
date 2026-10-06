@@ -314,8 +314,8 @@
           explain: `Yetib kelmagan: ${yetmadi.join(", ")} — ${yoq} ta.`,
         };
       }
-      const k = ri(rng, 2, level === 1 ? 6 : 8);
-      const p = ri(rng, 2, 9);
+      const k = ri(rng, 2, level === 1 ? 9 : 8);
+      const p = ri(rng, 2, level === 1 ? 10 : 9);
       const n = level === 1 ? k * p : k * (p - 1) + ri(rng, 1, k - 1);
       const javob = Math.ceil(n / k);
       return {
@@ -417,9 +417,9 @@
     topic: "xavfsizlik",
     levels: [1, 2, 3],
     make(level, rng) {
-      const [a, nom] = level === 1 ? [10, "raqam (0–9)"] : pick(rng, [[10, "raqam (0–9)"], [2, "belgi (faqat 0 yoki 1)"], [3, "belgi (A, B yoki C)"], [4, "belgi"], [5, "belgi"]]);
+      const [a, nom] = level === 1 ? pick(rng, [[10, "raqam (0–9)"], [2, "belgi (faqat 0 yoki 1)"], [3, "belgi (A, B yoki C)"], [4, "rang"]]) : pick(rng, [[10, "raqam (0–9)"], [2, "belgi (faqat 0 yoki 1)"], [3, "belgi (A, B yoki C)"], [4, "belgi"], [5, "belgi"]]);
       // 10 ta raqam bilan 6 belgi — 1 000 000, raqam klaviaturasiga sig'maydi: 5 tagacha
-      const n = level === 1 ? ri(rng, 1, 3) : level === 2 ? ri(rng, 2, 4) : ri(rng, 4, a === 10 ? 5 : 6);
+      const n = level === 1 ? ri(rng, a === 10 ? 1 : 2, a === 10 ? 3 : 4) : level === 2 ? ri(rng, 2, 4) : ri(rng, 4, a === 10 ? 5 : 6);
       const javob = a ** n;
       return {
         id: `${a}^${n}`,
@@ -580,7 +580,7 @@
         const n = ri(rng, 5, 60);
         return { id: `ch${n}`, data: { n, tur: "chiziqli" }, text: `Tartiblanmagan ${n} ta kartochkadan bittasini birma-bir qarab izlaymiz. Eng yomon holatda nechta kartochkani ochamiz?`, input: num(2), answer: String(n), explain: `Chiziqli izlash: kerakli kartochka eng oxirida boʻlishi mumkin — ${n} ta.` };
       }
-      const n = level === 2 ? pick(rng, [7, 15, 16, 20, 31, 32, 50, 63, 64, 100]) : ri(rng, 101, 5000);
+      const n = level === 2 ? ri(rng, 6, 120) : ri(rng, 121, 5000);
       const javob = ikkilikSavollar(n);
       return { id: `ik${n}`, data: { n, tur: "ikkilik" }, text: `1 dan ${n} gacha son oʻyladim. Har savolga «kattaroq», «kichikroq» yoki «topding» deyman. Har safar yarmini tashlasang, eng koʻpi bilan nechta savolda topasan?`, input: num(2), answer: String(javob), explain: `Har savol oraliqni ikkiga boʻladi: ${2 ** (javob - 1)} ≤ ${n} < ${2 ** javob}, demak ${javob} ta savol.` };
     },
@@ -721,6 +721,23 @@
         const javob = amal === "/" ? Math.trunc(a / b) : a % b;
         return { id: `${a}${amal}${b}`, data: { a, b, amal }, text: "Bu C++ kodi ekranga nima chiqaradi?", blocks: [code(`int a = ${a}, b = ${b};\ncout << a ${amal} b;`)], input: num(2), answer: String(javob), explain: amal === "/" ? `Ikkalasi int — butun boʻlish: ${a} / ${b} = ${javob} (kasr tashlanadi).` : `Qoldiq: ${a} = ${b} × ${Math.trunc(a / b)} + ${javob}.` };
       }
+      const shakl = rng();
+      if (shakl < 0.3) { // while: x chegaraga yetguncha ikki/uch baravar
+        const x = ri(rng, 1, 5);
+        const k = pick(rng, [2, 3]);
+        const ch = ri(rng, 20, 300);
+        let v = x;
+        while (v < ch) v *= k;
+        return { id: `w${x}-${k}-${ch}`, data: {}, text: "Bu C++ kodi ekranga nima chiqaradi?", blocks: [code(`int x = ${x};\nwhile (x < ${ch}) x *= ${k};\ncout << x;`)], input: num(4), answer: String(v), explain: `x ${ch} dan kichik ekan ${k} ga koʻpaytiramiz: oxirida ${v}.` };
+      }
+      if (shakl < 0.55) { // qadamli for: necha marta ishlaydi
+        const a = ri(rng, 0, 5);
+        const k = ri(rng, 2, 4);
+        const b = a + ri(rng, 6, 20);
+        let n = 0;
+        for (let i = a; i <= b; i += k) n++;
+        return { id: `q${a}-${b}-${k}`, data: {}, text: "Bu C++ kodi ekranga nima chiqaradi?", blocks: [code(`int n = 0;\nfor (int i = ${a}; i <= ${b}; i += ${k}) n++;\ncout << n;`)], input: num(2), answer: String(n), explain: `i: ${Array.from({ length: n }, (_, t) => a + t * k).join(", ")} — ${n} marta.` };
+      }
       const kop = rng() < 0.4; // ko'paytma 1 dan boshlanadi — 0 ga ko'paytirib yubormaslik uchun
       const a = ri(rng, kop ? 1 : 0, 4);
       const b = a + ri(rng, 2, kop ? 4 : 6);
@@ -821,6 +838,193 @@
       };
     },
   };
+
+
+  // ---------- Qo'shimcha bilim savollari (2026-10-06: «savollar ko'paysin, takror kamaysin») ----------
+  TANISHUV_BILIM.push(
+    [1, "Kompyuterning «miyasi» — hamma hisob-kitob qayerda boʻladi?", "Tizim blokida", ["Monitorda", "Sichqonchada", "Kolonkada"]],
+    [1, "Kamera nima qiladi?", "Rasm va video oladi", ["Ovoz chiqaradi", "Harf yozadi", "Qogʻozga chiqaradi"]],
+    [1, "Sichqoncha bilan narsani bir joydan boshqasiga oʻtkazish nima deyiladi?", "Sudrab olib borish", ["Ikki marta bosish", "Oʻng tugma", "Gʻildirakni aylantirish"]],
+    [1, "Sichqoncha gʻildiragi nima qiladi?", "Sahifani yuqori-pastga suradi", ["Kompyuterni oʻchiradi", "Faylni oʻchiradi", "Ovozni yozadi"]],
+    [1, "«□» tugmasi oynani nima qiladi?", "Butun ekranga yoyadi", ["Yopadi", "Kichraytiradi", "Saqlaydi"]],
+    [1, "Rasm chizadigan dastur qaysi?", "Paint", ["Kalkulyator", "Brauzer", "Savat"]],
+    [1, "Matn yozadigan dasturda yangi qatorga oʻtish tugmasi?", "Enter", ["Backspace", "Shift", "Ctrl"]],
+    [2, "Fayllar turadigan «quti» nima deyiladi?", "Papka", ["Oyna", "Belgi", "Brauzer"]],
+    [2, "Faylga nom berish nima deyiladi?", "Nomlash", ["Kesish", "Oʻchirish", "Ochish"]],
+    [2, "Belgilangan matnni nusxalash tezkor tugmasi?", "Ctrl + C", ["Ctrl + V", "Ctrl + X", "Ctrl + Z"]],
+    [2, "Nusxani qoʻyish tezkor tugmasi?", "Ctrl + V", ["Ctrl + C", "Ctrl + S", "Ctrl + Z"]],
+    [2, "Paintʼdagi oʻchirgʻich nima qiladi?", "Boʻyalgan joyni oqartiradi", ["Faylni oʻchiradi", "Rangni almashtiradi", "Rasmni saqlaydi"]],
+    [2, "Kursor nima?", "Matnda yozish joyini koʻrsatuvchi chiziqcha", ["Sichqonchaning tugmasi", "Fayl turi", "Brauzer nomi"]],
+    [2, "Vazifalar paneli odatda ekranning qayerida?", "Pastda", ["Tepada", "Oʻrtada", "Monitor orqasida"]],
+    [3, "Faylni boshqa papkaga KOʻCHIRISH uchun qaysi juftlik?", "Kesish, keyin Qoʻyish", ["Nusxa, keyin Oʻchirish", "Ochish, keyin Yopish", "Saqlash, keyin Nomlash"]],
+    [3, "Savatdagi faylni nima qilsa boʻladi?", "Qaytarish yoki butunlay oʻchirish", ["Faqat ochish", "Faqat nomlash", "Hech nima"]],
+    [3, "«Kompyuter › Hujjatlar › xat.txt» — bu nima?", "Faylning yoʻli", ["Sayt manzili", "Parol", "Dastur nomi"]],
+    [3, "Bir nechta oyna ochiq. Qaysi biri faol?", "Eng oldindagisi", ["Eng kichigi", "Eng birinchi ochilgani", "Hammasi"]],
+    [3, "Matndagi soʻzni ikki marta tez bossak nima boʻladi?", "Soʻz belgilanadi", ["Soʻz oʻchadi", "Fayl yopiladi", "Soʻz qalin boʻladi"]],
+    [3, "Paintʼda xato chizdingiz. Eng tez tuzatish?", "Ctrl + Z", ["Ctrl + S", "Kompyuterni oʻchirish", "Yangi fayl ochish"]],
+    [3, "Sayt «Yuklab olish uchun parolingizni yozing» dedi. Nima qilasiz?", "Yozmayman, kattaga aytaman", ["Yozaman", "Doʻstimning parolini yozaman", "Telefonimni yozaman"]],
+  );
+  DASTUR_BILIM.push(
+    [1, "Robot «→» buyrugʻini olsa nima qiladi?", "Bir katak oʻngga yuradi", ["Bir katak chapga yuradi", "Toʻxtaydi", "Aylanadi"]],
+    [1, "Dastur — bu nima?", "Kompyuter bajaradigan buyruqlar", ["Kompyuter qismi", "Rasm", "Sayt"]],
+    [1, "Robot devorga qarab yursa nima boʻladi?", "Oʻtolmaydi — dastur xato", ["Devordan oʻtadi", "Uchib ketadi", "Hech narsa"]],
+    [1, "«→ → ↑» va «↑ → →» bir xil joyga olib boradimi?", "Ha, yoʻl boshqa, joy bir xil", ["Yoʻq, hech qachon", "Faqat robot katta boʻlsa", "Bilib boʻlmaydi"]],
+    [1, "Buyruqlar qaysi tartibda bajariladi?", "Yuqoridan pastga, birma-bir", ["Pastdan yuqoriga", "Hammasi birdan", "Tasodifiy"]],
+    [1, "Dasturdagi xato nima deyiladi?", "Bag (bug)", ["Bayt", "Bit", "Belgi"]],
+    [1, "Robotga «takror 2 marta: → ↑» desak nechta buyruq bajariladi?", "4", ["2", "3", "6"]],
+    [2, "«Toʻsiqqacha yur» buyrugʻi qachon toʻxtaydi?", "Oldinda toʻsiq paydo boʻlganda", ["5 qadamdan keyin", "Hech qachon", "Boshida"]],
+    [2, "Bitta dastur har xil maydonda ishlashi uchun nima kerak?", "Shart va takror", ["Koʻproq oʻq", "Rangli robot", "Uzun dastur"]],
+    [2, "★ buyrugʻi ichida «→ ↑». Dastur «★ ★». Robot nechta qadam yuradi?", "4", ["2", "3", "1"]],
+    [2, "Oʻzgaruvchi qiymati nima uchun kerak?", "Sonni eslab qolish uchun", ["Robotni boʻyash uchun", "Dasturni oʻchirish uchun", "Hech nima"]],
+    [2, "«qadam = qadam + 1» nima qiladi?", "qadamni bittaga oshiradi", ["qadamni nolga tenglaydi", "Robotni toʻxtatadi", "Hech nima"]],
+    [2, "Dasturni qisqartirishning eng yaxshi yoʻli?", "Takrorlanadigan qismni takrorga solish", ["Buyruqlarni oʻchirish", "Robotni almashtirish", "Maydonni kichraytirish"]],
+    [2, "Xatoni topishda nima yordam beradi?", "Dasturni qadam-baqadam yurib chiqish", ["Dasturni tezroq ishlatish", "Kompyuterni oʻchirish", "Rangni almashtirish"]],
+    [3, "Bloklardagi «agar … aks holda …» Pythonʼda qanday?", "if … else", ["for … in", "while … do", "def … return"]],
+    [3, "Pythonʼda «…gacha takrorla» qaysi soʻz bilan?", "while", ["for", "if", "def"]],
+    [3, "Pythonʼda oʻz buyrugʻimizni (funksiya) yasash soʻzi?", "def", ["if", "for", "print"]],
+    [3, "«x = 0; takror 4 marta: x = x + 3». Oxirida x nechaga teng?", "12", ["4", "7", "3"]],
+    [3, "Ikki dastur bir xil ishni qiladi: biri 12, biri 7 buyruq. Qaysi yaxshiroq?", "7 buyruqlisi", ["12 buyruqlisi", "Farqi yoʻq", "Ikkalasi ham yomon"]],
+    [3, "Algoritmning «tugashi shart» degani nima?", "Cheksiz aylanib qolmasligi", ["Tez ishlashi", "Qisqa boʻlishi", "Rangli boʻlishi"]],
+    [3, "while sikli toʻxtamasa nima deyiladi?", "Cheksiz sikl", ["Funksiya", "Shart", "Oʻzgaruvchi"]],
+  );
+  INTERNET_BILIM.push(
+    [1, "Internet nima?", "Dunyodagi kompyuterlarni bogʻlagan tarmoq", ["Bitta katta kompyuter", "Telefon dasturi", "Kitob"]],
+    [1, "Bir saytdan boshqasiga oʻtkazadigan koʻk soʻz?", "Havola", ["Manzil", "Paket", "Server"]],
+    [1, "Maʼlumot qidirish uchun qaysi sayt?", "Qidiruv sayti", ["Oʻyin sayti", "Rasm dasturi", "Savat"]],
+    [1, "Sahifani qayta yuklash tugmasi?", "↻ Yangilash", ["← Orqaga", "✕ Yopish", "⭐ Xatchoʻp"]],
+    [1, "Sevimli saytni tez ochish uchun nima qilinadi?", "Xatchoʻpga qoʻshiladi", ["Oʻchiriladi", "Nusxalanadi", "Savatga tashlanadi"]],
+    [1, "Sayt manzilida «.uz» nimani bildiradi?", "Oʻzbekiston sayti", ["Rasm fayli", "Parol", "Server nomi"]],
+    [1, "Xabar yuborilganda paketlar qayerga boradi?", "Manzildagi kompyuterga", ["Hamma kompyuterga", "Hech qayerga", "Printerga"]],
+    [2, "IP manzil nima?", "Internetdagi kompyuter raqami", ["Sayt nomi", "Parol", "Fayl turi"]],
+    [2, "IP manzildagi har bir son qaysi oraliqda?", "0 dan 255 gacha", ["1 dan 100 gacha", "0 dan 999 gacha", "Istalgan"]],
+    [2, "Paketlar yoʻlda nimalar orqali oʻtadi?", "Tugunlar (routerlar) orqali", ["Printerlar orqali", "Faqat bitta sim orqali", "Monitorlar orqali"]],
+    [2, "Nega kesh sahifani tezroq ochadi?", "Nusxa yaqinda, uzoqdan olib kelinmaydi", ["Internet tezlashadi", "Sayt kichrayadi", "Kompyuter yangilanadi"]],
+    [2, "Brauzer saytni qanday topadi?", "DNS dan IP manzilini soʻraydi", ["Tasodifiy qidiradi", "Printerdan soʻraydi", "Faylni ochadi"]],
+    [2, "«https» dagi «s» nimani bildiradi?", "Xavfsiz (shifrlangan)", ["Sayt", "Server", "Sekin"]],
+    [2, "Paket ichida nima boʻladi?", "Xabar boʻlagi, raqam va manzil", ["Butun kitob", "Faqat rasm", "Hech narsa"]],
+    [3, "Bir paket 5 belgi sigʻdiradi, xabar 23 belgi. Nechta paket?", "5", ["4", "23", "6"]],
+    [3, "Server javob bermayapti. Nima boʻlishi mumkin?", "Server oʻchiq yoki band", ["Brauzer rangi oʻzgargan", "Klaviatura buzilgan", "Monitor kichik"]],
+    [3, "Bir xil sayt nomi ikki xil IP ga olib bordi. Bu nimaning belgisi boʻlishi mumkin?", "DNS aldangan — xavf", ["Hamma narsa joyida", "Internet tezlashdi", "Kesh ishladi"]],
+    [3, "Ochiq Wi-Fiʼda parol yozish nega xavfli?", "Boshqalar tinglashi mumkin", ["Wi-Fi sekinlashadi", "Telefon oʻchadi", "Xavfli emas"]],
+    [3, "Qaysi manzil xavfliroq koʻrinadi?", "maktab.uz-kirish.xyz", ["maktab.uz", "https://maktab.uz", "www.maktab.uz"]],
+    [3, "Paketlar har xil yoʻldan kelsa, qabul qiluvchi qanday biladi?", "Raqamiga qarab tartiblaydi", ["Kelgan tartibda oʻqiydi", "Bilmaydi", "Serverdan soʻraydi"]],
+    [3, "Kesh eski sahifani koʻrsatsa nima qilinadi?", "Sahifa yangilanadi", ["Kompyuter oʻchiriladi", "Sayt oʻchiriladi", "Hech nima qilib boʻlmaydi"]],
+  );
+  XAVF_BILIM.push(
+    [1, "Parolni qayerda saqlash xavfli?", "Stikerga yozib monitorga yopishtirish", ["Yodda saqlash", "Ota-onaga aytish", "Parol saqlovchida"]],
+    [1, "Notanish odamdan kelgan havolani nima qilasiz?", "Bosmayman", ["Darhol bosaman", "Doʻstlarimga yuboraman", "Parolimni yozaman"]],
+    [1, "Internetda oʻzing haqingda nimani yozmaslik kerak?", "Uy manzili va telefon", ["Sevimli rang", "Sevimli hayvon", "Sevimli fan"]],
+    [1, "Kompyuterdan ketayotganda akkauntdan nima qilish kerak?", "Chiqish", ["Ochiq qoldirish", "Parolni yozib qoldirish", "Hech nima"]],
+    [1, "Qaysi parol yaxshiroq?", "Uzun va yodda qoladigan gap", ["Ismim", "Tugʻilgan yilim", "123"]],
+    [1, "Kimdir chatda seni xafa qilyapti. Nima qilasan?", "Kattaga aytaman, bloklayman", ["Javob qaytaraman", "Parolimni aytaman", "Hech kimga aytmayman"]],
+    [1, "Oʻyin «bepul tanga» uchun parol soʻradi. Bu nima?", "Firibgarlik", ["Sovgʻa", "Yangi daraja", "Oddiy savol"]],
+    [2, "Firibgar xatda koʻpincha nima boʻladi?", "Shoshiltirish va qoʻrqitish", ["Doʻstona salom", "Uy vazifasi", "Hech narsa"]],
+    [2, "Xat «pochta.uz» dan kelganga oʻxshaydi, manzil esa «pochta-uz.top». Bu nima?", "Soxta manzil", ["Haqiqiy pochta", "Yangi sayt", "Xavfsiz"]],
+    [2, "Parolni oʻzgartirish qachon kerak?", "Kimdir bilib qolgan boʻlsa", ["Har kuni 10 marta", "Hech qachon", "Kompyuter yoqilganda"]],
+    [2, "Nega har saytda boshqa parol kerak?", "Bittasi oʻgʻirlansa, qolganlari xavfsiz qoladi", ["Chiroyli boʻlishi uchun", "Sayt talab qilgani uchun", "Kerak emas"]],
+    [2, "4 xonali PIN koddan nechta variant bor?", "10 000", ["4", "40", "1000"]],
+    [2, "Parolga 1 ta raqam qoʻshsak variantlar necha marta koʻpayadi?", "10 marta", ["1 marta", "2 marta", "100 marta"]],
+    [2, "Nega «parol123» zaif?", "Lugʻatda bor, birinchilardan sinaladi", ["Juda uzun", "Raqam bor", "Kuchli parol"]],
+    [3, "Xesh (iz) qanday ishlaydi?", "Paroldan iz yasaladi, izdan parol tiklanmaydi", ["Parol shifrlanib, keyin ochiladi", "Parol rasmga aylanadi", "Parol oʻchiriladi"]],
+    [3, "Ikki foydalanuvchining paroli bir xil. Tuz qoʻshilsa izlari qanday?", "Har xil", ["Bir xil", "Ikkalasi ham boʻsh", "Parolga teng"]],
+    [3, "Sayt bazasi oʻgʻirlandi, unda faqat izlar bor. Qaysi parollar xavf ostida?", "Oddiy, lugʻatdagi parollar", ["Uzun tasodifiy parollar", "Hech qaysi", "Hammasi birdek"]],
+    [3, "26 harfdan 3 harfli parol nechta?", "17 576", ["78", "2 600", "676"]],
+    [3, "Kompyuter soniyada 1 million parol sinaydi. 1 000 000 variantli parol qancha chidaydi?", "1 soniya", ["1 kun", "1 yil", "Abadiy"]],
+    [3, "Firibgar saytni tanishning eng ishonchli yoʻli?", "Manzildagi zonadan oldingi nomni tekshirish", ["Rangiga qarash", "Rasmlariga qarash", "Qulf belgisiga qarash"]],
+    [3, "Ikki bosqichli tekshiruvda ikkinchi kalit odatda nima?", "Telefonga kelgan kod", ["Ismingiz", "Tugʻilgan kuningiz", "Sayt nomi"]],
+  );
+  PYTHON_BILIM.push(
+    [1, "print(\"Salom\") ekranga nima chiqaradi?", "Salom", ["\"Salom\"", "print", "Hech narsa"]],
+    [1, "Pythonʼda 3 * 4 nechaga teng?", "12", ["7", "34", "1"]],
+    [1, "Qoʻshtirnoq yopilmasa nima boʻladi?", "Xato xabari chiqadi", ["Kod ishlayveradi", "Kompyuter oʻchadi", "Hech narsa"]],
+    [1, "Izoh (kompyuter oʻqimaydigan yozuv) qaysi belgi bilan boshlanadi?", "#", ["//", "*", "!"]],
+    [1, "Pythonʼda 10 / 4 nechaga teng?", "2.5", ["2", "3", "2,5"]],
+    [1, "Oʻzgaruvchi nomi qaysi biri toʻgʻri?", "yosh", ["2yosh", "yosh bola", "if"]],
+    [1, "print(2 + 3) nima chiqaradi?", "5", ["2 + 3", "23", "Xato"]],
+    [2, "17 // 5 nechaga teng?", "3", ["2", "3.4", "12"]],
+    [2, "17 % 5 nechaga teng?", "2", ["3", "12", "0"]],
+    [2, "input() har doim qanday turdagi qiymat qaytaradi?", "Matn (str)", ["Son (int)", "Roʻyxat", "True"]],
+    [2, "Matnni songa aylantirish?", "int()", ["str()", "len()", "print()"]],
+    [2, "len(\"olma\") nechaga teng?", "4", ["5", "3", "1"]],
+    [2, "x = 5 dan keyin x = x + 2. x nechaga teng?", "7", ["5", "2", "52"]],
+    [2, "if dan keyin qanday belgi qoʻyiladi?", "Ikki nuqta (:)", ["Nuqtali vergul (;)", "Qavs", "Hech narsa"]],
+    [3, "range(2, 8, 2) qaysi sonlarni beradi?", "2, 4, 6", ["2, 4, 6, 8", "2, 8", "4, 6, 8"]],
+    [3, "\"salom\"[1] nimaga teng?", "a", ["s", "l", "Xato"]],
+    [3, "\"a,b,c\".split(\",\") nima beradi?", "[\"a\", \"b\", \"c\"]", ["\"abc\"", "3", "[\"a,b,c\"]"]],
+    [3, "Funksiya ichida yaratilgan oʻzgaruvchi tashqarida koʻrinadimi?", "Yoʻq (lokal)", ["Ha", "Faqat print bilan", "Faqat sonlar"]],
+    [3, "break nima qiladi?", "Siklni toʻxtatadi", ["Dasturni oʻchiradi", "Keyingi qadamga oʻtadi", "Xato beradi"]],
+    [3, "a = [1, 2, 3]; a.append(4); len(a) nechaga teng?", "4", ["3", "5", "1"]],
+    [3, "print va return farqi?", "return natijani qaytaradi, print faqat koʻrsatadi", ["Farqi yoʻq", "print natijani qaytaradi", "return ekranga yozadi"]],
+  );
+  ALGORITM_BILIM.push(
+    [1, "Lugʻatda soʻzni tez topish qaysi usulga oʻxshaydi?", "Ikkilik izlash", ["Chiziqli izlash", "Pufakcha saralash", "Tasodifiy tanlash"]],
+    [1, "Tartiblanmagan roʻyxatda izlashning yagona yoʻli?", "Birma-bir qarash", ["Yarmiga boʻlish", "Oxiridan sakrash", "Izlab boʻlmaydi"]],
+    [1, "Blok-sxemada romb (◇) nimani bildiradi?", "Shart (savol)", ["Boshlash", "Amal", "Chiqarish"]],
+    [1, "Blok-sxemada toʻrtburchak (▭) nimani bildiradi?", "Amal (hisoblash)", ["Shart", "Boshlash", "Tugash"]],
+    [1, "Blok-sxemada oval (⬭) nimani bildiradi?", "Boshlash yoki tugash", ["Shart", "Amal", "Takror"]],
+    [1, "Sinf oʻquvchilarini boʻyi boʻyicha tizish — bu?", "Saralash", ["Izlash", "Oʻchirish", "Nusxalash"]],
+    [1, "100 ta kitobdan birini birma-bir izlasak, eng yomon holatda nechta qaraymiz?", "100", ["1", "7", "50"]],
+    [2, "1024 ta sondan ikkilik izlash eng koʻpi bilan nechta qadamda topadi?", "11", ["10", "512", "1024"]],
+    [2, "Pufakcha saralashda birinchi oʻtishdan keyin qaysi element joyida?", "Eng kattasi — oxirida", ["Eng kichigi — boshida", "Hech qaysi", "Oʻrtadagisi"]],
+    [2, "Tanlash saralashida birinchi oʻtishdan keyin qaysi element joyida?", "Eng kichigi — boshida", ["Eng kattasi — boshida", "Hech qaysi", "Oʻrtadagisi"]],
+    [2, "O(1) nima degani?", "Qadamlar soni n ga bogʻliq emas", ["Bitta n", "n ta qadam", "n² qadam"]],
+    [2, "Ikkita ichma-ich sikl (har biri n marta) nechta qadam?", "n²", ["n", "2n", "log n"]],
+    [2, "Qaysi algoritm katta n da eng sekin?", "O(n²)", ["O(n)", "O(log n)", "O(1)"]],
+    [2, "Blok-sxemada «Ha»/«Yoʻq» chiqadigan shakl?", "Romb", ["Oval", "Toʻrtburchak", "Parallelogramm"]],
+    [3, "n = 1 000 000 boʻlsa, O(log n) taxminan nechta qadam?", "20", ["1 000 000", "1000", "2"]],
+    [3, "Ikkilik izlashdan oldin roʻyxatni saralash kerak. Bu qachon foydali?", "Koʻp marta izlanganda", ["Bir marta izlanganda", "Hech qachon", "Roʻyxat boʻsh boʻlsa"]],
+    [3, "Pufakcha saralash teskari tartibdagi n ta sonda nechta almashinuv qiladi?", "n(n − 1)/2", ["n", "n²", "1"]],
+    [3, "«Ishlaydi ≠ yaxshi» degani nima?", "Toʻgʻri natija bersa ham sekin boʻlishi mumkin", ["Ishlamaydi", "Har doim yaxshi", "Faqat rangli yaxshi"]],
+    [3, "Saralash algoritmini nima bilan solishtiramiz?", "Taqqoslash va almashinuvlar soni bilan", ["Rangi bilan", "Nomi bilan", "Satrlar soni bilan"]],
+    [3, "Blok-sxemadan Pythonʼga oʻtganda romb nimaga aylanadi?", "if yoki while", ["print", "def", "input"]],
+    [3, "Algoritm har safar bir xil kirishga bir xil javob berishi — qaysi xossa?", "Aniqlik", ["Tezlik", "Ommaviylik", "Uzunlik"]],
+  );
+  KOMB_BILIM.push(
+    [1, "2 xil shapka va 3 xil sharf. Nechta xil juftlik?", "6", ["5", "3", "2"]],
+    [1, "3 ta oʻyinchoqdan bittasini tanlash usullari?", "3", ["1", "6", "9"]],
+    [1, "Tanga 3 marta tashlansa nechta natija?", "8", ["6", "3", "9"]],
+    [1, "Choʻntakda 4 ta har xil konfet. Bittasini olish usullari?", "4", ["1", "8", "16"]],
+    [1, "Daraxt chizmasida har shoxcha nimani bildiradi?", "Bitta tanlovni", ["Bitta xatoni", "Bitta raqamni", "Hech nimani"]],
+    [1, "2 xil non VA 2 xil sut. Nechta nonushta?", "4", ["2", "3", "8"]],
+    [1, "3 ta kitob YOKI 2 ta jurnal — bittasini tanlash usullari?", "5", ["6", "3", "2"]],
+    [2, "4! nechaga teng?", "24", ["16", "10", "4"]],
+    [2, "5 kishidan sardor va oʻrinbosar necha xil tanlanadi?", "20", ["10", "25", "5"]],
+    [2, "«ABC» harflaridan nechta har xil soʻz (hamma harf bir martadan)?", "6", ["3", "9", "27"]],
+    [2, "3 xonali son 1, 2, 3 raqamlaridan (takrorlanmasdan) nechta?", "6", ["3", "9", "27"]],
+    [2, "Raqamlar takrorlanishi mumkin: 1, 2, 3 dan nechta ikki xonali son?", "9", ["6", "3", "12"]],
+    [2, "Paskal uchburchagining 4-qatori (1 3 3 1 dan keyingi)?", "1 4 6 4 1", ["1 4 4 1", "1 3 6 3 1", "1 5 10 5 1"]],
+    [2, "Qaysi holatda tartib muhim EMAS?", "Sinfdan 3 kishilik jamoa tanlash", ["Poygada oʻrinlar", "Telefon raqami", "Parol"]],
+    [3, "C(6, 2) nechaga teng?", "15", ["30", "12", "36"]],
+    [3, "C(10, 9) nechaga teng?", "10", ["1", "90", "9"]],
+    [3, "5 ta nuqtadan nechta kesma oʻtkazish mumkin (har ikkisi orqali)?", "10", ["5", "20", "25"]],
+    [3, "4 ta jamoa — har biri har biri bilan bir marta oʻynaydi. Nechta oʻyin?", "6", ["4", "8", "12"]],
+    [3, "Sinfda 30 oʻquvchi. Bir kunda tugʻilgan 2 kishi borligiga kafolat bormi?", "Yoʻq, kafolat yoʻq", ["Ha, albatta", "Faqat 31 kunlik oyda", "Ha, 30 > 12"]],
+    [3, "Qopda 3 xil rangli paypoq. Bir juft bir xil rang kafolati uchun eng kamida nechta olish kerak?", "4", ["3", "2", "6"]],
+    [3, "A(5, 3) (5 tadan 3 tasini tartib bilan) nechaga teng?", "60", ["10", "15", "125"]],
+  );
+  CPP_BILIM.push(
+    [1, "C++ dasturi qaysi funksiyadan boshlanadi?", "main", ["start", "print", "begin"]],
+    [1, "Satr (matn) turi qaysi?", "string", ["int", "bool", "double"]],
+    [1, "Kasr son turi qaysi?", "double", ["int", "char", "bool"]],
+    [1, "Rost/yolgʻon turi qaysi?", "bool", ["int", "string", "char"]],
+    [1, "cout bilan yangi qatorga oʻtish?", "endl", ["next", "enter", "line"]],
+    [1, "C++ kodni bajarishdan oldin nima qilinadi?", "Kompilyatsiya", ["Chizish", "Saralash", "Yuklab olish"]],
+    [1, "#include <iostream> nima uchun kerak?", "cin va cout ishlashi uchun", ["Rasm chizish uchun", "Internet uchun", "Kerak emas"]],
+    [2, "int x = 7; x++; x nechaga teng?", "8", ["7", "6", "14"]],
+    [2, "int x = 10; x += 5; x nechaga teng?", "15", ["10", "5", "105"]],
+    [2, "C++ da 7.0 / 2 nechaga teng?", "3.5", ["3", "4", "Xato"]],
+    [2, "Ozgaruvchini eʼlon qilmay ishlatsak nima boʻladi?", "Kompilyatsiya xatosi", ["0 boʻladi", "Ishlayveradi", "Kompyuter oʻchadi"]],
+    [2, "if (x = 5) — bu yerda qanday xato bor?", "= oʻrniga == boʻlishi kerak", ["Xato yoʻq", "Nuqtali vergul yoʻq", "Qavs ortiqcha"]],
+    [2, "for (int i = 1; i <= 5; i++) necha marta ishlaydi?", "5", ["4", "6", "1"]],
+    [2, "Massiv int a[5] nechta element saqlaydi?", "5", ["4", "6", "Cheksiz"]],
+    [3, "int a[5] da oxirgi element indeksi?", "4", ["5", "0", "6"]],
+    [3, "int ga 2 147 483 647 + 1 qoʻshilsa nima boʻladi?", "Toshib, manfiy son chiqadi", ["2 147 483 648", "Xato xabari", "0"]],
+    [3, "vector qaysi jihati bilan massivdan farq qiladi?", "Oʻlchami oʻsadi (push_back)", ["Sekinroq ishlaydi", "Faqat matn saqlaydi", "Farqi yoʻq"]],
+    [3, "sort(a, a + n) nima qiladi?", "Massivni oʻsish tartibida saralaydi", ["Massivni oʻchiradi", "Teskari qiladi", "Yigʻindini topadi"]],
+    [3, "while (true) {} — bu nima?", "Cheksiz sikl", ["Bir martalik sikl", "Xato", "Funksiya"]],
+    [3, "Olimpiadada katta yigʻindi uchun qaysi tur xavfsiz?", "long long", ["int", "char", "bool"]],
+    [3, "cin >> n; — bu nima qiladi?", "Klaviaturadan n ni oʻqiydi", ["n ni chiqaradi", "n ni oʻchiradi", "n ni saralaydi"]],
+  );
 
   // ---------- Saqlangan mavzu tanlovi ----------
   // Bola/o'qituvchi tanlagan mavzular qurilmada saqlanadi. Keyin bankka qo'shilgan mavzu o'sha ro'yxatda yo'q —
