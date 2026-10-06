@@ -49,6 +49,25 @@
         b.items.forEach(([l, code]) => row.append(h("span", null, h("b", { text: l }), morseGroup(code))));
         return row;
       }
+      case "robot": { // Robot maydoni (chapda) va kod (o'ngda): b = { w, h, robot: [x, y], belgilar: [{ x, y, harf }], kod: [satrlar] }
+        const maydon = h("div", { class: "q-robot-maydon", role: "img", "aria-label": "Robot maydoni" });
+        maydon.style.gridTemplateColumns = `repeat(${b.w}, var(--r-katak))`;
+        for (let y = b.h - 1; y >= 0; y--) {
+          for (let x = 0; x < b.w; x++) {
+            const katak = h("span", { class: "r-katak" });
+            if (b.robot[0] === x && b.robot[1] === y) {
+              katak.classList.add("r-robot");
+              katak.innerHTML = QK.art.robot();
+            }
+            const harf = (b.belgilar || []).find((m) => m.x === x && m.y === y);
+            if (harf) katak.append(h("b", { class: "r-harf", text: harf.harf }));
+            maydon.append(katak);
+          }
+        }
+        const kod = h("ol", { class: "q-robot-kod" });
+        b.kod.forEach((satr) => kod.append(h("li", { text: satr })));
+        return h("div", { class: "q-robot" }, maydon, kod);
+      }
       case "code": // Python kodi: satrlar va otstup saqlanadi (musobaqa savollari-2)
         return h("pre", { class: "q-code", text: b.text });
       case "lines": {

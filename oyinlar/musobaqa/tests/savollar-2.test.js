@@ -78,13 +78,19 @@ const JAVOB = {
     return String(qaysi === "B" ? b + k : amal === "kesish" ? a - k : a);
   },
   robotJoy: (q) => {
-    let x = 0, y = 0;
+    let [x, y] = q.data.start;
     for (const b of q.data.b) { x += OQ[b][0]; y += OQ[b][1]; }
-    if (q.level === 1) return String(x);
-    const qism = [];
-    if (x) qism.push(`${Math.abs(x)} ta ${x > 0 ? "oʻngda" : "chapda"}`);
-    if (y) qism.push(`${Math.abs(y)} ta ${y > 0 ? "yuqorida" : "pastda"}`);
-    return qism.join(", ");
+    const blok = q.blocks.find((b) => b.type === "robot");
+    assert.ok(x >= 0 && y >= 0 && x < blok.w && y < blok.h, q.key + ": robot maydondan chiqib ketdi");
+    assert.deepEqual(blok.robot, q.data.start, q.key);
+    assert.deepEqual(blok.kod, q.data.b, q.key);
+    if (q.level === 1) return String(x - q.data.start[0]);
+    // harfli kataklar maydon ichida, bir-biridan va robotdan farqli
+    const joylar = blok.belgilar.map((m) => m.x + "," + m.y);
+    assert.equal(new Set(joylar).size, joylar.length, q.key);
+    assert.ok(!joylar.includes(q.data.start.join(",")), q.key);
+    assert.ok(blok.belgilar.length >= 3, q.key + ": kamida 3 variant");
+    return blok.belgilar.find((m) => m.x === x && m.y === y).harf;
   },
   takror: (q) => String(q.data.oldin + q.data.n * q.data.ichi.length + q.data.keyin),
   paket: (q) => (q.level === 3 ? String(q.data.jami - q.data.keldi.length) : String(Math.ceil(q.data.n / q.data.k))),

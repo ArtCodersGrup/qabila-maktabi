@@ -182,14 +182,20 @@
   // ======================================================================
   const OQ = { "→": [1, 0], "←": [-1, 0], "↑": [0, 1], "↓": [0, -1] };
   const siljish = (buyruqlar) => buyruqlar.reduce(([x, y], b) => [x + OQ[b][0], y + OQ[b][1]], [0, 0]);
-  const joyMatni = ([x, y]) => {
-    const q = [];
-    if (x) q.push(`${Math.abs(x)} ta ${x > 0 ? "oʻngda" : "chapda"}`);
-    if (y) q.push(`${Math.abs(y)} ta ${y > 0 ? "yuqorida" : "pastda"}`);
-    return q.length ? q.join(", ") : "Joyida";
-  };
 
-  // Robot qayerga yetdi: 1 — faqat → ←, nechta katak o'ngda; 2–3 — to'rt yo'nalish, javob so'z bilan
+  // Robot qayerga yetdi — o'yindagidek: chapda maydon (robot va harfli kataklar), o'ngda kod.
+  // 1 — faqat → ←, javob: necha katak o'ngda; 2–3 — to'rt yo'nalish, javob: qaysi harfli katakka yetdi
+  function maydonYasa(rng, b, qoshimcha) {
+    // Yo'l maydondan chiqmasin: boshlanish nuqtasini yo'lning eng chap/past nuqtasiga qarab tanlaymiz
+    let x = 0, y = 0, minX = 0, maxX = 0, minY = 0, maxY = 0;
+    for (const k of b) { x += OQ[k][0]; y += OQ[k][1]; minX = Math.min(minX, x); maxX = Math.max(maxX, x); minY = Math.min(minY, y); maxY = Math.max(maxY, y); }
+    const w = Math.max(5, maxX - minX + 1 + qoshimcha);
+    const h = Math.max(4, maxY - minY + 1 + qoshimcha);
+    const sx = -minX + ri(rng, 0, w - (maxX - minX + 1));
+    const sy = -minY + ri(rng, 0, h - (maxY - minY + 1));
+    return { w, h, start: [sx, sy], oxiri: [sx + x, sy + y] };
+  }
+
   const robotJoy = {
     topic: "dastur",
     levels: [1, 2, 3],
@@ -198,32 +204,46 @@
         let b;
         do { b = Array.from({ length: ri(rng, 4, 7) }, () => (rng() < 0.7 ? "→" : "←")); } while (siljish(b)[0] <= 0);
         const x = siljish(b)[0];
+        const m = maydonYasa(rng, b, 1);
         return {
           id: b.join(""),
-          data: { b },
-          text: "Robot shu buyruqlarni bajardi. U boshlagan joyidan necha katak oʻngda turibdi?",
-          blocks: [big(b.join(" "))],
+          data: { b, start: m.start },
+          text: "Robot shu kodni bajardi. U boshlagan joyidan necha katak oʻngga siljidi?",
+          blocks: [{ type: "robot", w: m.w, h: m.h, robot: m.start, belgilar: [], kod: b }],
           input: num(1),
           answer: String(x),
-          explain: `→ ${b.filter((v) => v === "→").length} ta, ← ${b.filter((v) => v === "←").length} ta: ${x} katak oʻngda.`,
+          explain: `→ ${b.filter((v) => v === "→").length} ta, ← ${b.filter((v) => v === "←").length} ta: ${x} katak oʻngga.`,
         };
       }
       const yon = Object.keys(OQ);
       let b, j;
       do {
-        b = Array.from({ length: level === 2 ? ri(rng, 4, 6) : ri(rng, 7, 9) }, () => pick(rng, yon));
+        b = Array.from({ length: level === 2 ? ri(rng, 3, 5) : ri(rng, 6, 8) }, () => pick(rng, yon));
         j = siljish(b);
-      } while (!j[0] || !j[1]);
-      const javob = joyMatni(j);
-      const xato = [joyMatni([-j[0], j[1]]), joyMatni([j[0], -j[1]]), joyMatni([j[1], j[0]]), joyMatni([j[0] + 1, j[1]]), joyMatni([j[0], j[1] - 1])];
+      } while (!j[0] && !j[1]);
+      const m = maydonYasa(rng, b, 2);
+      // Chalg'ituvchi kataklar — tipik xatolar: o'q teskari o'qildi, bitta qadam unutildi, x va y almashdi
+      const [ox, oy] = m.oxiri;
+      const [sx, sy] = m.start;
+      const nomzod = [[sx - j[0], oy], [ox, sy - j[1]], [sx + j[1], sy + j[0]], [ox + 1, oy], [ox - 1, oy], [ox, oy + 1], [ox, oy - 1], [sx - j[0], sy - j[1]]];
+      const ichida = ([x, y]) => x >= 0 && y >= 0 && x < m.w && y < m.h;
+      const teng = (p, q) => p[0] === q[0] && p[1] === q[1];
+      const xatolar = [];
+      for (const p of shuffle(rng, nomzod)) {
+        if (xatolar.length < 3 && ichida(p) && !teng(p, m.oxiri) && !teng(p, m.start) && !xatolar.some((q) => teng(p, q))) xatolar.push(p);
+      }
+      const kataklar = shuffle(rng, [m.oxiri, ...xatolar]);
+      const HARFLAR = ["A", "B", "C", "D"];
+      const belgilar = kataklar.map((p, k) => ({ x: p[0], y: p[1], harf: HARFLAR[k] }));
+      const javob = belgilar.find((q) => teng([q.x, q.y], m.oxiri)).harf;
       return {
-        id: b.join(""),
-        data: { b },
-        text: "Robot shu buyruqlarni bajardi. Boshlagan joyiga nisbatan qayerda?",
-        blocks: [big(b.join(" "))],
-        input: choice(withOptions(rng, javob, xato)),
+        id: `${b.join("")}@${sx},${sy}`,
+        data: { b, start: m.start, belgilar },
+        text: "Robot shu kodni bajarsa, qaysi harfli katakka yetib boradi?",
+        blocks: [{ type: "robot", w: m.w, h: m.h, robot: m.start, belgilar, kod: b }],
+        input: choice(HARFLAR.slice(0, belgilar.length)),
         answer: javob,
-        explain: `Oʻng-chap: ${j[0] >= 0 ? "+" : "−"}${Math.abs(j[0])}, yuqori-past: ${j[1] >= 0 ? "+" : "−"}${Math.abs(j[1])} → ${javob}.`,
+        explain: `Oʻng-chap: ${j[0] >= 0 ? "+" : "−"}${Math.abs(j[0])}, yuqori-past: ${j[1] >= 0 ? "+" : "−"}${Math.abs(j[1])} → ${javob} katak.`,
       };
     },
   };
@@ -247,7 +267,7 @@
         id: satrlar.join("|"),
         data: { n, ichi, oldin, keyin },
         text: "Robot bu dasturda jami nechta qadam yuradi?",
-        blocks: [lines(satrlar)],
+        blocks: [code(satrlar.join("\n"))],
         input: num(2),
         answer: String(jami),
         explain: `${oldin ? oldin + " + " : ""}${n} × ${ichi.length}${keyin ? " + " + keyin : ""} = ${jami}.`,

@@ -63,3 +63,18 @@
 }
 .chip[aria-pressed="true"] { border-color: var(--asosiy); background: var(--asosiy); color: #fff; }
 .chip[aria-pressed="true"]::before { content: "✓ "; }
+
+/* Robot maydoni va kod (musobaqa savollari-2, «Robot va algoritm»): chapda katakli maydon, o'ngda buyruqlar */
+.q-robot { --r-katak: 30px; display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: center; gap: 12px; }
+.q-robot-maydon { display: grid; gap: 2px; padding: 4px; border-radius: 10px; background: #D9D2C3; }
+.r-katak { position: relative; width: var(--r-katak); height: var(--r-katak); border-radius: 4px; background: #FFFBF2; display: grid; place-items: center; }
+.r-robot { background: #DCE8FB; }
+.r-robot svg { width: 100%; height: 100%; }
+.r-harf { width: 24px; height: 24px; border-radius: 50%; background: var(--asosiy); color: #fff; display: grid; place-items: center; font-size: 15px; font-weight: 900; }
+.q-robot-kod {
+  margin: 0; padding: 8px 12px 8px 36px; min-width: 96px; border-radius: 10px; background: #1F2430; color: #F2F4F8;
+  font: 700 22px/1.35 ui-monospace, Menlo, Consolas, monospace; text-align: left;
+}
+.q-robot-kod li::marker { color: #8A93A6; font-size: 14px; }
+@media (max-width: 400px) { .q-robot { --r-katak: 26px; } }
+
