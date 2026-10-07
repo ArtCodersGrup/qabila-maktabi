@@ -106,3 +106,15 @@ test("validate: masala banki xatolarini topadi", () => {
   assert.ok(K.validate({ type: "kod-yoz", solution: "print(" })[0].includes("xato berdi"));
   assert.ok(K.validate({ type: "bosh-joy", template: "x = 5", solution: "x = 5" })[0].includes("___"));
 });
+
+// Muallif 2026-10-07: bola ' yozadi, kutilgan javobda oʻ (U+02BB) yoki ʼ bo'lishi mumkin — teng hisoblanadi
+test("sameOutput: o'zbek apostroflari (ʻ ʼ ‘ ’ `) oddiy ' bilan teng", () => {
+  const K = require("../js/kod.js");
+  assert.equal(K.sameOutput(["yoʻq"], ["yo'q"]), true);
+  assert.equal(K.sameOutput("Oʻzbekiston\nmaʼlumot", "O'zbekiston\nma'lumot"), true);
+  assert.equal(K.sameOutput(["gʻalaba"], ["g‘alaba"]), true);
+  assert.equal(K.sameOutput(["yoʻq"], ["yo q"]), false, "boshqa belgi — teng emas");
+  assert.equal(K.firstDiff(["yoʻq", "ha"], ["yo'q", "ha"]), null, "farq yo'q");
+  const d = K.firstDiff(["toʻgʻri"], ["to'gri"]);
+  assert.equal(d.col, 5, "farq apostrofdan keyin — g harfida");
+});

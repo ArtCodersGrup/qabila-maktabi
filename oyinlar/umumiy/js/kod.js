@@ -23,9 +23,16 @@
     return lines;
   }
 
+  // O'zbekcha tutuq va o'zbek belgilari: oʻ/gʻ (ʻ U+02BB), tutuq ʼ (U+02BC), ‘ ’ ` — bola klaviaturada oddiy ' yozadi.
+  // Solishtirishda hammasi bitta belgi hisoblanadi (muallif 2026-10-07: "' to'g'ri olinishi kerak").
+  // Faqat solishtirish uchun — ekranda bola yozgani va kutilgan matn o'zgarmaydi.
+  const APOSTROF = /[ʻʼ‘’`´]/g;
+  const tekis = (line) => line.replace(APOSTROF, "'");
+  const tengmi = (x, y) => x === y || (x !== null && y !== null && tekis(x) === tekis(y));
+
   const sameOutput = (a, b) => {
     const x = normalize(a), y = normalize(b);
-    return x.length === y.length && x.every((line, k) => line === y[k]);
+    return x.length === y.length && x.every((line, k) => tengmi(line, y[k]));
   };
 
   // Ikki matn qayerdan farq qilishini topadi (ter turida "shu yerda farq bor" deb ko'rsatiladi)
@@ -36,11 +43,12 @@
     for (let k = 0; k < Math.max(a.length, b.length); k++) {
       const left = a[k] === undefined ? null : a[k];
       const right = b[k] === undefined ? null : b[k];
-      if (left === right) continue;
+      if (left === null && right === null) continue;
+      if (left !== null && right !== null && tengmi(left, right)) continue;
       if (left === null) return { line: k + 1, col: 1, expected: "", got: right };
       if (right === null) return { line: k + 1, col: 1, expected: left, got: "" };
       let col = 0;
-      while (col < left.length && col < right.length && left[col] === right[col]) col++;
+      while (col < left.length && col < right.length && tekis(left[col]) === tekis(right[col])) col++;
       return { line: k + 1, col: col + 1, expected: left, got: right };
     }
     return null;
