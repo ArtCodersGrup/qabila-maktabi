@@ -29,7 +29,9 @@
   // Bosqich uchun nechta to'g'ri javob kerak (matnlarda ham shu ishlatiladi: `${QK.practice.need()} ta`)
   const need = () => (hard ? HARD_NEED : NEED[Math.min(stage, NEED.length) - 1]);
   // Qiyinlik zinasi: 0 — birinchi javoblar, 1 — o'rta, 2 — oxirgi (qiyin rejimda doim 2)
-  const tier = (correct) => (hard ? 2 : correct < 2 ? 0 : correct < 4 ? 1 : 2);
+  // 5–8 va 9–11 (kattalar ko'rinishi, muallif 2026-10-07: "o'ta oson"): zina tezroq ko'tariladi — faqat 1-misol oson
+  const kattalar = () => !!(ui.kattalar && root.document && ui.kattalar());
+  const tier = (correct) => (hard ? 2 : kattalar() ? (correct < 1 ? 0 : correct < 3 ? 1 : 2) : correct < 2 ? 0 : correct < 4 ? 1 : 2);
   // Yulduzlar: xatosiz — 3, xato bo'ldi lekin yechim ko'rsatilmadi — 2, yechim ko'rsatildi — 1
   const stars = () => (stats.solutions ? 1 : stats.mistakes ? 2 : 3);
 
@@ -123,7 +125,13 @@
       if (ok) {
         correct++;
         ui.setProgress(total, correct);
-        await ui.say("elder", `${PRAISE[(correct - 1) % PRAISE.length]} ${praise(task)}`);
+        if (kattalar()) {
+          // Kattalarga: qisqa ✓ va o'zi keyingi misolga — "Davom" bosish shart emas, "Barakalla" yo'q
+          ui.bubble("elder", `✓ ${praise(task)}`);
+          await ui.sleep(1100);
+        } else {
+          await ui.say("elder", `${PRAISE[(correct - 1) % PRAISE.length]} ${praise(task)}`);
+        }
       } else {
         await ui.say("elder", "Toʻgʻri javob ekranda. Endi yangi misol.");
       }

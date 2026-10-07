@@ -7,15 +7,15 @@
   const S = sanoq;
 
   const SCENES = [
-    { art: "paint", lines: ["Rang kodi #FF8800: qizil FF = 255, yashil 88 = 136, koʻk 00 = 0.", "Shuning uchun u toʻq sariq!"] },
-    { art: "arrows", lines: ["Keyingi oʻyinda — teskari yoʻl.", "Oʻnlikdagi sonni istalgan tizimga oʻtkazamiz!"] },
+    { art: "paint", lines: ["Qayerda uchraydi: rang kodi #FF8800 — R = FF = 255, G = 88 = 136, B = 00 = 0.", "Bitta bayt (8 bit) aynan 2 ta 16-lik raqamga sigʻadi — shuning uchun dasturchilar 16-likni yaxshi koʻradi."] },
+    { art: "arrows", lines: ["Teskari yoʻl — oʻnlikdan istalgan tizimga — «Qoplarga joylash» oʻyinida."] },
   ];
 
   // 6.1: bola harfni bosadi — u songa aylanadi, keyin yoyib yoziladi
   async function letters() {
     const el = common.box(true);
     el.append(ui.h("div", { class: "big-value", text: S.fmt("C8", 16) }), bozorUi.hexStrip());
-    ui.bubble("elder", "16-likda harflar bor. C harfini bos — u qaysi songa aylanadi?");
+    ui.bubble("elder", "16-likda 16 ta raqam kerak: 0–9 va A–F. C ni bos — u nechaga teng?");
     await ui.settle((done) => {
       const card = ui.h("button", { class: "letter-card", type: "button", text: "C" });
       const row = ui.h("div", { class: "letter-row" }, card, ui.h("span", { class: "letter-rest", text: "8" }));
@@ -29,18 +29,18 @@
       });
     });
     common.add(el, bozorUi.placed("C8", 16, { values: true }));
-    await ui.say("elder", "C = 12. Xonalar: 16 va 1.");
+    await ui.say("elder", "C = 12. Vaznlar: 16¹ = 16 va 16⁰ = 1.");
     common.add(el, common.answerLine(`${bozor.expandText("C8", 16)} = 200`));
-    await ui.say("elder", "12·16 + 8 = 200. Demak, C8₁₆ = 200!");
+    await ui.say("elder", "12·16 + 8 = 200, yaʼni C8₁₆ = 200₁₀.");
     common.add(el, common.answerLine(`FF₁₆ = ${bozor.expandText("FF", 16)} = 255`));
-    await ui.say("elder", "Eng katta ikki xonali 16-lik son — FF = 255. Esingdami, rang chirogʻi 0–255!");
+    await ui.say("elder", "FF₁₆ = 255 — ikki xonali eng katta 16-lik son, bir baytning eng katta qiymati.");
   }
 
   async function definition() {
     const el = common.box(false);
     el.append(bozorUi.hexStrip());
-    common.formula(el, ["1) harfni songa aylantir", "2) raqam × xona qiymati (16, 1)", "3) hammasini qoʻsh"]);
-    await ui.say("elder", "Avval harfni songa aylantir, keyin xona qiymatiga koʻpaytir.");
+    common.formula(el, ["1) harf → son (A = 10 … F = 15)", "2) raqam × vazn (…, 256, 16, 1)", "3) yigʻindi"]);
+    await ui.say("elder", "Usul oʻsha: faqat raqamlar orasida harflar bor. Uch xonali sonda vaznlar 256, 16, 1.");
   }
 
   // 6.3: mashq — 16-lik son → o'nlik
@@ -49,14 +49,14 @@
     // A–F qatori faqat birinchi javoblarda (tier 0) ko'rinadi; keyin yashirin — maslahat qaytaradi
     if (!task.tier) el.append(bozorUi.hexStrip());
     el.append(ui.h("div", { class: "big-value", text: S.fmt(task.number, 16) }));
-    ui.bubble("elder", "Bu son oʻnlikda nechaga teng?");
+    ui.bubble("elder", "Oʻnlikda nechaga teng?");
     return practice.numberTries({
       answer: task.answer,
       maxLen: 4,
       hint: () => {
         if (task.tier) el.prepend(bozorUi.hexStrip());
         common.add(el, bozorUi.placed(task.number, 16, { values: true }));
-        ui.bubble("elder", "↻ Harfni songa aylantirdim. Endi xona qiymatiga koʻpaytir.");
+        ui.bubble("elder", "↻ Harflar songa aylantirildi. Endi raqam × vazn.");
       },
       solution: () => common.add(el, common.answerLine(`${bozor.expandText(task.number, 16)} = ${task.answer}`)),
     });
@@ -73,7 +73,7 @@
   async function stage3() {
     await letters();
     await definition();
-    await ui.say("elder", `Endi oʻzing: 16-likdan oʻnlikka. ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta 16-lik son. A–F jadvali faqat birinchi misolda koʻrinadi.`);
     await practice.exercises({
       next: (prev, correct, tier) => bozor.makeHexTask(prev, undefined, tier),
       run: hexTask,

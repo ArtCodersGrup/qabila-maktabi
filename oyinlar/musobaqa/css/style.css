@@ -176,3 +176,8 @@
   .answer-pad .key { min-height: 48px; }
 }
 
+/* 5–8 va 9–11 (kattalar ko'rinishi, umumiy/js/toifa.js qo'yadi): muxlis-qahramonlar va ularning pufaklari yo'q,
+   tomon bayroqchasi qoladi — kim Oy, kim Quyosh ekani ko'rinib tursin */
+:root[data-toifa]:not([data-toifa="boshlangich"]):not([data-maskot]) .fan .actor, :root[data-toifa]:not([data-toifa="boshlangich"]):not([data-maskot]) .fan-bubble { display: none !important; }
+:root[data-toifa]:not([data-toifa="boshlangich"]):not([data-maskot]) .fan { min-height: 0; }
+

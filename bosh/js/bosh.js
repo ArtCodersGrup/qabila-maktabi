@@ -12,7 +12,10 @@
   // id lar umumiy/js/toifa.js dagi IDS bilan bir xil. sarlavha — bosh sahifa tepasidagi nom.
   const TOIFALAR = [
     { id: "boshlangich", title: "1–4-sinf", qisqa: "1–4", sarlavha: "Qabila maktabi", note: "Klaviatura, robotga buyruq va sirli xabarlar" },
-    { id: "orta", title: "5–8-sinf", qisqa: "5–8", sarlavha: "5–8-sinf informatikasi", note: "Kod, sonlar, internet, sunʼiy intellekt va Python" },
+    // tartib — shu toifadagi o'rganish yo'li (muallif 2026-10-07): axborotni belgilashdan boshlab, kod yozish oxirida.
+    // Berilmasa — SECTIONS tartibi. Ro'yxatda yo'q bo'lim (masalan "klaviatura") — SECTIONS dagi joyida, oxirida.
+    { id: "orta", title: "5–8-sinf", qisqa: "5–8", sarlavha: "5–8-sinf informatikasi", note: "Kod, sonlar, internet, sunʼiy intellekt va Python",
+      tartib: ["kod", "ikkilik", "olchov", "mantiq", "internet", "xavfsizlik", "ai", "ai2", "dastur", "python", "algoritm"] },
     { id: "yuqori", title: "9–11-sinf", qisqa: "9–11", sarlavha: "Olimpiada dasturlash", note: "Algoritmlar, kombinatorika, C++ va masalalar" },
     { id: "hammasi", title: "Hammasi", qisqa: "hammasi", sarlavha: "Qabila maktabi", note: "Oʻqituvchi uchun — barcha oʻyinlar" },
   ];
@@ -140,7 +143,13 @@
   const toifaYorligi = (item) => (item.toifa ? toifaById(item.toifa).qisqa : "");
 
   // Toifadagi o'yinlar — bo'limlar tartibida. Raqam ham shu ro'yxat bo'yicha: har toifada 1 dan boshlanadi.
-  const oyinlar = (toifa) => SECTIONS.flatMap((sec) => GAMES.filter((g) => g.topic === sec.id && mos(g, toifa)));
+  // Toifaning bo'limlar tartibi: o'z "tartib"i bo'lsa — shu, qolganlari SECTIONS tartibida oxirida
+  const bolimlar = (toifa) => {
+    if (!toifa || !Array.isArray(toifa.tartib)) return SECTIONS;
+    const oldin = toifa.tartib.map((id) => SECTIONS.find((s) => s.id === id)).filter(Boolean);
+    return oldin.concat(SECTIONS.filter((s) => !toifa.tartib.includes(s.id)));
+  };
+  const oyinlar = (toifa) => bolimlar(toifa).flatMap((sec) => GAMES.filter((g) => g.topic === sec.id && mos(g, toifa)));
   const number = (game, toifa) => oyinlar(toifa).indexOf(game) + 1;
 
   // Tanlov umumiy/js/toifa.js da saqlanadi (bosh sahifa uni <head> da ulaydi); sahifa ko'rinishi ham o'sha yerda yangilanadi
@@ -294,7 +303,7 @@
     if (musobaqaBor && toifa.id === "hammasi") list.append(musobaqalar);
 
     // Bo'limlar — o'rganish yo'li, har biri o'z rangi va "tugagan/jami" hisobi bilan
-    SECTIONS.forEach((section, idx) => {
+    bolimlar(toifa).forEach((section, idx) => {
       const games = GAMES.filter((g) => g.topic === section.id && mos(g, toifa));
       if (!games.length) return; // bu toifada bo'sh bo'lim ko'rsatilmaydi
       const rang = RANGLAR[idx % RANGLAR.length];
@@ -342,6 +351,6 @@
   }
 
   root.QK = root.QK || {};
-  root.QK.bosh = { TOIFALAR, SECTIONS, GAMES, CONTESTS, MASHQLAR, MODES, mos, toifaById, oyinlar, toifaYorligi, number, render };
+  root.QK.bosh = { TOIFALAR, SECTIONS, GAMES, CONTESTS, MASHQLAR, MODES, mos, toifaById, bolimlar, oyinlar, toifaYorligi, number, render };
   if (root.document && root.document.getElementById("list")) render(); // o'qituvchi paneli faqat katalogni oladi
 })(window);

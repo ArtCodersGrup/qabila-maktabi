@@ -10,7 +10,7 @@ const ROOT = path.join(__dirname, "../..");
 const win = {};
 loadScript(path.join(ROOT, "bosh/js/bosh-art.js"), win);
 loadScript(path.join(ROOT, "bosh/js/bosh.js"), win);
-const { GAMES, SECTIONS, CONTESTS, MASHQLAR, TOIFALAR, mos, oyinlar, toifaYorligi, number } = win.QK.bosh;
+const { GAMES, SECTIONS, CONTESTS, MASHQLAR, TOIFALAR, mos, bolimlar, oyinlar, toifaYorligi, number } = win.QK.bosh;
 const toifa = (id) => TOIFALAR.find((t) => t.id === id);
 
 test("barcha o'yin papkalari ro'yxatda bor va aksincha", () => {
@@ -71,8 +71,8 @@ test("har toifada raqamlar 1 dan ketma-ket, bo'limlar tartibida", () => {
     const list = oyinlar(t);
     assert.ok(list.length > 0, t.id + ": bitta ham o'yin yo'q");
     assert.deepEqual(list.map((g) => number(g, t)), list.map((g, k) => k + 1), t.id);
-    // Bo'limlar tartibi saqlanadi
-    const tartib = list.map((g) => SECTIONS.findIndex((s) => s.id === g.topic));
+    // Bo'limlar tartibi saqlanadi (toifaning o'z tartibi bo'yicha)
+    const tartib = list.map((g) => bolimlar(t).findIndex((s) => s.id === g.topic));
     assert.deepEqual(tartib, [...tartib].sort((a, b) => a - b), t.id + ": bo'limlar tartibi buzilgan");
   }
   assert.equal(number(GAMES.find((g) => g.dir === "66-kompyuter-qismlari"), toifa("boshlangich")), 1, "kompyuter bilan tanishuv — birinchi");
@@ -201,4 +201,15 @@ test("o'yin sahifasi: toifa.js <head> da, uslublardan oldin", () => {
     assert.ok(head.includes(SKRIPT), g.dir);
     assert.ok(head.indexOf(SKRIPT) < head.indexOf("asos.css"), g.dir + ": toifa.js uslubdan oldin");
   }
+});
+
+// 5–8 o'rganish yo'li: kodlashdan boshlanadi, Python va algoritmlar oxirida (muallif 2026-10-07)
+test("5–8 bo'limlar tartibi: birinchi o'yin kodlashdan, Python algoritmdan oldin; har bo'lim bir marta", () => {
+  const orta = toifa("orta");
+  const ids = bolimlar(orta).map((s) => s.id);
+  assert.equal(new Set(ids).size, SECTIONS.length, "har bo'lim aynan bir marta");
+  assert.equal(oyinlar(orta)[0].topic, "kod");
+  assert.ok(ids.indexOf("python") < ids.indexOf("algoritm"));
+  assert.ok(ids.indexOf("ikkilik") < ids.indexOf("python"));
+  assert.deepEqual(bolimlar(toifa("boshlangich")), SECTIONS, "1–4 tartibi o'zgarmadi");
 });
