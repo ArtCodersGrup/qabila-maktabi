@@ -258,7 +258,8 @@
   }
 
   // ---------- Natija ----------
-  function natija(host, state, meId) {
+  // ismlar — faqat o'qituvchi doskasida (sinf xonasi): o'yindan keyin "Ali K." va qaysi rangda o'ynagani
+  function natija(host, state, meId, ismlar) {
     const r = T.reyting(state);
     const me = state.oyinchilar[meId];
     const sabab = {
@@ -272,7 +273,7 @@
     const el = h("div", { class: "natija" },
       h("div", { class: "natija-golib" },
         golib ? h("span", { class: "natija-rasm", html: art.odam(golib.rang) }) : null,
-        h("h1", { text: state.golib === meId ? "Sen yutding!" : golib ? `${golib.nom} yutdi!` : "Oʻyin tugadi" })),
+        h("h1", { text: state.golib === meId ? "Sen yutding!" : golib ? `${(ismlar && ismlar[state.golib]) || golib.nom} yutdi!` : "Oʻyin tugadi" })),
       h("p", { class: "natija-sabab", text: sabab }));
     const list = h("div", { class: "natija-royxat" });
     r.forEach((p, k) => {
@@ -280,7 +281,8 @@
       list.append(h("div", { class: "natija-qator" + (p.id === meId ? " men" : "") },
         h("span", { class: "reyting-orin", text: String(k + 1) }),
         h("span", { class: "reyting-rasm", html: art.nishon(q.rang) }),
-        h("span", { class: "reyting-nom", text: p.id === meId ? "Sen" : q.nom }),
+        h("span", { class: "reyting-nom", text: p.id === meId ? "Sen" : ismlar && ismlar[p.id] ? ismlar[p.id] : q.nom },
+          ismlar && ismlar[p.id] && p.id !== meId ? h("small", { class: "natija-rang", text: " · " + q.nom }) : null),
         h("span", { class: "natija-hisob", text: `${p.pogona}-pogʻona · ✓ ${p.togri} · ↻ ${p.xato}` })));
     });
     el.append(list);

@@ -221,6 +221,25 @@ async def parol_tikla(sid: int, uid: int, u=Depends(oqituvchi), conn=Depends(db)
     return {"id": r["id"], "ism": r["ism"], "login": r["login"], "parol": p}
 
 
+@router.post("/{sid}/oquvchilar/{uid}/ism")
+async def ism_ozgartir(sid: int, uid: int, body: Nom, u=Depends(oqituvchi), conn=Depends(db)):
+    # Faqat o'qituvchi yaratgan (login bilan) akkaunt; o'quvchi o'zi ismini o'zgartira olmaydi
+    s = await _sinf(conn, sid, u)
+    r = (await conn.execute(text(
+        "select u.login, u.kim_yaratgan from users u join sinf_azolari a on a.user_id = u.id "
+        "where a.sinf_id = :s and u.id = :i and a.holat = 'qabul'"), {"s": sid, "i": uid})).mappings().first()
+    if r is None:
+        raise HTTPException(404, "topilmadi")
+    if r["login"] is None or (u["rol"] != "admin" and r["kim_yaratgan"] != s["oqituvchi_id"]):
+        raise HTTPException(403, "ruxsat-yoq")
+    ism = ism_toza(body.nom)
+    if ism is None:
+        raise HTTPException(400, "ism-notogri")
+    await conn.execute(text("update users set ism = :n where id = :i"), {"n": ism, "i": uid})
+    await conn.commit()
+    return {"id": uid, "ism": ism}
+
+
 @router.post("/{sid}/sorovlar/{uid}")
 async def sorov_qaror(sid: int, uid: int, body: Qaror, u=Depends(oqituvchi), conn=Depends(db)):
     await _sinf(conn, sid, u)

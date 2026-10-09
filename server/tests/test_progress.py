@@ -41,6 +41,15 @@ def test_rekord_va_masalalar():
     }
 
 
+def test_mavzular_statistikasi():
+    k = "tog:mavzular:v1"
+    eski = {"sanoq": {"t": 3, "x": 5}, "kod": {"t": 1, "x": 0}}
+    yangi = {"sanoq": {"t": 4, "x": 2}, "ai": {"t": 0, "x": 1}}
+    assert P.birlashtir(k, eski, yangi) == {"sanoq": {"t": 4, "x": 5}, "kod": {"t": 1, "x": 0}, "ai": {"t": 0, "x": 1}}
+    for q in [{"a b": {"t": 1}}, {"kod": {"t": -1, "x": 0}}, {"kod": {"t": True, "x": 0}}, [1], {f"m{i}": {"t": 1} for i in range(41)}]:
+        assert P.birlashtir(k, None, q) is None, q
+
+
 @pytest.fixture
 def c(toza):
     with TestClient(create_app(TEST_DB), base_url="https://testserver", headers=ORIGIN) as client:

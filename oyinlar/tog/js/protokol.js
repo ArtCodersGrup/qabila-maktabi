@@ -7,7 +7,8 @@
 
   const T = typeof module !== "undefined" && module.exports ? require("./tog.js") : root.QK.tog;
 
-  const TYPES = ["lobbi", "holat", "kirdi", "javob"];
+  // mavzu — boshlovchi → server: bolaning shu o'yindagi mavzu hisobi (sinf xonasi natijasi uchun; server tarqatmaydi)
+  const TYPES = ["lobbi", "holat", "kirdi", "javob", "mavzu"];
   const MIN_JAVOB = 1200; // shundan tez kelgan javob hisobga olinmaydi (tasodifan bosish yoki aldash)
   const HOST_JIM = 20000; // boshlovchidan shuncha vaqt xabar kelmasa — u uzilgan (DIZAYN 9.4)
   const SABABLAR = ["chogqi", "uzib-ketdi", "vaqt", "toxtatildi"];
@@ -111,10 +112,16 @@
     return !!T.javob(s, id, !!ok, now);
   }
 
+  // Bolaning shu o'yindagi mavzu hisobi → "mavzu" xabari. stat: { mavzu: { t, x } }
+  function mavzuPaket(id, stat) {
+    const m = Object.keys(stat || {}).filter((k) => /^[a-z0-9_-]{1,32}$/.test(k)).slice(0, 24);
+    return { id, m, t: m.map((k) => stat[k].t | 0), x: m.map((k) => stat[k].x | 0) };
+  }
+
   // Bo'sh qahramonlar: bitta qahramon bitta bolaga (DIZAYN 2.7)
   const bosh = (band) => T.QAHRAMONLAR.filter((q) => !band.includes(q.id));
 
-  const api = { TYPES, MIN_JAVOB, HOST_JIM, SABABLAR, kimlik, lobbi, paket, yaxshiPaket, holat, qabul, bosh };
+  const api = { TYPES, MIN_JAVOB, HOST_JIM, SABABLAR, kimlik, lobbi, paket, yaxshiPaket, holat, qabul, mavzuPaket, bosh };
 
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else {

@@ -4,7 +4,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.main import create_app
-from app.xona_natija import natija_ol
+from app.xona_natija import mavzu_ol, natija_ol
 from tests.conftest import TEST_DB, sql, user_yarat
 
 ORIGIN = {"Origin": "https://kelajagim.uz"}
@@ -27,12 +27,23 @@ def tog_holat(tugadi, ids=("k1", "k2")):
             "tgr": [10, 5][:n], "xat": [1, 3][:n], "qoldi": 0, "tugadi": tugadi, "golib": ids[0] if tugadi else "", "sabab": ""}
 
 
+def test_mavzu_ol():
+    assert mavzu_ol({"id": "k1", "m": ["sanoq", "kod"], "t": [2, 0], "x": [1, 4]}) == ("k1", {"sanoq": [2, 1], "kod": [0, 4]})
+    for d in [{"id": "k 1", "m": [], "t": [], "x": []}, {"id": "k1", "m": ["a"], "t": [1], "x": []},
+              {"id": "k1", "m": ["a b"], "t": [1], "x": [1]}, {"id": "k1", "m": ["a"], "t": [-1], "x": [1]},
+              {"id": "k1", "m": ["a"], "t": [True], "x": [1]}, {"id": "k1", "m": ["a"] * 25, "t": [1] * 25, "x": [1] * 25}, None]:
+        assert mavzu_ol(d) is None, d
+
+
 def test_natija_ol_tog_va_poyga():
     kimlar = {"k1": {"user_id": 7, "ism": "Ali K."}}
     meta, rows = natija_ol("tog", tog_holat(1), kimlar)
     assert meta == {"tog": "chimyon"}
-    assert rows == [{"user_id": 7, "ism": "Ali K.", "orin": 1, "pogona": 9, "togri": 10, "xato": 1, "chiqdi": False},
-                    {"user_id": None, "ism": None, "orin": 2, "pogona": 4, "togri": 5, "xato": 3, "chiqdi": False}]
+    assert rows == [{"user_id": 7, "ism": "Ali K.", "orin": 1, "pogona": 9, "togri": 10, "xato": 1, "chiqdi": False, "rang": "tulki"},
+                    {"user_id": None, "ism": None, "orin": 2, "pogona": 4, "togri": 5, "xato": 3, "chiqdi": False, "rang": "tulki"}]
+    # mavzular berilsa — o'yinchi qatoriga qo'shiladi
+    _, rows = natija_ol("tog", tog_holat(1), kimlar, {"k2": {"sanoq": [2, 3]}})
+    assert "mavzular" not in rows[0] and rows[1]["mavzular"] == {"sanoq": [2, 3]}
     poyga = {"tur": "maqol", "ids": ["k2", "k1"], "orin": [1, 2], "cpm": [180, 150], "aniq": [97, 90], "ms": [60000, 71000], "tugadi": 1}
     meta, rows = natija_ol("poyga", poyga, kimlar)
     assert meta == {"tur": "maqol"}
@@ -76,6 +87,10 @@ def test_sinf_xonasi_natijasi_saqlanadi(c):
         with c.websocket_connect(url.format(k="k1", r="player"), headers={"cookie": f"kj_sessiya={t_ali}"}) as p1, \
              c.websocket_connect(url.format(k="k2", r="player"), headers={"cookie": f"kj_sessiya={t_beg}"}) as p2:
             kut(p1, "kirdi"), kut(p2, "kirdi")
+            # kirgan sinf a'zosining ismi faqat boshlovchiga keladi
+            assert kut(h, "ismlar")["ismlar"] == {"k1": "Ali K."}
+            # boshlovchi mavzu hisobini yuboradi — saqlanadi, bolalarga tarqatilmaydi
+            h.send_text(msg("mavzu", {"id": "k2", "m": ["sanoq"], "t": [1], "x": [2]}))
             for td in (0, 1, 1, 1):  # tugadi bir necha marta takrorlanadi — bitta natija
                 h.send_text(msg("holat", tog_holat(td)))
                 kut(p1, "msg")
@@ -90,6 +105,11 @@ def test_sinf_xonasi_natijasi_saqlanadi(c):
     assert royxat[0]["golib"] == "Ali K."
     d = c.get(f"/api/sinflar/natija/{royxat[0]['id']}").json()["natija"]
     assert [(o["ism"], o["orin"]) for o in d["oyinchilar"]] == [("Ali K.", 1), (None, 2)]  # sinfda bo'lmagan — mehmon
+    assert d["oyinchilar"][0]["rang"] == "tulki"
+    # mavzu hisobi birinchi o'yin natijasida; yangi o'yin (tugadi 1 → 0) uni tozalaydi
+    birinchi = c.get(f"/api/sinflar/natija/{royxat[1]['id']}").json()["natija"]
+    assert birinchi["oyinchilar"][1]["mavzular"] == {"sanoq": [1, 2]}
+    assert all("mavzular" not in o for o in d["oyinchilar"])
     assert c.get("/api/sinflar/natijalar", params={"sinf": s["id"]}).json()["natijalar"][0]["id"] == royxat[0]["id"]
     # boshqa o'qituvchi ko'rmaydi
     token(c, "ustoz02", "qovun123")

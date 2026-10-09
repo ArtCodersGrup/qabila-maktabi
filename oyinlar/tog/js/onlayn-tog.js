@@ -135,6 +135,7 @@
     let sanoq = 0;
     let room = null;
     let timer = null;
+    const ismlar = {}; // sinf xonasida server beradigan ismlar — faqat o'yindan keyingi ro'yxatda ko'rsatiladi
     const el = E.box(false);
     const royxat = h("div", { class: "lobbi-royxat" });
     const holati = h("div", { class: "net-status", text: "⏳ Xona ochilmoqda…" });
@@ -190,10 +191,17 @@
       sound.play("win");
       const box = E.box(true, "tog-oyin");
       const ekran = E.oyin(box, { togId, meId: null, kuzatuvchi: true, holat: () => state });
-      // Bolaning javobi: hisobni faqat shu qurilma yuritadi
-      javobKeldi = (id, ok) => {
+      // Bolaning javobi: hisobni faqat shu qurilma yuritadi.
+      // Sinf xonasida har bolaning mavzu hisobi serverga ketadi (natija sahifasida «qaysi mavzuda xato»)
+      const mavzuHisob = {};
+      javobKeldi = (id, ok, mavzu) => {
         if (state.tugadi) return;
-        if (P.qabul(state, id, ok, Date.now())) yubor();
+        if (!P.qabul(state, id, ok, Date.now())) return;
+        if (sinf && mavzu && QK.mavzular && QK.savollar.TOPICS.some((t) => t.id === mavzu)) {
+          mavzuHisob[id] = QK.mavzular.qosh(mavzuHisob[id], mavzu, ok);
+          room.send("mavzu", P.mavzuPaket(id, mavzuHisob[id])); // natija yozilishidan OLDIN yetib boradi
+        }
+        yubor();
       };
       const chiqarish = h("div", { class: "host-chiqarish" });
       box.append(chiqarish);
@@ -254,7 +262,7 @@
         E.natija(state, null, [
           { label: "Yangi oʻyin", onClick: () => { state = null; sanoq = 0; qaytaLobbi(); } },
           { label: "Xonani yopish", onClick: chiqish, secondary: true },
-        ]);
+        ], { ismlar });
         ui.bubble("elder", "Oʻyin tugadi. Yangi oʻyin boshlash mumkin — bolalar xonada qoladi.");
       }
     }
@@ -277,6 +285,7 @@
       kind: KIND, code, me: "host", role: "host", types: P.TYPES, sinf: sinf && sinf.id,
       on: {
         sinf(ok) { if (!ok) sinfIzoh.textContent = "⚠ Natijalarni sinfga yozib boʻlmadi (qayta kiring). Oʻyin baribir ishlaydi."; },
+        ismlar(d) { Object.assign(ismlar, d); QK.probe.ismlar = ismlar; },
         status(s) {
           QK.probe.status = s;
           if (s === "ready") {
@@ -292,7 +301,7 @@
         },
         message(msg) {
           if (msg.type === "javob") {
-            if (javobKeldi && state && !state.tugadi) javobKeldi(msg.from, !!msg.data.ok);
+            if (javobKeldi && state && !state.tugadi) javobKeldi(msg.from, !!msg.data.ok, typeof msg.data.m === "string" ? msg.data.m : "");
             return;
           }
           if (msg.type !== "kirdi" || state) return; // o'yin ketayotganda yangi bola kutadi
@@ -397,7 +406,7 @@
         meId: me,
         mavzular: holatim ? holatim.mavzular : null,
         holat: () => holatim,
-        javob: (ok) => room.send("javob", { ok: ok ? 1 : 0 }),
+        javob: (ok, q) => room.send("javob", { ok: ok ? 1 : 0, m: (q && q.topic) || "" }),
       });
       E.buttons([{ label: "Chiqish", onClick: chiqish, secondary: true }]);
       ui.bubble("elder", "Boshladik! Toʻgʻri javob — bir pogʻona yuqoriga.");
@@ -405,13 +414,14 @@
 
     function natijaEkran(uzilish) {
       rejim = "natija";
+      const xatolar = ekran ? ekran.xatolar : null;
       ekran = null;
       if (uzilish && holatim && !holatim.tugadi) holatim.sabab = "uzildi";
       sound.play(holatim && holatim.golib === me ? "win" : "dum");
       E.natija(holatim, me, [
         { label: "Keyingi oʻyinni kutish", onClick: () => kutishEkran("Oʻqituvchi yangi oʻyin boshlashini kutamiz…") },
         { label: "Chiqish", onClick: chiqish, secondary: true },
-      ]);
+      ], { xatolar });
       if (uzilish) ui.bubble("elder", "Oʻqituvchining qurilmasi uzildi. Oʻyin shu yerda tugadi.");
     }
 

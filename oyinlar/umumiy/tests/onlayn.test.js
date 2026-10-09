@@ -66,3 +66,9 @@ test("ikki kishilik xona holati server ro'yxatidan", () => {
   assert.deepEqual(O.juftHolat(["right"], 5), { sides: ["right"], full: false, hostAt: null, extra: false });
   assert.deepEqual(O.juftHolat(["left", "begona"], 5).sides, ["left"]);
 });
+
+test("ismlar: faqat kalit → qisqa ism, boshqasi tashlanadi", () => {
+  assert.deepEqual(O.ismlarToza({ k1: "Ali K.", "k 2": "X", k3: 5, k4: "a".repeat(41), k5: "" }), { k1: "Ali K." });
+  assert.deepEqual(O.ismlarToza(null), {});
+  assert.deepEqual(O.ismlarToza(["Ali"]), {});
+});

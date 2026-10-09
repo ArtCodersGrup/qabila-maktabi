@@ -45,8 +45,27 @@
     ui.bubble("elder", "Qaysi rangda chiqasan?");
   }
 
+  // Bola o'zi o'ynaganda mavzu faqat bosh sahifadagi bo'limini o'qib tugatgach ochiladi (tanlangan sinf toifasida).
+  // Kirgan o'qituvchi/admin uchun qulf yo'q; o'qituvchi ochgan onlayn xonada ham qulf yo'q.
+  function qulfHisobla() {
+    const M = QK.mavzular;
+    const K = QK.bosh;
+    if (!M || !K) return null;
+    const kim = QK.hisob && QK.hisob.saqlangan();
+    if (kim && ["teacher", "admin"].includes(kim.rol)) return null;
+    const toifa = K.toifaById(QK.toifa && QK.toifa.oqi()) || K.toifaById("hammasi");
+    const tugadimi = (g) => QK.storage.create(g.key, g.stages).load().done.every(Boolean);
+    const out = {};
+    for (const t of QK.savollar.TOPICS) {
+      const x = M.holat(t.id, K, toifa, tugadimi);
+      out[t.id] = { holat: x.holat, matn: x.holat === "yopiq" ? M.sabab(x) : "" };
+    }
+    return out;
+  }
+
   function mavzuTanlash(qahramon) {
     E.mavzular({
+      qulf: qulfHisobla(),
       izoh: "Savollar shu mavzulardan keladi. Qiyinlikni tanla — yoki balandlikka qarab oshib borsin.",
       tanlangan: mavzulariniOl(),
       qiyinlik: qiyinlikOl(),
@@ -98,7 +117,7 @@
       E.natija(state, MEN, [
         { label: "Yana oʻynash", onClick: qahramonTanlash },
         { label: "Barcha oʻyinlar", onClick: () => { root.location.href = E.SITE_HOME; }, secondary: true },
-      ]);
+      ], { xatolar: ekran.xatolar });
       ui.bubble("elder", state.golib === MEN ? "Barakalla! Choʻqqi seniki." : "Yaxshi chiqding. Yana sinab koʻramizmi?");
     }
 

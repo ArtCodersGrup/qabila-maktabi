@@ -62,6 +62,27 @@ def test_sinf_va_oquvchilar(ustoz):
         assert b.get("/api/hisob/men").json()["user"]["parol_almashtirsin"] is True
 
 
+def test_ism_ozgartirish(ustoz):
+    c = ustoz
+    s = c.post("/api/sinflar", json={"nom": "5-A"}).json()["sinf"]
+    y = c.post(f"/api/sinflar/{s['id']}/oquvchilar", json={"ismlar": ["Ali K."]}).json()["yangi"][0]
+    url = f"/api/sinflar/{s['id']}/oquvchilar/{y['id']}/ism"
+    assert c.post(url, json={"nom": "1 2"}).json() == {"detail": "ism-notogri"}
+    assert c.post(url, json={"nom": "  Alisher   K. "}).json() == {"id": y["id"], "ism": "Alisher K."}
+    assert sql("select ism from users where id = :i", i=y["id"])[0]["ism"] == "Alisher K."
+    assert c.post(f"/api/sinflar/{s['id']}/oquvchilar/999999/ism", json={"nom": "Ali K."}).json() == {"detail": "topilmadi"}
+    # boshqa o'qituvchi — sinf topilmaydi
+    user_yarat(login="ustoz02", parol="qovun123", rol="teacher")
+    with mijoz() as b:
+        kir(b, "ustoz02", "qovun123")
+        assert b.post(url, json={"nom": "Ali K."}).json() == {"detail": "topilmadi"}
+    # o'quvchining o'zi bu yo'lga kira olmaydi
+    sql("update users set parol_almashtirsin = false where id = :i", i=y["id"])
+    with mijoz() as b:
+        kir(b, y["login"], y["parol"])
+        assert b.post(url, json={"nom": "Zo'r Bola"}).json() == {"detail": "ruxsat-yoq"}
+
+
 def test_begona_sinf_va_rollar(ustoz):
     s = ustoz.post("/api/sinflar", json={"nom": "5-A"}).json()["sinf"]
     user_yarat(login="ustoz02", parol="qovun123", rol="teacher")
@@ -100,6 +121,8 @@ def test_kod_bilan_qoshilish(ustoz):
     assert [o["ism"] for o in d["oquvchilar"]] == ["Sardor M."] and d["oquvchilar"][0]["meniki"] is False
     # o'zi yaratmagan o'quvchining parolini tiklab bo'lmaydi
     assert ustoz.post(f"/api/sinflar/{s['id']}/oquvchilar/{gid}/parol").json() == {"detail": "ruxsat-yoq"}
+    # o'zi ro'yxatdan o'tgan bolaning ismini ham o'qituvchi o'zgartira olmaydi
+    assert ustoz.post(f"/api/sinflar/{s['id']}/oquvchilar/{gid}/ism", json={"nom": "Boshqa B."}).json() == {"detail": "ruxsat-yoq"}
     assert ustoz.post(f"/api/sinflar/{s['id']}/chiqar/{gid}").json() == {"ok": True}
     assert ustoz.get(f"/api/sinflar/{s['id']}").json()["oquvchilar"] == []
 

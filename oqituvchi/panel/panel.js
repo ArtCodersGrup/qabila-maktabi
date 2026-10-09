@@ -30,12 +30,26 @@
     return { bolimlar, yulduz, qiyin, rekord, masalalar, tugagan, foiz: jami ? Math.round((tugagan / jami) * 100) : 0 };
   }
 
+  // Xona natijasidagi o'yinchilar mavzulari ({ mavzu: [t, x] }) → mavzular.js statistikasi ({ mavzu: { t, x } })
+  function mavzuStat(oyinchi) {
+    const out = {};
+    for (const [k, v] of Object.entries((oyinchi && oyinchi.mavzular) || {})) {
+      if (Array.isArray(v) && v.length === 2) out[k] = { t: Number(v[0]) || 0, x: Number(v[1]) || 0 };
+    }
+    return out;
+  }
+
   if (typeof module !== "undefined" && module.exports) {
-    module.exports = { hisobla };
+    module.exports = { hisobla, mavzuStat };
     return;
   }
 
   const H = root.QK.hisob;
+  const M = root.QK.mavzular; // Tog' savollari: mavzu statistikasi va mavzu → bo'lim
+  const TOPICS = (root.QK.savollar && root.QK.savollar.TOPICS) || [];
+  const QAHRAMONLAR = (root.QK.tog && root.QK.tog.QAHRAMONLAR) || [];
+  const STAT = "tog:mavzular:v1";
+  const bolimNomi = (mavzu) => M.bolimlari(mavzu).map((id) => (K.SECTIONS.find((x) => x.id === id) || {}).title).filter(Boolean).join(", ");
   const K = root.QK.bosh; // o'yinlar katalogi
   const B = root.QK.boshqaruv;
   const { h, ikon } = B;
@@ -50,6 +64,7 @@
     "sinf-toʻla": "Sinfda 60 tadan ortiq oʻquvchi boʻlmaydi.",
     "ismlar-notogri": "Har qatorda bitta ism boʻlsin, masalan «Ali K.» (2–40 harf).",
     "ruxsat-yoq": "Bu amalga ruxsat yoʻq.",
+    "ism-notogri": "Ism 2–40 harf boʻlsin, masalan «Ali K.».",
     topilmadi: "Topilmadi — sahifani yangilang.",
     tarmoq: "Server bilan aloqa yoʻq. Internetni tekshiring.",
   };
@@ -179,10 +194,13 @@
     if (!d.oquvchilar.length) {
       op.append(B.bosh("odamlar", "Sinfda hali oʻquvchi yoʻq. «Oʻquvchi qoʻshish» tugmasi bilan akkaunt yarating yoki bolalarga sinf kodini bering."));
     } else {
-      const qatorlar = d.oquvchilar.map((o) => ({ o, x: hisobla(d.progress[String(o.id)] || {}, K.GAMES, K.SECTIONS) }));
+      const qatorlar = d.oquvchilar.map((o) => {
+        const p = d.progress[String(o.id)] || {};
+        return { o, x: hisobla(p, K.GAMES, K.SECTIONS), zaif: M.jadval(p[STAT], TOPICS).filter((m) => m.zaif) };
+      });
       const eng = Math.max(1, ...qatorlar.map((q) => q.x.tugagan)); // chiziq — sinfdagi eng ko'p bajarganga nisbatan
       const tb = h("tbody");
-      for (const { o, x } of qatorlar) {
+      for (const { o, x, zaif } of qatorlar) {
         const tr = h("tr", { class: "bosiladi", tabindex: "0" },
           h("td", { class: "asosiy" }, h("div", { class: "bq-kim" }, B.avatar(o.ism, true),
             h("div", { class: "bq-kim-matn" }, h("b", { text: o.ism || "—" }), h("span", { text: o.login || o.email || "" })))),
@@ -193,6 +211,9 @@
           h("td", { class: "son ixtiyoriy", "data-nom": "Qiyin rejim", text: String(x.qiyin) }),
           h("td", { class: "son", "data-nom": "Oʻn barmoq", text: x.rekord ? x.rekord + " belgi/daq" : "—" }),
           h("td", { class: "son ixtiyoriy", "data-nom": "Masalalar", text: String(x.masalalar) }),
+          h("td", { class: "ixtiyoriy", "data-nom": "Zaif mavzu" }, zaif.length
+            ? h("span", { class: "bq-zaif", title: zaif.map((m) => `${m.title}: ${m.x} xato / ${m.jami}`).join("\n"), text: zaif[0].title + (zaif.length > 1 ? ` +${zaif.length - 1}` : "") })
+            : h("span", { class: "bq-qator-izoh", text: "—" })),
           h("td", { "data-nom": "Oxirgi kirish", text: B.qachon(o.oxirgi_kirish) }));
         const och = () => { root.location.hash = `sinf/${id}/oquvchi/${o.id}`; };
         tr.addEventListener("click", och);
@@ -200,7 +221,7 @@
         tb.append(tr);
       }
       op.append(h("table", { class: "bq-jadval" },
-        h("thead", {}, h("tr", {}, ...["Oʻquvchi", "Bosqichlar", "Yulduz", "Qiyin", "Oʻn barmoq", "Masalalar", "Oxirgi kirish"].map((t) => h("th", { text: t })))), tb));
+        h("thead", {}, h("tr", {}, ...["Oʻquvchi", "Bosqichlar", "Yulduz", "Qiyin", "Oʻn barmoq", "Masalalar", "Zaif mavzu", "Oxirgi kirish"].map((t) => h("th", { text: t })))), tb));
     }
     kids.push(op);
     Q.sahifa(...kids);
@@ -226,7 +247,30 @@
 
     const xato = h("p", { class: "bq-xato", role: "alert" });
     const amallar = [];
+    const ismJoy = h("div");
     if (o.meniki && o.login) {
+      // Ismni faqat o'qituvchi o'zgartiradi (o'zi yaratgan login uchun) — o'quvchining o'zida bu imkoniyat yo'q
+      amallar.push(B.tugma("Ismni oʻzgartirish", () => {
+        const kirit = h("input", { class: "bq-input", maxlength: "40", value: o.ism || "", autocomplete: "off", "aria-label": "Yangi ism" });
+        const xt = h("p", { class: "bq-xato", role: "alert" });
+        const btn = h("button", { class: "btn", type: "submit", text: "Saqlash" });
+        const f = h("form", { class: "bq-forma" },
+          h("div", { class: "bq-forma-qator" }, h("label", { class: "bq-maydon" }, h("span", { text: "Yangi ism (ism va familiyaning bosh harfi)" }), kirit), btn),
+          xt, B.tugma("Bekor qilish", () => { ismJoy.innerHTML = ""; }, "secondary sm"));
+        f.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          btn.disabled = true;
+          const r = await H.sinf.ism(id, uid, kirit.value);
+          btn.disabled = false;
+          if (!r.ok) { xt.textContent = xabar(r.xato); return; }
+          delete kesh[id];
+          oquvchi(id, uid);
+        });
+        ismJoy.innerHTML = "";
+        ismJoy.append(B.panel("Ismni oʻzgartirish", null, h("div", { class: "bq-panel-tana" }, f)));
+        kirit.focus();
+        kirit.select();
+      }, "secondary sm", "akkaunt"));
       amallar.push(B.tugma("Yangi parol", async () => {
         const r = await H.sinf.parol(id, uid);
         if (r.ok) kartochkalar(id, d.sinf.nom, [r], "Yangi bir martalik parol");
@@ -242,7 +286,27 @@
 
     Q.sahifa(
       B.sarlavha({ matn: o.ism || "Oʻquvchi", orqaga, izoh: (o.login ? "login: " + o.login : o.email || "") + " · oxirgi kirish: " + B.qachon(o.oxirgi_kirish), amallar }),
-      xato, statlar, B.panel("Boʻlimlar boʻyicha", null, h("div", { class: "bq-panel-tana" }, bolimlar)));
+      xato, ismJoy, statlar, mavzuPanel(d.progress[String(uid)] || {}), B.panel("Boʻlimlar boʻyicha", null, h("div", { class: "bq-panel-tana" }, bolimlar)));
+  }
+
+  // ---------- Tog' savollari: mavzu bo'yicha to'g'ri/xato ----------
+  function mavzuJadval(qatorlar) {
+    return h("div", { class: "bq-bolimlar" }, ...qatorlar.map((m) => h("div", { class: "bq-bolim" + (m.zaif ? " zaif" : "") },
+      h("div", { class: "bq-bolim-nom" }, h("b", { text: (m.zaif ? "⚠ " : "") + m.title }), h("span", { text: `${m.x} xato / ${m.jami} javob` })),
+      h("div", { class: "bq-bar-chiziq xato" }, h("span", { style: `width:${m.foiz}%` })),
+      m.zaif ? h("div", { class: "bq-qator-izoh", text: "Koʻproq oʻqisin: " + bolimNomi(m.id) }) : null)));
+  }
+
+  function mavzuPanel(progress) {
+    const qatorlar = M.jadval(progress[STAT], TOPICS);
+    const p = B.panel("Togʻ savollari mavzular boʻyicha", null);
+    const tana = h("div", { class: "bq-panel-tana" });
+    if (!qatorlar.length) tana.append(h("p", { class: "bq-qator-izoh", text: "Hali Togʻga chiqishda savolga javob bermagan (yoki akkauntiga kirmasdan oʻynagan)." }));
+    else {
+      tana.append(h("p", { class: "bq-qator-izoh", text: `Kamida ${M.ZAIF_MIN} ta javob berilgan va ${Math.round(M.ZAIF_ULUSH * 100)} % dan koʻpi xato boʻlgan mavzu ⚠ bilan belgilanadi.` }), mavzuJadval(qatorlar));
+    }
+    p.append(tana);
+    return p;
   }
 
   // ---------- O'quvchi qo'shish ----------
@@ -341,24 +405,40 @@
     const n = r.natija;
     const tog = n.tur === "tog";
     const tank = n.tur === "tank";
-    const ustunlar = tank ? ["Oʻrin", "Oʻquvchi", "Jon", "Tekkazdi"] : tog ? ["Oʻrin", "Oʻquvchi", "Pogʻona", "Toʻgʻri", "Xato"] : ["Oʻrin", "Oʻquvchi", "Tezlik", "Aniqlik", "Vaqt"];
+    const ustunlar = tank ? ["Oʻrin", "Oʻquvchi", "Jon", "Tekkazdi"] : tog ? ["Oʻrin", "Oʻquvchi", "Pogʻona", "Toʻgʻri", "Xato", "Xato mavzular"] : ["Oʻrin", "Oʻquvchi", "Tezlik", "Aniqlik", "Vaqt"];
     const MEDAL = ["🥇", "🥈", "🥉"];
     const tb = h("tbody");
     for (const o of n.oyinchilar) {
       const ism = o.ism || "Mehmon";
+      const xatoMavzular = M.jadval(mavzuStat(o), TOPICS).filter((m) => m.x > 0).map((m) => `${m.title} ${m.x}`).join(", ");
       const qiymatlar = tank ? [o.tirik ? "♥".repeat(o.jon) : "yiqildi", String(o.tegdi)] : tog
-        ? [String(o.pogona) + (o.chiqdi ? " (chiqdi)" : ""), String(o.togri), String(o.xato)]
+        ? [String(o.pogona) + (o.chiqdi ? " (chiqdi)" : ""), String(o.togri), String(o.xato), xatoMavzular || "—"]
         : [o.cpm + " belgi/daq", o.aniq + "%", (o.ms / 1000).toFixed(1) + " s"];
+      // Qaysi rangda o'ynagani: o'yin paytida bolalar rang bilan ko'rinadi, ism faqat shu ro'yxatda
+      const q = o.rang && QAHRAMONLAR.find((x) => x.id === o.rang);
+      const rang = q ? h("span", { class: "bq-rang" }, h("i", { style: `background:${q.rang}` }), q.nom) : null;
       tb.append(h("tr", {},
         h("td", { class: "son", "data-nom": "Oʻrin", text: (MEDAL[o.orin - 1] || "") + " " + o.orin }),
         h("td", { class: "asosiy" }, h("div", { class: "bq-kim" }, B.avatar(ism, true),
-          h("div", { class: "bq-kim-matn" }, h("b", { text: ism }), o.ism ? null : h("span", { text: "kirmagan yoki sinfda emas" })))),
-        ...qiymatlar.map((v, i) => h("td", { class: "son", "data-nom": ustunlar[i + 2], text: v }))));
+          h("div", { class: "bq-kim-matn" }, h("b", { text: ism }),
+            h("span", {}, rang, o.ism ? null : (rang ? " · " : "") + "kirmagan yoki sinfda emas")))),
+        ...qiymatlar.map((v, i) => h("td", { class: i === 3 ? "" : "son", "data-nom": ustunlar[i + 2], text: v }))));
+    }
+    const kids = [];
+    if (tog) {
+      // Sinf bo'yicha: bu o'yinda qaysi mavzularda ko'p xato qilindi
+      const jami = M.jadval(M.yigindi(n.oyinchilar.map(mavzuStat)), TOPICS);
+      const p = B.panel("Mavzular boʻyicha (butun sinf)", null);
+      const tana = h("div", { class: "bq-panel-tana" });
+      if (jami.length) tana.append(mavzuJadval(jami));
+      else tana.append(h("p", { class: "bq-qator-izoh", text: "Mavzu boʻyicha hisob yoʻq: bu oʻyin yangilanishdan oldin oʻynalgan yoki bolalar sahifani yangilamagan." }));
+      p.append(tana);
+      kids.push(p);
     }
     Q.sahifa(
       B.sarlavha({ matn: oyinNomi(n), orqaga, izoh: `${n.sinf_nom} · ${vaqt(n.tugagan)} · ${n.oyinchilar.length} oʻyinchi` }),
       B.panel("Reyting", null, h("table", { class: "bq-jadval" },
-        h("thead", {}, h("tr", {}, ...ustunlar.map((t) => h("th", { text: t })))), tb)));
+        h("thead", {}, h("tr", {}, ...ustunlar.map((t) => h("th", { text: t })))), tb)), ...kids);
   }
 
   boshla();

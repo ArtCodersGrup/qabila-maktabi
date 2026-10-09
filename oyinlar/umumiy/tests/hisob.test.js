@@ -74,7 +74,9 @@ test("storage.js: kirgan bo'lsa saqlanganini navbatga qo'yadi, masalalar va o'n 
 
 test("o'qituvchi paneli: skriptlar va sinf hisobi", () => {
   assert.deepEqual(skriptlar("oqituvchi/panel/index.html"), [
-    "../../oyinlar/umumiy/js/storage.js", "../../bosh/js/bosh.js", "../../oyinlar/umumiy/js/hisob.js", "../../oyinlar/umumiy/js/boshqaruv.js", "panel.js"]);
+    "../../oyinlar/umumiy/js/storage.js", "../../bosh/js/bosh.js", "../../oyinlar/tog/js/tog.js", "../../oyinlar/musobaqa/js/savollar.js",
+    "../../oyinlar/musobaqa/js/savollar-2.js", "../../oyinlar/umumiy/js/mavzular.js", "../../oyinlar/umumiy/js/hisob.js",
+    "../../oyinlar/umumiy/js/boshqaruv.js", "panel.js"]);
   const P = require("../../../oqituvchi/panel/panel.js");
   const GAMES = [{ topic: "kod", key: "a:v1", stages: 3 }, { topic: "kod", key: "b:v1", stages: 2 }, { topic: "ai", key: "c:v1", stages: 3 }];
   const SECTIONS = [{ id: "kod", title: "Kodlash" }, { id: "ai", title: "AI" }, { id: "bosh", title: "Bo'sh" }];
@@ -91,4 +93,7 @@ test("o'qituvchi paneli: skriptlar va sinf hisobi", () => {
   assert.equal(h.masalalar, 2);
   assert.equal(h.foiz, 63); // 5 / 8 bosqich
   assert.equal(h.tugagan, 5);
+  // xona natijasidagi mavzular: [t, x] → { t, x }
+  assert.deepEqual(P.mavzuStat({ mavzular: { sanoq: [2, 3], buzuq: [1] } }), { sanoq: { t: 2, x: 3 } });
+  assert.deepEqual(P.mavzuStat({}), {});
 });

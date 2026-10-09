@@ -10,7 +10,7 @@ from sqlalchemy import text
 
 from . import sessiya
 from . import xona_qoidalari as Q
-from .xona_natija import natija_ol
+from .xona_natija import mavzu_ol, natija_ol
 
 log = logging.getLogger("kelajagim.xonalar")
 
@@ -26,6 +26,7 @@ class Xona:
         self.sinf_id = None  # o'qituvchi sinf uchun ochgan bo'lsa — natija saqlanadi
         self.kimlar: dict = {}  # o'yinchi kaliti → {user_id, ism} (faqat shu sinf a'zolari)
         self.tugadi = False  # oxirgi "holat" paketida o'yin tugaganmi (natija bir marta yoziladi)
+        self.mavzular: dict = {}  # o'yinchi kaliti → {mavzu: [t, x]} — shu o'yinda (boshlovchi yuboradi)
         # Boshlovchining maxfiy belgisi: aloqa uzilib qayta ulanganda shu belgi bilan o'z o'rnini qaytarib oladi.
         # Kalit "host" hammaga ma'lum — belgisiz qayta kirish "band" bo'ladi (begona xonani egallab olmasin).
         self.host_token = secrets.token_urlsafe(12)
@@ -140,8 +141,16 @@ async def _azomi(ws: WebSocket, sinf_id: int, user_id: int) -> bool:
         return False
 
 
+async def _ismlar(x: Xona) -> None:
+    """Sinf xonasida kirgan bolalarning ismlari — FAQAT boshlovchiga (o'yindan keyingi ro'yxat uchun).
+    Bolalar qurilmasiga ism yuborilmaydi: o'yin paytida hamma rang bilan ko'rinadi."""
+    ws = x.odamlar.get(Q.HOST)
+    if ws is not None and x.kimlar:
+        await _yubor(ws, {"t": "ismlar", "ismlar": {k: v["ism"] for k, v in x.kimlar.items() if v.get("ism")}})
+
+
 async def _saqla(ws: WebSocket, kind: str, x: Xona, data: dict) -> None:
-    n = natija_ol(kind, data, x.kimlar)
+    n = natija_ol(kind, data, x.kimlar, x.mavzular)
     if n is None:
         return
     meta, rows = n
@@ -189,6 +198,8 @@ async def xona(ws: WebSocket, kind: str, code: str, key: str = "", role: str = "
             except Exception:
                 pass
         await _odamlar(x)
+        if kind == "tog":
+            await _ismlar(x)
         soniya, soni = 0, 0
         while True:
             m = await ws.receive()
@@ -213,11 +224,20 @@ async def xona(ws: WebSocket, kind: str, code: str, key: str = "", role: str = "
             if not Q.valid_payload(p):
                 continue
             data = p.get("data") or {}
+            # Boshlovchi bolaning shu o'yindagi mavzu hisobini yuboradi — saqlanadi, boshqalarga tarqatilmaydi
+            if p["type"] == "mavzu":
+                if key == Q.HOST and x.sinf_id is not None:
+                    d = mavzu_ol(data)
+                    if d is not None and (d[0] in x.mavzular or len(x.mavzular) < Q.MAX_ODAM):
+                        x.mavzular[d[0]] = d[1]
+                continue
             # O'yin tugadi (0 → 1) — sinf xonasida natija bir marta yoziladi
             if key == Q.HOST and x.sinf_id is not None and p["type"] == "holat":
                 tugadi = bool(data.get("tugadi"))
                 if tugadi and not x.tugadi:
                     await _saqla(ws, kind, x, data)
+                elif not tugadi and x.tugadi:
+                    x.mavzular = {}  # yangi o'yin boshlandi
                 x.tugadi = tugadi
             chiq = {"t": "msg", "payload": {"type": p["type"], "data": data, "t": p["t"], "from": key}}
             for k, o in list(x.odamlar.items()):

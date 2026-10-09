@@ -310,7 +310,7 @@
       const tug = games.filter(tugaganmi).length;
       const cards = h("div", { class: "bosh-cards" });
       games.forEach((g) => cards.append(card(g, toifa)));
-      list.append(h("section", { class: "bosh-section", style: `--sec:${rang.sec};--sec-och:${rang.och}` },
+      list.append(h("section", { class: "bosh-section", id: "bolim-" + section.id, style: `--sec:${rang.sec};--sec-och:${rang.och}` },
         h("h2", { class: "bosh-h2" },
           h("span", { text: section.title }),
           h("span", { class: "bosh-h2-soni" + (tug === games.length ? " done" : ""), text: `${tug}/${games.length}` })),
@@ -348,6 +348,12 @@
     const toifa = saqlangan();
     if (toifa) royxat(list, toifa);
     else sinfEkrani(list);
+    // Tog' maslahatidan kelgan havola: index.html#bolim-ikkilik — o'sha bo'limga tushadi
+    const hash = root.location && root.location.hash;
+    if (hash && /^#bolim-[a-z0-9]+$/.test(hash)) {
+      const bolim = root.document.getElementById(hash.slice(1));
+      if (bolim) setTimeout(() => bolim.scrollIntoView({ block: "start" }), 0);
+    }
   }
 
   root.QK = root.QK || {};

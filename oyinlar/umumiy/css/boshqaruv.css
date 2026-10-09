@@ -260,3 +260,12 @@ textarea.bq-input { min-height: 180px; resize: vertical; line-height: 1.5; }
   .bq-kartochkalar { grid-template-columns: repeat(2, 1fr); gap: 8mm; }
   .bq-kartochka { border-color: #888; }
 }
+
+/* ---------- Tog' savollari: mavzular bo'yicha xato ulushi ---------- */
+.bq-bar-chiziq.xato span { background: #E0A43A; }
+.bq-bolim.zaif .bq-bar-chiziq.xato span { background: #C8402F; }
+.bq-bolim.zaif .bq-bolim-nom b { color: #A2321F; }
+.bq-zaif { display: inline-block; padding: 2px 8px; border-radius: var(--r-pill); background: #FCE3DE; color: #A2321F; font-size: 13px; font-weight: 800; white-space: nowrap; }
+/* Xona natijasi: qaysi rangda o'ynagani */
+.bq-rang { display: inline-flex; align-items: center; gap: 4px; }
+.bq-rang i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.2); }

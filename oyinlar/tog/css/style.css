@@ -189,3 +189,27 @@
 .tog-kichik-sarlavha { margin: var(--s3) 0 0; font-size: var(--t1); font-weight: 900; text-align: center; }
 .tog-qiyinlik { justify-content: center; }
 
+
+/* ---------- Mavzu qulfi (bola o'zi o'ynaganda) ---------- */
+.chip.qulf { border-style: dashed; background: transparent; color: var(--matn-3); }
+.tog-qulf-izoh { max-width: 460px; min-height: 0; margin: 0; font-size: 15px; font-weight: 700; text-align: center; color: var(--matn-3); }
+.tog-qulf-izoh:empty { display: none; }
+
+/* ---------- O'yindan keyin: ism va rang (o'qituvchi doskasi) ---------- */
+.natija-rang { font-size: 13px; font-weight: 700; color: var(--matn-3); }
+
+/* ---------- O'yindan keyin: xato savollar va maslahat ---------- */
+.tog-xatolar { display: flex; flex-direction: column; align-items: center; gap: 8px; width: min(100%, 520px); }
+.tog-xatolar-yaxshi { margin: 0; font-size: 16px; font-weight: 800; text-align: center; }
+.tog-xato-royxat { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+.tog-xato { display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; border-radius: 12px; background: #fff; box-shadow: 0 3px 0 var(--soya); }
+.tog-xato .q-text { font-size: 16px; font-weight: 800; }
+.tog-xato-mavzu { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; color: var(--matn-3); }
+.tog-xato-javob { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 15px; font-weight: 800; }
+.tog-xato-javob .sen { color: #B3261E; }
+.tog-xato-javob .togri { color: #1E7A4D; }
+.tog-maslahat { display: flex; flex-direction: column; gap: 6px; width: 100%; }
+.tog-maslahat-btn { display: flex; flex-direction: column; gap: 2px; padding: 10px 14px; border-radius: 12px; background: #FFF4D6; color: inherit; text-decoration: none; box-shadow: 0 3px 0 var(--soya); }
+.tog-maslahat-btn b { font-size: 16px; }
+.tog-maslahat-btn span { font-size: 14px; font-weight: 700; color: var(--matn-3); }
+.tog-maslahat-btn b::after { content: " →"; }

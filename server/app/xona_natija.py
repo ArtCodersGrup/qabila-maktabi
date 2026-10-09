@@ -3,6 +3,24 @@
 # shu sinf a'zosi bo'lgan kirgan bola uchun qo'yiladi (kimlar), qolganlar — mehmon (ism yo'q).
 from .xona_qoidalari import kimlik
 
+MAX_MAVZU = 24
+
+
+def mavzu_ol(data):
+    """Boshlovchining "mavzu" xabari: bitta o'yinchining shu o'yindagi mavzu bo'yicha hisobi.
+    {id, m: [mavzu], t: [to'g'ri], x: [xato]} → (kalit, {mavzu: [t, x]}) yoki None."""
+    if not isinstance(data, dict) or not kimlik(data.get("id")):
+        return None
+    m, t, x = data.get("m"), data.get("t"), data.get("x")
+    if not all(isinstance(v, list) for v in (m, t, x)) or not len(m) == len(t) == len(x) <= MAX_MAVZU:
+        return None
+    if not all(kimlik(v) for v in m):
+        return None
+    if not all(isinstance(v, int) and not isinstance(v, bool) and 0 <= v <= 10000 for v in t + x):
+        return None
+    return data["id"], {k: [a, b] for k, a, b in zip(m, t, x)}
+
+
 MAYDONLAR = {
     "tog": {"pog": "pogona", "tgr": "togri", "xat": "xato", "chiq": "chiqdi"},
     "poyga": {"orin": "orin", "cpm": "cpm", "aniq": "aniq", "ms": "ms"},
@@ -11,7 +29,7 @@ MAYDONLAR = {
 META = {"tog": "tog", "poyga": "tur", "tank": None}
 
 
-def natija_ol(kind: str, data: dict, kimlar: dict):
+def natija_ol(kind: str, data: dict, kimlar: dict, mavzular: dict | None = None):
     if kind not in MAYDONLAR or not isinstance(data, dict):
         return None
     ids = data.get("ids")
@@ -26,6 +44,9 @@ def natija_ol(kind: str, data: dict, kimlar: dict):
     m = data.get(META[kind]) if META[kind] else None
     if isinstance(m, str) and kimlik(m):
         meta[META[kind]] = m
+    qah = data.get("qah")
+    if not (isinstance(qah, list) and len(qah) == n and all(kimlik(v) for v in qah)):
+        qah = None  # qahramon rangi — ixtiyoriy (o'qituvchi ro'yxatida ism yonida)
     rows = []
     for i, key in enumerate(ids):
         kim = kimlar.get(key) or {}
@@ -33,5 +54,9 @@ def natija_ol(kind: str, data: dict, kimlar: dict):
         for k, nom in MAYDONLAR[kind].items():
             v = data[k][i]
             row[nom] = bool(v) if nom in ("chiqdi", "tirik") else (int(v) if nom == "orin" else round(v))
+        if qah:
+            row["rang"] = qah[i]
+        if mavzular and key in mavzular:
+            row["mavzular"] = mavzular[key]
         rows.append(row)
     return meta, rows

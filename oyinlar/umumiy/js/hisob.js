@@ -54,7 +54,7 @@
 
   const EGASI = "qabila:egasi:v1"; // bu qurilmadagi progress kimniki (user id)
   const NAVBAT = "qabila:navbat:v1";
-  const MAXSUS = ["masalalar:holat:v1", "on-barmoq:rekord"];
+  const MAXSUS = ["masalalar:holat:v1", "on-barmoq:rekord", "tog:mavzular:v1"]; // oxirgisi — Tog' mavzu hisobi
 
   // localStorage dagi progress kalitlari: bosqichli o'yinlar (done bor va bo'sh emas), masalalar, o'n barmoq rekordi
   function progressKalitlari(store) {
@@ -164,6 +164,7 @@
       olish: (id) => sorov("/api/sinflar/" + Number(id)),
       qosh: (id, ismlar) => sorov("/api/sinflar/" + Number(id) + "/oquvchilar", { ismlar }),
       parol: (id, uid) => sorov("/api/sinflar/" + Number(id) + "/oquvchilar/" + Number(uid) + "/parol", {}),
+      ism: (id, uid, nom) => sorov("/api/sinflar/" + Number(id) + "/oquvchilar/" + Number(uid) + "/ism", { nom }),
       qaror: (id, uid, qaror) => sorov("/api/sinflar/" + Number(id) + "/sorovlar/" + Number(uid), { qaror }),
       chiqar: (id, uid) => sorov("/api/sinflar/" + Number(id) + "/chiqar/" + Number(uid), {}),
       progress: (id) => sorov("/api/sinflar/" + Number(id) + "/progress"),

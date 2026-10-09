@@ -43,6 +43,17 @@
     return Object.values(data).every(qiymat);
   }
 
+  // Server faqat boshlovchiga yuboradigan ismlar (sinf xonasida kirgan bolalar): { kalit: "Ali K." }.
+  // Ism o'yin paytida ko'rsatilmaydi — faqat o'yindan keyingi ro'yxatda (qaysi rangda o'ynagani bilan).
+  function ismlarToza(d) {
+    const out = {};
+    if (!d || typeof d !== "object" || Array.isArray(d)) return out;
+    for (const [k, v] of Object.entries(d).slice(0, MAX_ODAM)) {
+      if (kimlik(k) && typeof v === "string" && v.length >= 1 && v.length <= 40) out[k] = v;
+    }
+    return out;
+  }
+
   // Presence holatidan: kim ulangan va xona qachon ochilgan
   function roomInfo(state) {
     const sides = SIDES.filter((s) => state[s] && state[s].length);
@@ -150,6 +161,7 @@
       else if (d.t === "rad") { yop(); h.rad(String(d.sabab)); }
       else if (d.t === "odamlar" && Array.isArray(d.keys)) h.odamlar(d.keys.filter(kimlik), son(d.at) ? d.at : null);
       else if (d.t === "msg") h.xabar(d.payload);
+      else if (d.t === "ismlar" && h.ismlar) h.ismlar(ismlarToza(d.ismlar));
     };
     ws.onclose = () => {
       if (yopildi) return;
@@ -215,7 +227,7 @@
   // Bitta boshlovchi ("host" — o'qituvchi qurilmasi) va 12 tagacha o'yinchi.
   // Boshlovchi o'yin holatini o'zi hisoblaydi va tarqatadi; o'yinchilar faqat javobini yuboradi.
   // me — o'yinchining yashirin raqami (ism emas!), role — "host" yoki "player".
-  // on: { status(s), peers(ids, hostBor), message(msg), sinf(bog'landimi) }; sinf — ixtiyoriy sinf id (faqat boshlovchi)
+  // on: { status(s), peers(ids, hostBor), message(msg), sinf(bog'landimi), ismlar({kalit: ism}) — faqat boshlovchi }; sinf — ixtiyoriy sinf id (faqat boshlovchi)
   // status: "connecting" | "ready" | "missing" | "full" | "error"
   // Aloqa uzilsa (maktab Wi-Fi, telefon uyquga ketdi) qurilma o'zi qayta ulanadi — o'sha kalit bilan, shuning uchun
   // server uni o'sha odam deb biladi; boshlovchi "token" bilan o'z o'rnini qaytaradi. Urinishlar tugasa — "error".
@@ -263,6 +275,9 @@
         odamlar(keys) {
           if (!closed && on.peers) on.peers(keys.filter((k) => k !== HOST), keys.includes(HOST));
         },
+        ismlar(d) {
+          if (!closed && hostmi && on.ismlar) on.ismlar(d);
+        },
         xabar(p) {
           if (!closed && validMessage(p, types) && p.from !== key && on.message) on.message(p);
         },
@@ -289,7 +304,7 @@
     };
   }
 
-  const api = { SERVER, CODE_TTL, HOST_WAIT, PING_HAR, JIMLIK, QAYTA_KUTISH, HOST, MAX_ODAM, SIDES, KINDS, xona, makeCode, validCode, channelName, validMessage, roomInfo, juftHolat, serverUrl, xonaUrl, available, ping, join };
+  const api = { SERVER, CODE_TTL, HOST_WAIT, PING_HAR, JIMLIK, QAYTA_KUTISH, HOST, MAX_ODAM, SIDES, KINDS, xona, makeCode, validCode, channelName, validMessage, ismlarToza, roomInfo, juftHolat, serverUrl, xonaUrl, available, ping, join };
 
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else {

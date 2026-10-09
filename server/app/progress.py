@@ -15,6 +15,7 @@ _OYIN = re.compile(r"[a-z0-9-]{1,40}:v\d{1,3}")
 _MASALA_ID = re.compile(r"[a-z0-9_-]{1,40}")
 MASALALAR = "masalalar:holat:v1"
 REKORD = "on-barmoq:rekord"
+MAVZULAR = "tog:mavzular:v1"  # Tog' savollari mavzu bo'yicha: { mavzu: { t: to'g'ri, x: xato } }
 
 
 def _butun(v, lo, hi):
@@ -56,7 +57,23 @@ def _rekord(q):
     return round(q)
 
 
+def _mavzular(q):
+    if not isinstance(q, dict) or len(q) > 40:
+        return None
+    out = {}
+    for k, v in q.items():
+        if not _MASALA_ID.fullmatch(str(k)) or not isinstance(v, dict):
+            return None
+        t, x = v.get("t", 0), v.get("x", 0)
+        if not _butun(t, 0, 10 ** 6) or not _butun(x, 0, 10 ** 6):
+            return None
+        out[k] = {"t": t, "x": x}
+    return out
+
+
 def tozala(kalit, q):
+    if kalit == MAVZULAR:
+        return _mavzular(q)
     if kalit == MASALALAR:
         return _masalalar(q)
     if kalit == REKORD:
@@ -75,6 +92,12 @@ def birlashtir(kalit, eski, yangi):
         return y
     if kalit == REKORD:
         return max(e, y)
+    if kalit == MAVZULAR:
+        out = dict(e)
+        for k, v in y.items():
+            w = out.get(k)
+            out[k] = v if w is None else {"t": max(w["t"], v["t"]), "x": max(w["x"], v["x"])}
+        return out
     if kalit == MASALALAR:
         out = dict(e)
         for k, v in y.items():

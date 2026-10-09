@@ -8,6 +8,17 @@
   const { ui, sound, art, tog: T, togUi, savolUi, savollar } = QK;
   const h = ui.h;
   const SITE_HOME = "../../index.html";
+  const M = QK.mavzular;
+
+  // Har javob mavzu bo'yicha sanaladi (mashqda ham, onlayn xonada ham) — kirgan bo'lsa akkauntga ketadi
+  function statYoz(mavzu, ok) {
+    if (!M || !mavzu) return;
+    try {
+      const bor = JSON.parse(root.localStorage.getItem(M.STAT) || "null");
+      root.localStorage.setItem(M.STAT, JSON.stringify(M.qosh(bor, mavzu, ok)));
+      if (QK.storage && QK.storage.navbatga) QK.storage.navbatga(M.STAT);
+    } catch (e) { /* saqlab bo'lmadi — o'yin baribir ishlaydi */ }
+  }
 
   const pick = (list) => list[Math.floor(Math.random() * list.length)];
 
@@ -83,33 +94,54 @@
     { id: 3, title: "Qiyin" },
   ];
 
-  function mavzular({ sarlavha, izoh, tanlangan, qiyinlik, onDavom, orqaga }) {
+  // qulf — bola o'zi o'ynaganda: { mavzu: { holat: "ochiq"|"yopiq"|"yoq", matn } }. "yoq" ko'rsatilmaydi,
+  // "yopiq" qulf bilan turadi: bosilsa — qaysi bo'limni tugatish kerakligi aytiladi. Berilmasa — hammasi ochiq.
+  function mavzular({ sarlavha, izoh, tanlangan, qiyinlik, onDavom, orqaga, qulf }) {
     const el = box(false);
     el.append(
       h("h1", { class: "game-title", text: sarlavha || "Qaysi mavzudan savol beramiz?" }),
       izoh ? h("p", { class: "tog-note", text: izoh }) : null);
-    let tanlov = (tanlangan && tanlangan.length ? tanlangan : savollar.TOPICS.map((t) => t.id)).slice();
+    const korinadi = savollar.TOPICS.filter((t) => !qulf || (qulf[t.id] && qulf[t.id].holat !== "yoq"));
+    const ochiqmi = (id) => !qulf || (qulf[id] && qulf[id].holat === "ochiq");
+    const ochiqlar = korinadi.filter((t) => ochiqmi(t.id)).map((t) => t.id);
+    let tanlov = (tanlangan && tanlangan.length ? tanlangan : ochiqlar).filter(ochiqmi);
+    if (!tanlov.length) tanlov = ochiqlar.slice();
+    const qulfIzoh = h("p", { class: "tog-qulf-izoh", role: "status" });
     const box2 = h("div", { class: "chips" });
-    const tugmalar = savollar.TOPICS.map((t) => {
+    const tugmalar = korinadi.map((t) => {
+      if (!ochiqmi(t.id)) {
+        const b = h("button", { class: "chip qulf", type: "button", text: "🔒 " + t.title, "aria-pressed": "false" });
+        b.addEventListener("click", () => { sound.play("retry"); qulfIzoh.textContent = qulf[t.id].matn; });
+        box2.append(b);
+        return b;
+      }
       const b = h("button", { class: "chip", type: "button", text: t.title, "aria-pressed": String(tanlov.includes(t.id)) });
       b.addEventListener("click", () => {
         sound.play("tap");
+        qulfIzoh.textContent = "";
         if (!tanlov.includes(t.id)) tanlov = tanlov.concat(t.id);
         else if (tanlov.length > 1) tanlov = tanlov.filter((v) => v !== t.id);
         else return ui.toast("Kamida bitta mavzu kerak");
-        tugmalar.forEach((x, k) => x.setAttribute("aria-pressed", String(tanlov.includes(savollar.TOPICS[k].id))));
+        tugmalar.forEach((x, k) => { if (ochiqmi(korinadi[k].id)) x.setAttribute("aria-pressed", String(tanlov.includes(korinadi[k].id))); });
       });
       box2.append(b);
       return b;
     });
-    el.append(box2);
-    const hammasi = h("button", { class: "chip hammasi", type: "button", text: "Hammasi" });
-    hammasi.addEventListener("click", () => {
-      sound.play("tap");
-      tanlov = savollar.TOPICS.map((t) => t.id);
-      tugmalar.forEach((x) => x.setAttribute("aria-pressed", "true"));
-    });
-    box2.append(hammasi);
+    el.append(box2, qulfIzoh);
+    if (ochiqlar.length > 1) {
+      const hammasi = h("button", { class: "chip hammasi", type: "button", text: "Hammasi" });
+      hammasi.addEventListener("click", () => {
+        sound.play("tap");
+        tanlov = ochiqlar.slice();
+        tugmalar.forEach((x, k) => { if (ochiqmi(korinadi[k].id)) x.setAttribute("aria-pressed", "true"); });
+      });
+      box2.append(hammasi);
+    }
+    if (!ochiqlar.length) {
+      // Hali birorta bo'lim tugamagan: o'ynash uchun avval o'qish kerak
+      qulfIzoh.textContent = "Hali ochiq mavzu yoʻq. Bosh sahifadagi boʻlimlardan birini oʻqib tugat — oʻsha mavzu shu yerda ochiladi. Qulfni bossang, qaysi boʻlim kerakligini koʻrasan.";
+      el.append(h("a", { class: "btn secondary", href: SITE_HOME, text: "Boʻlimlarga oʻtish" }));
+    }
     let qiy = QIYINLIKLAR.some((q) => q.id === qiyinlik) ? qiyinlik : 0;
     const qatorQiy = h("div", { class: "chips tog-qiyinlik", role: "group", "aria-label": "Qiyinlik" });
     const qTugmalar = QIYINLIKLAR.map((q) => {
@@ -127,7 +159,7 @@
     el.insertBefore(qatorQiy, box2);
     el.insertBefore(h("h2", { class: "tog-kichik-sarlavha", text: "Mavzular" }), box2);
     buttons([
-      { label: "Davom etish", onClick: () => onDavom(tanlov.slice(), qiy) },
+      { label: "Davom etish", onClick: () => onDavom(tanlov.slice(), qiy), disabled: !tanlov.length },
       orqaga ? { label: "Orqaga", onClick: orqaga, secondary: true } : null,
     ]);
     return el;
@@ -196,6 +228,7 @@
     const hisob = (me) => me.togri + me.xato;
 
     const tarix = new Set(); // shu o'yinda berilgan savollar — qaytarilmaydi (nextQ)
+    const xatolar = []; // shu o'yinda xato javob berilgan savollar — natija ekranida ko'rsatiladi
     let urinishPog = -1; // urinish raqami shu pog'onada (xatodan keyin yangi savol — boshqa urinish)
     let urinish = 0;
     function savolBer(me) {
@@ -213,6 +246,10 @@
       savolUi.answerPad(joriy, (value) => {
         const ok = savollar.check(joriy, value);
         javobi = joriy.answer;
+        if (!kuzatuvchi) {
+          statYoz(joriy.topic, ok);
+          if (!ok) xatolar.push({ q: joriy, sen: value });
+        }
         kutilgan = hisob(me);
         kutganVaqt = Date.now();
         sound.play(ok ? "correct" : "retry");
@@ -221,7 +258,7 @@
         ui.clearControl();
         pastki.append(h("div", { class: "tog-kutish", text: ok ? "✓ Javob yuborildi…" : "↻ Javob yuborildi…" }));
         rejim = "kutish";
-        javob(ok);
+        javob(ok, joriy);
       }, () => rejim === "savol");
     }
 
@@ -264,16 +301,60 @@
       if (rejim !== "savol") savolBer(me);
     }
 
-    return { render, pastki, soat, el };
+    return { render, pastki, soat, el, xatolar };
   }
 
   // ---------- Natija ----------
-  function natija(state, meId, tugmalar) {
+  // ismlar — o'qituvchi doskasida (sinf xonasi): { kalit: ism }; xatolar — bolaning shu o'yindagi xato savollari
+  function natija(state, meId, tugmalar, { ismlar, xatolar } = {}) {
     const el = box(false);
-    togUi.natija(el, state, meId);
+    togUi.natija(el, state, meId, ismlar);
+    if (xatolar) xatolarBlok(el, xatolar);
     buttons(tugmalar);
     return el;
   }
 
-  QK.togEkran = { SITE_HOME, box, buttons, nextQ, qahramonlar, toglar, mavzular, oyin, natija, QIYINLIKLAR };
+  // Xato qilingan savollar va «shu bo'limni ko'proq o'qi» maslahati (mavzu → bosh sahifa bo'limi)
+  const XATO_KORSAT = 8;
+  function xatolarBlok(host, xatolar) {
+    const el = h("div", { class: "tog-xatolar" });
+    if (!xatolar.length) {
+      el.append(h("p", { class: "tog-xatolar-yaxshi", text: "Bu oʻyinda birorta xato qilmading. Barakalla!" }));
+      host.append(el);
+      return el;
+    }
+    el.append(h("h2", { class: "tog-kichik-sarlavha", text: `Xato qilgan savollaring (${xatolar.length})` }));
+    const royxat = h("div", { class: "tog-xato-royxat" });
+    xatolar.slice(-XATO_KORSAT).forEach(({ q, sen }) => {
+      const karta = h("div", { class: "tog-xato" }, h("div", { class: "tog-xato-mavzu", text: savollar.topicTitle(q.topic) || "" }),
+        h("div", { class: "q-text", text: q.text }));
+      (q.blocks || []).forEach((b) => { const n = savolUi.block(b); if (n) karta.append(n); });
+      karta.append(h("div", { class: "tog-xato-javob" },
+        h("span", { class: "sen", text: "Sen: " + String(sen) }),
+        h("span", { class: "togri", text: "Toʻgʻri: " + String(q.answer) })));
+      royxat.append(karta);
+    });
+    if (xatolar.length > XATO_KORSAT) royxat.append(h("p", { class: "tog-note", text: `Oxirgi ${XATO_KORSAT} tasi koʻrsatildi.` }));
+    el.append(royxat);
+    // Maslahat: ko'p xato qilingan mavzular bo'limlari
+    const soni = {};
+    xatolar.forEach(({ q }) => { soni[q.topic] = (soni[q.topic] || 0) + 1; });
+    const bolimlar = [];
+    Object.keys(soni).sort((a, b) => soni[b] - soni[a]).forEach((m) => {
+      (M ? M.bolimlari(m) : []).forEach((id) => {
+        if (bolimlar.some((x) => x.id === id)) return;
+        const sec = QK.bosh && QK.bosh.SECTIONS.find((s) => s.id === id);
+        if (sec) bolimlar.push({ id, title: sec.title, mavzu: m });
+      });
+    });
+    if (bolimlar.length) {
+      el.append(h("h2", { class: "tog-kichik-sarlavha", text: "Shu boʻlimlarni koʻproq oʻqi" }));
+      el.append(h("div", { class: "tog-maslahat" }, ...bolimlar.map((b) => h("a", { class: "tog-maslahat-btn", href: `${SITE_HOME}#bolim-${b.id}` },
+        h("b", { text: b.title }), h("span", { text: `${savollar.topicTitle(b.mavzu)}: ${soni[b.mavzu]} ta xato` })))));
+    }
+    host.append(el);
+    return el;
+  }
+
+  QK.togEkran = { SITE_HOME, box, buttons, nextQ, qahramonlar, toglar, mavzular, oyin, natija, xatolarBlok, QIYINLIKLAR };
 })(window);

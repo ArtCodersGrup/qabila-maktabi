@@ -177,3 +177,10 @@ test("qiyinlik ham uzatiladi: 0 — balandlikka qarab, 1–3 — qat'iy; buzuq q
   assert.equal(T.create({ tog: T.TOGLAR[0].id, players, now, qiyinlik: 7 }).qiyinlik, 0);
   assert.equal(P.yaxshiPaket(Object.assign({}, p, { qiy: 5 })), false);
 });
+
+test("mavzu paketi: ro'yxatlar teng, server qoidasiga mos", () => {
+  const d = P.mavzuPaket("ab3k7q", { sanoq: { t: 2, x: 1 }, kod: { t: 0, x: 3 } });
+  assert.deepEqual(d, { id: "ab3k7q", m: ["sanoq", "kod"], t: [2, 0], x: [1, 3] });
+  assert.ok(O.validMessage({ type: "mavzu", data: d, t: 1, from: "host" }, P.TYPES));
+  assert.deepEqual(P.mavzuPaket("a", null), { id: "a", m: [], t: [], x: [] });
+});
