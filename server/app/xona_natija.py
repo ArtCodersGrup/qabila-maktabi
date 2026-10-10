@@ -25,15 +25,18 @@ MAYDONLAR = {
     "tog": {"pog": "pogona", "tgr": "togri", "xat": "xato", "chiq": "chiqdi"},
     "poyga": {"orin": "orin", "cpm": "cpm", "aniq": "aniq", "ms": "ms"},
     "tank": {"jon": "jon", "tg": "tegdi", "tirik": "tirik"},
+    # Qal'a: jamoa (0 — Oy, 1 — Quyosh), jamoa ochkosi, bola yiqitgan devorlar soni
+    "qala": {"jam": "jamoa", "och": "ochko", "dev": "devor"},
 }
-META = {"tog": "tog", "poyga": "tur", "tank": None}
+META = {"tog": "tog", "poyga": "tur", "tank": None, "qala": "golib"}
+MAX_IDS = {"qala": 30}  # qolganlarida 12
 
 
 def natija_ol(kind: str, data: dict, kimlar: dict, mavzular: dict | None = None):
     if kind not in MAYDONLAR or not isinstance(data, dict):
         return None
     ids = data.get("ids")
-    if not isinstance(ids, list) or not 1 <= len(ids) <= 12 or not all(kimlik(k) for k in ids):
+    if not isinstance(ids, list) or not 1 <= len(ids) <= MAX_IDS.get(kind, 12) or not all(kimlik(k) for k in ids):
         return None
     n = len(ids)
     for k in MAYDONLAR[kind]:

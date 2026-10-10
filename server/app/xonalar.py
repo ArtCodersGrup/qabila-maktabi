@@ -68,7 +68,7 @@ class Boshqaruvchi:
                     return "expired", None, None
             else:
                 oyinchilar = [k for k in x.odamlar if k != Q.HOST]
-                if key not in x.odamlar and len(oyinchilar) >= Q.MAX_ODAM - 1:
+                if key not in x.odamlar and len(oyinchilar) >= Q.max_odam(kind) - 1:
                     return "full", None, None
                 eski = x.odamlar.get(key)  # o'sha bola qayta ulandi — eski ulanish yopiladi
         x.odamlar[key] = ws
@@ -178,7 +178,7 @@ async def xona(ws: WebSocket, kind: str, code: str, key: str = "", role: str = "
         return
     try:
         # Sinfga bog'lash (faqat natijasi bor ko'p kishilik o'yinlar) va kirgan bolani tanish
-        if kind in ("tog", "poyga", "tank"):
+        if kind in ("tog", "poyga", "tank", "qala"):
             if key == Q.HOST and sinf:
                 sid = await _sinf_egasi(ws, await _kim(ws), sinf)
                 if sid is not None:
@@ -228,7 +228,7 @@ async def xona(ws: WebSocket, kind: str, code: str, key: str = "", role: str = "
             if p["type"] == "mavzu":
                 if key == Q.HOST and x.sinf_id is not None:
                     d = mavzu_ol(data)
-                    if d is not None and (d[0] in x.mavzular or len(x.mavzular) < Q.MAX_ODAM):
+                    if d is not None and (d[0] in x.mavzular or len(x.mavzular) < Q.max_odam(kind)):
                         x.mavzular[d[0]] = d[1]
                 continue
             # O'yin tugadi (0 → 1) — sinf xonasida natija bir marta yoziladi
@@ -240,8 +240,10 @@ async def xona(ws: WebSocket, kind: str, code: str, key: str = "", role: str = "
                     x.mavzular = {}  # yangi o'yin boshlandi
                 x.tugadi = tugadi
             chiq = {"t": "msg", "payload": {"type": p["type"], "data": data, "t": p["t"], "from": key}}
+            # Qal'a: o'yinchi xabari (himoya sirlari — parol kartalari, kalit) faqat boshlovchiga boradi, raqib telefoniga emas
+            faqat_host = kind in Q.FAQAT_HOSTGA and key != Q.HOST
             for k, o in list(x.odamlar.items()):
-                if o is not ws:
+                if o is not ws and (not faqat_host or k == Q.HOST):
                     await _yubor(o, chiq)
     finally:
         qolgan = b.chiq(kind, code, key, ws)

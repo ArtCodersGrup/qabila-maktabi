@@ -1,6 +1,6 @@
 // Offline rejim: sayt fayllari keshlanadi. Bola saytni bir marta ochsa, keyin internetsiz ham oʻynay oladi.
 // Yangi fayl qoʻshilsa, FILES roʻyxatiga ham qoʻshiladi — buni bosh/tests/offline.test.js tekshiradi.
-const VERSION = "v117";
+const VERSION = "v118";
 const CACHE = "qabila-maktabi-" + VERSION;
 
 const FILES = [
@@ -37,13 +37,13 @@ const FILES = [
   "oyinlar/umumiy/js/dastur-ui.js",
   "oyinlar/umumiy/js/dastur.js",
   "oyinlar/umumiy/js/hisob.js",
-  "oyinlar/umumiy/js/mavzular.js",
   "oyinlar/umumiy/js/jang-ui.js",
   "oyinlar/umumiy/js/jang.js",
   "oyinlar/umumiy/js/kod-mashq.js",
   "oyinlar/umumiy/js/kod-ui.js",
   "oyinlar/umumiy/js/kod.js",
   "oyinlar/umumiy/js/mantiq-ui.js",
+  "oyinlar/umumiy/js/mavzular.js",
   "oyinlar/umumiy/js/offline.js",
   "oyinlar/umumiy/js/onlayn.js",
   "oyinlar/umumiy/js/practice.js",
@@ -939,6 +939,21 @@ const FILES = [
   "oyinlar/yozuv-poygasi/js/onlayn-poyga.js",
   "oyinlar/yozuv-poygasi/js/poyga.js",
   "oyinlar/yozuv-poygasi/js/protokol.js",
+  "oyinlar/qala/",
+  "oyinlar/qala/index.html",
+  "oyinlar/qala/css/style.css",
+  "oyinlar/qala/css/dars.css",
+  "oyinlar/qala/css/oyin.css",
+  "oyinlar/qala/js/dars-mantiq.js",
+  "oyinlar/qala/js/dars.js",
+  "oyinlar/qala/js/lugat.js",
+  "oyinlar/qala/js/main.js",
+  "oyinlar/qala/js/mashq.js",
+  "oyinlar/qala/js/onlayn-qala.js",
+  "oyinlar/qala/js/oyin-ui.js",
+  "oyinlar/qala/js/protokol.js",
+  "oyinlar/qala/js/qala-ui.js",
+  "oyinlar/qala/js/qala.js",
 ];
 
 // Yangi versiya fayllari brauzerning oddiy keshidan emas, serverdan olinadi (cache: "reload").

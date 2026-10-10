@@ -1,0 +1,33 @@
+/* Qal'a — qobiq: menyu, umumiy quti, atama chipi. Darslar — dars.css, o'yin ekranlari — oyin.css */
+.tbox { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
+.qala-note { max-width: 520px; margin: 0; font-size: 17px; font-weight: 700; text-align: center; color: var(--matn-2); }
+.qala-menyu { display: flex; flex-direction: column; gap: 10px; width: min(100%, 440px); }
+.menyu-karta {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 12px 16px; text-align: left;
+  border: none; border-radius: 16px; background: #fff; box-shadow: 0 3px 0 var(--soya); cursor: pointer;
+}
+.menyu-karta:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--soya); }
+.menyu-karta:disabled { opacity: 0.45; box-shadow: none; cursor: default; }
+.menyu-karta.tanlangan { box-shadow: 0 3px 0 var(--togri-qora), inset 0 0 0 3px var(--togri); }
+.menyu-nom { font-size: 21px; font-weight: 900; color: var(--asosiy); }
+.menyu-izoh { font-size: 15px; font-weight: 700; color: var(--matn-3); }
+.menyu-belgi { margin-left: auto; font-size: 15px; font-weight: 800; color: var(--togri-qora); }
+.menyu-qator { display: flex; align-items: center; gap: 8px; width: 100%; }
+
+/* Atama chipi: uz · en · ru; bosilsa izoh ochiladi */
+.atama-qator { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; max-width: 560px; }
+.atama { display: inline-flex; align-items: baseline; gap: 6px; padding: 6px 12px; border: 2px solid var(--chiziq); border-radius: 999px;
+  background: #fff; font-size: 16px; font-weight: 800; color: var(--matn); cursor: pointer; }
+.atama .uz { color: var(--asosiy); }
+.atama .en { color: #1A9E77; font-weight: 700; }
+.atama .ru { color: #8E5BD0; font-weight: 700; }
+.atama .nuqta { color: var(--matn-3); }
+.atama[aria-expanded="true"] { border-color: var(--asosiy); }
+.atama-izoh { width: 100%; max-width: 560px; padding: 8px 14px; border-left: 4px solid var(--asosiy); background: #fff; font-size: 16px; font-weight: 600; line-height: 1.4; }
+.atama-izoh[hidden] { display: none; }
+
+/* Taymer va jamoa ranglari — o'yin va doska ishlatadi */
+.qala-taymer { font-variant-numeric: tabular-nums; font-size: 24px; font-weight: 900; color: var(--matn); }
+.qala-taymer.oz { color: #C63A3A; }
+.jam-oy { --jam: #2F6FDE; --jam-och: #E3ECFC; }
+.jam-quyosh { --jam: #D97B10; --jam-och: #FBEBD6; }

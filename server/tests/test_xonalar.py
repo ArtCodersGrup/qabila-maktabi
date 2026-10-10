@@ -164,3 +164,33 @@ def test_ping_pong(c):
         h.receive_json()  # odamlar
         h.send_text('{"t":"ping"}')
         assert h.receive_json() == {"t": "pong"}
+
+
+def test_qala_xonasi_30_bola(c):
+    """Qal'a — butun sinf: 30 bola kiradi, 31-chisi "full"."""
+    with c.websocket_connect(url("qala", "6161", "host", "host")) as hst:
+        kut(hst, "kirdi")
+        ochiq = [c.websocket_connect(url("qala", "6161", f"q{i}", "player")) for i in range(30)]
+        try:
+            for ws in ochiq:
+                ws.__enter__()
+            with c.websocket_connect(url("qala", "6161", "q30", "player")) as ortiqcha:
+                assert kut(ortiqcha, "rad")["sabab"] == "full"
+        finally:
+            for ws in ochiq:
+                ws.__exit__(None, None, None)
+
+
+def test_qala_oyinchi_xabari_faqat_boshlovchiga(c):
+    """Qal'a: bolaning himoya xabari (sir) boshqa bolalarga bormaydi, boshlovchiga boradi."""
+    with c.websocket_connect(url("qala", "6262", "host", "host")) as hst:
+        kut(hst, "kirdi")
+        with c.websocket_connect(url("qala", "6262", "a1", "player")) as a, \
+             c.websocket_connect(url("qala", "6262", "b1", "player")) as b:
+            kut(a, "kirdi")
+            kut(b, "kirdi")
+            a.send_text(msg("himoya", {"dev": "parol", "ids": ["s1", "r2"]}))
+            assert kut(hst, "msg")["payload"]["from"] == "a1"
+            hst.send_text(msg("holat", {"f": "himoya"}))
+            # b ga birinchi kelgan o'yin xabari — boshlovchiniki (a ning sirli xabari emas)
+            assert kut(b, "msg")["payload"]["from"] == "host"

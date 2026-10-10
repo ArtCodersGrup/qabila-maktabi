@@ -130,6 +130,7 @@
     { dir: "onlayn", mode: "online", toifalar: ["boshlangich", "orta", "yuqori"], title: "Aloqa sinovi", desc: "Ikki qurilmani ulab koʻramiz — onlayn musobaqalar uchun tayyorgarlik", icon: "onlayn" },
     { dir: "tog", mode: "online", toifalar: ["boshlangich", "orta"], title: "Togʻga chiqish", desc: "Savolga javob ber — pogʻona yuqoriga. Qolib ketsang, chiqib ketasan", icon: "tog", badge: "robotlar bilan" },
     { dir: "tank-onlayn", mode: "online", toifalar: ["orta", "yuqori"], title: "Tank jangi — onlayn", desc: "2–8 bola, har raundda bitta satr kod: oxirgi tirik qolgan yutadi", icon: "tankduel", pc: true },
+    { dir: "qala", mode: "online", toifalar: ["orta", "yuqori"], title: "Qalʼa: xakerlar va himoyachilar", desc: "Ikki jamoa: avval qalʼa qur (parol, qulf, shifr, xat), keyin raqibnikiga hujum qil", icon: "qala", badge: "darslar + robotlar bilan" },
     { dir: "yozuv-poygasi", mode: "online", toifalar: ["boshlangich", "orta", "yuqori"], title: "Yozuv poygasi", desc: "Hamma bir xil matnni yozadi — yozgan sari togʻga koʻtarilasan", icon: "yozuv", pc: true },
   ];
   const MODES = [

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="uz" data-toifa="orta">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Qalʼa: xakerlar va himoyachilar</title>
+  <link rel="icon" href="../../bosh/icon.svg">
+  <meta name="theme-color" content="#FBFAF7">
+  <script src="../umumiy/js/toifa.js"></script>
+  <link rel="stylesheet" href="../umumiy/css/asos.css">
+  <link rel="stylesheet" href="../umumiy/css/onlayn.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dars.css">
+  <link rel="stylesheet" href="css/oyin.css">
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <button class="icon-btn" id="btn-home" type="button" aria-label="Bosh ekran"></button>
+      <div class="progress" id="progress" aria-label="Bosqich"></div>
+      <button class="icon-btn" id="btn-sound" type="button" aria-label="Ovoz"></button>
+    </header>
+    <main class="play" id="play">
+      <section class="zone-stage" id="zone-stage">
+        <div class="bubble" id="bubble" hidden></div>
+        <div class="actor" id="actor-elder"></div>
+        <div class="actor" id="actor-apprentice"></div>
+      </section>
+      <section class="zone-work" id="zone-work"></section>
+      <section class="zone-control" id="zone-control"></section>
+    </main>
+  </div>
+  <!-- Boshqa o'yinlarning mantiqi: har biri QK.logic nomini bosib yozadi — yuklangach o'z nomiga ko'chiriladi (qala.js shundan oladi) -->
+  <script src="../umumiy/js/sanash.js"></script>
+  <script src="../50-parol-kuchi/js/logic.js"></script>
+  <script>window.QK.qalaLib = { parol: window.QK.logic };</script>
+  <script src="../51-bir-tomonlama-qulf/js/logic.js"></script>
+  <script>window.QK.qalaLib.qulf = window.QK.logic;</script>
+  <script src="../52-firibgar-xat/js/logic.js"></script>
+  <script>window.QK.qalaLib.xat = window.QK.logic; delete window.QK.logic;</script>
+  <script src="../03-sezar-maktubi/js/caesar.js"></script>
+  <script>window.QK.qalaLib.caesar = window.QK.caesar;</script>
+  <script src="js/qala.js"></script>
+  <script src="js/dars-mantiq.js"></script>
+  <script src="js/protokol.js"></script>
+  <script src="../umumiy/js/storage.js"></script>
+  <script src="../umumiy/js/sound.js"></script>
+  <script src="../umumiy/js/art.js"></script>
+  <script src="../umumiy/js/ui.js"></script>
+  <script src="../umumiy/js/practice.js"></script>
+  <script src="../umumiy/js/onlayn.js"></script>
+  <script src="../umumiy/js/hisob.js"></script>
+  <script src="../umumiy/js/sinf-tanlov.js"></script>
+  <script src="../umumiy/js/offline.js"></script>
+  <script src="js/qala-ui.js"></script>
+  <script src="js/oyin-ui.js"></script>
+  <script src="js/dars.js"></script>
+  <script src="js/lugat.js"></script>
+  <script src="js/mashq.js"></script>
+  <script src="js/onlayn-qala.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

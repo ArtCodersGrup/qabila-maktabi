@@ -11,7 +11,7 @@
   const JIMLIK = 40000; // shuncha vaqt serverdan hech narsa kelmasa — ulanish o'lgan deb yopiladi (qayta ulanadi)
   const QAYTA_KUTISH = [1000, 2000, 3000, 5000, 5000, 5000, 5000]; // qayta ulanish urinishlari orasidagi kutish (~26 s)
   const SIDES = ["left", "right"]; // chap — Oy (xonani ochgan), o'ng — Quyosh (kod bilan kirgan)
-  const KINDS = ["sinov", "poyga", "savol", "tog", "tank"]; // server/app/xona_qoidalari.py bilan bir xil
+  const KINDS = ["sinov", "poyga", "savol", "tog", "tank", "qala"]; // server/app/xona_qoidalari.py bilan bir xil
   const HOST = "host";
   const MAX_ODAM = 13; // 12 o'yinchi + boshlovchi
 

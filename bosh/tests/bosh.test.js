@@ -42,8 +42,8 @@ test("har o'yin mavjud bo'limda va ikonkasi bor", () => {
 });
 
 test("musobaqalar: bitta ekranda (savol-javob, poyga) va onlayn (aloqa sinovi), sahifasi va ikonkasi bor", () => {
-  assert.deepEqual(CONTESTS.map((c) => c.dir), ["musobaqa", "poyga", "tank-duel", "onlayn", "tog", "tank-onlayn", "yozuv-poygasi"]);
-  assert.deepEqual(CONTESTS.map((c) => c.mode), ["offline", "offline", "offline", "online", "online", "online", "online"], "bitta ekranda — eski musobaqalar, onlayn — alohida");
+  assert.deepEqual(CONTESTS.map((c) => c.dir), ["musobaqa", "poyga", "tank-duel", "onlayn", "tog", "tank-onlayn", "qala", "yozuv-poygasi"]);
+  assert.deepEqual(CONTESTS.map((c) => c.mode), ["offline", "offline", "offline", "online", "online", "online", "online", "online"], "bitta ekranda — eski musobaqalar, onlayn — alohida");
   for (const c of CONTESTS) {
     assert.ok(fs.existsSync(path.join(ROOT, "oyinlar", c.dir, "index.html")), c.dir);
     assert.match(win.QK.boshArt.icon(c.icon), /^<svg[\s\S]*<\/svg>$/, c.icon);

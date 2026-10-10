@@ -3,11 +3,18 @@
 import math
 import re
 
-KINDS = ("sinov", "poyga", "savol", "tog", "tank")
+KINDS = ("sinov", "poyga", "savol", "tog", "tank", "qala")
 CODE_TTL_MS = 600_000  # ikki kishilik xona kodi 10 daqiqa amal qiladi
 HOST = "host"
 SIDES = ("left", "right")
 MAX_ODAM = 13  # 12 o'yinchi + boshlovchi
+MAX_ODAM_KIND = {"qala": 31}
+FAQAT_HOSTGA = ("qala",)  # o'yinchi xabari faqat boshlovchiga (boshqa o'yinchilarga tarqalmaydi)  # Qal'a — butun sinf: 30 bola (ikki jamoa) + boshlovchi
+
+
+def max_odam(kind) -> int:
+    return MAX_ODAM_KIND.get(kind, MAX_ODAM)
+
 MAX_KADR = 4096  # bitta xabar (bayt)
 MAX_XONA = 300  # bir vaqtda ochiq xonalar
 TEZLIK = 30  # bitta ulanishdan soniyasiga ko'pi bilan shuncha xabar

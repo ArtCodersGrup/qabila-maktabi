@@ -12,7 +12,7 @@ const manifest = JSON.parse(read("manifest.json"));
 // Alohida sahifalar: o'yinlar (NN-nomi), musobaqalar, masalalar va shpargalka.
 // Shpargalka — faqat matn: unda js/ papkasi yo'q.
 const pageDirs = () => fs.readdirSync(path.join(ROOT, "oyinlar")).filter((d) => /^\d\d-/.test(d)
-  || ["masalalar", "cpp-shpargalka", "musobaqa", "poyga", "tank-duel", "tank-onlayn", "onlayn", "tog", "yozuv-poygasi"].includes(d));
+  || ["masalalar", "cpp-shpargalka", "musobaqa", "poyga", "tank-duel", "tank-onlayn", "onlayn", "tog", "yozuv-poygasi", "qala"].includes(d));
 
 // Saytga kerak bo'lgan fayllar (testlar va hujjatlar kirmaydi)
 function siteFiles() {
@@ -29,6 +29,8 @@ function siteFiles() {
   }
   for (const dir of pageDirs()) {
     out.push(`oyinlar/${dir}/index.html`, `oyinlar/${dir}/css/style.css`);
+    // style.css dan tashqari CSS (qala: dars.css, oyin.css)
+    for (const f of fs.readdirSync(path.join(ROOT, "oyinlar", dir, "css")).filter((f) => f.endsWith(".css") && f !== "style.css")) out.push(`oyinlar/${dir}/css/${f}`);
     const js = path.join(ROOT, "oyinlar", dir, "js");
     if (!fs.existsSync(js)) continue;
     for (const f of fs.readdirSync(js)) {
