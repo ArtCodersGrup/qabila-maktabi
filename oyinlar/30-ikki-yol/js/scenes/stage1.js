@@ -9,9 +9,8 @@
     await U.keyboardCheck();
     const el = common.box(false);
     el.append(ui.h("div", { class: "story-art", html: QK.gameArt.fork(null) }));
-    await ui.say("elder", "Yoʻl ikkiga ayrildi. Qaysi biridan borishni nima hal qiladi?");
-    await ui.say("apprentice", "Shart — masalan, yomgʻir yogʻyaptimi yoki yoʻqmi.");
-    await ui.say("elder", "Toʻgʻri. Dasturda ham shunday: shart rost boʻlsa — bir yoʻl, aks holda — boshqasi.");
+    await ui.say("elder", "Maqsad: tarmoqlanish — dastur shartga qarab qaysi satrlarni bajarishni tanlaydi (if, elif, else).");
+    await ui.say("elder", "Kalit gʻoya: shart rost boʻlsa — bir tarmoq, yolgʻon boʻlsa — boshqasi. Xuddi yoʻl ayrilishidek.");
   }
 
   // Ko'rsatish: qadam-baqadam — qaysi satr bajarilgani ko'rinadi
@@ -21,7 +20,7 @@
     el.append(common.note(value >= 12 ? "Shart rost boʻlsa, qaysi satr bajariladi?" : "Endi shart yolgʻon. Qaysi satr bajariladi?"));
     const step = U.stepper({ code });
     el.append(step.el);
-    ui.bubble("elder", "⏭ Qadam ni bosib bor.");
+    ui.bubble("elder", "⏭ Qadam: har bosishda bitta satr bajariladi.");
     await ui.settle((done) => {
       ui.control().append(ui.button("⏭ Qadam", () => {
         if (!step.step()) { ui.clearControl(); done(); }
@@ -54,7 +53,7 @@
       ui.h("div", { class: "formula-row", text: "    surilgan satrlar — shart rost boʻlsa" }),
       ui.h("div", { class: "formula-row kod", text: "else:" }),
       ui.h("div", { class: "formula-row", text: "    surilgan satrlar — aks holda" })));
-    await ui.say("elder", "Solishtirish belgilari: ==  !=  <  <=  >  >=");
+    await ui.say("elder", "Solishtirish amallari: ==  !=  <  <=  >  >=. Natijasi — True yoki False.");
   }
 
   async function stage1() {
@@ -62,11 +61,11 @@
     await whichWay(8);
     await indent();
     await definition();
-    await ui.say("elder", `Endi oʻzing ayt: kod nima chiqaradi? ${QK.practice.need()} ta toʻgʻri javob kerak.`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta kod. Har biri nima chiqarishini aniqla.`);
     await practice.exercises({
       next: (prev, correct, tier) => L.ifTask(Math.random, prev, tier),
       run: (task) => common.resultExercise(task),
-      praise: () => "Toʻgʻri yoʻlni tanlading.",
+      praise: () => "Shart toʻgʻri hisoblandi.",
     });
   }
 

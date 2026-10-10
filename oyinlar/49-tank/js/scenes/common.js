@@ -59,7 +59,7 @@
             ui.pose("apprentice", "happy", 1200);
             done(true);
           } else if (L.yutqazdi(m)) {
-            yoz("Tanking yiqildi. Maydon qaytadan tiklandi — yana urinib koʻr.", "izoh");
+            yoz("Tank yiqildi. Maydon tiklandi — kodni oʻzgartirib qayta urin.", "izoh");
             urinish++;
             if (urinish === 1) yoz("↻ " + v.ishora, "izoh");
             await ui.sleep(600);

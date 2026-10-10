@@ -12,9 +12,8 @@
     sound.play("win");
     ui.pose("elder", "happy", 1200);
     ui.pose("apprentice", "happy", 1200);
-    await ui.say("elder", goingOn
-      ? `${s}-bosqich tugadi! Barakalla, keyingisiga oʻtamiz.`
-      : `${s}-bosqich tugadi! Barakalla!`);
+    const NEXT = { 1: "ikkilikda ayirish va qarz.", 2: "ikkilikda koʻpaytirish: surish va qoʻshish." };
+    await ui.say("elder", goingOn && NEXT[s] ? `${s}-bosqich tugadi. Keyingisi — ${NEXT[s]}` : `${s}-bosqich tugadi.`);
   }
 
   async function congrats() {
@@ -23,13 +22,13 @@
     sound.play("win");
     ui.pose("elder", "happy", 1500);
     ui.pose("apprentice", "happy", 1500);
-    ui.bubble("elder", "Tabriklayman! Endi sen ikkilikda hisoblay olasan!");
+    ui.bubble("elder", "Tayyor: ikkilikda ustunda qoʻsha, ayira va koʻpaytira olasan.");
     ui.work().append(ui.h("div", { class: "story" },
       ui.h("div", { class: "story-art small", html: art.calc() }),
       ui.h("div", { class: "summary" },
-        ui.h("div", { text: "1 + 1 = 10: 0 yoz, 1 koʻchir" }),
-        ui.h("div", { text: "0 − 1: chapdan qarz" }),
-        ui.h("div", { text: "× 10₂ — oxiriga 0" }))));
+        ui.h("div", { text: "1 + 1 = 10₂: 0 yoz, 1 koʻchir" }),
+        ui.h("div", { text: "0 − 1: chapdan qarz, u 2 birlikka teng" }),
+        ui.h("div", { text: "× 10₂ — chapga surish (oxiriga 0), qiymat × 2" }))));
     return ui.choice([
       { label: "Qayta oʻynash", value: "replay" },
       { label: "Bosh ekran", value: "home", secondary: true },

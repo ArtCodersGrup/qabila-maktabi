@@ -31,16 +31,16 @@
     const el = common.box();
     el.append(common.note("Endi shu zanjir teskari tartibda yozilgan:"));
     withOutput(el, bad);
-    await ui.say("elder", "95 ball uchun 3 chiqdi! Chunki birinchi shart (50 dan katta) allaqachon rost.");
-    await ui.say("elder", "elif zanjirida tartib muhim: eng qattiq shart yuqorida turadi.");
+    await ui.say("elder", "95 ball uchun 3 chiqdi: birinchi shart (ball >= 50) allaqachon rost.");
+    await ui.say("elder", "elif zanjirida tartib muhim: eng qatʼiy shart yuqorida turadi.");
   }
 
   async function logic() {
     const code = 'x = 14\nprint(x > 10 and x < 20)\nprint(x < 10 or x == 14)\nprint(not x == 14)\nprint(10 < x < 20)';
     const el = common.box();
     withOutput(el, code);
-    await ui.say("elder", "«Mantiq kalitlari» oʻyinini esla: VA, YOKI, EMAS kalitlari. Pythonda ular and, or, not.");
-    await ui.say("elder", "Oxirgi satr — qisqa yoʻl: 10 < x < 20 degani x oraliqda ekani.");
+    await ui.say("elder", "Mantiqiy amallar VA, YOKI, EMAS Pythonda and, or, not deb yoziladi — «Mantiq kalitlari» oʻyinidagi kalitlar.");
+    await ui.say("elder", "Oxirgi satr — qoʻsh solishtirish: 10 < x < 20 xuddi x > 10 and x < 20 kabi.");
   }
 
   async function definition() {
@@ -50,7 +50,7 @@
       ui.h("div", { class: "formula-row", text: "yuqoridan pastga, birinchi rost topilganda toʻxtaydi" }),
       ui.h("div", { class: "formula-row kod", text: "and  —  ikkalasi ham rost" }),
       ui.h("div", { class: "formula-row kod", text: "or   —  bittasi rost boʻlsa yetadi" })));
-    await ui.say("elder", "Endi oʻzing hisobla: kod nima chiqaradi?");
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta kod. Har biri nima chiqarishini aniqla.`);
   }
 
   async function stage2() {
@@ -61,7 +61,7 @@
     await practice.exercises({
       next: (prev, correct, tier) => L.stage2Task(Math.random, prev, tier),
       run: (task) => common.resultExercise(task),
-      praise: (task) => (task.kind === "bool" ? "Rost va yolgʻonni ajratding." : "Zanjirni toʻgʻri kuzatding."),
+      praise: (task) => (task.kind === "bool" ? "Mantiqiy ifoda toʻgʻri hisoblandi." : "Zanjir toʻgʻri kuzatildi."),
     });
   }
 

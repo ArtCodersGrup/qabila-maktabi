@@ -15,15 +15,15 @@
   async function brackets() {
     const el = common.box();
     withOutput(el, "print(2 + 3 * 4)\nprint((2 + 3) * 4)");
-    await ui.say("elder", "Ikkala satrda ham bir xil sonlar. Javoblar esa boshqacha.");
-    await ui.say("elder", "Kompyuter avval koʻpaytiradi, keyin qoʻshadi. Qavs bu tartibni oʻzgartiradi.");
+    await ui.say("elder", "Ikkala satrda sonlar bir xil, natijalar esa har xil.");
+    await ui.say("elder", "Python avval koʻpaytiradi, keyin qoʻshadi — matematikadagidek. Qavs bu tartibni oʻzgartiradi.");
   }
 
   async function power() {
     const el = common.box();
     withOutput(el, "print(2 ** 10)\nprint(2 + 3 ** 2)\nprint(-2 ** 2)");
-    await ui.say("elder", "Ikki yulduzcha — daraja. U hammadan avval hisoblanadi.");
-    await ui.say("elder", "Shuning uchun -2 ** 2 javobi -4: avval 2 ** 2, keyin minus.");
+    await ui.say("elder", "** — darajaga koʻtarish. U boshqa arifmetik amallardan oldin bajariladi.");
+    await ui.say("elder", "Shuning uchun -2 ** 2 = -4: avval 2 ** 2, keyin minus.");
   }
 
   async function definition() {
@@ -32,14 +32,14 @@
       ui.h("div", { class: "formula-row", text: "Tartib:" }),
       ui.h("div", { class: "formula-row kod", text: "( )  →  **  →  * / // %  →  + -" }),
       ui.h("div", { class: "formula-row", text: "bir xil kuchlilari chapdan oʻngga" })));
-    await ui.say("elder", "Ishonching komil boʻlmasa — qavs qoʻy. Qavs hech qachon xato boʻlmaydi.");
+    await ui.say("elder", "Tartibga ishonching komil boʻlmasa, qavs qoʻy — ortiqcha qavs xato emas.");
   }
 
   async function stage2() {
     await brackets();
     await power();
     await definition();
-    await ui.say("elder", "Endi oʻzing hisobla: kod nima chiqaradi?");
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta kod — nima chiqarishini hisobla.`);
     await practice.exercises({
       next: (prev, correct, tier) => L.orderTask(Math.random, prev, tier),
       run: (task) => common.resultExercise(task),

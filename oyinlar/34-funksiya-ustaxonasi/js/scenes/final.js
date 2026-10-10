@@ -4,6 +4,7 @@
 
   const QK = root.QK;
   const { ui, sound } = QK;
+  const KEYINGI = { 1: "return va lokal oʻzgaruvchi", 2: "funksiyani oʻzing yozish" };
 
   async function stageDone(s, goingOn) {
     ui.setCompact(false);
@@ -12,9 +13,7 @@
     sound.play("win");
     ui.pose("elder", "happy", 1200);
     ui.pose("apprentice", "happy", 1200);
-    await ui.say("elder", goingOn
-      ? `${s}-bosqich tugadi! Barakalla, keyingisiga oʻtamiz.`
-      : `${s}-bosqich tugadi! Barakalla!`);
+    await ui.say("elder", goingOn && KEYINGI[s] ? `${s}-bosqich tugadi. Keyingisi — ${KEYINGI[s]}.` : `${s}-bosqich tugadi.`);
   }
 
   async function congrats() {
@@ -23,13 +22,13 @@
     sound.play("win");
     ui.pose("elder", "happy", 1500);
     ui.pose("apprentice", "happy", 1500);
-    ui.bubble("elder", "Tabriklayman! Endi oʻz buyruqlaringni yasay olasan.");
+    ui.bubble("elder", "Tayyor: parametrli funksiya yozib, natijani return bilan qaytara olasan.");
     ui.work().append(ui.h("div", { class: "story" },
       ui.h("div", { class: "story-art small", html: QK.gameArt.bench(true) }),
       ui.h("div", { class: "summary" },
-        ui.h("div", { text: "def — oʻz buyrugʻing" }),
+        ui.h("div", { text: "def nom(parametr): — funksiya eʼloni" }),
         ui.h("div", { text: "return qiymat qaytaradi, print ekranga yozadi" }),
-        ui.h("div", { text: "Katta masalani boʻlaklab yechish" }))));
+        ui.h("div", { text: "Katta masala — kichik funksiyalarga boʻlinadi" }))));
     return ui.choice([
       { label: "Qayta oʻynash", value: "replay" },
       { label: "Bosh ekran", value: "home", secondary: true },

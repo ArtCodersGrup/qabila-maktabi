@@ -11,19 +11,18 @@
     el.append(ui.h("div", { class: "fx-qoida" },
       ui.h("div", { class: "fx-qoida-nom", text: "Himoya qoidalari" }),
       ...L.QOIDALAR.map((q) => ui.h("div", { text: q }))));
-    await ui.say("elder", "Firibgar xatga javob yozmaysan, havolasini bosmaysan.");
-    await ui.say("elder", "Hisobni faqat oʻzing bilgan rasmiy ilovadan tekshirasan.");
-    await ui.say("apprentice", "Agar aldanib qolsam, uyaltirmaydilarmi?");
-    await ui.say("elder", "Yoʻq. Kattalarga tez aytsang, zarar boʻlmaydi. Buni hamma boshidan oʻtkazadi.");
+    await ui.say("elder", "Firibgar xatga javob yozilmaydi, havolasi bosilmaydi.");
+    await ui.say("elder", "Hisob faqat oʻzing bilgan rasmiy ilova yoki saytdan tekshiriladi.");
+    await ui.say("elder", "Aldanib qolsang, darhol kattalarga ayt va parolni almashtir — tez harakat zararni kamaytiradi. Bu uyat emas: kattalar ham aldanadi.");
   }
 
   async function stage3() {
     await korsat();
-    await ui.say("elder", "Endi vaziyatlarni koʻramiz. Har birida bitta harakat toʻgʻri.");
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta vaziyat. Har birida bitta harakat toʻgʻri.`);
     await practice.exercises({
       next: (prev) => L.vaziyatTask(Math.random, prev),
       run: (task) => common.vaziyatExercise(task),
-      praise: () => "Shunday qilsang, xavf qolmaydi.",
+      praise: () => "Toʻgʻri harakat.",
     });
   }
 

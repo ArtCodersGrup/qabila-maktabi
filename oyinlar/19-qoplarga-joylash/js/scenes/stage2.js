@@ -27,7 +27,7 @@
     });
     await ui.say("elder", lines[row - 1]);
     table.arrow();
-    ui.bubble("elder", "Endi qoldiqlarni pastdan yuqoriga bos!");
+    ui.bubble("elder", "Endi qoldiqlarni pastdan yuqoriga bos.");
     let digits = "";
     await ui.settle((done) => {
       let expect = table.steps.length - 1;
@@ -54,14 +54,14 @@
   async function bags() {
     const el = common.box(true);
     el.append(ui.h("div", { class: "big-value", text: "13 → 2-lik" }));
-    ui.bubble("elder", "13 ta olmani 2 tadan qopga joylaymiz. «Boʻl»ni bos!");
+    ui.bubble("elder", "2-usul: 13 ni 2 ga ketma-ket boʻlamiz — olmalarni juftlab qoplarga joylagandek. «Boʻl» ni bos.");
     await divideAndRead(el, 13, 2, [
-      "13 ta olma → 6 qop, 1 ta ortdi.",
-      "6 qop → 3 quti, hech narsa ortmadi.",
-      "3 quti → 1 sandiq, 1 ta ortdi.",
-      "1 sandiqni juftlab boʻlmaydi: 0, 1 ta ortdi. Tamom!",
+      "13 : 2 = 6, qoldiq 1.",
+      "6 : 2 = 3, qoldiq 0.",
+      "3 : 2 = 1, qoldiq 1.",
+      "1 : 2 = 0, qoldiq 1. Boʻlinma 0 — toʻxtaymiz.",
     ]);
-    await ui.say("elder", "1101₂ — tangalar usulidagi javobning xuddi oʻzi!");
+    await ui.say("elder", "1101₂ — 1-usuldagi javob bilan bir xil.");
   }
 
   async function definition() {
@@ -70,8 +70,8 @@
     const t = qopUi.divTable(el, 38, 5, true);
     t.arrow();
     el.append(common.answerLine("38 = 123₅"));
-    await ui.say("elder", "Bu usul istalgan tizimda ishlaydi. Mana 38 ni 5-likka oʻtkazdik.");
-    await ui.say("elder", "Eng koʻp xato — qoldiqlarni yuqoridan oʻqish. Doim pastdan boshla!");
+    await ui.say("elder", "Bu usul istalgan asos uchun ishlaydi: 38 = 123₅.");
+    await ui.say("elder", "Oxirgi qoldiq — eng katta xona raqami, shuning uchun qoldiqlar pastdan yuqoriga oʻqiladi.");
   }
 
   // Maslahat: birinchi bo'lish qatori
@@ -90,7 +90,7 @@
   function divTask(task) {
     const el = common.box(true);
     el.append(ui.h("div", { class: "big-value", text: `${task.n} → ${task.base}-lik` }));
-    ui.bubble("elder", `Bu sonni ${task.base}-likda yoz.`);
+    ui.bubble("elder", `${task.base}-likda yoz.`);
     return sanoqUi.digitTries({
       answer: task.answer,
       base: task.base,
@@ -106,7 +106,7 @@
   async function stage2() {
     await bags();
     await definition();
-    await ui.say("elder", `Endi oʻzing: boʻlib-boʻlib oʻtkaz. ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta son — oʻnlikdan 2–8-likka, boʻlish usulida.`);
     await practice.exercises({
       next: (prev, correct, tier) => qop.makeDivTask(prev, undefined, tier),
       run: divTask,

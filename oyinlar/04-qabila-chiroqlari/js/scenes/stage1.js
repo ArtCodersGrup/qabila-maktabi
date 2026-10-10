@@ -11,9 +11,8 @@
     ui.clearControl();
     ui.paper("");
     ui.work().append(ui.h("div", { class: "story-art", html: art.story("hills") }));
-    await ui.say("elder", "Qabilaga elektr chiroqlari keldi!");
-    await ui.say("apprentice", "Qoʻshni qabila togʻ ortida. Tunda ularga qanday xabar yuboramiz?");
-    await ui.say("elder", "Chiroqlar bilan! Kel, oʻrganamiz.");
+    await ui.say("elder", "Maqsad: chiroqlar bilan xabarni kodlash — nechta naqsh chiqadi va ikkilik son nima.");
+    await ui.say("elder", "Kalit gʻoya: har chiroq — 2 holat (yoniq/oʻchiq), yaʼni 1 bit. Holatlar koʻpaytiriladi.");
   }
 
   // 5.1: bitta chiroq — faqat 2 ta xabar
@@ -27,14 +26,14 @@
     const show = (p) => { meaning.textContent = p[0] ? "Yoniq — «Keling»" : "Oʻchiq — «Kelmang»"; };
     box.append(meaning);
     show([0]);
-    ui.bubble("elder", "Chiroqni bosib koʻr. Yoniq — «Keling», oʻchiq — «Kelmang».");
+    ui.bubble("elder", "Chiroqni bos. Bitta chiroq — 2 holat: yoniq «Keling», oʻchiq «Kelmang».");
     // Avval qildir: "Davom" bola chiroqni bir marta bosgandan keyin chiqadi
     await ui.settle((done) => {
       const row = lampsUi.lampRow(box, { count: 1, states: lamps.PLAIN, onChange: (p) => { show(p); done(); } });
       box.prepend(box.lastChild); // chiroq yozuvdan tepada tursin
       return row;
     });
-    await ui.say("elder", "Faqat 2 ta xabar — bu kam!");
+    await ui.say("elder", "1 chiroq — atigi 2 ta xabar. Koʻproq xabar uchun chiroq qoʻshamiz.");
   }
 
   // 5.4: ta'rif
@@ -47,8 +46,8 @@
     ["1 chiroq: 2", "2 chiroq: 2 × 2 = 4", `3 chiroq: 2 × 2 × 2 = 2${ui.sup(3)} = 8`].forEach((t) => {
       box.append(ui.h("div", { class: "formula-row", text: t }));
     });
-    await ui.say("elder", "Har bir chiroq 2 xil boʻladi. Chiroqlar soni qancha boʻlsa, 2 ni shuncha marta koʻpaytiramiz.");
-    await ui.say("elder", "«Qabila kodlari» oʻyinidagi harflarni esla — xuddi shunday!");
+    await ui.say("elder", "Har chiroq — 2 holat. n ta chiroq: 2 ni n marta koʻpaytiramiz, yaʼni 2ⁿ ta naqsh.");
+    await ui.say("elder", "Bu — koʻpaytirish qoidasi, «Qabila kodlari» oʻyinidagi harflar bilan bir xil.");
   }
 
   // 5.5: naqshni o'qish yoki yuborish. Kod jadvali faqat birinchi 2 javobda ko'rinadi (task.showTable),
@@ -62,10 +61,10 @@
     ui.work().append(box);
     let row = null;
     if (task.type === "decode") {
-      ui.bubble("elder", "Qoʻshni qabila chiroq yoqdi. Nima deyapti?");
+      ui.bubble("elder", "Bu naqsh qaysi xabarni bildiradi?");
       box.append(lampsUi.patternView(pattern, lamps.PLAIN, true));
     } else {
-      ui.bubble("elder", `Qoʻshni qabilaga «${lamps.MEANINGS[task.meaning]}» deb yubor.`);
+      ui.bubble("elder", `«${lamps.MEANINGS[task.meaning]}» xabarini naqsh bilan yubor.`);
       row = lampsUi.lampRow(box, { count: 3, states: lamps.PLAIN });
     }
     const table = lampsUi.codeTable(box);
@@ -84,10 +83,10 @@
         if (row) row.shake();
         if (task.showTable) {
           table.highlight(lamps.hintPair(task.meaning));
-          ui.bubble("elder", "↻ Jadvalga qara — yonib turgan ikki qatordan biri kerakli.");
+          ui.bubble("elder", "↻ Jadvalda ikki qator belgilandi — javob ulardan biri.");
         } else {
           table.show(true);
-          ui.bubble("elder", "↻ Jadvalni ochdim. Kerakli naqshni undan oʻzing top.");
+          ui.bubble("elder", "↻ Kod jadvali ochildi. Kerakli naqshni undan top.");
         }
       },
       solution: () => {
@@ -104,15 +103,15 @@
 
   async function stage1() {
     await oneLamp();
-    ui.bubble("elder", "Endi 2 ta chiroq. Naqsh yasab «Saqlash»ni bos — hammasini top!");
+    ui.bubble("elder", "2 ta chiroq. Har bir mumkin naqshni yasab, «Saqlash»ni bos.");
     await common.findAll({ count: 2, states: lamps.PLAIN });
-    await ui.say("elder", "2 ta chiroq — 4 ta naqsh.");
-    ui.bubble("elder", "Endi 3 ta chiroq. Har bir naqshga maʼno beramiz!");
+    await ui.say("elder", "2 ta chiroq — 4 ta naqsh: 2 × 2 = 4.");
+    ui.bubble("elder", "3 ta chiroq. Har naqshga bitta xabar biriktiriladi — bu kod jadvali.");
     await common.findAll({ count: 3, states: lamps.PLAIN, labelFor: (p) => lamps.MEANINGS[lamps.toNumber(p)] });
-    await ui.say("elder", "3 ta chiroq — 8 ta naqsh. Har biriga maʼno berdik!");
+    await ui.say("elder", "3 ta chiroq — 8 ta naqsh, yaʼni 8 xil xabar.");
     await explain();
-    await ui.say("elder", `Endi qoʻshni qabila bilan gaplashamiz. ${QK.practice.need()} ta toʻgʻri javob kerak!`);
-    await ui.say("elder", "Jadval avval koʻrinib turadi, keyin yashirinadi — naqshlarni eslab qol!");
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta naqsh — oʻqish yoki yuborish.`);
+    await ui.say("elder", "Kod jadvali avval koʻrinadi, keyin yashirinadi — naqshlarni eslab qol.");
     await practice.exercises({
       next: (prev, correct, tier) => lamps.makeCodeTask(prev, null, tier),
       run: codeTask,

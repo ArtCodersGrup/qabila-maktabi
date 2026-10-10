@@ -12,15 +12,14 @@
     ui.clearControl();
     ui.paper("");
     ui.work().append(ui.h("div", { class: "story-art", html: art.abacus() }));
-    await ui.say("elder", "Qoʻshni qabilalar har xil sanaydi.");
-    await ui.say("apprentice", "Qanday qilib? Sonlar hammada bir xil-ku!");
-    await ui.say("elder", "Sonlar bir xil, yozilishi boshqa. Kel, choʻtda koʻramiz.");
+    await ui.say("elder", "Maqsad: sanoq tizimi nima ekanini va uning asosini tushunish.");
+    await ui.say("elder", "Kalit gʻoya: son bir xil, lekin har tizimda boshqacha yoziladi. Choʻtda koʻramiz.");
   }
 
   const RUNS = [
-    { base: 10, from: 7, to: 12, start: "Bu — oʻnlik choʻt: har simda 9 tagacha munchoq. «+1» ni bosib, 12 gacha sana!", carry: "10 ta boʻldi — ular chapdagi simda 1 ta munchoqqa almashdi!", end: "Oʻnlikda 12 — bir oʻnlik va 2 ta birlik." },
-    { base: 5, from: 3, to: 7, start: "Besh barmoqli qabila 5 tadan sanaydi: har simda 4 tagacha. 7 gacha sana!", carry: "5 ta boʻldi — chapdagi simga 1 ta oʻtdi!", end: "Yetti bu yerda 12₅ deb yoziladi: «bir-ikki, beshlik»." },
-    { base: 2, from: 0, to: 5, start: "Bu qabila faqat «bor» yoki «yoʻq» deydi: har simda 1 tagacha. 5 gacha sana!", carry: "2 ta boʻldi — darrov keyingi simga!", end: "Besh — 101₂: «bir-nol-bir, ikkilik»." },
+    { base: 10, from: 7, to: 12, start: "Oʻnlik choʻt: har simda 9 tagacha munchoq. «+1» bilan 12 gacha sana.", carry: "10 ta boʻldi — ular chapdagi simda 1 ta munchoqqa almashdi. Bu — xonadan koʻchish.", end: "12 = 1 ta oʻnlik + 2 ta birlik." },
+    { base: 5, from: 3, to: 7, start: "Beshlik choʻt: har simda 4 tagacha munchoq. 7 gacha sana.", carry: "5 ta boʻldi — chapdagi simga 1 ta oʻtdi.", end: "7 = 1 ta beshlik + 2 ta birlik, yaʼni 12₅ («bir-ikki, beshlik»)." },
+    { base: 2, from: 0, to: 5, start: "Ikkilik choʻt: har simda 0 yoki 1 ta munchoq. 5 gacha sana.", carry: "2 ta boʻldi — darhol keyingi simga koʻchadi.", end: "5 = 1 ta toʻrtlik + 0 ta ikkilik + 1 ta birlik, yaʼni 101₂." },
   ];
 
   // 4.1–4.3: bola uch xil cho'tda +1 bilan sanaydi
@@ -60,9 +59,9 @@
 
   async function definition() {
     const el = common.box(false);
-    common.formula(el, ["10-lik: 10 tada keyingi xonaga", "5-lik: 5 tada", "2-lik: 2 tada"]);
-    await ui.say("elder", "Nechta munchoqda keyingi simga oʻtilsa — shu tizimning asosi.");
-    await ui.say("elder", "Bular — sanoq tizimlari (sanoq sistemalari).");
+    common.formula(el, ["10-lik: 10 tada keyingi xonaga", "5-lik: 5 tada", "2-lik: 2 tada", "asos b: b tada keyingi xonaga"]);
+    await ui.say("elder", "Nechta birlikda keyingi xonaga koʻchilsa — shu son tizimning asosi (b).");
+    await ui.say("elder", "Asosi b boʻlgan tizim — b-lik sanoq tizimi (sanoq sistemasi).");
   }
 
   // 4.5: mashq — cho'tdagi son / yana 1 qo'shilsa
@@ -80,7 +79,7 @@
         common.add(el, common.line(task.type === "read"
           ? "Har sim — bitta raqam: munchoqlarini sana. Boʻsh sim — 0. Chapdan oʻngga yoz"
           : `Simda ${task.base} ta boʻlsa — u boʻshab, chapdagiga 1 oʻtadi`));
-        ui.bubble("elder", task.type === "read" ? "↻ Munchoqlarni sana: har sim — bitta raqam." : "↻ Koʻchishni unutma!");
+        ui.bubble("elder", task.type === "read" ? "↻ Munchoqlarni sana: har sim — bitta raqam." : "↻ Oxirgi simga qara: u toʻlsa, keyingi xonaga koʻchadi.");
       },
       solution: () => {
         abacus.showDigits();
@@ -93,7 +92,7 @@
   async function stage1() {
     for (const run of RUNS) await countOn(run);
     await definition();
-    await ui.say("elder", `Endi oʻzing: choʻtdagi sonni oʻqi. ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta — choʻtdagi sonni yoz yoki unga 1 qoʻsh.`);
     await QK.practice.exercises({
       next: (prev, correct, tier) => tizim.makeChotiTask(prev, undefined, tier),
       run: chotiTask,

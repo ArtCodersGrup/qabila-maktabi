@@ -7,10 +7,10 @@
 
   // Hikoya: art — rasm (QK.art.story), caption — rasm ostidagi yozuv, lines — Oqsoqol gaplari
   const SCENES = [
-    { art: "bits", caption: "1 0 1 1 0 1", lines: ["Kompyuterda millionlab juda kichik «chiroqlar» bor — ular bit deyiladi.", "Yoqilgan — 1, oʻchgan — 0."] },
-    { art: "byte", caption: "8 bit = 1 bayt", lines: ["8 ta bit — 1 bayt.", "U 256 xil boʻladi: 2 ni 8 marta koʻpaytiramiz."] },
-    { art: "pixel", lines: ["Ekrandagi har bir nuqta — 3 ta kichik chiroq: qizil, yashil va koʻk."] },
-    { art: "screen", lines: ["Har biri 256 xil yorugʻlikda yonadi.", "Shuning uchun ekran millionlab rangni koʻrsata oladi!"] },
+    { art: "bits", caption: "1 0 1 1 0 1", lines: ["Qayerda uchraydi: kompyuter xotirasi — milliardlab bit, har biri 0 yoki 1.", "Bit — xuddi chiroq: yoniq 1, oʻchiq 0."] },
+    { art: "byte", caption: "8 bit = 1 bayt", lines: ["1 bayt = 8 bit.", "2⁸ = 256 xil qiymat: 0 dan 255 gacha."] },
+    { art: "pixel", lines: ["Ekran pikseli — 3 ta subpiksel: qizil (R), yashil (G), koʻk (B)."] },
+    { art: "screen", lines: ["Har subpikselga 1 bayt: 256 daraja yorugʻlik.", "Jami 256³ ≈ 16,7 million rang."] },
   ];
 
   // 7.2: ta'rif — oddiy va rangli chiroqlar naqshlari
@@ -23,8 +23,8 @@
       ui.h("div", { class: "formula-row", text: "1, 2, 3, 4 ta chiroq:" }),
       ui.h("div", { class: "formula-row", text: `Oddiy: ${row(lamps.PLAIN)}` }),
       ui.h("div", { class: "formula-row", text: `Rangli: ${row(lamps.COLOR)}` })));
-    await ui.say("elder", "Holatlar sonini chiroqlar sonicha koʻpaytiramiz.");
-    await ui.say("elder", "Holat koʻp boʻlsa — chiroq kam kerak.");
+    await ui.say("elder", "Umumiy qoida: k holatli n ta chiroq — kⁿ ta naqsh.");
+    await ui.say("elder", "Holat koʻp boʻlsa, oʻsha xabarlar uchun chiroq kamroq kerak.");
   }
 
   // 1-xato maslahati: 1, 2, 3… ta chiroq naqshlari (belgisiz)
@@ -79,11 +79,11 @@
   }
 
   async function stage3() {
-    ui.bubble("elder", "Qabilaga rangli chiroqlar keldi: oʻchiq, sariq, koʻk — 3 xil! 2 ta chiroq bilan hamma naqshni top.");
+    ui.bubble("elder", "Endi chiroq 3 holatli: oʻchiq, sariq, koʻk. 2 ta chiroq bilan barcha naqshlarni top.");
     await common.findAll({ count: 2, states: lamps.COLOR });
     await ui.say("elder", `2 ta rangli chiroq — 9 ta naqsh: 3 × 3 = 3${ui.sup(2)}.`);
     await explain();
-    await ui.say("elder", `Endi hisoblaymiz: nechta chiroq kerak? ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta masala — eng kamida nechta chiroq kerak. Shart: kⁿ ≥ xabarlar soni.`);
     await practice.exercises({
       next: (prev, correct, tier) => lamps.makeLampsQuestion(prev, null, tier),
       run: lampsTask,

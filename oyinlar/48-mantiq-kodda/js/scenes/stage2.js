@@ -7,17 +7,16 @@
 
   async function jadvallar() {
     for (const [ifoda, gap] of [
-      ["a and b", "and — ikkalasi ham rost boʻlsa, rost."],
-      ["a or b", "or — kamida bittasi rost boʻlsa, rost."],
-      ["not a", "not — rostni yolgʻonga, yolgʻonni rostga aylantiradi."],
+      ["a and b", "and: ikkala qiymat True boʻlsa — True, aks holda False."],
+      ["a or b", "or: kamida bittasi True boʻlsa — True."],
+      ["not a", "not: True ni False ga, False ni True ga aylantiradi."],
     ]) {
       const host = common.box(true);
       host.append(common.kodBlok("print(" + ifoda + ")"));
       host.append(common.rostlik(ifoda));
       await ui.say("elder", gap);
     }
-    await ui.say("apprentice", "Jadvalni oʻzim yodlab olishim kerakmi?");
-    await ui.say("elder", "Yoʻq. Kodni ishga tushirsang, Python oʻzi hisoblab beradi.");
+    await ui.say("elder", `Jadvalni yodlash shart emas — Python oʻzi hisoblaydi. Mashq: ${QK.practice.need()} ta — ifoda qiymati va gapni kodga oʻgirish.`);
   }
 
   // Mashqda ikki tur aralashadi: ifoda qiymati va hayotiy gap

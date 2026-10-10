@@ -4,6 +4,7 @@
 
   const QK = root.QK;
   const { ui, sound } = QK;
+  const KEYINGI = { 1: "yigʻindi, sanoq va break", 2: "sonni raqamlarga ajratish" };
 
   async function stageDone(s, goingOn) {
     ui.setCompact(false);
@@ -12,9 +13,7 @@
     sound.play("win");
     ui.pose("elder", "happy", 1200);
     ui.pose("apprentice", "happy", 1200);
-    await ui.say("elder", goingOn
-      ? `${s}-bosqich tugadi! Barakalla, keyingisiga oʻtamiz.`
-      : `${s}-bosqich tugadi! Barakalla!`);
+    await ui.say("elder", goingOn && KEYINGI[s] ? `${s}-bosqich tugadi. Keyingisi — ${KEYINGI[s]}.` : `${s}-bosqich tugadi.`);
   }
 
   async function congrats() {
@@ -23,12 +22,12 @@
     sound.play("win");
     ui.pose("elder", "happy", 1500);
     ui.pose("apprentice", "happy", 1500);
-    ui.bubble("elder", "Tabriklayman! Endi dasturing takrorlay oladi.");
+    ui.bubble("elder", "Tayyor: while sikli bilan sanash, yigʻish va sonni raqamlarga ajratishni yoza olasan.");
     ui.work().append(ui.h("div", { class: "story" },
       ui.h("div", { class: "story-art small", html: QK.gameArt.wheel(8) }),
       ui.h("div", { class: "summary" },
         ui.h("div", { text: "while — shart rost boʻlgancha takrorlanadi" }),
-        ui.h("div", { text: "Hisoblagichni oʻzgartirishni unutma" }),
+        ui.h("div", { text: "Sikl uchun: boshlangʻich qiymat, shart, oʻzgartirish" }),
         ui.h("div", { text: "% 10 — oxirgi raqam, // 10 — qolgani" }))));
     return ui.choice([
       { label: "Qayta oʻynash", value: "replay" },

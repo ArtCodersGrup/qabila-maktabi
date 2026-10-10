@@ -12,9 +12,8 @@
     sound.play("win");
     ui.pose("elder", "happy", 1200);
     ui.pose("apprentice", "happy", 1200);
-    const text = goingOn
-      ? `${s}-bosqich tugadi! Barakalla, keyingisiga oʻtamiz.`
-      : `${s}-bosqich tugadi! Barakalla!`;
+    const next = { 1: "ikkilik sonlar", 2: "koʻp holatli chiroqlar" }[s];
+    const text = goingOn && next ? `${s}-bosqich tugadi. Keyingisi — ${next}.` : `${s}-bosqich tugadi.`;
     await ui.say("elder", text);
   }
 
@@ -24,11 +23,11 @@
     sound.play("win");
     ui.pose("elder", "happy", 1500);
     ui.pose("apprentice", "happy", 1500);
-    ui.bubble("elder", "Tabriklayman! Endi sen chiroqlar tilini bilasan!");
+    ui.bubble("elder", "Tayyor: n bitda nechta xabar sigʻishini hisoblay olasan va ikkilik sonni oʻqiy olasan.");
     ui.work().append(ui.h("div", { class: "summary" },
-      ui.h("div", { html: "n ta chiroq — 2<sup>n</sup> ta naqsh" }),
-      ui.h("div", { text: "Yoniq — 1, oʻchiq — 0: ikkilik son" }),
-      ui.h("div", { text: "Holat koʻp boʻlsa — chiroq kam kerak" })));
+      ui.h("div", { html: "n bit — 2<sup>n</sup> ta naqsh" }),
+      ui.h("div", { text: "101₂ = 4 + 1 = 5" }),
+      ui.h("div", { text: "k holat, n chiroq — kⁿ ta naqsh" })));
     return ui.choice([
       { label: "Qayta oʻynash", value: "replay" },
       { label: "Bosh ekran", value: "home", secondary: true },

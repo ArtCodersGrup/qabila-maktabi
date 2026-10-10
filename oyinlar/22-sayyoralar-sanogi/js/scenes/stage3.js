@@ -7,23 +7,23 @@
   const S = sanoq;
 
   const SCENES = [
-    { art: "babylon", lines: ["Qadimgi Bobilda 60-lik tizim boʻlgan.", "Shuning uchun soatda 60 daqiqa, daqiqada 60 soniya!"] },
-    { art: "maya", lines: ["Mayyalar 20-likda sanashgan: qoʻl va oyoq barmoqlari — 20 ta."] },
-    { art: "finale", lines: ["Kompyuter — 2-likda, dasturchi — 16-likda, biz — 10-likda.", "Endi sen istalgan tizimda hisoblay olasan!"] },
+    { art: "babylon", lines: ["Qayerda uchraydi: vaqt 60-lik tizimda yoziladi — 1 soat = 60 daqiqa, 1 daqiqa = 60 soniya. Bu Bobildan qolgan."] },
+    { art: "maya", lines: ["Mayya taqvimi 20-lik tizimga asoslangan edi."] },
+    { art: "finale", lines: ["Kompyuter 2-likda hisoblaydi, dasturchi koʻpincha 16-likda yozadi. Ustundagi amallar ikkalasida ham bir xil."] },
   ];
 
   // 6.2: jumboq — qaysi sayyorada 3 + 4 = 10?
   async function puzzleDemo() {
     const el = common.box(true);
     el.append(ui.h("div", { class: "big-value", text: "3 + 4 = 10" }));
-    ui.bubble("elder", "Qaysi sayyorada 3 + 4 = 10 boʻladi?");
+    ui.bubble("elder", "Qaysi asosda 3 + 4 = 10 boʻladi?");
     await ui.settle((done) => {
       const row = ui.h("div", { class: "choice-row" });
       [5, 6, 7, 8].forEach((b) => row.append(ui.button(`${b}-lik`, () => {
         if (b !== 7) {
           sound.play("retry");
           ui.pose("apprentice", "think", 900);
-          ui.bubble("elder", `↻ ${b}-likda «10» — ${b} degani. 3 + 4 esa nechchi?`);
+          ui.bubble("elder", `↻ ${b}-likda «10» = ${b}. 3 + 4 nechaga teng?`);
           return;
         }
         sound.play("correct");
@@ -32,7 +32,7 @@
       })));
       ui.control().append(row);
     });
-    await ui.say("elder", "10 — bu asosning oʻzi! 3 + 4 = 7 → 7-lik sayyora.");
+    await ui.say("elder", "Har tizimda «10» — asosning oʻzi. 3 + 4 = 7, yaʼni asos 7.");
   }
 
   // 6.3: mashq — ko'paytirish yoki jumboq
@@ -41,7 +41,7 @@
     if (task.type === "puzzle" || task.type === "puzzle2") {
       const two = task.type === "puzzle2";
       el.append(ui.h("div", { class: "big-value", text: two ? `${task.a} + ${task.b} = ${task.sum}` : `${task.x} + ${task.y} = 1${task.c}` }));
-      ui.bubble("elder", "Qaysi sayyorada shunday? Asosini yoz.");
+      ui.bubble("elder", "Qaysi asosda shunday? Asosni yoz.");
       return practice.numberTries({
         answer: task.answer,
         hint: () => {
@@ -58,7 +58,7 @@
     }
     el.append(ui.h("div", { class: "planet-tag", text: `${task.base}-lik sayyora` }));
     const board = sanoqUi.ustun(el, { a: task.a, b: String(task.d), op: "×", base: task.base, width: 4 });
-    ui.bubble("elder", "Koʻpaytir! Javobni shu sayyora tizimida yoz.");
+    ui.bubble("elder", "Koʻpaytir. Javobni shu asosda yoz.");
     const x = S.fromBase(task.a, task.base);
     const steps = S.stepsMul(task.a, task.d, task.base).filter((st) => st.i < task.a.length);
     return sanoqUi.digitTries({
@@ -73,7 +73,7 @@
       solution: () => {
         S.mulDigit(task.a, task.d, task.base).cols.forEach((c, i) => { if (c.carryOut) board.setCarry(i + 1, String(c.carryOut)); });
         board.setResultAll(task.answer);
-        common.add(el, common.answerLine(`Tekshiramiz: ${x} × ${task.d} = ${x * task.d} ✓`));
+        common.add(el, common.answerLine(`Tekshiruv (oʻnlikda): ${x} × ${task.d} = ${x * task.d} ✓`));
       },
     });
   }
@@ -94,9 +94,9 @@
 
   async function stage3() {
     await sayyoraScenes.guided("23", "4", "×", 5, S.stepsMul("23", 4, 5), "Ustunda koʻpaytiramiz: 23₅ × 4.");
-    await ui.say("elder", "23₅ × 4 = 202₅. Tekshiramiz: 13 × 4 = 52 = 2·25 + 0·5 + 2 ✓");
+    await ui.say("elder", "23₅ × 4 = 202₅. Tekshiruv: 13 × 4 = 52 = 2·25 + 0·5 + 2 ✓");
     await puzzleDemo();
-    await ui.say("elder", `Endi oʻzing: koʻpaytirish va jumboqlar. ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta — koʻpaytirish va asosni topish.`);
     await practice.exercises({
       next: (prev, correct, tier) => sayyora.makeStage3Task(prev, undefined, tier),
       run: stage3Task,

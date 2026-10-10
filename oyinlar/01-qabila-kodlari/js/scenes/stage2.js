@@ -1,9 +1,10 @@
 // 2-bosqich: i harfgacha so'zlar (DIZAYN.md, 5-bo'lim).
+// 2026-10-10: 5–8 ohangi; baraban o'rniga ish zonasida signal qatori, qog'oz o'rniga shart kartasi.
 (function (root) {
   "use strict";
 
   const QK = root.QK;
-  const { logic, ui, sound, art, common } = QK;
+  const { logic, ui, sound, common } = QK;
   const AU = ["A", "U"];
   const AUF = ["A", "U", "F"];
 
@@ -11,17 +12,14 @@
   async function pauseScene() {
     ui.setCompact(false);
     ui.clearWork();
-    ui.raisePaper(false);
-    const box = ui.h("div", { class: "pause-box", html: art.drum() });
+    const box = ui.h("div", { class: "pause-box" }, ui.h("div", { class: "signal-title", text: "Signal: A — tak, U — dum" }));
     const beats = ui.h("div", { class: "beats" });
     box.append(beats);
     ui.work().append(box);
-    await ui.say("apprentice", "Barabanda xabar chalaman: A — tak, U — dum. Tingla!");
-    ui.pose("apprentice", "drum", 200);
+    await ui.say("elder", "Xabarni tovush signali bilan uzatamiz: A — qisqa «tak», U — uzun «dum».");
     sound.play("tak");
     beats.append(ui.tile("A", 0, "sm"));
     await ui.sleep(300);
-    ui.pose("apprentice", "drum", 200);
     sound.play("dum");
     beats.append(ui.tile("U", 1, "sm"));
     await ui.sleep(500);
@@ -31,8 +29,8 @@
       ui.h("div", { class: "pause-opt" },
         ui.h("div", { class: "chip-row" }, ui.wordChip("A", AU), ui.wordChip("U", AU)),
         ui.h("div", { text: "ikkita soʻz" }))));
-    await ui.say("elder", "Bu «AU» degan bitta soʻzmi yoki «A» va «U» degan ikkita soʻzmi? Bilib boʻlmaydi!");
-    await ui.say("elder", "Soʻzlar har xil uzunlikda boʻlsa, orasiga pauza qoʻyamiz. Morze alifbosida ham shunday.");
+    await ui.say("elder", "Qabul qilingan signal — «AU» bitta soʻzmi yoki «A» va «U» ikkita soʻzmi? Aniqlab boʻlmaydi.");
+    await ui.say("elder", "Uzunligi har xil kodlarda soʻzlar orasiga ajratkich (pauza) kerak. Morze kodida shunday.");
   }
 
   // 5.2: har bir uzunlik alohida → yig'indi → umumiy formula
@@ -47,49 +45,46 @@
         : `${k} harfli: ${logic.productText(a, k)} = ${logic.countExact(a, k)}`;
       box.append(ui.h("div", { class: "formula-row", text }));
     }
-    await ui.say("elder", "Har bir uzunlikni 1-bosqichdagidek alohida hisoblaymiz.");
+    await ui.say("elder", "Har bir uzunlik k uchun soʻzlar soni aᵏ — alohida hisoblanadi.");
     const parts = [];
     for (let k = 1; k <= i; k++) parts.push(logic.countExact(a, k));
     box.append(ui.h("div", { class: "formula", text: `${parts.join(" + ")} = ${logic.countUpTo(a, i)}` }));
-    await ui.say("elder", "Keyin hammasini qoʻshamiz.");
+    await ui.say("elder", "Qoʻshish qoidasi: soʻz bir vaqtda ikki xil uzunlikda boʻlmaydi, shuning uchun sonlar qoʻshiladi.");
     box.append(ui.h("div", { class: "formula big", html: "N = a<sup>1</sup> + a<sup>2</sup> + … + a<sup>i</sup>" }));
-    await ui.say("elder", "Qoida: har bir uzunlik uchun 1-bosqichdagidek hisoblaymiz, keyin hammasini qoʻshamiz.");
+    await ui.say("elder", "Formula: 1 dan i gacha harfli soʻzlar soni N = a¹ + a² + … + aⁱ.");
   }
 
   async function stage2() {
     // 2.1 — qo'lda yasash: A, U, 2 harfgacha
     ui.setCompact(false);
     ui.clearWork();
-    ui.paper("1–2");
-    ui.raisePaper(true);
-    await ui.say("elder", "Endi soʻz 1 harfli ham, 2 harfli ham boʻlishi mumkin.");
-    await ui.say("apprentice", "Qogʻozimda 1–2. Demak, soʻz 2 harfgacha.");
-    ui.bubble("elder", "1 harfli soʻz uchun bitta harf qoʻyib, «Tayyor»ni bos. Hammasini top!");
+    ui.work().append(common.condCard({ letters: AU, len: common.lenText("upto", 2) }));
+    await ui.say("elder", "Yangi shart: uzunlik 1 dan 2 gacha — soʻz 1 harfli ham, 2 harfli ham boʻlishi mumkin.");
+    ui.bubble("elder", "Barcha soʻzlarni yasa. 1 harfli soʻz uchun bitta harf qoʻyib, «Tayyor»ni bos.");
     await common.manualWall(AU, 2, true);
     sound.play("win");
     ui.pose("elder", "happy", 1200);
-    await ui.say("elder", "Barakalla! 2 + 4 = 6 ta soʻz.");
+    await ui.say("elder", "1 harfli — 2 ta, 2 harfli — 4 ta: 2 + 4 = 6 ta soʻz.");
 
     // 2.2 — daraxtdagi hamma tugunlar
-    ui.bubble("elder", "Daraxtga qara: endi har bir tugun — soʻz.");
+    ui.bubble("elder", "Daraxtda endi har bir tugun — alohida soʻz.");
     ui.pose("elder", "point", 2000);
     await common.treeLevels(AU, 2);
-    await ui.say("elder", "1-qavatda 2 ta, 2-qavatda 4 ta. Hammasi 6 ta.");
-    ui.paper("1–3");
-    await ui.say("elder", ui.lettersLine("Endi harflar:", AUF, "Soʻz 3 harfgacha."));
-    ui.bubble("elder", "Qavatlarni kuzat!");
+    await ui.say("elder", "1-qavat: 2 ta, 2-qavat: 4 ta. Jami 6 ta.");
+    await ui.say("elder", ui.lettersLine("Alifbo (a = 3):", AUF, "Uzunlik 1 dan 3 gacha."));
+    ui.bubble("elder", "Har qavatdagi soʻzlar sonini kuzat.");
     await common.treeLevels(AUF, 3);
-    ui.bubble("elder", "Hammasi boʻlib nechta soʻz?");
+    ui.bubble("elder", "Jami nechta soʻz?");
     const ok = await common.askUntilCorrect(39, () => {
-      ui.bubble("elder", "Har bir qavatdagi sonlarni qoʻsh: 3 + 9 + 27.");
+      ui.bubble("elder", "↻ Har qavat soni tepada yozilgan — ularni qoʻsh.");
     });
-    if (ok) await ui.say("elder", "Toʻgʻri, 39 ta!");
+    if (ok) await ui.say("elder", "3 + 9 + 27 = 39.");
 
     // 2.3 va formula
     await pauseScene();
     await formulaUpTo(3, 3);
 
-    await ui.say("elder", `Endi oʻzing hisobla! ${QK.practice.need()} ta toʻgʻri javob — bosqich tugaydi.`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta misol. Har uzunlikni aᵏ bilan hisoblab, qoʻsh.`);
     await common.exercises(2, common.stage12Spec("upto"));
   }
 

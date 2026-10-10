@@ -6,9 +6,9 @@
   const { learn, ui, sound, art, learnUi, practice, common } = QK;
 
   const SCENES = [
-    { art: "data", lines: ["Bugungi sunʼiy intellekt ham shunday oʻrganadi.", "Faqat uning misollari millionlab."] },
-    { art: "cats", lines: ["Mushukni tanish uchun unga minglab mushuk rasmi koʻrsatiladi."] },
-    { art: "biasCats", lines: ["Misollarda faqat oq mushuklar boʻlsa, qora mushukni tanimay qolishi mumkin.", "Maʼlumot qanday boʻlsa — javob shunday."] },
+    { art: "data", lines: ["Qayerda uchraydi: sunʼiy intellekt aynan shunday oʻrganadi — faqat misollar millionlab.", "Model esa bitta chiziq emas, millionlab sozlanadigan sonlar."] },
+    { art: "cats", lines: ["Rasmda mushukni tanish uchun modelga minglab belgilangan rasm beriladi."] },
+    { art: "biasCats", lines: ["Misollarda faqat oq mushuklar boʻlsa, qora mushukni tanimay qolishi mumkin.", "Bu — maʼlumotdagi ogʻish: maʼlumot qanday boʻlsa, model shunday."] },
     { art: "human", lines: ["Shuning uchun muhim ishda oxirgi qarorni odam qabul qiladi.", "Mashina yordam beradi, lekin javobgarlik odamda."] },
   ];
 
@@ -35,16 +35,16 @@
     box.append(note);
     f.set({ points: task.train, line: task.model });
     note.textContent = "Oʻqitish misollari: 6 ta";
-    await ui.say("elder", "Robot oʻrgandi. Lekin u haqiqatan bilib oldimi?");
-    await ui.say("elder", "Sinaymiz: u hali koʻrmagan yongʻoqlarni beramiz. Bular — sinov maʼlumoti.");
+    await ui.say("elder", "Model oʻqitildi. Uni qanday tekshiramiz?");
+    await ui.say("elder", "Sinov maʼlumoti — model koʻrmagan, lekin javobi bizga maʼlum misollar.");
     const wrong = await runTest(f, task.model, task.test);
     note.textContent = `Sinov: ${task.test.length - wrong} toʻgʻri, ${wrong} xato`;
-    await ui.say("elder", `${wrong} tasida xato qildi! Nega?`);
+    await ui.say("elder", `Sinovda ${wrong} ta xato. Sababini topamiz.`);
     f.set({ glow: learn.wrongOnes(task.test, task.model) });
-    await ui.say("elder", "Qara: oʻqitish misollarining hammasi oʻng tomonda edi.");
-    await ui.say("elder", "Robot chap tomondagi kichik yongʻoqlarni umuman koʻrmagan.");
+    await ui.say("elder", "Oʻqitish misollarining hammasi oʻng tomonda edi.");
+    await ui.say("elder", "Chapdagi kichik yongʻoqlar maʼlumotda yoʻq — model ular haqida hech narsa bilmaydi.");
 
-    ui.bubble("elder", "Chap tomondan 2 ta yongʻoq chaqamiz va robotga koʻrsatamiz.");
+    ui.bubble("elder", "Yechim — maʼlumotni toʻldirish. Chap tomondan 2 ta yongʻoqni chaq.");
     const holder = ui.h("div", { class: "nut-holder" });
     ui.control().append(holder);
     const points = task.train.slice();
@@ -63,12 +63,12 @@
     }
     holder.remove();
     f.set({ glow: [] });
-    await ui.say("elder", "Endi robot qaytadan oʻrganadi.");
+    await ui.say("elder", "Model yangi maʼlumotda qayta oʻqitiladi.");
     const model2 = await common.trainAnimation(f, points, learn.START, null);
     const wrong2 = await runTest(f, model2, task.test);
     note.textContent = `Sinov: ${task.test.length - wrong2} toʻgʻri, ${wrong2} xato`;
-    await ui.say("elder", "Hammasi toʻgʻri! Yangi misollar robotni tuzatdi.");
-    await ui.say("elder", "Maʼlumot qanday boʻlsa, robot shunday oʻylaydi.");
+    await ui.say("elder", "Sinovda xato yoʻq: yetishmagan misollar qoʻshildi.");
+    await ui.say("elder", "Xulosa: model sifati maʼlumot sifatiga bogʻliq.");
   }
 
   // 6.4: "Robot qaysi yong'oqda adashadi?" — chaqilgan sinov yong'oqlaridan bittasi chiziqning noto'g'ri tomonida
@@ -76,7 +76,7 @@
     const { box, f } = common.board();
     f.set({ points: [], line: task.line, test: task.test });
     box.append(common.line("Kvadratlar — chaqilgan yongʻoqlar: yashil — toʻla, oq — boʻsh"));
-    ui.bubble("elder", "Chiziqdan yuqorisini robot «toʻla» deydi. U qaysi yongʻoqda adashadi? Oʻshani bos.");
+    ui.bubble("elder", "Chiziqdan yuqorisi — «toʻla» bashorati. Model adashadigan yongʻoqni bos.");
     return practice.tries({
       setup: (submit) => f.set({ onPick: (index, kind) => { if (kind === "test") { sound.play("tap"); submit(index); } } }),
       check: (index) => index === task.answer,
@@ -103,14 +103,14 @@
   function usefulTask(task) {
     const { box, f } = common.board();
     f.set({ points: task.points, options: task.options });
-    ui.bubble("elder", "Robot qaysi yongʻoqdan koʻproq narsa oʻrganadi?");
+    ui.bubble("elder", "Qaysi yangi misol modelga eng koʻp foyda beradi?");
     box.append(common.line("Misollar — doiralar, variantlar — shakllar"));
     return practice.tries({
       setup: (submit) => learnUi.optionButtons(task.options.length, submit),
       check: (value) => value === task.answer,
       hint: () => {
         f.set({ glow: task.points });
-        ui.bubble("elder", "↻ Robot shu joylarni koʻrgan. Qaysi shakl ulardan eng uzoqda?");
+        ui.bubble("elder", "↻ Belgilanganlar — model koʻrgan joylar. Qaysi shakl ulardan eng uzoqda?");
       },
       solution: () => {
         f.set({ glow: [task.options[task.answer]] });
@@ -129,7 +129,7 @@
 
   async function stage3() {
     await testAndFix();
-    await ui.say("elder", `Endi oʻzing javob ber. ${QK.practice.need()} ta toʻgʻri javob kerak!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta savol — model qayerda adashadi va qaysi misol foydaliroq.`);
     await practice.exercises({
       next: (prev, correct, tier) => learn.makeStage3Task(correct, prev, null, tier),
       run: (task) => (task.type === "mistake" ? mistakeTask(task) : usefulTask(task)),

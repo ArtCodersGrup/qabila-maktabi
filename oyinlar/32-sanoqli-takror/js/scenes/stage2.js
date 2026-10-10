@@ -15,22 +15,22 @@
   async function fromTo() {
     const el = common.box();
     withOutput(el, "for i in range(2, 6):\n    print(i)");
-    await ui.say("elder", "Ikkita son yozilsa: birinchisi — boshi, ikkinchisi — oxiri.");
-    await ui.say("elder", "Oxiri baribir kirmaydi: 2, 3, 4, 5 chiqdi, 6 yoʻq.");
+    await ui.say("elder", "range(a, b): a — boshi, b — oxiri.");
+    await ui.say("elder", "Oxiri kirmaydi: 2, 3, 4, 5 chiqdi, 6 yoʻq.");
   }
 
   async function withStep() {
     const el = common.box();
     withOutput(el, "for i in range(1, 10, 3):\n    print(i)");
     withOutput(el, "for i in range(10, 0, -2):\n    print(i)");
-    await ui.say("elder", "Uchinchi son — qadam. Manfiy boʻlsa, teskari sanaydi.");
+    await ui.say("elder", "Uchinchi argument — qadam. Qadam manfiy boʻlsa, sanoq kamayib boradi.");
   }
 
   async function overString() {
     const el = common.box();
     withOutput(el, 'for harf in "qabila":\n    print(harf)');
-    await ui.say("elder", "for faqat sonlar ustida emas — satr harflari boʻylab ham yuradi.");
-    await ui.say("elder", "Har aylanishda harf qutisiga keyingi harf tushadi.");
+    await ui.say("elder", "for faqat range boʻylab emas, satr harflari boʻylab ham yuradi.");
+    await ui.say("elder", "Har aylanishda harf oʻzgaruvchisi keyingi belgini oladi.");
   }
 
   async function definition() {
@@ -39,7 +39,7 @@
       ui.h("div", { class: "formula-row kod", text: "range(boshi, oxiri, qadam)" }),
       ui.h("div", { class: "formula-row", text: "oxiri kirmaydi" }),
       ui.h("div", { class: "formula-row kod", text: "for harf in soʻz:" })));
-    await ui.say("elder", "Endi oʻzing hisobla.");
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta kod. Har biri nima chiqarishini aniqla.`);
   }
 
   async function stage2() {
@@ -50,7 +50,7 @@
     await practice.exercises({
       next: (prev, correct, tier) => L.boundTask(Math.random, prev, tier),
       run: (task) => common.resultExercise(task),
-      praise: () => "Chegaralarni toʻgʻri hisoblading.",
+      praise: () => "Chegaralar toʻgʻri.",
     });
   }
 

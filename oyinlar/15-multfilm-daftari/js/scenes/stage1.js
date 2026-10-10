@@ -11,9 +11,8 @@
     ui.clearControl();
     ui.paper("");
     ui.work().append(ui.h("div", { class: "story-art", html: art.notebook() }));
-    await ui.say("apprentice", "Qarang, daftar chetiga koptok chizdim!");
-    await ui.say("apprentice", "Varaqlarni tez aylantirsam, u sakraydi!");
-    await ui.say("elder", "Bu — multfilm. Kompyuterdagi video ham xuddi shunday ishlaydi.");
+    await ui.say("elder", "Maqsad: video qanday saqlanishini tushunish va hajmini hisoblash.");
+    await ui.say("elder", "Kalit gʻoya: video — rasmlar (kadrlar) ketma-ketligi, xuddi daftar chetidagi multfilmdek.");
   }
 
   const frames = () => video.BOUNCE.map((_, k) => video.bounceFrame(k));
@@ -26,7 +25,7 @@
     const at = ([x, y]) => y * video.SIZE + x;
     const ghosts = [at(video.BOUNCE[video.MISSING - 1]), at(video.BOUNCE[video.MISSING + 1])];
     let editor = null;
-    ui.bubble("elder", "3-kadr yoʻqolibdi! Koptokni 2- va 4-kadrdagi joylar orasiga qoʻy.");
+    ui.bubble("elder", "3-kadr yoʻq. Koptokni 2- va 4-kadrdagi holatlar orasiga qoʻy.");
     await ui.settle((done) => {
       let finished = false;
       editor = videoUi.frameGrid(el, video.background(), {
@@ -54,7 +53,7 @@
         },
       });
     });
-    await ui.say("elder", "✓ Barakalla! Endi 6 ta kadr tayyor. Bu kadrlar — multfilm.");
+    await ui.say("elder", "✓ 6 ta kadr tayyor. Endi ularni ketma-ket koʻrsatamiz.");
     return all;
   }
 
@@ -62,23 +61,23 @@
   async function playBoth(all) {
     const el = common.box(true);
     const screen = videoUi.player(el, all[0]);
-    ui.bubble("elder", "Avval sekin oʻynatamiz: 1 soniyada 1 ta kadr.");
+    ui.bubble("elder", "Avval sekin: 1 kadr/soniya.");
     await common.waitButton("▶︎ Sekin: 1 kadr/soniya");
     await screen.play(all, video.SPEEDS.slow, all.length);
-    await ui.say("elder", "Koptok sakrab-sakrab, toʻxtab-toʻxtab yuryapti.");
-    ui.bubble("elder", "Endi tez: 1 soniyada 12 ta kadr!");
+    await ui.say("elder", "Kadrlar alohida koʻrinadi — harakat uzuq-uzuq.");
+    ui.bubble("elder", "Endi tez: 12 kadr/soniya.");
     await common.waitButton("▶︎ Tez: 12 kadr/soniya");
     await screen.play(all, video.SPEEDS.fast, 3);
-    await ui.say("elder", "Kadrlar tez almashsa, koʻz ularni harakat deb koʻradi.");
-    await ui.say("elder", "Multfilmda 1 soniyada 24 ta kadr boʻladi.");
+    await ui.say("elder", "Kadrlar tez almashsa, koʻz ularni uzluksiz harakat deb qabul qiladi.");
+    await ui.say("elder", "Kinoda odatda 24 kadr/soniya, telefon videosida 30 yoki 60.");
   }
 
   async function definition() {
     const el = common.box(false);
     el.append(videoUi.frameIcons(4));
     common.formula(el, ["video — tez almashadigan kadrlar", "kadrlar = kadr/soniya × soniya"]);
-    await ui.say("elder", "Har bir rasm — kadr. Video — kadrlar ketma-ketligi.");
-    await ui.say("elder", "Jami kadrlarni topish uchun 1 soniyadagi kadrlarni soniyalarga koʻpaytiramiz.");
+    await ui.say("elder", "Har bir rasm — kadr. Tezlik kadr/soniya bilan oʻlchanadi (inglizcha fps).");
+    await ui.say("elder", "Jami kadrlar = kadr/soniya × soniya. Teskarisi: soniya = kadrlar : kadr/soniya.");
   }
 
   // 4.4: mashq — jami kadrlar / necha soniya
@@ -94,7 +93,7 @@
       hint: () => {
         if (task.type === "total") {
           common.add(el, videoUi.secondBoxes(task.seconds, task.fps));
-          ui.bubble("elder", "↻ Har soniyada shuncha kadr. Hammasini qoʻsh.");
+          ui.bubble("elder", "↻ Har soniya — bitta quti, ichida bir xil son kadr. Qutilarni sana.");
         } else {
           common.add(el, common.line(`${task.fps} × ? = ${task.total}`));
           ui.bubble("elder", `↻ ${task.fps} ni nechaga koʻpaytirsak, ${task.total} chiqadi?`);
@@ -110,7 +109,7 @@
     const all = await missingFrame();
     await playBoth(all);
     await definition();
-    await ui.say("elder", `Endi oʻzing hisobla: kadrlar va soniyalar. ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta — jami kadrlar yoki davomiylik.`);
     await practice.exercises({
       next: (prev, correct, tier) => video.makeFrameTask(prev, undefined, tier),
       run: frameTask,

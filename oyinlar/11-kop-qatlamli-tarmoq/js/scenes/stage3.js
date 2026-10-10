@@ -6,10 +6,10 @@
   const { neural, ui, sound, art, neuralUi, practice, common } = QK;
 
   const SCENES = [
-    { art: "layers", lines: ["Rasm taniydigan tarmoqlarda yuzlab qatlam va millionlab ogʻirlik bor.", "Chatbotlarda esa milliardlab!"] },
-    { art: "brain", lines: ["Neyron gʻoyasi miyadan olingan.", "Lekin tarmoq miya emas — u faqat sonlarni qoʻshadi va solishtiradi."] },
-    { art: "blackbox", lines: ["Tarmoq nega aynan shunday qaror qilganini tushuntirish qiyin.", "Shuning uchun uning javobini odam tekshirib turadi."] },
-    { art: "robot", lines: ["Chuqur oʻrganish — mashinali oʻrganishning ichidagi qism.", "Keyingi oʻyinda hammasini bitta xaritaga joylaymiz!"] },
+    { art: "layers", lines: ["Qayerda uchraydi: rasm taniydigan tarmoqlarda oʻnlab–yuzlab qatlam va millionlab ogʻirlik bor. Chatbotlarda — milliardlab."] },
+    { art: "brain", lines: ["Neyron gʻoyasi miyadan olingan, lekin tarmoq miya emas: u faqat sonlarni koʻpaytiradi, qoʻshadi va solishtiradi."] },
+    { art: "blackbox", lines: ["Kamchilik: tarmoq nega aynan shunday qaror qilganini tushuntirish qiyin. Shuning uchun muhim javoblarni odam tekshiradi."] },
+    { art: "robot", lines: ["Chuqur oʻrganish — mashinali oʻrganishning bir qismi. Ularning oʻrni — «AI xaritasi» oʻyinida."] },
   ];
 
   const TASK = neural.TABLES.faqatBittasi;
@@ -22,8 +22,8 @@
     table.set(TASK, null);
     const note = common.line(" ");
     el.append(note);
-    await ui.say("elder", "Yangi ish: ikki chiroqdan faqat bittasi yoniq boʻlsa, neyron yonsin.");
-    ui.bubble("elder", "Bitta neyron buni uddalaydimi? Robot barcha ogʻirlik va chegaralarni sinasin.");
+    await ui.say("elder", "Yangi vazifa: ikki kirishdan faqat bittasi yoniq boʻlsa, neyron yonsin (XOR).");
+    ui.bubble("elder", "Bitta neyron buni uddalaydimi? Dastur barcha ogʻirlik va chegaralarni sinab chiqadi.");
     await ui.settle((done) => {
       ui.control().append(ui.button("Hammasini sina", () => { ui.clearControl(); done(); }, "big"));
     });
@@ -42,7 +42,7 @@
     table.set(TASK, (x) => neural.fire(x, best.weights, best.threshold));
     note.textContent = `Eng yaxshisi ham ${best.errors} ta xato qiladi`;
     sound.play("retry");
-    await ui.say("elder", `Hech bir neyron uddalay olmadi — eng yaxshisi ham ${best.errors} ta xato qiladi.`);
+    await ui.say("elder", `Hech bir sozlama ishlamadi: eng yaxshisi ham ${best.errors} ta xato qiladi.`);
   }
 
   // 6.2: ikki qatlam uddalaydi
@@ -51,14 +51,14 @@
     el.append(common.line("1-qatlam: «faqat A» va «faqat B» neyronlari → 2-qatlam: «bittasi yondimi?»"));
     const table = neuralUi.truthTable(el);
     table.set(TASK, null);
-    ui.bubble("elder", "Endi ikki qatlamli tarmoq sinab koʻrsin. «Sina»ni bos.");
+    ui.bubble("elder", "Endi ikki qatlamli tarmoqni sinaymiz. «Sina»ni bos.");
     await ui.settle((done) => {
       ui.control().append(ui.button("Sina", () => { ui.clearControl(); done(); }, "big"));
     });
     table.set(TASK, (x) => neural.twoLayer(x).out);
     sound.play("correct");
-    await ui.say("elder", "Hammasi toʻgʻri! Ikki qatlam bitta neyron uddalay olmagan ishni bajardi.");
-    await ui.say("elder", "Qiyin ish — koʻp qatlam. Shuning uchun uni chuqur oʻrganish deyishadi.");
+    await ui.say("elder", "Hammasi toʻgʻri: ikki qatlam bitta neyron uddalay olmagan vazifani bajardi.");
+    await ui.say("elder", "Murakkab vazifa koʻp qatlam talab qiladi — shuning uchun bu chuqur oʻrganish deyiladi.");
   }
 
   // 6.3: og'irliklarni tarmoq o'zi o'rganadi
@@ -68,9 +68,9 @@
     const note = common.line(" ");
     el.append(note);
     const threshold = neural.THRESHOLDS.va;
-    await ui.say("elder", "Ogʻirliklarni kim tanlaydi? Tarmoqning oʻzi — misollardan!");
+    await ui.say("elder", "Ogʻirliklarni odam emas, tarmoqning oʻzi misollardan topadi — bu oʻqitish.");
     await ui.say("elder", "Qoida: yonishi kerak edi-yu yonmasa — ogʻirlik oshiriladi. Yonmasligi kerak edi-yu yonsa — kamaytiriladi.");
-    ui.bubble("elder", "Ish: ikkala chiroq yoniq boʻlsa — yon. «Oʻrgat»ni bos.");
+    ui.bubble("elder", "Vazifa: ikkala kirish yoniq boʻlsa — yon (VA). «Oʻrgat»ni bos.");
     await ui.settle((done) => {
       ui.control().append(ui.button("Oʻrgat", () => { ui.clearControl(); done(); }, "big"));
     });
@@ -82,7 +82,7 @@
       sound.play(steps[i].errors ? "tap" : "correct");
       await ui.sleep(900);
     }
-    await ui.say("elder", "Xato 0! Tarmoq ogʻirliklarni oʻzi topdi — biz faqat misol berdik.");
+    await ui.say("elder", "Xato 0. Tarmoq ogʻirliklarni oʻzi topdi — biz faqat misollar berdik.");
   }
 
   // 6.4: mashq — og'irlikni oshiramizmi yoki kamaytiramizmi?
@@ -101,7 +101,7 @@
       },
       second: {
         setup: (submit) => {
-          ui.bubble("elder", `Toʻgʻri! Har bir yoniq kirishning ogʻirligi 1 ga ${task.answer === "oshir" ? "oshadi" : "kamayadi"}. Yangi yigʻindi nechchi boʻladi?`);
+          ui.bubble("elder", `Toʻgʻri. Har bir yoniq kirishning ogʻirligi 1 ga ${task.answer === "oshir" ? "oshadi" : "kamayadi"}. Yangi yigʻindi nechchi boʻladi?`);
           neuralUi.choiceButtons(task.newSumOptions.map(num), submit);
         },
         check: (index) => index === task.newSumIndex,
@@ -128,7 +128,7 @@
     await oneFails();
     await twoWork();
     await learning();
-    await ui.say("elder", `Endi sen oʻrgat: ogʻirlikni oshiramizmi yoki kamaytiramizmi? ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta xato — ogʻirlikni oshirish yoki kamaytirishni tanla va yangi yigʻindini hisobla.`);
     await practice.exercises({
       next: (prev, correct, tier) => neural.makeUpdateTask(prev, null, tier),
       run: updateTask,

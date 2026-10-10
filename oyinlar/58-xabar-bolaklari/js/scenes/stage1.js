@@ -8,22 +8,21 @@
   async function intro() {
     const el = common.box(false);
     el.append(ui.h("div", { class: "story-art wide", html: QK.gameArt.yol() }));
-    await ui.say("elder", "Doʻstingga internet orqali xat yozding. Xat qanday yetib boradi deb oʻylaysan?");
-    await ui.say("apprentice", "Bir boʻlib uchib boradi-da!");
-    await ui.say("elder", "Yoʻq. Uni boʻlaklarga qirqib, har birini alohida yuborishadi. Hozir oʻzing koʻrasan.");
+    await ui.say("elder", "Maqsad: internetda xabar qanday uzatilishini tushunish — boʻlak, raqam, manzil, paket.");
+    await ui.say("elder", "Kalit gʻoya: uzun xabar bir butun emas, boʻlaklarga boʻlinib, har boʻlak alohida yuboriladi.");
   }
 
   async function korsat() {
     const el = common.box(true);
     el.append(common.xabarQator("SALOM"));
-    ui.bubble("elder", "Bitta konvertga 2 ta harf sigʻadi. Xatni qirq!");
+    ui.bubble("elder", "Bitta konvertga 2 ta belgi sigʻadi. Xabarni boʻlakla.");
     await ui.choice([{ label: "✂️ Qirqish", value: "ok" }]);
     QK.sound.play("tap");
     const list = L.konvertlar("SALOM", 2);
     el.append(common.qator(...list.map((x) => common.konvert(x, { manzil: "Ali" }))));
-    await ui.say("elder", "3 ta konvert chiqdi. Oxirgisida bitta harf — u ham alohida konvert.");
-    await ui.say("elder", "Har konvertga raqam yoziladi: «1/3» — uchtadan birinchisi. Va manzil: kimga.");
-    await ui.say("apprentice", "Raqam boʻlmasa, qaysi boʻlak qayerda ekanini bilib boʻlmaydi-ku!");
+    await ui.say("elder", "5 belgi ÷ 2 = 2,5 → yuqoriga yaxlitlab 3 ta konvert. Oxirgisida bitta harf qoladi.");
+    await ui.say("elder", "Har konvertga raqam («1/3» — 3 tadan 1-si) va manzil (kimga) yoziladi.");
+    await ui.say("elder", `Raqamsiz boʻlaklarni toʻgʻri tartibda yigʻib boʻlmaydi. Mashq: ${QK.practice.need()} ta savol.`);
   }
 
   async function stage1() {

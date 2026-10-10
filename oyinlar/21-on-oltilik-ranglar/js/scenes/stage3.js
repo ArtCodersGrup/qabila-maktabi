@@ -8,9 +8,9 @@
   const h16 = (s) => S.fmt(s, 16);
 
   const SCENES = [
-    { art: "web", lines: ["Veb-sahifalardagi har bir rang — 16-lik kod."] },
-    { art: "memory", lines: ["Dasturchilar kompyuter xotirasini ham 16-likda koʻradi: har ikki raqam — bitta bayt."] },
-    { art: "planets", lines: ["Keyingi oʻyinda — boshqa sayyoralar: 3-, 5-, 7-lik tizimlar!"] },
+    { art: "web", lines: ["Qayerda uchraydi: veb-sahifa rangi CSS da 16-lik kod bilan yoziladi — color: #FF8800."] },
+    { art: "memory", lines: ["Xotira manzillari va fayl baytlari ham 16-likda koʻrsatiladi: 2 ta raqam = 1 bayt."] },
+    { art: "planets", lines: ["Istalgan asosda (3-, 5-, 7-lik) amallar — «Sayyoralar sanogʻi» oʻyinida."] },
   ];
 
   // 6.1: 1A × 3 ustunda
@@ -18,9 +18,9 @@
     const el = common.box(true);
     el.append(amal16Ui.multiples());
     const board = sanoqUi.ustun(el, { a: "1A", b: "3", op: "×", base: 16 });
-    await ui.say("elder", "Ustunda koʻpaytiramiz: 1A₁₆ × 3. Tepada — 16 ga karralilar, koʻchishni topishga yordam beradi.");
+    await ui.say("elder", "Ustunda koʻpaytiramiz: 1A₁₆ × 3. Tepada — 16 ga karralilar: koʻchishni topish uchun.");
     await sanoqUi.guide(board, S.stepsMul("1A", 3, 16), 16);
-    await ui.say("elder", "1A₁₆ × 3 = 4E₁₆. Tekshiramiz: 26 × 3 = 78 = 4·16 + 14 ✓");
+    await ui.say("elder", "1A₁₆ × 3 = 4E₁₆. Tekshiruv: 26 × 3 = 78 = 4·16 + 14 ✓");
   }
 
   // 6.2: mashq — 2 xonali son × bir xonali son (tier 2 da A…F)
@@ -28,7 +28,7 @@
     const el = common.box(true);
     el.append(amal16Ui.multiples());
     const board = sanoqUi.ustun(el, { a: task.a, b: S.digitChar(task.d), op: "×", base: 16, width: 4 });
-    ui.bubble("elder", "Koʻpaytir! Javobni 16-likda yoz.");
+    ui.bubble("elder", "Koʻpaytir. Javobni 16-likda yoz.");
     const x = S.fromBase(task.a, 16);
     const steps = S.stepsMul(task.a, task.d, 16).filter((st) => st.i < task.a.length);
     return sanoqUi.digitTries({
@@ -58,7 +58,7 @@
 
   async function stage3() {
     await guidedMul();
-    await ui.say("elder", `Endi oʻzing koʻpaytir. ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta misol — 16-likda bir xonali songa koʻpaytirish.`);
     await practice.exercises({
       next: (prev, correct, tier) => amal16.makeMulTask(prev, undefined, tier),
       run: mulTask,

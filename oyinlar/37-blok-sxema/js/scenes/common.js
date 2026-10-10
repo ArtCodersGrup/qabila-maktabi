@@ -22,7 +22,7 @@
         host.append(tanlov);
       },
       check: (value) => value === task.javob,
-      hint() { host.append(M.note("↻ Shaklga diqqat bilan qara: u nimani eslatadi?")); },
+      hint() { host.append(M.note("↻ Shaklga qara: oval, romb, toʻrtburchak yoki qiyshiq toʻrtburchakmi?")); },
       solution() { host.append(M.answer(task.javob)); },
     });
   }
@@ -51,7 +51,7 @@
         return r.ok;
       },
       hint() { host.append(M.note("↻ Bloklar tartibiga qara. Shart ichiga blok qoʻyish uchun avval “ha” yoki “yoʻq” ni bos.")); },
-      solution() { natijaJoy.append(M.answer("Bloklarni boshqacha tartibda qoʻyib koʻr — keyingi masalada urinib koʻrasan.")); },
+      solution() { natijaJoy.append(M.answer("Bloklar tartibi notoʻgʻri. Keyingi masalada qayta urin.")); },
     });
   }
 

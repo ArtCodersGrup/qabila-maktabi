@@ -9,14 +9,13 @@
     await U.keyboardCheck();
     const el = common.box(false);
     el.append(ui.h("div", { class: "story-art wide", html: QK.gameArt.mantiq() }));
-    await ui.say("elder", "«Mantiq kalitlari» oʻyinida rost va yolgʻon bilan ishlagan eding.");
-    await ui.say("apprentice", "Ha — VA, YOKI, EMAS. Kodda ham shundaymi?");
-    await ui.say("elder", "Xuddi oʻsha. Faqat nomi boshqa: and, or, not. Rost esa — True.");
+    await ui.say("elder", "Maqsad: Pythonda solishtirish (>, <, ==, !=) va mantiqiy amallar and, or, not.");
+    await ui.say("elder", "«Mantiq kalitlari»dagi VA, YOKI, EMAS kodda and, or, not deb yoziladi; rost — True, yolgʻon — False.");
   }
 
   async function solishtir() {
     const host = common.box(true);
-    host.append(common.note("Solishtirish natijasi — son emas, javob: True yoki False."));
+    host.append(common.note("Solishtirish natijasi son emas, mantiqiy qiymat: True yoki False."));
     host.append(common.kodBlok("print(7 > 3)\nprint(7 < 3)\nprint(7 == 7)\nprint(7 != 7)"));
     const chiqish = QK.kodUI.output({ title: "Chiqish" });
     host.append(chiqish.el);
@@ -25,8 +24,8 @@
       ui.clearControl();
       done();
     }, "big")));
-    await ui.say("elder", "Diqqat: bitta = qiymat beradi, ikkita == esa «tengmi?» deb soʻraydi.");
-    await ui.say("elder", "Endi oʻzing ayt. Bitta print ichida uchta solishtirish boʻladi — uchalasiga javob ber.");
+    await ui.say("elder", "Farqi muhim: = oʻzgaruvchiga qiymat beradi, == esa «tengmi?» deb solishtiradi.");
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta kod, har birida uchta solishtirish — har qatorga True yoki False.`);
   }
 
   async function stage1() {

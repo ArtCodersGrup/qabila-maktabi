@@ -6,9 +6,9 @@
   const { bytes, ui, sound, art, bytesUi, practice, common } = QK;
 
   const SCENES = [
-    { art: "sms", lines: ["Qisqa SMS — 100 baytga yaqin.", "Bir sahifa kitob — 2 Kbayt atrofida."] },
-    { art: "book", lines: ["Qalin kitob — 1000 Kbaytdan ham koʻp!", "Bunday sonlar uchun yanada katta birlik bor — keyingi oʻyinlarda."] },
-    { art: "emoji", lines: ["Aslida baʼzi belgilar koʻproq joy oladi.", "Oʻ harfidagi ʻ belgisi — 2 bayt, kulgich (emoji) — 4 bayt."] },
+    { art: "sms", lines: ["Qayerda uchraydi: qisqa SMS — 100 baytga yaqin, kitobning bir sahifasi — taxminan 2 Kbayt."] },
+    { art: "book", lines: ["Qalin kitob — 1000 Kbaytdan ham koʻp. Undan katta birliklar — «Xotira ombori» oʻyinida."] },
+    { art: "emoji", lines: ["Aniqrogʻi: zamonaviy UTF-8 kodlashda baʼzi belgilar koʻproq joy oladi. Oʻ dagi ʻ belgisi — 2 bayt, emoji — 4 bayt."] },
   ];
 
   // 7.1: bola 1 ni 10 marta ikkilantiradi
@@ -19,7 +19,7 @@
     const chain = common.line("1");
     const times = common.line("Ikkilantirish: 0 marta", "muted");
     el.append(big, chain, times);
-    ui.bubble("elder", "1 dan boshlaymiz. «× 2» ni bosib, sonni ikkilantir!");
+    ui.bubble("elder", "1 dan boshla va «× 2» ni bosib, sonni ikkilantir.");
 
     await ui.settle((done) => {
       let k = 0;
@@ -32,7 +32,7 @@
         big.classList.add("pop");
         chain.textContent = steps.slice(0, k + 1).join(" → ");
         times.textContent = `Ikkilantirish: ${k} marta`;
-        if (steps[k] === 256) ui.bubble("elder", "256 — bitta baytdagi naqshlar soni! Davom et.");
+        if (steps[k] === 256) ui.bubble("elder", "256 = 2⁸ — bitta baytdagi naqshlar soni. Davom et.");
         if (k === steps.length - 1) {
           ui.clearControl();
           done();
@@ -40,8 +40,8 @@
       }, "big"));
     });
     sound.play("correct");
-    await ui.say("elder", "10 marta ikkilantirding — 1024 chiqdi. Bu 1000 ga juda yaqin!");
-    await ui.say("elder", "Shuning uchun 1024 bayt kilobayt deyiladi. «Kilo» — ming degani.");
+    await ui.say("elder", "2¹⁰ = 1024 — bu 1000 ga juda yaqin.");
+    await ui.say("elder", "Shuning uchun 1024 bayt kilobayt deyiladi («kilo» — ming). Kompyuterda ikkining darajasi qulay.");
   }
 
   // 7.2: kilobayt qutisi to'ladi
@@ -50,7 +50,7 @@
     const count = common.line("0 bayt");
     const box = bytesUi.kbBox(el, (n) => { count.textContent = `${n} bayt`; });
     el.append(count);
-    ui.bubble("elder", "Bu qutida 1024 ta katak — har biri 1 bayt. «Toʻldir»ni bos!");
+    ui.bubble("elder", "Bu qutida 1024 ta katak — har biri 1 bayt. «Toʻldir»ni bos.");
     await common.waitButton("Toʻldir");
     await box.fill();
     sound.play("correct");
@@ -63,8 +63,8 @@
     const el = common.box(false);
     el.append(bytesUi.pages(1, false));
     common.formula(el, ["1 Kbayt = 1024 bayt", "1 sahifa ≈ 2 Kbayt"]);
-    await ui.say("elder", "Bir sahifa kitobda taxminan 2000 ta belgi bor.");
-    await ui.say("elder", "Demak, bir sahifa — 2 Kbaytga yaqin.");
+    await ui.say("elder", "Kitobning bir sahifasida taxminan 2000 ta belgi bor.");
+    await ui.say("elder", "2000 bayt ≈ 2048 bayt = 2 Kbayt, yaʼni bir sahifa ≈ 2 Kbayt.");
   }
 
   // "Qaysi biri eng katta?" — uch karta va "Teng" (4 variant)
@@ -156,7 +156,7 @@
     await doubling();
     await kbFill();
     await definition();
-    await ui.say("elder", `Endi oʻzing hisobla: kilobaytlar. ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta misol — Kbayt, bayt va sahifalar.`);
     await practice.exercises({
       next: (prev, correct, tier) => bytes.makeKbTask(prev, undefined, tier),
       run: kbTask,

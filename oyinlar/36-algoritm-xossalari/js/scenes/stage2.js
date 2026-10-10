@@ -27,13 +27,13 @@
         ui.h("span", { class: "xossa-izoh", text: x.izoh })));
     }
     el.append(list);
-    await ui.say("elder", "Beshta xossa. Biri buzilsa — bu algoritm emas, shunchaki gap.");
+    await ui.say("elder", "Algoritmning beshta xossasi. Bittasi buzilsa ham, bu endi algoritm emas.");
   }
 
   async function stage2() {
     await korsat();
     await definition();
-    await ui.say("elder", "Endi oʻzing top: qaysi xossa buzilgan?");
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta algoritm. Har birida qaysi xossa buzilganini top.`);
     await practice.exercises({
       next: (prev, correct, tier) => L.xossaTask(Math.random, prev, tier),
       run: (task) => common.xossaExercise(task),

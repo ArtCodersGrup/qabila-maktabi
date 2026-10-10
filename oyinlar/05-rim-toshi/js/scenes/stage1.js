@@ -11,9 +11,8 @@
     ui.clearControl();
     ui.paper("");
     ui.work().append(common.stone("XII  XXVI"));
-    await ui.say("elder", "Qabila qadimgi tosh topdi!");
-    await ui.say("apprentice", "Unda gʻalati belgilar bor: XII, XXVI…");
-    await ui.say("elder", "Bular — Rim raqamlari. Sezar askarlari shunday yozgan.");
+    await ui.say("elder", "Maqsad: Rim raqamlarini oʻqish va yozish, keyin pozitsion tizim nega qulayligini koʻrish.");
+    await ui.say("elder", "Toshdagi XII va XXVI — Rim raqamlari. Bu tizimda har belgining qiymati qatʼiy.");
   }
 
   // 4.1: belgilar — bola har birini bosib qiymatini ochadi
@@ -23,7 +22,7 @@
     ui.clearControl();
     const grid = ui.h("div", { class: "cards5" });
     ui.work().append(grid);
-    ui.bubble("elder", "Rimliklarda 5 ta asosiy belgi bor. Har birini bos — qanday son ekan?");
+    ui.bubble("elder", "Rim tizimining 5 ta asosiy belgisi. Har birini bosib qiymatini och.");
     await ui.settle((done) => {
       let opened = 0;
       roman.KEYS.forEach((ch) => {
@@ -41,7 +40,7 @@
       });
     });
     await ui.say("elder", "I — 1, V — 5, X — 10, L — 50, C — 100.");
-    await ui.say("elder", "I — bitta barmoq, V — ochiq qoʻl, X — ikki qoʻl.");
+    await ui.say("elder", "Kelib chiqishi: I — bitta barmoq, V — ochiq kaft, X — ikki kaft.");
   }
 
   // 4.2: qo'shish qoidasi, keyin 7, 12, 26 ni yasash
@@ -52,9 +51,9 @@
     ui.work().append(ui.h("div", { class: "rbox" },
       romanUi.breakdown("VII"),
       ui.h("div", { class: "formula-row", text: "VII = 5 + 1 + 1 = 7" })));
-    await ui.say("elder", "Belgilar kattadan kichikka yozilsa — qoʻshiladi: VII = 5 + 1 + 1.");
+    await ui.say("elder", "Qoʻshish qoidasi: belgilar kattadan kichikka yozilsa, qiymatlar qoʻshiladi: VII = 5 + 1 + 1.");
     for (const n of [7, 12, 26]) {
-      await common.buildUntil(n, `${n} ni yasa. Kattasidan boshla — yozuving yonida qiymati koʻrinadi.`);
+      await common.buildUntil(n, `${n} ni yoz. Eng katta belgidan boshla; yonida joriy qiymat koʻrinadi.`);
       const r = roman.toRoman(n);
       await ui.say("elder", `✓ ${r} = ${roman.symbolValues(r).join(" + ")} = ${n}.`);
     }
@@ -69,16 +68,16 @@
       romanUi.word("IV", "lg"),
       ui.h("div", { class: "formula-row", text: "IV = 5 − 1 = 4" }));
     ui.work().append(box);
-    await ui.say("elder", "Kichik belgi kattasidan oldin tursa — ayiriladi: IV = 5 − 1 = 4.");
+    await ui.say("elder", "Ayirish qoidasi: kichik belgi kattasidan oldin tursa, ayiriladi: IV = 5 − 1 = 4.");
     box.innerHTML = "";
     const pairs = ui.h("div", { class: "pairs" });
     for (const p of ["IV", "IX", "XL", "XC"]) pairs.append(romanUi.breakdown(p, { grouped: true }));
     box.append(pairs);
     await ui.say("elder", "Bunday juftlik faqat 4 ta: IV, IX, XL, XC.");
     await ui.say("elder", "Bir belgi 3 martadan koʻp takrorlanmaydi: IIII emas — IV.");
-    await common.buildUntil(4, "4 ni yasa.");
+    await common.buildUntil(4, "4 ni yoz.");
     await ui.say("elder", "✓ IV = 5 − 1 = 4.");
-    await common.buildUntil(40, "Endi 40 ni yasa. Oʻnliklarda ham xuddi shunday!");
+    await common.buildUntil(40, "40 ni yoz. Oʻnliklarda ham shu qoida ishlaydi.");
     await ui.say("elder", "✓ XL = 50 − 10 = 40.");
   }
 
@@ -89,12 +88,12 @@
     ui.clearControl();
     const box = ui.h("div", { class: "rbox" }, common.stone(task.roman));
     ui.work().append(box);
-    ui.bubble("elder", `Toshda ${task.roman} yozilgan. Bu qaysi son?`);
+    ui.bubble("elder", `${task.roman} — bu qaysi son?`);
     return practice.numberTries({
       answer: task.n,
       hint: () => {
         box.append(romanUi.breakdown(task.roman, { grouped: true }));
-        ui.bubble("elder", "↻ Har guruh ostidagi qiymatlarni qoʻshib chiq.");
+        ui.bubble("elder", "↻ Guruhlarga ajratildi. Ostidagi qiymatlarni qoʻsh.");
       },
       solution: () => {
         const parts = roman.tokens(task.roman);
@@ -128,7 +127,7 @@
     await symbols();
     await additionRule();
     await subtractionRule();
-    await ui.say("elder", `Endi toshdagi sonlarni oʻqiymiz va yozamiz. ${QK.practice.need()} ta toʻgʻri javob kerak!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta son — Rim yozuvidan oʻqish yoki Rim yozuvida yozish.`);
     await practice.exercises({
       next: (prev, correct, tier) => roman.makeReadWriteTask(correct, prev, null, tier),
       run: (task) => (task.type === "read" ? readTask(task) : writeTask(task)),

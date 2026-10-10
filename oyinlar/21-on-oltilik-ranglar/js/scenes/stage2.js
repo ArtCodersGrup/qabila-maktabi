@@ -32,7 +32,7 @@
     const el = common.box(true);
     el.append(amal16Ui.hexStrip());
     const board = sanoqUi.ustun(el, { a: task.a, b: task.b, op: task.op, base: 16, width: 4 });
-    ui.bubble("elder", task.op === "+" ? "Qoʻsh! Javobni 16-likda yoz." : "Ayir! Javobni 16-likda yoz.");
+    ui.bubble("elder", task.op === "+" ? "Qoʻsh. Javobni 16-likda yoz." : "Ayir. Javobni 16-likda yoz.");
     const x = S.fromBase(task.a, 16);
     const y = S.fromBase(task.b, 16);
     return sanoqUi.digitTries({
@@ -41,7 +41,7 @@
       maxLen: 3,
       hint: () => {
         showMarks(board, task);
-        ui.bubble("elder", task.op === "+" ? "↻ Koʻchishlarni yozdim: yigʻindi 16 dan oshsa — 1 koʻchadi." : "↻ Qarzlarni belgiladim: qarz — 16 birlik.");
+        ui.bubble("elder", task.op === "+" ? "↻ Koʻchishlarni yozdim: ustun yigʻindisi 16 yoki undan katta boʻlsa — 1 koʻchadi." : "↻ Qarzlarni belgiladim: 16-likda qarz = 16 birlik.");
       },
       solution: () => {
         showMarks(board, task);
@@ -52,11 +52,11 @@
   }
 
   async function stage2() {
-    await guided("2A", "3F", "+", S.stepsAdd("2A", "3F", 16), "Ustunda qoʻshamiz: 2A₁₆ + 3F₁₆. Harflarni songa aylantirib hisoblaymiz!");
-    await ui.say("elder", "2A₁₆ + 3F₁₆ = 69₁₆. Tekshiramiz: 42 + 63 = 105 = 6·16 + 9 ✓");
-    await guided("5C", "2F", "−", S.stepsSub("5C", "2F", 16), "Endi ayiramiz: 5C₁₆ − 2F₁₆.");
-    await ui.say("elder", "5C₁₆ − 2F₁₆ = 2D₁₆. Tekshiramiz: 92 − 47 = 45 ✓. Qarz — 16 birlik!");
-    await ui.say("elder", `Endi oʻzing: qoʻshish va ayirish. ${QK.practice.need()} ta toʻgʻri javob!`);
+    await guided("2A", "3F", "+", S.stepsAdd("2A", "3F", 16), "Ustunda qoʻshamiz: 2A₁₆ + 3F₁₆. Har ustun oʻnlikda hisoblanadi, natija 16-likka qaytariladi.");
+    await ui.say("elder", "2A₁₆ + 3F₁₆ = 69₁₆. Tekshiruv: 42 + 63 = 105 = 6·16 + 9 ✓");
+    await guided("5C", "2F", "−", S.stepsSub("5C", "2F", 16), "Ayiramiz: 5C₁₆ − 2F₁₆.");
+    await ui.say("elder", "5C₁₆ − 2F₁₆ = 2D₁₆. Tekshiruv: 92 − 47 = 45 ✓. Qarz = 16 birlik.");
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta misol — 16-likda qoʻshish va ayirish.`);
     await practice.exercises({
       next: (prev, correct, tier) => amal16.makeAddSubTask(prev, undefined, tier),
       run: addSubTask,

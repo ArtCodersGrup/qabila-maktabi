@@ -17,21 +17,21 @@
     el.append(common.note("Ikki funksiya deyarli bir xil. Farqi — print va return:"));
     withOutput(el, "def kvadrat(n):\n    print(n * n)\n\nx = kvadrat(5)\nprint(x)");
     withOutput(el, "def kvadrat(n):\n    return n * n\n\nx = kvadrat(5)\nprint(x)");
-    await ui.say("elder", "Birinchisi ekranga yozdi, lekin hech narsa qaytarmadi — x ichida None.");
-    await ui.say("elder", "Ikkinchisi qiymat qaytardi. Endi u bilan ishlash mumkin: qoʻshish, saqlash, qayta uzatish.");
+    await ui.say("elder", "Birinchisi ekranga yozdi, lekin hech narsa qaytarmadi — x = None.");
+    await ui.say("elder", "Ikkinchisi qiymat qaytardi: uni qoʻshish, saqlash, boshqa funksiyaga berish mumkin.");
   }
 
   async function stops() {
     const el = common.box();
     withOutput(el, 'def sinov(n):\n    return n + 1\n    print("bu satr bajarilmaydi")\n\nprint(sinov(4))');
-    await ui.say("elder", "return funksiyani darrov tugatadi. Undan keyingi satrlar bajarilmaydi.");
+    await ui.say("elder", "return funksiyani darhol tugatadi — undan keyingi satrlar bajarilmaydi.");
   }
 
   async function local() {
     const el = common.box();
     withOutput(el, "def hisobla():\n    natija = 42\n    return natija\n\nprint(hisobla())\nprint(natija)");
-    await ui.say("elder", "Funksiya ichidagi quti faqat ichkarida bor — tashqarida yoʻq.");
-    await ui.say("elder", "Kerak boʻlsa, uni return bilan chiqarib olinadi.");
+    await ui.say("elder", "Funksiya ichidagi oʻzgaruvchi lokal: u faqat funksiya ichida mavjud.");
+    await ui.say("elder", "Qiymati tashqarida kerak boʻlsa — return bilan qaytariladi.");
   }
 
   async function definition() {
@@ -40,7 +40,7 @@
       ui.h("div", { class: "formula-row kod", text: "print — ekranga yozadi" }),
       ui.h("div", { class: "formula-row kod", text: "return — qiymatni qaytaradi" }),
       ui.h("div", { class: "formula-row", text: "return funksiyani tugatadi ham" })));
-    await ui.say("elder", "Endi oʻzing hisobla.");
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta kod. Har biri nima chiqarishini aniqla.`);
   }
 
   async function stage2() {
@@ -51,7 +51,7 @@
     await practice.exercises({
       next: (prev, correct, tier) => L.returnTask(Math.random, prev, tier),
       run: (task) => common.resultExercise(task),
-      praise: () => "return va print farqini ushlading.",
+      praise: () => "Toʻgʻri.",
     });
   }
 

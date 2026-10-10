@@ -11,14 +11,14 @@
     const el = common.box();
     const step = U.stepper({ code });
     el.append(step.el);
-    ui.bubble("elder", "⏭ Qadam tugmasini bosib koʻr: har safar bitta satr bajariladi.");
+    ui.bubble("elder", "«⏭ Qadam»ni bos: har bosishda bitta satr bajariladi.");
     await ui.settle((done) => {
       const next = ui.button("⏭ Qadam", () => {
         if (!step.step()) { ui.clearControl(); done(); }
       }, "big");
       ui.control().append(next);
     });
-    await ui.say("elder", "Kompyuter satrlarni tartib bilan bajardi: yuqoridan pastga.");
+    await ui.say("elder", "Satrlar tartib bilan bajarildi: yuqoridan pastga.");
   }
 
   // Qo'shtirnoq: ichidagi — matn, tashqarisidagi — hisob
@@ -29,8 +29,8 @@
     const out = U.output({ title: "Chiqish" });
     out.lines(K.run(code).output);
     el.append(out.el);
-    await ui.say("elder", "Qavs ichida qoʻshtirnoq boʻlmasa — kompyuter hisoblaydi.");
-    await ui.say("elder", "Qoʻshtirnoq ichida boʻlsa — hisoblamaydi, matnni oʻzini chiqaradi.");
+    await ui.say("elder", "Qoʻshtirnoqsiz 2 + 3 — ifoda: Python uni hisoblaydi.");
+    await ui.say("elder", "Qoʻshtirnoq ichida — matn (satr): u hisoblanmaydi, oʻzgarmay chiqadi.");
   }
 
   async function definition() {
@@ -39,14 +39,14 @@
       ui.h("div", { class: "formula-row kod", text: 'print(2 + 3)  →  5' }),
       ui.h("div", { class: "formula-row kod", text: 'print("2 + 3")  →  2 + 3' }),
       ui.h("div", { class: "formula-row", text: "boʻsh print() — boʻsh satr" })));
-    await ui.say("elder", "Dasturni oʻqib, natijani oldindan aytish — dasturchining asosiy ishi.");
+    await ui.say("elder", "Kodni oʻqib natijani oldindan aytish — dasturchining asosiy koʻnikmasi.");
   }
 
   async function stage2() {
     await stepByStep();
     await quotesMatter();
     await definition();
-    await ui.say("elder", `Endi sen ayt: kod nima chiqaradi? ${QK.practice.need()} ta toʻgʻri javob kerak.`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta kod — ekranga nima chiqishini ayt.`);
     await practice.exercises({
       next: (prev, correct, tier) => L.resultTask(Math.random, prev, tier),
       run: (task) => common.resultExercise(task),

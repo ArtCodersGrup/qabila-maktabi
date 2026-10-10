@@ -15,8 +15,8 @@
     const out = U.output({ title: "Chiqish" });
     out.lines(K.run(code, { stdin }).output);
     el.append(out.el);
-    await ui.say("elder", "input() — kiritilgan satrni oladi va qutiga soladi.");
-    await ui.say("elder", "Bu saytda kiritiladigan satrlar oldindan yozib qoʻyilgan.");
+    await ui.say("elder", "input() kirishdan bitta satr oʻqiydi; uni oʻzgaruvchiga yozamiz.");
+    await ui.say("elder", "Bu saytda kirish satrlari oldindan yozib qoʻyilgan.");
   }
 
   // Tuzoq: input() matn qaytaradi, shuning uchun + qo'shmaydi
@@ -29,7 +29,7 @@
     out.show(K.run(bad, { stdin }), bad);
     el.append(out.el);
     await ui.say("elder", "Xato xabarini oʻqi: matnga son qoʻshib boʻlmaydi.");
-    await ui.say("elder", "Sababi: input() har doim matn qaytaradi — hatto 12 yozsang ham.");
+    await ui.say("elder", "Sabab: input() doim matn (str) qaytaradi — 12 kiritilsa ham, bu son emas, matn.");
 
     const task = { type: "xato-top", code: bad, stdin, solution: "yosh = int(input())\nprint(yosh + 1)", why: "input() matn qaytaradi" };
     const el2 = common.box();
@@ -44,7 +44,7 @@
         },
       });
     });
-    await ui.say("apprentice", "13 chiqdi! Endi qoʻshildi.");
+    await ui.say("elder", "int() matnni songa oʻgirdi: 12 + 1 = 13.");
   }
 
   async function definition() {
@@ -53,14 +53,14 @@
       ui.h("div", { class: "formula-row kod", text: "input()  →  matn" }),
       ui.h("div", { class: "formula-row kod", text: "int(input())  →  son" }),
       ui.h("div", { class: "formula-row", text: "son kerak boʻlsa — int() bilan oʻgiriladi" })));
-    await ui.say("elder", "Matnni qoʻshsang — yopishadi: \"5\" + \"5\" → 55. Sonni qoʻshsang — hisoblanadi.");
+    await ui.say("elder", "Matnlar qoʻshilsa, yopishadi: \"5\" + \"5\" → 55. Sonlar qoʻshilsa, hisoblanadi: 5 + 5 → 10.");
   }
 
   async function stage3() {
     await inputDemo();
     await typeTrap();
     await definition();
-    await ui.say("elder", "Endi navbat senga: goh natijani aytasan, goh kodni oʻzing yozasan.");
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta — goh natijani aytasan, goh kodni oʻzing yozasan.`);
     await practice.exercises({
       next: (prev, correct, tier) => L.stage3Task(Math.random, prev, tier),
       run: (task) => common.stage3Exercise(task),

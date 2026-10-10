@@ -12,9 +12,8 @@
     ui.clearControl();
     ui.paper("");
     ui.work().append(ui.h("div", { class: "story-art", html: art.planets() }));
-    await ui.say("elder", "Uzoq sayyoralardan xabar keldi!");
-    await ui.say("apprentice", "Ular ham bizdek sanaydimi?");
-    await ui.say("elder", "Barmoqlari boshqa — tizimi ham boshqa. Lekin qoidalar bir xil. Koʻramiz!");
+    await ui.say("elder", "Maqsad: istalgan n-lik tizimda ustunda qoʻshish, ayirish va koʻpaytirish.");
+    await ui.say("elder", "Kalit gʻoya: qoidalar oʻnlikdagidek, faqat koʻchish va qarz 10 emas, n ga teng. Har sayyora — bitta asos.");
   }
 
   // 4.1: 5-lik cho'tda 4 + 1
@@ -23,7 +22,7 @@
     const abacus = sanoqUi.choti(el, { base: 5, rods: 3, value: 4, places: true });
     const line = common.line(`Son: ${S.fmt("4", 5)}`);
     el.append(line);
-    ui.bubble("elder", "Besh barmoqli sayyora: har simda 4 tagacha. «+1» ni bos!");
+    ui.bubble("elder", "5-lik tizim: har xonada raqam 0 dan 4 gacha. «+1» ni bos.");
     await ui.settle((done) => {
       let busy = false;
       ui.control().append(ui.button("+1", async () => {
@@ -36,14 +35,14 @@
       }, "big"));
     });
     sound.play("correct");
-    await ui.say("elder", "4 + 1 = 10₅: 5 ta boʻldi — keyingi xonaga! Bu sayyorada «10» — besh degani.");
+    await ui.say("elder", "4 + 1 = 10₅: xona toʻldi, 1 keyingi xonaga koʻchdi. 5-likda «10» = 5₁₀.");
   }
 
   async function rule() {
     const el = common.box(false);
-    common.formula(el, ["yigʻindi < n → shuni yoz", "yigʻindi ≥ n → yigʻindi − n ni yoz, 1 koʻchir"]);
-    await ui.say("elder", "Umumiy qoida — har qanday n-lik tizimda.");
-    await ui.say("elder", "2-likda n = 2, 16-likda n = 16 — qoida bitta!");
+    common.formula(el, ["xonadagi yigʻindi < n → shuni yoz", "yigʻindi ≥ n → yigʻindi − n ni yoz, 1 koʻchir"]);
+    await ui.say("elder", "Bu qoida har qanday n-lik tizimda ishlaydi; n — asos.");
+    await ui.say("elder", "Oʻnlikda n = 10, ikkilikda n = 2, 16-likda n = 16.");
   }
 
   // Ustunda bosqichma-bosqich (qo'shish, ayirish yoki ko'paytirish)
@@ -63,7 +62,7 @@
     const el = common.box(true);
     el.append(ui.h("div", { class: "planet-tag", text: `${task.base}-lik sayyora` }));
     const board = sanoqUi.ustun(el, { a: task.a, b: task.b, op: "+", base: task.base, width: 4 });
-    ui.bubble("elder", "Qoʻsh! Javobni shu sayyora tizimida yoz.");
+    ui.bubble("elder", "Qoʻsh. Javobni shu asosda yoz.");
     const x = S.fromBase(task.a, task.base);
     const y = S.fromBase(task.b, task.base);
     return sanoqUi.digitTries({
@@ -72,12 +71,12 @@
       maxLen: 4,
       hint: () => {
         showCarries(board, task);
-        ui.bubble("elder", `↻ Koʻchishlarni yozdim: yigʻindi ${task.base} dan oshsa — ${task.base} ni ayir.`);
+        ui.bubble("elder", `↻ Koʻchishlar yozildi. Xonadagi yigʻindi ≥ ${task.base} boʻlsa, ${task.base} ni ayir.`);
       },
       solution: () => {
         showCarries(board, task);
         board.setResultAll(task.answer);
-        common.add(el, common.answerLine(`Tekshiramiz: ${x} + ${y} = ${x + y} ✓`));
+        common.add(el, common.answerLine(`Tekshiruv (oʻnlikda): ${x} + ${y} = ${x + y} ✓`));
       },
     });
   }
@@ -85,9 +84,9 @@
   async function stage1() {
     await chotiDemo();
     await rule();
-    await guided("34", "13", "+", 5, S.stepsAdd("34", "13", 5), "Ustunda qoʻshamiz: 34₅ + 13₅. Oʻngdan boshlaymiz!");
-    await ui.say("elder", "34₅ + 13₅ = 102₅. Tekshiramiz: 19 + 8 = 27 = 25 + 2 ✓");
-    await ui.say("elder", `Endi oʻzing: turli sayyoralarda qoʻsh. ${QK.practice.need()} ta toʻgʻri javob!`);
+    await guided("34", "13", "+", 5, S.stepsAdd("34", "13", 5), "Ustunda qoʻshamiz: 34₅ + 13₅. Oʻngdagi xonadan boshlaymiz.");
+    await ui.say("elder", "34₅ + 13₅ = 102₅. Tekshiruv: 19 + 8 = 27 = 1·25 + 0·5 + 2 ✓");
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta qoʻshish, asoslar turlicha.`);
     await practice.exercises({
       next: (prev, correct, tier) => sayyora.makeAddTask(prev, undefined, tier),
       run: addTask,

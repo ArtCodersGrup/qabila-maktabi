@@ -12,15 +12,15 @@
     ui.clearControl();
     ui.paper("");
     ui.work().append(ui.h("div", { class: "story-art", html: art.painter() }));
-    await ui.say("apprentice", "Rassom kompyuterda #FF8800 deb yozibdi. Bu nima?");
-    await ui.say("elder", "Bu — oʻn oltilik sonlar. Kel, ochib koʻramiz.");
+    await ui.say("elder", "Maqsad: 2-lik ↔ 16-lik oʻtkazish, rang kodini oʻqish va 16-likda hisoblash.");
+    await ui.say("elder", "Kalit gʻoya: 16 = 2⁴, shuning uchun har 4 bit — bitta 16-lik raqam. #FF8800 kabi kodlar shunday yoziladi.");
   }
 
   async function tetrads() {
     const el = common.box(false);
     el.append(amal16Ui.tetradTable());
-    await ui.say("elder", "Bitta 16-lik raqam — 16 xil. 4 ta bit ham 16 xil: 2·2·2·2 = 16.");
-    await ui.say("elder", "Demak, 4 ta bit = bitta 16-lik raqam! Jadvalga qara: B — 1011.");
+    await ui.say("elder", "Bitta 16-lik raqam 16 xil qiymat oladi. 4 bit ham: 2⁴ = 16.");
+    await ui.say("elder", "Demak, 4 bit (tetrada) = bitta 16-lik raqam. Jadvalda: B = 1011.");
   }
 
   // 4.2: 1011 0110₂ → B6₁₆ (guruhlarni bosish)
@@ -28,12 +28,12 @@
     const bits = "10110110";
     const el = common.box(true);
     el.append(ui.h("div", { class: "big-value", text: S.fmt(bits, 2) }));
-    ui.bubble("elder", "Oʻngdan 4 tadan ajratdim. Har guruhni bos — u 16-lik raqamga aylanadi!");
+    ui.bubble("elder", "Bitlar oʻngdan 4 tadan guruhlangan. Har guruhni bos — u 16-lik raqamga aylanadi.");
     const g = amal16.groups(bits);
     await amal16Ui.flipRow(el, g.map((x) => ({ front: x, back: S.toBase(S.fromBase(x, 2), 16) })));
     sound.play("correct");
     common.add(el, common.answerLine(`${S.fmt(bits, 2)} = ${S.fmt("B6", 16)}`));
-    await ui.say("elder", "1011 — B, 0110 — 6. Demak, B6₁₆! Sakkizta raqam oʻrniga ikkita.");
+    await ui.say("elder", "1011 = B, 0110 = 6, yaʼni 10110110₂ = B6₁₆. 8 ta raqam oʻrniga 2 ta.");
   }
 
   // 4.3: 3F₁₆ → 0011 1111₂
@@ -45,15 +45,15 @@
     await amal16Ui.flipRow(el, [...hex].map((ch) => ({ front: ch, back: S.toBase(S.digitValue(ch), 2).padStart(4, "0") })));
     sound.play("correct");
     common.add(el, common.answerLine(`${S.fmt(hex, 16)} = ${S.fmt("00111111", 2)} = ${S.fmt("111111", 2)}`));
-    await ui.say("elder", "3 — 0011, F — 1111. Boshidagi nollar yozilmasa ham boʻladi.");
+    await ui.say("elder", "3 = 0011, F = 1111. Boshidagi nollar qiymatni oʻzgartirmaydi — tashlab yoziladi.");
   }
 
   // 4.4: rang kodi
   async function colors() {
     const el = common.box(false);
     el.append(amal16Ui.swatch("#FF8800"));
-    await ui.say("elder", "Rang kodi — uchta 16-lik son: qizil, yashil va koʻk chiroq («Piksel ustaxonasi» oʻyinini esla).");
-    await ui.say("elder", "FF — 255, toʻliq yoniq. 88 — 136, yarim. 00 — oʻchiq. Natija — toʻq sariq!");
+    await ui.say("elder", "Rang kodi #RRGGBB — uchta bayt: qizil, yashil, koʻk kanal (RGB, «Piksel ustaxonasi» oʻyinida).");
+    await ui.say("elder", "FF = 255 — toʻliq, 88 = 136 — yarim, 00 = 0 — oʻchiq. Natija — toʻq sariq.");
   }
 
   // 4.5: mashq — 2 → 16, 16 → 2, rang
@@ -61,7 +61,7 @@
     const el = common.box(true);
     if (task.type === "bin2hex") {
       el.append(ui.h("div", { class: "big-value", text: S.fmt(task.bits, 2) }));
-      ui.bubble("elder", "Bu sonni 16-likda yoz.");
+      ui.bubble("elder", "16-likda yoz.");
       const g = amal16.groups(task.bits);
       return sanoqUi.digitTries({
         answer: task.answer,
@@ -69,14 +69,14 @@
         maxLen: 3,
         hint: () => {
           common.add(el, common.line(`4 tadan: ${g.join(" | ")}`), amal16Ui.tetradTable());
-          ui.bubble("elder", "↻ Har guruhni jadvaldan top.");
+          ui.bubble("elder", "↻ Har 4 bitli guruhni jadvaldan top.");
         },
         solution: () => common.add(el, common.answerLine(g.map((x) => `${x} → ${S.toBase(S.fromBase(x, 2), 16)}`).join(", "))),
       });
     }
     if (task.type === "hex2bin") {
       el.append(ui.h("div", { class: "big-value", text: S.fmt(task.hex, 16) }));
-      ui.bubble("elder", "Bu sonni ikkilikda yoz.");
+      ui.bubble("elder", "Ikkilikda yoz.");
       return sanoqUi.digitTries({
         answer: task.answer,
         base: 2,
@@ -84,13 +84,13 @@
         hint: () => {
           // Jadval — asbob: kerakli qatorlar belgilanmaydi, bola o'zi topadi
           common.add(el, amal16Ui.tetradTable());
-          ui.bubble("elder", "↻ Har raqam — 4 ta bit. Jadvaldan top.");
+          ui.bubble("elder", "↻ Har 16-lik raqam — 4 bit. Jadvaldan top.");
         },
         solution: () => common.add(el, common.answerLine([...task.hex].map((ch) => `${ch} → ${S.toBase(S.digitValue(ch), 2).padStart(4, "0")}`).join(", "))),
       });
     }
     el.append(ui.h("div", { class: "big-value", text: task.code }));
-    ui.bubble("elder", "Bu qaysi rang?");
+    ui.bubble("elder", "Bu kod qaysi rang?");
     return practice.tries({
       setup: (submit) => {
         const row = ui.h("div", { class: "choice-row" });
@@ -104,7 +104,7 @@
       check: (value) => value === task.answer,
       hint: () => {
         common.add(el, amal16Ui.swatch(task.code).querySelector(".sw-info"));
-        ui.bubble("elder", "↻ Qaysi chiroq FF — toʻliq yoniq, qaysi biri 88 — yarim, qaysi biri 00 — oʻchiq?");
+        ui.bubble("elder", "↻ Kodni 3 juftga ajrat: R, G, B. Qaysi kanal FF (toʻliq), 88 (yarim), 00 (oʻchiq)?");
       },
       solution: () => common.add(el, common.answerLine(`${task.code} — ${task.options[task.answer].name}`)),
     });
@@ -121,7 +121,7 @@
     await binToHex();
     await hexToBin();
     await colors();
-    await ui.say("elder", `Endi oʻzing: 2 ↔ 16 va ranglar. ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta — 2 → 16, 16 → 2 va rang kodlari.`);
     await practice.exercises({
       next: (prev, correct, tier) => amal16.makeConvTask(prev, undefined, tier),
       run: convTask,

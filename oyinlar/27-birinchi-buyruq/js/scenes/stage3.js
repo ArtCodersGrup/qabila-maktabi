@@ -15,8 +15,8 @@
     const result = K.run(broken);
     out.show(result, broken);
     el.append(out.el);
-    await ui.say("elder", "Python xato qayerdaligini aytadi: satr raqami va belgi.");
-    await ui.say("elder", "Bu — jazo emas, yordam. Xato qilish dasturlashning bir qismi.");
+    await ui.say("elder", "Xato xabari joyni koʻrsatadi: satr raqami va belgi.");
+    await ui.say("elder", "Xato xabari — maslahat: dasturchilar uni har kuni oʻqiydi.");
   }
 
   // Birga tuzatamiz
@@ -34,22 +34,22 @@
         },
       });
     });
-    await ui.say("apprentice", "Bitta belgi yetmagan ekan!");
+    await ui.say("elder", "Xato bitta belgida edi — yopuvchi qavs yetmagan.");
   }
 
   // Hikoya: Python nomi qayerdan kelgan
   async function story() {
     const el = common.box(false);
     el.append(ui.h("div", { class: "story-art", html: QK.gameArt.snake() }));
-    await ui.say("elder", "Bu tilni 1991-yilda Gvido van Rossum degan dasturchi yozgan.");
-    await ui.say("elder", "Nomi ilondan emas — u yoqtirgan kulgili koʻrsatuvdan olingan.");
-    await ui.say("elder", "Bugun Python dunyoda eng koʻp oʻrgatiladigan dasturlash tili.");
+    await ui.say("elder", "Qayerda uchraydi: Python tilini 1991-yilda Gvido van Rossum yaratgan.");
+    await ui.say("elder", "Nomi ilondan emas — «Monti Payton» komediya shousidan olingan.");
+    await ui.say("elder", "Bugun Python sunʼiy intellekt, maʼlumotlar tahlili va veb-serverlarda keng ishlatiladi.");
   }
 
   async function stage3() {
     await readError();
     await fixTogether();
-    await ui.say("elder", "Endi navbat senga: goh xatoni tuzatasan, goh kodni oʻzing yozasan.");
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta — goh xatoni tuzatasan, goh kodni oʻzing yozasan.`);
     await practice.exercises({
       next: (prev, correct, tier) => L.stage3Task(Math.random, prev, tier),
       run: (task) => common.stage3Exercise(task),

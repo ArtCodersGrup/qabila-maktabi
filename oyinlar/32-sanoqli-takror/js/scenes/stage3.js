@@ -16,8 +16,8 @@
         if (!step.step()) { ui.clearControl(); done(); }
       }, "big"));
     });
-    await ui.say("elder", "Tashqi sikl 3 marta, ichkisi 2 marta — ichki qism 6 marta ishladi.");
-    await ui.say("elder", "Qoida oddiy: tashqi × ichki.");
+    await ui.say("elder", "Tashqi sikl 3 marta, ichkisi 2 marta — ichki tana 3 × 2 = 6 marta bajarildi.");
+    await ui.say("elder", "Umumiy qoida: bajarilishlar soni = tashqi × ichki.");
   }
 
   async function pattern() {
@@ -27,17 +27,17 @@
     const out = U.output({ title: "Chiqish" });
     out.lines(K.run(code).output);
     el.append(out.el);
-    await ui.say("elder", "Yulduzchani takrorlash uchun koʻpaytirish kifoya: \"*\" * 3 → ***");
+    await ui.say("elder", "Satrni songa koʻpaytirish uni takrorlaydi: \"*\" * 3 → ***");
   }
 
   async function stage3() {
     await nested();
     await pattern();
-    await ui.say("elder", "Endi navbat senga: goh natijani aytasan, goh dasturni yozasan.");
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta topshiriq — natijani aniqlash yoki dastur yozish.`);
     await practice.exercises({
       next: (prev, correct, tier) => L.stage3Task(Math.random, prev, tier),
       run: (task) => common.stage3Exercise(task),
-      praise: (task) => (task.type === "kod-yoz" ? "Dastur hamma sinovdan oʻtdi." : "Aylanishlarni toʻgʻri sanading."),
+      praise: (task) => (task.type === "kod-yoz" ? "Dastur hamma sinovdan oʻtdi." : "Aylanishlar soni toʻgʻri."),
     });
   }
 

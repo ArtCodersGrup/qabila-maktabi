@@ -9,10 +9,8 @@
     await U.keyboardCheck();
     const el = common.box(false);
     el.append(ui.h("div", { class: "story-art wide", html: QK.gameArt.share(17, 5) }));
-    await ui.say("elder", "17 ta toshni 5 bolaga teng boʻldik. Har biriga 3 tadan tegdi.");
-    await ui.say("elder", "Ikkitasi ortdi — ularni teng boʻlib boʻlmaydi.");
-    await ui.say("apprentice", "Demak boʻlishning ikkita javobi bor ekan.");
-    await ui.say("elder", "Ha. Pythonda ham shunday: bittasi — nechtadan, ikkinchisi — nechtasi ortdi.");
+    await ui.say("elder", "Maqsad: Pythonda butun boʻlish (//), qoldiq (%), oddiy boʻlish (/) va amallar tartibi.");
+    await ui.say("elder", "17 ta toshni 5 kishiga teng boʻlsak, har biriga 3 ta tegadi va 2 ta ortadi: boʻlinma va qoldiq.");
   }
 
   async function twoResults() {
@@ -23,7 +21,7 @@
     const out = U.output({ title: "Chiqish" });
     out.lines(K.run(code).output);
     el.append(out.el);
-    await ui.say("elder", "Ikki chiziq (//) — nechtadan tegdi. Foiz belgisi (%) — nechtasi ortdi.");
+    await ui.say("elder", "// — butun boʻlinma (nechtadan tegdi), % — qoldiq (nechtasi ortdi).");
   }
 
   async function slashIsFloat() {
@@ -33,24 +31,24 @@
     const out = U.output({ title: "Chiqish" });
     out.lines(K.run(code).output);
     el.append(out.el);
-    await ui.say("elder", "Bitta chiziq (/) esa doim kasr beradi — teng boʻlinganda ham.");
-    await ui.say("elder", "Shuning uchun 4 / 2 javobi 2 emas, 2.0 boʻldi.");
+    await ui.say("elder", "Bitta chiziq (/) doim kasr son (float) beradi — teng boʻlinganda ham.");
+    await ui.say("elder", "Shuning uchun 4 / 2 natijasi 2 emas, 2.0.");
   }
 
   async function definition() {
     const el = common.box(false);
     el.append(ui.h("div", { class: "formula-box" },
-      ui.h("div", { class: "formula-row kod", text: "17 // 5  →  3   (nechtadan)" }),
-      ui.h("div", { class: "formula-row kod", text: "17 % 5   →  2   (nechtasi ortdi)" }),
+      ui.h("div", { class: "formula-row kod", text: "17 // 5  →  3   (butun boʻlinma)" }),
+      ui.h("div", { class: "formula-row kod", text: "17 % 5   →  2   (qoldiq)" }),
       ui.h("div", { class: "formula-row kod", text: "17 / 5   →  3.4 (kasr)" })));
-    await ui.say("elder", "Uchalasi ham boʻlish, lekin javoblari boshqa-boshqa.");
+    await ui.say("elder", "Uchalasi ham boʻlish, natijalari esa har xil: butun boʻlinma, qoldiq, kasr.");
   }
 
   async function stage1() {
     await twoResults();
     await slashIsFloat();
     await definition();
-    await ui.say("elder", `Endi oʻzing hisobla. ${QK.practice.need()} ta toʻgʻri javob kerak.`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta ifoda — natijasini hisobla.`);
     await practice.exercises({
       next: (prev, correct, tier) => L.divisionTask(Math.random, prev, tier),
       run: (task) => common.resultExercise(task),

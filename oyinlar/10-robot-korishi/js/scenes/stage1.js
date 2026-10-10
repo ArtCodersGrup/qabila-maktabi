@@ -11,9 +11,8 @@
     ui.clearControl();
     ui.paper("");
     ui.work().append(ui.h("div", { class: "story-art", html: art.robot() }));
-    await ui.say("elder", "Robotga koʻz berdik!");
-    await ui.say("apprentice", "Endi u rasmni koʻradimi?");
-    await ui.say("elder", "Koʻradi, lekin boshqacha. U faqat kataklardagi sonlarni koʻradi.");
+    await ui.say("elder", "Maqsad: kompyuter rasmni qanday koʻrishi va tanishini tushunish (kompyuter koʻrishi).");
+    await ui.say("elder", "Kalit gʻoya: kamera uchun rasm — piksellar jadvali, yaʼni sonlar. Robot shakl emas, faqat sonlarni koʻradi.");
   }
 
   // 4.1: bola chizadi, sonlar jonli o'zgaradi
@@ -23,7 +22,7 @@
     const board = visionUi.grid(el, { editable: true, onChange: (cells) => nums.set(cells) });
     el.insertBefore(board.el, nums.el);
     nums.set(board.get());
-    ui.bubble("elder", "Kataklarni bosib rasm chiz. Pastdagi sonlarga qara!");
+    ui.bubble("elder", "Kataklarni bosib rasm chiz va pastdagi sonlarga qara.");
     let painted = 0;
     await ui.settle((done) => {
       ui.control().append(ui.button("Tayyor", () => {
@@ -37,8 +36,8 @@
         done();
       }, "big"));
     });
-    await ui.say("elder", `Sen ${painted} ta katakni boʻyading. Robot buni 1 va 0 lar qatori deb koʻradi.`);
-    await ui.say("elder", "Har katak — bitta piksel. «Qabila chiroqlari» oʻyinidagi chiroqlarni esla: yoniq — 1, oʻchiq — 0.");
+    await ui.say("elder", `${painted} ta katak boʻyaldi. Robot buni 1 va 0 lar qatori sifatida oladi.`);
+    await ui.say("elder", "Har katak — bitta piksel: boʻyalgan — 1, boʻsh — 0. Rangli rasmda har piksel 0–255 oraligʻidagi sonlar bilan yoziladi.");
   }
 
   // 4.3: mashq — sonlarga qarab rasmni topish
@@ -64,11 +63,11 @@
 
   async function stage1() {
     await draw();
-    await ui.say("elder", `Endi oʻzing top: sonlar qaysi rasmga tegishli? ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta piksellar jadvali — qaysi rasmga tegishli.`);
     await practice.exercises({
       next: (prev, correct, tier) => vision.makeReadTask(prev, null, tier),
       run: readTask,
-      praise: () => "Sonlar va rasm — bir narsa.",
+      praise: () => "Sonlar jadvali va rasm — bir maʼlumotning ikki koʻrinishi.",
     });
   }
 

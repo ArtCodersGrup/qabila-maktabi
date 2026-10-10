@@ -10,13 +10,13 @@
     const el = common.box(true);
     const map = atlasUi.mapView(el);
     map.show(atlas.ORDER);
-    ui.bubble("elder", "Oʻzing oʻynagan oʻyinlarni xaritaga qoʻyamiz.");
+    ui.bubble("elder", "Oʻynagan oʻyinlaringni xaritaga joylaymiz.");
     await ui.sleep(700);
     for (const game of atlas.GAMES) {
       map.highlight(game.zone);
       map.add(game.zone, `${game.n}. ${game.title}`);
       sound.play("tap");
-      await ui.say("elder", `${game.n}-oʻyin — ${atlas.zoneName(game.zone)}: ${game.note}.`);
+      await ui.say("elder", `«${game.title}» — ${atlas.zoneName(game.zone)}: ${game.note}.`);
     }
     map.highlight(null);
   }
@@ -39,13 +39,13 @@
     const map = atlasUi.mapView(el);
     map.show(atlas.ORDER);
     for (const z of atlas.ZONES) map.add(z.id, z.short);
-    await ui.say("elder", "Katta doira — sunʼiy intellekt. Ichida — misoldan oʻrganish. Eng ichida — neyron tarmoqlar.");
-    await ui.say("elder", "Koʻrish, til va harakat — ular bajaradigan ishlar. Endi sen bu soʻzlarning farqini bilasan!");
+    await ui.say("elder", "AI ⊃ ML ⊃ DL: sunʼiy intellekt, uning ichida misoldan oʻrganish, eng ichida — neyron tarmoqlar.");
+    await ui.say("elder", "Koʻrish, til va harakat — ular bajaradigan vazifalar, usul emas.");
   }
 
   async function stage3() {
     await yourGames();
-    await ui.say("elder", `Endi hayotdan misollar: xaritaning qayerida? ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta real misol — xaritaning qayerida.`);
     await practice.exercises({
       next: (prev, correct, tier) => atlas.makeExampleTask(prev, null, tier),
       run: exampleTask,

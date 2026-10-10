@@ -9,9 +9,8 @@
     await U.keyboardCheck();
     const el = common.box(false);
     el.append(ui.h("div", { class: "story-art", html: QK.gameArt.wheel(5) }));
-    await ui.say("elder", "Suv charxi aylanaveradi. Uni nima toʻxtatadi?");
-    await ui.say("apprentice", "Suv tugasa toʻxtaydi.");
-    await ui.say("elder", "Dasturda ham shunday: shart yolgʻon boʻlganda takror toʻxtaydi.");
+    await ui.say("elder", "Maqsad: while sikli — shart rost boʻlguncha satrlarni takrorlash.");
+    await ui.say("elder", "Kalit gʻoya: har aylanishdan oldin shart tekshiriladi. Yolgʻon boʻlsa — sikl tugaydi, xuddi suv tugagan charxdek.");
   }
 
   async function counter() {
@@ -25,7 +24,7 @@
         if (!step.step()) { ui.clearControl(); done(); }
       }, "big"));
     });
-    await ui.say("elder", "Sikl 5 marta aylandi. Har safar i qutisi bittaga oshdi.");
+    await ui.say("elder", "Sikl 5 marta aylandi: i har safar 1 ga oshdi, i = 6 da shart yolgʻon boʻldi.");
   }
 
   // Cheksiz sikl: qadam chegarasi tutadi — bu jazo emas, dars
@@ -45,7 +44,7 @@
         },
       });
     });
-    await ui.say("elder", "Hisoblagich oʻzgarmasa — shart doim rost. Bu cheksiz sikl deyiladi.");
+    await ui.say("elder", "Hisoblagich oʻzgarmasa, shart doim rost — bu cheksiz sikl.");
     await ui.say("elder", "Saytda 3 000 000 qadamdan keyin toʻxtatiladi, lekin haqiqiy kompyuterda dastur qotib qoladi.");
   }
 
@@ -55,18 +54,18 @@
       ui.h("div", { class: "formula-row kod", text: "while shart:" }),
       ui.h("div", { class: "formula-row", text: "    shart rost boʻlgan har safar qayta bajariladi" }),
       ui.h("div", { class: "formula-row", text: "hisoblagichni oʻzgartirishni unutma" })));
-    await ui.say("elder", "Uch narsa kerak: boshlangʻich qiymat, shart va oʻzgartirish.");
+    await ui.say("elder", "Toʻgʻri sikl uchun uchta qism kerak: boshlangʻich qiymat, shart va oʻzgartirish.");
   }
 
   async function stage1() {
     await counter();
     await endless();
     await definition();
-    await ui.say("elder", `Endi oʻzing ayt: sikl nima chiqaradi? ${QK.practice.need()} ta toʻgʻri javob kerak.`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta sikl. Har biri nima chiqarishini aniqla.`);
     await practice.exercises({
       next: (prev, correct, tier) => L.countTask(Math.random, prev, tier),
       run: (task) => common.resultExercise(task),
-      praise: () => "Aylanishlarni toʻgʻri sanading.",
+      praise: () => "Aylanishlar soni toʻgʻri.",
     });
   }
 

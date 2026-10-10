@@ -11,9 +11,8 @@
     ui.clearControl();
     ui.paper("");
     ui.work().append(ui.h("div", { class: "story-art", html: art.story("map") }));
-    await ui.say("elder", "Sen robot bilan koʻp ish qilding: misol koʻrsatding, soʻz sanatding, mukofot berding.");
-    await ui.say("apprentice", "Ularning nomi bormi?");
-    await ui.say("elder", "Bor! Keling, hammasini bitta xaritaga joylaymiz.");
+    await ui.say("elder", "Maqsad: sunʼiy intellekt (AI), mashinali oʻrganish (ML) va chuqur oʻrganish (DL) farqini bilish.");
+    await ui.say("elder", "Kalit gʻoya: AI ⊃ ML ⊃ DL — har biri oldingisining ichidagi doira. Koʻrish, til kabi vazifalar esa alohida.");
   }
 
   // 4.1–4.4: zonalar birma-bir chiziladi
@@ -21,10 +20,10 @@
     const el = common.box(true);
     const map = atlasUi.mapView(el);
     const steps = [
-      { id: "plain", chip: "kalkulyator", line: "Eng tashqarida — oddiy dastur. Kalkulyator, budilnik: qoidani bajaradi, aql talab qilmaydi." },
-      { id: "ai", chip: "shaxmat dasturi", line: "Ichkarida — sunʼiy intellekt: aql talab qiladigan ish. Masalan, shaxmat dasturi yurishlarni sanab, eng yaxshisini tanlaydi." },
-      { id: "ml", chip: "oʻynagan oʻyinlaring", line: "Uning ichida — mashinali oʻrganish: qoida yozilmaydi, mashina misollardan oʻrganadi." },
-      { id: "dl", chip: "neyron tarmoq", line: "Eng ichkarida — chuqur oʻrganish: koʻp qatlamli neyron tarmoq bilan oʻrganadi." },
+      { id: "plain", chip: "kalkulyator", line: "Eng tashqarida — oddiy dastur (kalkulyator, budilnik): yozilgan qoidani bajaradi, aql talab qilmaydi." },
+      { id: "ai", chip: "shaxmat dasturi", line: "AI — odatda aql talab qiladigan ishni bajaruvchi dastur. Masalan, shaxmat dasturi yurishlarni hisoblab, eng yaxshisini tanlaydi." },
+      { id: "ml", chip: "oʻynagan oʻyinlaring", line: "ML — AI ning bir qismi: qoida yozilmaydi, dastur misollardan oʻrganadi." },
+      { id: "dl", chip: "neyron tarmoq", line: "DL — ML ning bir qismi: koʻp qatlamli neyron tarmoq bilan oʻrganish." },
     ];
     const shown = [];
     for (const step of steps) {
@@ -36,7 +35,7 @@
       await ui.say("elder", step.line);
     }
     map.highlight(null);
-    await ui.say("elder", "Koʻrdingmi? Har doira oldingisining ichida. Chuqur oʻrganish — ham ML, ham AI.");
+    await ui.say("elder", "Har doira oldingisining ichida, shuning uchun DL — ham ML, ham AI. Teskarisi har doim ham toʻgʻri emas.");
   }
 
   // 4.5: mashq — ta'rif qaysi doiraga tegishli?
@@ -60,7 +59,7 @@
 
   async function stage1() {
     await buildMap();
-    await ui.say("elder", `Endi oʻzing top: qaysi doira haqida gap ketyapti? ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta taʼrif — qaysi doiraga tegishli.`);
     await practice.exercises({
       next: (prev, correct, tier) => atlas.makeDefTask(prev, null, tier),
       run: defTask,

@@ -9,10 +9,8 @@
     await U.keyboardCheck();
     const el = common.box(false);
     el.append(ui.h("div", { class: "story-art", html: QK.gameArt.screen() }));
-    await ui.say("elder", "Robotga oʻqlar bilan buyruq bergan edik. Endi — soʻz bilan.");
-    await ui.say("elder", "Kompyuter tushunadigan til — Python. Bugun unda birinchi buyruqni yozamiz.");
-    await ui.say("apprentice", "Klaviaturada oʻzim yozamanmi?");
-    await ui.say("elder", "Ha. Yozilgan dastur — kod. Kompyuter uni yuqoridan pastga bajaradi.");
+    await ui.say("elder", "Maqsad: Pythonda birinchi buyruq — print — va xato xabarini oʻqish.");
+    await ui.say("elder", "Dastur (kod) — klaviaturada yoziladigan buyruqlar matni. Kompyuter uni yuqoridan pastga bajaradi.");
   }
 
   // Ko'rsatish: berilgan kodni terib, ishga tushirish (xato urinish sanalmaydi)
@@ -31,13 +29,13 @@
       });
     });
     await ui.say("elder", "Qoʻshtirnoq ichidagi matn ekranga chiqdi.");
-    await ui.say("elder", "print — buyruq nomi. Qavs ichida — nima chiqishi kerakligi.");
+    await ui.say("elder", "print — buyruq nomi; qavs ichida — nima chiqarilishi.");
   }
 
   // O'z matnini yozish: nima yozishini bola o'zi tanlaydi, faqat kod ishlashi kerak
   async function ownText() {
     const el = common.box();
-    el.append(common.note("Endi oʻzingniki. Qoʻshtirnoq ichiga istagan matningni yoz:"));
+    el.append(common.note("Endi oʻz matning: qoʻshtirnoq ichiga istagan matnni yoz:"));
     el.append(U.codeBlock('print("Salom, men Anvarman!")', { numbers: false }));
     const say = common.liveNote(el);
     await ui.settle((done) => {
@@ -49,7 +47,7 @@
         },
       });
     });
-    await ui.say("apprentice", "Kompyuter men yozgan matnni aytdi!");
+    await ui.say("elder", "Dastur sen yozgan matnni oʻzgartirmay chiqardi.");
   }
 
   async function definition() {
@@ -57,8 +55,8 @@
     el.append(ui.h("div", { class: "formula-box" },
       ui.h("div", { class: "formula-row kod", text: 'print("matn")' }),
       ui.h("div", { class: "formula-row", text: "qoʻshtirnoq ichidagi matn ekranga chiqadi" })));
-    await ui.say("elder", "Sen hozir buyruq berding. Buyruqning nomi — print.");
-    await ui.say("elder", "Har print oʻz satrini chiqaradi. Buyruqlar tartib bilan bajariladi.");
+    await ui.say("elder", "print — chiqarish buyrugʻi: qoʻshtirnoq ichidagi matnni ekranga chiqaradi.");
+    await ui.say("elder", "Har print alohida satr chiqaradi; buyruqlar yozilgan tartibda bajariladi.");
   }
 
   async function stage1() {
@@ -66,7 +64,7 @@
     await ownText();
     await definition();
     // Terish — koʻchirish mashqi: 2 ta toʻgʻri javob yetadi (2026-10-02); qiyin rejimda ikki satr teriladi
-    await ui.say("elder", "Endi oʻzing yoz. 2 ta toʻgʻri javob — bosqich tugaydi!");
+    await ui.say("elder", "Mashq: 2 ta kodni aynan koʻchirib ter.");
     await practice.exercises({
       need: 2,
       next: (prev, correct, tier) => L.typeTask(Math.random, prev, practice.isHard() ? 2 : 0),

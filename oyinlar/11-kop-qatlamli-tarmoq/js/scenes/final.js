@@ -13,8 +13,8 @@
     ui.pose("elder", "happy", 1200);
     ui.pose("apprentice", "happy", 1200);
     await ui.say("elder", goingOn
-      ? `${s}-bosqich tugadi! Barakalla, keyingisiga oʻtamiz.`
-      : `${s}-bosqich tugadi! Barakalla!`);
+      ? `${s}-bosqich tugadi. Keyingisi — ${s === 1 ? "qatlamlar" : "nega tarmoq chuqur boʻladi"}.`
+      : `${s}-bosqich tugadi.`);
   }
 
   async function congrats() {
@@ -23,13 +23,13 @@
     sound.play("win");
     ui.pose("elder", "happy", 1500);
     ui.pose("apprentice", "happy", 1500);
-    ui.bubble("elder", "Tabriklayman! Endi sen neyron tarmoq qanday ishlashini bilasan!");
+    ui.bubble("elder", "Tayyor: neyron chiqishini hisoblay olasan va tarmoq qanday oʻrganishini tushuntira olasan.");
     ui.work().append(ui.h("div", { class: "story" },
       ui.h("div", { class: "story-art small", html: art.robot() }),
       ui.h("div", { class: "summary" },
-        ui.h("div", { text: "Neyron: yigʻindi chegaraga yetsa — yonadi" }),
+        ui.h("div", { text: "Neyron: Σ wᵢ·xᵢ ≥ chegara → 1, aks holda 0" }),
         ui.h("div", { text: "Qatlamlar: chiziq → shakl → javob" }),
-        ui.h("div", { text: "Xato boʻlsa — ogʻirlik oʻzgaradi" }))));
+        ui.h("div", { text: "Oʻqitish: xato boʻlsa, yoniq kirishlar ogʻirligi ±1" }))));
     return ui.choice([
       { label: "Qayta oʻynash", value: "replay" },
       { label: "Bosh ekran", value: "home", secondary: true },

@@ -18,7 +18,7 @@
       row.append(holder);
     }
     await ui.say("elder", `Robot xotirasida ${vision.NAMES.length} ta shablon bor: ${vision.NAMES.join(", ")}.`);
-    await ui.say("elder", "Yangi rasm kelsa, u har shablon bilan solishtiradi.");
+    await ui.say("elder", "Yangi rasm har shablon bilan katakma-katak solishtiriladi: nechta katak mos — shuncha ball.");
   }
 
   // 5.2: moslikni sanash
@@ -43,7 +43,7 @@
     list.set(best.list.slice(0, 4), best.name);
     sound.play("correct");
     await ui.say("elder", `Eng koʻp moslik — ${best.name}: 36 tadan ${best.score} ta katak mos keldi.`);
-    await ui.say("elder", "Robot uchun «tanish» degani — eng oʻxshash shablonni topish.");
+    await ui.say("elder", "Bu — shablon bilan tanish: javob — eng koʻp ball olgan shablon.");
   }
 
   // 5.4: mashq — robot nima deydi?
@@ -73,7 +73,7 @@
   async function stage2() {
     await showTemplates();
     await matchDemo();
-    await ui.say("elder", `Endi oʻzing ayt: robot nima deydi? ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta rasm — robot qaysi shablonni tanlaydi.`);
     await practice.exercises({
       next: (prev, correct, tier) => vision.makeMatchTask(prev, null, tier),
       run: matchTask,

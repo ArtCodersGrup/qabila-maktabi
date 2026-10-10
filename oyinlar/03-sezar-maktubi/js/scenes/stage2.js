@@ -1,4 +1,4 @@
-// 2-bosqich: Sezarga javobni shifrlash (DIZAYN 6-bo'lim).
+// 2-bosqich: Sezarga javobni shifrlash (DIZAYN 6-bo'lim). 2026-10-10: 5–8 ohangi, qog'ozsiz.
 (function (root) {
   "use strict";
 
@@ -10,10 +10,9 @@
     ui.clearWork();
     ui.clearControl();
     ui.closeGuide();
-    ui.paper("");
-    await ui.say("elder", "Endi Sezarga javob yozamiz. Javob ham shifrlanadi!");
+    await ui.say("elder", "Endi teskari amal — shifrlash: ochiq matndan shifr matn hosil qilamiz.");
     const tbl = caesarUi.table(0, null);
-    await ui.say("elder", "Oddiy harfni tepa qatordan top — pastdagisi shifr.");
+    await ui.say("elder", "Oddiy harfni jadvalning tepa qatoridan top — ostidagisi uning shifri.");
     await common.exercises({
       mode: "encode",
       tbl,
@@ -23,11 +22,11 @@
         ? caesar.makePlanned(caesar.REPLIES, prev, Math.max(0, correct - 1), tier, 3)
         : { word: caesar.FIRST_REPLY, key: caesar.FIRST_KEY, blind: false }),
       question: (ex) => (ex.blind
-        ? `Kalit — ${ex.key}. Pastki qator yashirin: «${ex.word}» ning har harfini ${ex.key} ta oldinga sur va shifr harfini bos.`
+        ? `Kalit — ${ex.key}. Pastki qator yashirin: «${ex.word}» ning har harfini ${ex.key} qadam oldinga siljit va shifr harfini bos.`
         : `Kalit — ${ex.key}. «${ex.word}» soʻzini shifrla.`),
       praise: (ex) => `Shifr tayyor: ${caesar.encrypt(caesar.tokenize(ex.word), ex.key).join("")}.`,
     });
-    await ui.say("apprentice", "Javob Sezarga joʻnatildi!");
+    await ui.say("elder", "Shifrlash va ochish — bitta kalit bilan. Bunday shifr simmetrik deyiladi.");
   }
 
   QK.scenes = QK.scenes || {};

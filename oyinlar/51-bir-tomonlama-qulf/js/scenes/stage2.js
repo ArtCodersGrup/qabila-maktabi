@@ -7,37 +7,35 @@
 
   async function qoida() {
     const el = common.box(true);
-    el.append(common.note("Parol uchun ham shunday amal bor. Unga iz deymiz."));
+    el.append(common.note("Parol uchun ham bir tomonlama amal bor — uning natijasi iz (xesh)."));
     el.append(common.alifboJadval());
     el.append(common.qoidaQuti(0));
-    await ui.say("elder", "Har harf oʻz soniga aylanadi: a — 1, b — 2, z — 26.");
-    await ui.say("elder", "Keyin uch qadamli qoida. Qoʻlda ham hisoblanadi.");
+    await ui.say("elder", "1-qadam: har harf alifbodagi oʻrniga aylanadi: a = 1, b = 2, … z = 26.");
+    await ui.say("elder", "Keyin har belgi uchun: iz = (iz · 3 + son) mod 100. Qoʻlda ham hisoblanadi.");
 
     const misol = common.box(true);
     misol.append(common.parolKarta("olma"));
     misol.append(common.izJadval(L.izQadamlar("olma", 0)));
     misol.append(common.izChip(L.iz("olma")));
-    await ui.say("elder", "«olma» parolining izi — " + L.iz("olma") + ". Parolning oʻzi hech qayerda qolmadi.");
-    await ui.say("apprentice", "Izdan orqaga qaytib parolni topsam boʻladimi?");
-    await ui.say("elder", "Yoʻq. Yigʻindi misolidagidek — koʻp parol bir xil iz beradi.");
+    await ui.say("elder", "«olma» parolining izi — " + L.iz("olma") + ". Parolning oʻzi hech qayerda saqlanmadi.");
+    await ui.say("elder", "Izdan parolni qaytarib boʻlmaydi: yigʻindi misolidagidek, koʻp parol bir xil iz beradi.");
   }
 
   async function kirish() {
     const el = common.box(true);
     el.append(ui.h("div", { class: "story-art small", html: QK.gameArt.baza() }));
     el.append(common.note("Sayt bazasida parol yoʻq — faqat izlar"));
-    await ui.say("elder", "Sen kirganda sayt yozganing izini qaytadan hisoblaydi.");
-    await ui.say("elder", "Saqlangan iz bilan solishtiradi: mos kelsa — kirasan.");
+    await ui.say("elder", "Kirishda sayt sen yozgan parolning izini qaytadan hisoblaydi.");
+    await ui.say("elder", "Keyin bazadagi iz bilan solishtiradi: mos kelsa — kirish ruxsat etiladi.");
 
     const taqqos = common.box(true);
     taqqos.append(common.note("Bazadagi iz — " + L.iz("olma")));
     taqqos.append(ui.h("div", { class: "bq-juft" },
       common.parolKarta("olma", { nom: "Toʻgʻri parol", qiymat: false, iz: true, belgi: "✓" }),
       common.parolKarta("olmo", { nom: "Xato parol", qiymat: false, iz: true, belgi: "↻" })));
-    await ui.say("elder", "Oxirgi harf oʻzgardi — iz butunlay boshqa chiqdi.");
-    await ui.say("apprentice", "Baza oʻgʻirlansa, oʻgʻri nimani oladi?");
-    await ui.say("elder", "Faqat izlarni. Paroling esa unda yoʻq.");
-    await ui.say("elder", "Bizning iz qisqa — qoʻlda hisoblash uchun. Haqiqiy saytlarda u ancha uzun.");
+    await ui.say("elder", "Faqat oxirgi harf oʻzgardi, iz esa butunlay boshqa chiqdi.");
+    await ui.say("elder", "Baza oʻgʻirlansa ham, oʻgʻri faqat izlarni oladi — parollar unda yoʻq.");
+    await ui.say("elder", `Bizning iz 2 xonali — qoʻlda hisoblash uchun; haqiqiy xesh ancha uzun. Mashq: ${QK.practice.need()} ta savol.`);
   }
 
   async function stage2() {

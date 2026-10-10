@@ -13,7 +13,7 @@
     const slots = units.ORDER.map(() => ui.h("div", { class: "shelf-slot" }));
     shelf.append(...slots);
     el.append(common.line("Kichigidan kattasiga:"), shelf);
-    ui.bubble("elder", "Eng kichik fayldan boshlab bos!");
+    ui.bubble("elder", "Fayllarni eng kichigidan boshlab bos.");
     let next = 0;
     await ui.settle((done) => {
       const pad = ui.h("div", { class: "file-pad" });
@@ -45,7 +45,7 @@
       ui.clearControl();
       ui.control().append(pad);
     });
-    await ui.say("elder", "✓ SMS — eng kichik, film — eng katta!");
+    await ui.say("elder", "✓ SMS — eng kichik, film — eng katta.");
     await ui.say("elder", "Surat va qoʻshiq — ikkalasi Mbaytda. Birlik bir xil boʻlsa, sonni solishtiramiz: 3 < 4.");
   }
 
@@ -55,21 +55,21 @@
     const b = { n: 1, unit: "Gbayt" };
     const el = common.box(true);
     el.append(ui.h("div", { class: "cmp" }, unitsUi.sizeCard(a), ui.h("div", { class: "cmp-or", text: "yoki" }), unitsUi.sizeCard(b)));
-    ui.bubble("elder", "Qaysi biri katta? Oʻylab koʻr!");
+    ui.bubble("elder", "Qaysi biri katta?");
     const pickedA = await ui.choice([{ label: "2000 Mbayt", value: true }, { label: "1 Gbayt", value: false }]);
     if (pickedA) {
       sound.play("correct");
       ui.pose("apprentice", "happy", 900);
     } else sound.play("retry");
     el.append(common.line("1 Gbayt = 1024 Mbayt"), common.answerLine("2000 Mbayt > 1024 Mbayt"));
-    await ui.say("elder", pickedA ? "✓ Toʻgʻri! 1 Gbayt — bor-yoʻgʻi 1024 Mbayt." : "↻ Aldandingmi? 1 Gbayt — bor-yoʻgʻi 1024 Mbayt. 2000 kattaroq!");
-    await ui.say("elder", "Birlik katta boʻlsa ham, son kichik boʻlsa — aylantirib solishtir.");
+    await ui.say("elder", pickedA ? "✓ Toʻgʻri: 1 Gbayt = 1024 Mbayt < 2000 Mbayt." : "↻ 1 Gbayt = 1024 Mbayt, yaʼni 2000 Mbayt kattaroq.");
+    await ui.say("elder", "Birlikning kattaligi yetarli emas: avval bir xil birlikka oʻtkaz, keyin solishtir.");
   }
 
   async function definition() {
     const el = common.box(false);
     common.formula(el, ["1) Birlik bir xil — sonni solishtir", "2) Birlik boshqa — bir xil birlikka aylantir"]);
-    await ui.say("elder", "Solishtirishning ikki qoidasi. Aylantirishda 1024 ni unutma!");
+    await ui.say("elder", "Solishtirish qoidasi shu. Oʻtkazishda koʻpaytuvchi — 1024.");
   }
 
   // 5.4: mashq — uch kartadan qaysi biri eng katta, yoki uchalasi teng (4 variant)
@@ -102,7 +102,7 @@
     await sortFiles();
     await trap();
     await definition();
-    await ui.say("elder", `Endi oʻzing solishtir. ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta uchlik — eng kattasini top.`);
     await practice.exercises({
       next: (prev, correct, tier) => units.makeCompareTask(prev, undefined, tier),
       run: compareTask,

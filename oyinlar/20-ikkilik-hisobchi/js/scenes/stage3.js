@@ -8,8 +8,8 @@
   const b2 = (s) => S.fmt(s, 2);
 
   const SCENES = [
-    { art: "cpu", lines: ["Protsessor sekundiga milliardlab shunday qoʻshadi — faqat 0 va 1 bilan."] },
-    { art: "hex", lines: ["Keyingi oʻyinda — 16-lik: harfli raqamlar bilan hisob!"] },
+    { art: "cpu", lines: ["Qayerda uchraydi: protsessorning qoʻshuvchi sxemasi aynan shu qoidalar bilan ishlaydi — soniyasiga milliardlab amal.", "Dasturlarda 2 ga koʻpaytirish koʻpincha surish (x << 1) bilan bajariladi."] },
+    { art: "hex", lines: ["16-likda yozuv va amallar — «Oʻn oltilik ranglar» oʻyinida."] },
   ];
 
   // 6.1: × 10₂ — oxiriga 0
@@ -20,7 +20,7 @@
     const show = () => { big.textContent = `${b2(s)} = ${S.fromBase(s, 2)}`; };
     show();
     el.append(big);
-    ui.bubble("elder", "Oʻnlikda × 10 — oxiriga 0 qoʻshiladi. Ikkilikda × 10₂ ni bosib koʻr!");
+    ui.bubble("elder", "Oʻnlikda × 10 — oxiriga 0 qoʻshiladi. Ikkilikda × 10₂ ni bos va qiymatni kuzat.");
     await ui.settle((done) => {
       let k = 0;
       ui.control().append(ui.button("× 10₂", () => {
@@ -36,7 +36,7 @@
       }, "big"));
     });
     sound.play("correct");
-    await ui.say("elder", "101₂ → 1010₂ → 10100₂: 5 → 10 → 20. Har gal oxiriga 0 — ikki baravar!");
+    await ui.say("elder", "101₂ → 1010₂ → 10100₂, yaʼni 5 → 10 → 20. Chapga surish = 2 ga koʻpaytirish.");
   }
 
   const mulRows = (a, b) => {
@@ -55,11 +55,11 @@
     const shown = [{ text: a }, { text: "× " + b }, { cls: "line" }];
     host.replaceChildren(common.mulBlock(shown));
     const texts = [
-      "Koʻpaytuvchining oxirgi raqami 1 — sonni oʻzini yozamiz: 101.",
-      "Keyingi raqam ham 1 — sonni bir xona chapga surib yozamiz: 1010.",
-      "Endi qatorlarni qoʻshamiz: 101 + 1010 = 1111.",
+      "Koʻpaytuvchining oxirgi raqami 1 — sonning oʻzi yoziladi: 101.",
+      "Keyingi raqam ham 1 — son bir xona chapga surib yoziladi: 1010.",
+      "Qatorlar qoʻshiladi: 101 + 1010 = 1111.",
     ];
-    ui.bubble("elder", "101₂ × 11₂ ni ustunda koʻpaytiramiz. «Keyingi qator»ni bos!");
+    ui.bubble("elder", "101₂ × 11₂ ni ustunda koʻpaytiramiz. «Keyingi qator» ni bos.");
     await ui.settle((done) => {
       let k = 0;
       ui.control().append(ui.button("Keyingi qator ▶︎", () => {
@@ -76,7 +76,7 @@
       }, "big"));
     });
     await ui.say("elder", texts[2]);
-    await ui.say("elder", "Tekshiramiz: 5 × 3 = 15 = 1111₂ ✓. Ikkilikda jadval kerak emas: 1 — sonni yoz, 0 — nol.");
+    await ui.say("elder", "Tekshiruv: 5 × 3 = 15 = 1111₂ ✓. Ikkilikda jadval kerak emas: raqam 1 — surilgan sonni yoz, 0 — qator boʻsh.");
   }
 
   // 6.3: mashq — surish yoki ko'paytirish
@@ -85,7 +85,7 @@
     const host = ui.h("div", { class: "mb-host" });
     el.append(host);
     host.replaceChildren(common.mulBlock([{ text: task.a }, { text: "× " + task.b }, { cls: "line" }]));
-    ui.bubble("elder", "Koʻpaytir! Javobni tugmalar bilan yoz.");
+    ui.bubble("elder", "Koʻpaytir. Javobni tugmalar bilan yoz.");
     const x = S.fromBase(task.a, 2);
     const y = S.fromBase(task.b, 2);
     const { m } = mulRows(task.a, task.b);
@@ -124,7 +124,7 @@
   async function stage3() {
     await shift();
     await columns();
-    await ui.say("elder", `Endi oʻzing koʻpaytir. ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta misol — ikkilikda koʻpaytirish.`);
     await practice.exercises({
       next: (prev, correct, tier) => amal2.makeMulTask(prev, undefined, tier),
       run: mulTask,

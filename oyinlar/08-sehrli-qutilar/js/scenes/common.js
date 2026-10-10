@@ -59,7 +59,7 @@
           boxHost.innerHTML = "";
           table.finish("robot");
           sound.play("retry");
-          ui.bubble("elder", "Oxirgi toshni robot oldi — robot yutdi!");
+          ui.bubble("elder", "Oxirgi toshni robot oldi — robot yutdi.");
           await ui.sleep(1200);
           return { history, won: true };
         }
@@ -75,7 +75,7 @@
           table.finish("me");
           sound.play("win");
           ui.pose("apprentice", "happy", 900);
-          ui.bubble("elder", "Oxirgi toshni sen olding — sen yutding!");
+          ui.bubble("elder", "Oxirgi toshni sen olding — sen yutding.");
           await ui.sleep(1200);
           return { history, won: false };
         }
@@ -92,8 +92,8 @@
     view.set(state, VISIBLE);
     for (const step of history) view.highlight(step.n);
     ui.bubble("elder", won
-      ? "Robot yutdi! Ishlatgan munchoqlaridan bittadan qoʻshamiz."
-      : "Robot yutqazdi. Ishlatgan munchoqlaridan bittadan olamiz.");
+      ? "Robot yutdi — mukofot: har yurishda ishlatilgan munchoqdan bittadan qoʻshiladi."
+      : "Robot yutqazdi — jazo: har yurishda ishlatilgan munchoqdan bittadan olinadi.");
     await ui.settle((done) => {
       ui.control().append(ui.button(won ? "Mukofot ber" : "Munchoq ol", () => { ui.clearControl(); done(); }, "big"));
     });

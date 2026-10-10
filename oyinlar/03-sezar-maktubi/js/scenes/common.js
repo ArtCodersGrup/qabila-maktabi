@@ -1,5 +1,6 @@
 // So'zni ochish/shifrlash va mashq sikli (QOIDALAR 4.4, 4.5) — umumiy practice.js ustida:
 // bosqichga qarab 4 / 5 / 6 ta to'g'ri javob, yulduzlar, seriya, qiyin rejim.
+// 2026-10-10: berilgan kalit shogird qog'ozida emas, ish zonasida yoziladi (kattalar ko'rinishi uchun).
 (function (root) {
   "use strict";
 
@@ -31,6 +32,7 @@
       tbl.setKey(key);
       box.append(ui.h("div", { class: "blind-note", text: `Kalit: ${key} · pastki qator yashirin` }));
     } else {
+      box.append(ui.h("div", { class: "blind-note", text: `Berilgan kalit: ${key}` }));
       caesarUi.keyControl(box, tbl);
     }
     const slots = caesarUi.wordSlots(box, shown);
@@ -69,10 +71,10 @@
           hidden = false;
           tbl.setBlind(false);
           slots.markWrong(wrong);
-          ui.bubble("elder", "↻ Jadvalning pastki qatorini ochdim. Belgilangan harflarni qaytadan top.");
+          ui.bubble("elder", "↻ Jadvalning pastki qatori ochildi. Belgilangan harflarni qaytadan top.");
         } else if (tbl.getKey() !== key) {
           slots.clearAll();
-          ui.bubble("elder", `Jadval kaliti ${tbl.getKey()} emas, ${key} boʻlishi kerak.`);
+          ui.bubble("elder", `↻ Jadval kaliti ${tbl.getKey()} emas, ${key} boʻlishi kerak.`);
         } else {
           slots.markWrong(wrong);
           ui.bubble("elder", "↻ Belgilangan harflarni qaytadan top.");
@@ -93,8 +95,6 @@
       need,
       next,
       run: (ex) => {
-        ui.paper(String(ex.key));
-        ui.raisePaper(true);
         ui.bubble("elder", question(ex));
         return solveWord({ plain: caesar.tokenize(ex.word), key: ex.key, mode, tbl, blind: ex.blind });
       },

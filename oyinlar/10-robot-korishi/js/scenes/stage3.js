@@ -6,10 +6,10 @@
   const { vision, ui, sound, art, visionUi, practice, common } = QK;
 
   const SCENES = [
-    { art: "camera", lines: ["Telefon kamerasi yuzni shunday topadi: kataklar, belgilar va taqqoslash."] },
-    { art: "roadsign", lines: ["Mashina yoʻl belgisini oʻqiydi.", "Lekin qor yoki soya tushsa, piksellar oʻzgaradi va u adashishi mumkin."] },
-    { art: "xray", lines: ["Shifokorga rasmdagi shubhali joyni koʻrsatib beradi.", "Oxirgi qarorni baribir shifokor qabul qiladi."] },
-    { art: "robot", lines: ["Koʻrish — bu vazifa. Uni qoida bilan ham, misol bilan ham yechsa boʻladi.", "Bugungi dasturlar belgilarni oʻzi topadi — bu keyingi oʻyinda."] },
+    { art: "camera", lines: ["Qayerda uchraydi: telefon kamerasi yuzni piksellardan belgilar ajratib, taqqoslab topadi."] },
+    { art: "roadsign", lines: ["Avtomobil yoʻl belgisini taniydi. Qor yoki soya tushsa, piksellar oʻzgaradi va u adashishi mumkin."] },
+    { art: "xray", lines: ["Tibbiyotda dastur rentgendagi shubhali joyni belgilaydi. Oxirgi qarorni shifokor qabul qiladi."] },
+    { art: "robot", lines: ["Zamonaviy dasturlar belgilarni qoʻlda emas, misollardan oʻzi topadi — neyron tarmoq yordamida.", "Bu haqda — «Koʻp qatlamli tarmoq» oʻyinida."] },
   ];
 
   const TOP = 3; // moslik ustunchalari: eng o'xshash uchtasi (oltitasi telefonda sig'maydi)
@@ -26,8 +26,8 @@
     const list = visionUi.scores(el);
     list.set(vision.bestMatch(original).list.slice(0, TOP), name);
     feature.set(original);
-    await ui.say("elder", `Mana toza rasm: robot uni ${name} deb tanidi — 36 tadan 36 ta mos.`);
-    ui.bubble("elder", "Endi rasmni bir katak oʻngga suramiz. «Sur»ni bos.");
+    await ui.say("elder", `Toza rasm: robot uni ${name} deb tanidi — 36 / 36 katak mos.`);
+    ui.bubble("elder", "Endi rasmni bir katak oʻngga sur: «Sur»ni bos.");
     await ui.settle((done) => {
       ui.control().append(ui.button("Sur ▶︎", () => { ui.clearControl(); done(); }, "big"));
     });
@@ -41,11 +41,11 @@
     await ui.say("elder", `Koʻzga deyarli bir xil, lekin mosliklar tushib ketdi: eng yaxshisi ${best.score} ta.`);
     await ui.say("elder", best.name === name
       ? "Robot uchun surilgan rasm — butunlay boshqa sonlar."
-      : `Robot endi uni ${best.name} deb oʻylayapti! Uning uchun surilgan rasm — butunlay boshqa sonlar.`);
+      : `Robot endi uni ${best.name} deb oʻylayapti. Uning uchun surilgan rasm — butunlay boshqa sonlar.`);
     await ui.say("elder", `Endi belgiga qaraymiz: boʻyalgan kataklar ${vision.filled(original)} ta edi, endi ${vision.filled(moved)} ta — deyarli oʻzgarmadi.`);
     el.append(common.answerLine(`Belgi boʻyicha javob: ${vision.byFeature(moved)}`));
     sound.play("correct");
-    await ui.say("elder", "Belgi — rasmdagi muhim xususiyat. U surilganda ham saqlanadi.");
+    await ui.say("elder", "Belgi (xususiyat) — rasmdan hisoblangan son, masalan boʻyalgan kataklar soni. U surilganda ham saqlanadi.");
   }
 
   const METHOD_LABELS = { shablon: "Faqat shablon", belgi: "Faqat belgi", ikkalasi: "Ikkalasi ham", hech: "Hech biri" };
@@ -102,7 +102,7 @@
 
   async function stage3() {
     await shiftDemo();
-    await ui.say("elder", `Endi oʻzing ayt: qaysi usul ishlaydi? ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta oʻzgargan rasm — qaysi usul toʻgʻri javob beradi.`);
     await practice.exercises({
       next: (prev, correct, tier) => vision.makeMethodTask(prev, null, tier),
       run: methodTask,

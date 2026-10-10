@@ -9,10 +9,8 @@
     await U.keyboardCheck();
     const el = common.box(false);
     el.append(ui.h("div", { class: "story-art", html: QK.gameArt.boxes() }));
-    await ui.say("elder", "Kompyuter qiymatni eslab qolishi uchun unga joy kerak.");
-    await ui.say("elder", "Bu joy — quti. Qutining yorligʻi bor: nomi. Ichidagisi esa almashib turadi.");
-    await ui.say("apprentice", "Demak nom bir xil qolib, ichidagi oʻzgaradimi?");
-    await ui.say("elder", "Ha. Shuning uchun ularni oʻzgaruvchi deyishadi.");
+    await ui.say("elder", "Maqsad: oʻzgaruvchi, qiymat berish (=), kuzatuv jadvali va input().");
+    await ui.say("elder", "Oʻzgaruvchi — xotiradagi nomli quti: nomi oʻzgarmaydi, ichidagi qiymat almashib turadi.");
   }
 
   // Ko'rsatish: qadam-baqadam — qutilar to'ladi
@@ -21,13 +19,13 @@
     const el = common.box();
     const step = U.stepper({ code });
     el.append(step.el);
-    ui.bubble("elder", "⏭ Qadam ni bosib bor: har safar bitta buyruq bajariladi.");
+    ui.bubble("elder", "«⏭ Qadam»ni bos: har bosishda bitta buyruq bajariladi.");
     await ui.settle((done) => {
       ui.control().append(ui.button("⏭ Qadam", () => {
         if (!step.step()) { ui.clearControl(); done(); }
       }, "big"));
     });
-    await ui.say("elder", "Uchinchi satrda a qutisi yangi qiymat oldi: 2 emas, 6.");
+    await ui.say("elder", "3-satrda a yangi qiymat oldi: 2 oʻrniga 6. Eski qiymat oʻchdi.");
   }
 
   // x = x + 1 — eng ko'p savol tug'diradigan satr
@@ -38,8 +36,8 @@
     const out = U.output({ title: "Chiqish" });
     out.lines(K.run(code).output);
     el.append(out.el);
-    await ui.say("elder", "x = x + 1 — bu tenglik emas. Avval oʻng tomon hisoblanadi: 5 + 1.");
-    await ui.say("elder", "Keyin natija qutiga qoʻyiladi. x += 10 — shuning qisqa yozuvi.");
+    await ui.say("elder", "x = x + 1 — tenglama emas. Avval oʻng tomon hisoblanadi: 5 + 1 = 6.");
+    await ui.say("elder", "Keyin natija x ga yoziladi. x += 10 — x = x + 10 ning qisqa yozuvi.");
   }
 
   async function definition() {
@@ -47,15 +45,15 @@
     el.append(ui.h("div", { class: "formula-box" },
       ui.h("div", { class: "formula-row kod", text: "nom = qiymat" }),
       ui.h("div", { class: "formula-row", text: "qiymat nomli qutiga qoʻyiladi" }),
-      ui.h("div", { class: "formula-row", text: "= belgisi tenglik emas, qoʻyish" })));
-    await ui.say("elder", "Nom — sen tanlaysan. Qiymat — kompyuter eslab qoladi.");
+      ui.h("div", { class: "formula-row", text: "= — tenglik emas, qiymat berish" })));
+    await ui.say("elder", "Nomni sen tanlaysan; qiymatni kompyuter xotirada saqlaydi.");
   }
 
   async function stage1() {
     await stepDemo();
     await plusOne();
     await definition();
-    await ui.say("elder", `Endi oʻzing ayt: dastur nima chiqaradi? ${QK.practice.need()} ta toʻgʻri javob kerak.`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta dastur — nima chiqarishini ayt.`);
     await practice.exercises({
       next: (prev, correct, tier) => L.resultTask(Math.random, prev, tier),
       run: (task) => common.resultExercise(task),

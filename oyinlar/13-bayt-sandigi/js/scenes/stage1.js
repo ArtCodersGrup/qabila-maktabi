@@ -11,9 +11,8 @@
     ui.clearControl();
     ui.paper("");
     ui.work().append(ui.h("div", { class: "story-art", html: art.computer() }));
-    await ui.say("elder", "Qabilamizga kompyuter keldi!");
-    await ui.say("apprentice", "U harflarni qanday eslab qoladi?");
-    await ui.say("elder", "Kichik chiroqlar — bitlar bilan. Xuddi «Qabila chiroqlari» oʻyinidagi chiroqlar kabi!");
+    await ui.say("elder", "Maqsad: nega 1 bayt = 8 bit ekanini tushunish va matn hajmini bayt hamda Kbaytda oʻlchash.");
+    await ui.say("elder", "Kalit gʻoya: kompyuter har belgini bitlar naqshi bilan saqlaydi. N bit bilan 2ᴺ xil naqsh yasash mumkin.");
   }
 
   const QUESTIONS = [
@@ -69,31 +68,31 @@
       });
 
       if (s === 0) {
-        await ui.say("elder", `✓ ${bits} bit — ${bytes.pow2(bits)} xil naqsh. 26 ta harfga yetadi!`);
+        await ui.say("elder", `✓ ${bits} bit — ${bytes.pow2(bits)} xil naqsh, 26 ta harfga yetadi.`);
         await ui.say("elder", "Klaviaturada 26 ta harf tugmasi bor. Oʻ, sh kabi harflar ham shulardan yasaladi.");
       } else if (s === 2) {
-        await ui.say("elder", "✓ Yana 6 bit! 64 xil naqsh 62 ta belgiga hali yetadi.");
+        await ui.say("elder", "✓ Yana 6 bit: 2⁶ = 64 xil naqsh 62 ta belgiga hali yetadi.");
       } else {
-        await ui.say("elder", `✓ ${bits} bit — ${bytes.pow2(bits)} xil naqsh. Yetadi!`);
+        await ui.say("elder", `✓ ${bits} bit — ${bytes.pow2(bits)} xil naqsh, yetadi.`);
       }
     }
 
-    await ui.say("elder", "Klaviaturadagi hamma belgiga 7 bit yetdi.");
+    await ui.say("elder", "Klaviaturadagi 95 ta belgiga 7 bit yetdi: 2⁷ = 128.");
     showBits(8);
     need.textContent = "";
     sound.play("correct");
-    await ui.say("elder", "Lekin kompyuter yaratganlar yana 1 ta zaxira bit qoʻshib, 8 ni tanlashdi.");
-    await ui.say("elder", "8 bit — 1 bayt. Unda 256 xil naqsh bor!");
+    await ui.say("elder", "Lekin muhandislar yana 1 ta zaxira bit qoʻshib, 8 ni tanlashdi.");
+    await ui.say("elder", "8 bit — 1 bayt: 2⁸ = 256 xil naqsh.");
   }
 
   // 5.3: ta'rif — sandiq va formula
   async function definition() {
     const el = common.box(false);
     el.append(bytesUi.chest(null, { bits: "01000010" }));
-    common.formula(el, ["1 bayt = 8 bit", "2 × 2 × 2 × 2 × 2 × 2 × 2 × 2 = 256"]);
-    await ui.say("elder", "Bayt — xotiraning bitta «sandigʻi». Unga 8 ta bit sigʻadi.");
+    common.formula(el, ["1 bayt = 8 bit", "2 × 2 × 2 × 2 × 2 × 2 × 2 × 2 = 2⁸ = 256"]);
+    await ui.say("elder", "Bayt — xotiraning eng kichik manzilli boʻlagi («sandiq»). Unga 8 bit sigʻadi.");
     await ui.say("elder", "Bu — odamlar kelishib olgan qoida. Qadimgi kompyuterlarda 6 va 7 bitli baytlar ham boʻlgan.");
-    await ui.say("elder", "8 — kompyuterga qulay son: 2 × 2 × 2. Shuning uchun hamma 8 ni tanladi.");
+    await ui.say("elder", "8 = 2³ — ikkining darajasi, kompyuterga qulay. Shuning uchun 8 bitli bayt standart boʻldi.");
   }
 
   // 5.4: mashq — bayt ↔ bit
@@ -132,7 +131,7 @@
   async function stage1() {
     await countSets();
     await definition();
-    await ui.say("elder", `Endi oʻzing hisobla: bayt va bit. ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta misol — baytni bitga va bitni baytga oʻtkaz.`);
     await practice.exercises({
       next: (prev, correct, tier) => bytes.makeBitTask(prev, undefined, tier),
       run: bitTask,

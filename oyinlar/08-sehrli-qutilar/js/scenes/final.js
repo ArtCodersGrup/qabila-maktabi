@@ -13,8 +13,8 @@
     ui.pose("elder", "happy", 1200);
     ui.pose("apprentice", "happy", 1200);
     await ui.say("elder", goingOn
-      ? `${s}-bosqich tugadi! Barakalla, keyingisiga oʻtamiz.`
-      : `${s}-bosqich tugadi! Barakalla!`);
+      ? `${s}-bosqich tugadi. Keyingisi — ${s === 1 ? "mukofot va jazo" : "robotni oʻrgatish va strategiya"}.`
+      : `${s}-bosqich tugadi.`);
   }
 
   async function congrats() {
@@ -23,13 +23,13 @@
     sound.play("win");
     ui.pose("elder", "happy", 1500);
     ui.pose("apprentice", "happy", 1500);
-    ui.bubble("elder", "Tabriklayman! Endi sen robotni mukofot bilan oʻrgata olasan!");
+    ui.bubble("elder", "Tayyor: mashina mukofot va jazo orqali qanday oʻrganishini tushuntira olasan.");
     ui.work().append(ui.h("div", { class: "story" },
       ui.h("div", { class: "story-art small", html: art.robot() }),
       ui.h("div", { class: "summary" },
-        ui.h("div", { text: "Har holat uchun quti, har yurish uchun munchoq" }),
-        ui.h("div", { text: "Yutsa — munchoq qoʻshiladi, yutqazsa — olinadi" }),
-        ui.h("div", { text: "Mukofot qanday boʻlsa — xulq shunday" }))));
+        ui.h("div", { text: "Holat → quti, yurish → munchoq rangi" }),
+        ui.h("div", { text: "Yutuq: +1 munchoq, yutqazish: −1 (kamida 1 qoladi)" }),
+        ui.h("div", { text: "Ehtimol = rang ulushi; mukofot xulqni belgilaydi" }))));
     return ui.choice([
       { label: "Qayta oʻynash", value: "replay" },
       { label: "Bosh ekran", value: "home", secondary: true },

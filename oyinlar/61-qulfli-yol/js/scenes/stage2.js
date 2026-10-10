@@ -10,14 +10,14 @@
     const qulf = L.qulfla(x.matn, Math.random);
     const host = common.box(true);
     host.append(common.yol(3), common.quti(qulf));
-    await ui.say("elder", "Endi aynan oʻsha xabar qulflangan qutida yuborildi. Tugun nimani koʻrdi?");
-    await ui.say("apprentice", "Faqat gʻalati belgilar… Hech narsa tushunmadim!");
+    await ui.say("elder", "Endi oʻsha xabar qulflangan qutida — shifrlangan holda yuborildi. Tugun nimani koʻradi?");
+    await ui.say("elder", "Faqat tushunarsiz belgilar: login ham, parol ham oʻqilmaydi.");
     host.append(common.otkritka(x));
-    await ui.say("elder", "Qutini faqat sayt ochadi — u xabarni toʻliq oʻqiydi. Yoʻldagilar esa hech narsa bilmaydi.");
+    await ui.say("elder", "Qutini faqat sayt ochadi va xabarni toʻliq oʻqiydi. Yoʻldagi tugunlar mazmunni bilmaydi.");
     host.innerHTML = "";
     host.append(common.satr("https://kelajagim.uz/kirish"), common.satr("http://kelajagim.uz/kirish"));
-    await ui.say("elder", "Qulfli yoʻl — HTTPS. Manzil «https://» bilan boshlanadi va yonida 🔒 turadi. «http://» — qulfsiz.");
-    await ui.say("elder", "Qulf yana bir narsani tasdiqlaydi: sen aynan shu manzildagi saytga ulanding, soxtasiga emas.");
+    await ui.say("elder", "Atama: qulfli yoʻl — HTTPS: manzil «https://» bilan boshlanadi, yonida 🔒. «http://» — qulfsiz.");
+    await ui.say("elder", `HTTPS yana tasdiqlaydi: sen aynan shu manzildagi saytga ulangansan. Mashq: ${QK.practice.need()} ta savol.`);
   }
 
   async function stage2() {

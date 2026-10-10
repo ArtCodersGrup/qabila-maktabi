@@ -13,8 +13,8 @@
     ui.pose("elder", "happy", 1200);
     ui.pose("apprentice", "happy", 1200);
     await ui.say("elder", goingOn
-      ? `${s}-bosqich tugadi! Barakalla, keyingisiga oʻtamiz.`
-      : `${s}-bosqich tugadi! Barakalla!`);
+      ? `${s}-bosqich tugadi. Keyingisi — ${s === 1 ? "amallar tartibi" : "hisoblaydigan dastur"}.`
+      : `${s}-bosqich tugadi.`);
   }
 
   async function congrats() {
@@ -23,13 +23,13 @@
     sound.play("win");
     ui.pose("elder", "happy", 1500);
     ui.pose("apprentice", "happy", 1500);
-    ui.bubble("elder", "Tabriklayman! Endi kompyuterga hisob-kitobni topshira olasan.");
+    ui.bubble("elder", "Tayyor: //, %, / va amallar tartibini bilib, hisoblaydigan dastur yoza olasan.");
     ui.work().append(ui.h("div", { class: "story" },
       ui.h("div", { class: "story-art", html: QK.gameArt.share(17, 5) }),
       ui.h("div", { class: "summary" },
-        ui.h("div", { text: "// — nechtadan tegdi, % — nechtasi ortdi" }),
-        ui.h("div", { text: "/ doim kasr beradi" }),
-        ui.h("div", { text: "Avval daraja, keyin koʻpaytirish, keyin qoʻshish" }))));
+        ui.h("div", { text: "// — butun boʻlinma, % — qoldiq" }),
+        ui.h("div", { text: "/ doim kasr (float) beradi" }),
+        ui.h("div", { text: "Tartib: ( ) → ** → * / // % → + -" }))));
     return ui.choice([
       { label: "Qayta oʻynash", value: "replay" },
       { label: "Bosh ekran", value: "home", secondary: true },

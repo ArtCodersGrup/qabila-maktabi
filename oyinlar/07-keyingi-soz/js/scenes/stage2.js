@@ -13,9 +13,9 @@
     const ptable = wordsUi.pairTable(el);
     ptable.set(table, ROWS);
     const rline = wordsUi.robotLine(el);
-    await ui.say("elder", "Robot gap yozadi. U «bola» dan boshlaydi va jadvalga qaraydi.");
+    await ui.say("elder", "Model gap yozadi: «bola» dan boshlab, har qadamda jadvalga qaraydi.");
     const first = await common.animateWrite(table, "bola", {}, rline, ptable);
-    await ui.say("elder", `«${first.join(" ")}». Har safar eng koʻp uchragan soʻzni tanladi.`);
+    await ui.say("elder", `«${first.join(" ")}». Har qadamda eng katta chastotali soʻz tanlandi — bu ochkoʻz tanlov.`);
     for (let k = 0; k < 2; k++) {
       ui.bubble("elder", "«Yana yoz»ni bos.");
       await ui.settle((done) => {
@@ -23,7 +23,7 @@
       });
       await common.animateWrite(table, "bola", {}, rline, ptable);
     }
-    await ui.say("elder", "Robot doim bir xil gap yozdi. Zerikarli!");
+    await ui.say("elder", "Natija doim bir xil: ochkoʻz tanlovda tasodif yoʻq.");
   }
 
   // 5.3: tasodif qo'shamiz
@@ -32,7 +32,7 @@
     const ptable = wordsUi.pairTable(el);
     ptable.set(table, ROWS);
     const rline = wordsUi.robotLine(el);
-    await ui.say("elder", "Tasodif qoʻshamiz: koʻp uchragan soʻz koʻproq chiqadi, lekin boshqasi ham chiqishi mumkin.");
+    await ui.say("elder", "Endi soʻz chastotasiga mos ehtimol bilan tanlanadi: 3 marta kelgan soʻz 1 marta kelgandan 3 barobar koʻp chiqadi.");
     const seen = [];
     for (let k = 0; k < 3; k++) {
       ui.bubble("elder", k === 0 ? "«Yoz»ni bos." : "Yana bos — boshqacha chiqishi mumkin.");
@@ -44,7 +44,7 @@
       seen.push(sentence.join(" "));
     }
     el.append(common.line(seen.join(" · ")));
-    await ui.say("elder", "Gaplar har xil chiqdi! Chatbot ham keyingi soʻzni shunday — ehtimol bilan tanlaydi.");
+    await ui.say("elder", "Gaplar har xil chiqdi. Chatbot ham keyingi soʻzni shunday — ehtimol bilan tanlaydi.");
   }
 
   // 5.5: mashq — "Robot har safar eng ko'p uchragan so'zni tanlasa, qaysi gap chiqadi?" (4 ta gap).
@@ -53,7 +53,7 @@
     const el = common.box(true);
     const ptable = wordsUi.pairTable(el);
     ptable.set(words.table(task.sentences), task.rows);
-    ui.bubble("elder", `Robot «${task.start}» dan boshlaydi va har safar eng koʻp uchragan soʻzni tanlaydi. Qaysi gap chiqadi?`);
+    ui.bubble("elder", `Boshlanish — «${task.start}», tanlov — ochkoʻz (eng katta chastota). Qaysi gap chiqadi?`);
     return practice.tries({
       setup: (submit) => wordsUi.sentenceButtons(task.options, submit),
       check: (index) => index === task.answer,
@@ -73,11 +73,11 @@
     const table = words.table(words.BASE);
     await greedyDemo(table);
     await randomDemo(table);
-    await ui.say("elder", `Endi oʻzing ayt: eng koʻpini tanlaydigan robot qaysi gapni yozadi? ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta savol — ochkoʻz tanlovda qaysi gap chiqadi.`);
     await practice.exercises({
       next: (prev, correct, tier) => words.makeGreedyTask(null, prev, null, tier),
       run: greedyTask,
-      praise: (task) => `Robot har safar eng koʻpini tanladi: «${task.options[task.answer].join(" ")}».`,
+      praise: (task) => `Ochkoʻz tanlov: «${task.options[task.answer].join(" ")}».`,
     });
   }
 

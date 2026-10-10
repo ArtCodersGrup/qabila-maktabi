@@ -13,9 +13,8 @@
     ui.clearControl();
     ui.paper("");
     ui.work().append(ui.h("div", { class: "story-art", html: art.calc() }));
-    await ui.say("elder", "Kompyuter faqat 0 va 1 bilan hisoblaydi.");
-    await ui.say("apprentice", "Unda 1 + 1 nima boʻladi? 2 degan raqam yoʻq-ku!");
-    await ui.say("elder", "Ana shuni oʻrganamiz!");
+    await ui.say("elder", "Maqsad: ikkilikda ustunda qoʻshish, ayirish va koʻpaytirish.");
+    await ui.say("elder", "Kalit gʻoya: qoidalar oʻnlikdagidek, faqat koʻchish 10 da emas, 2 da boʻladi.");
   }
 
   // Cho'tda "+1" yoki "−1": natija satri yangilanadi. clicks — nechta bosish kerak
@@ -61,8 +60,8 @@
   async function additionTable() {
     const el = common.box(false);
     common.formula(el, ["0 + 0 = 0", "0 + 1 = 1", "1 + 1 = 10", "1 + 1 + 1 = 11"]);
-    await ui.say("elder", "Ikkilikda qoʻshish jadvali — atigi 4 qator!");
-    await ui.say("elder", "Yigʻindi 2 boʻlsa — 0 yozamiz, 1 ni koʻchiramiz. 3 boʻlsa — 1 yozamiz, 1 ni koʻchiramiz.");
+    await ui.say("elder", "Ikkilikda qoʻshish jadvali — atigi 4 qator.");
+    await ui.say("elder", "Ustundagi yigʻindi 2 = 10₂ boʻlsa — 0 yoziladi, 1 koʻchadi. 3 = 11₂ boʻlsa — 1 yoziladi, 1 koʻchadi.");
   }
 
   // Maslahat: ko'chishlar taxtada
@@ -74,7 +73,7 @@
   function addTask(task) {
     const el = common.box(true);
     const board = sanoqUi.ustun(el, { a: task.a, b: task.b, op: "+", base: 2, width: task.answer.length + 1 });
-    ui.bubble("elder", "Qoʻsh! Javobni pastdagi tugmalar bilan yoz.");
+    ui.bubble("elder", "Qoʻsh. Javobni pastdagi tugmalar bilan yoz.");
     const x = S.fromBase(task.a, 2);
     const y = S.fromBase(task.b, 2);
     return sanoqUi.digitTries({
@@ -96,16 +95,16 @@
   async function stage1() {
     await chotiDemo({
       start: 1, op: 1, clicks: 2,
-      first: "Choʻtda 1 bor. «+1» ni bos — 1 + 1 nima boʻladi?",
-      after: ["1 + 1 = 10₂! Ikkita munchoq — keyingi simga oʻtdi. Yana bos!", "10₂ + 1 = 11₂. Endi bu — uch."],
+      first: "Choʻtda 1. Ikkilikda 2 raqami yoʻq — «+1» ni bosib, 1 + 1 qanday yozilishini koʻr.",
+      after: ["1 + 1 = 10₂: birlar xonasi toʻldi, 1 keyingi xonaga koʻchdi. Yana bos.", "10₂ + 1 = 11₂ = 3₁₀."],
     });
     await additionTable();
     await guided({
       a: "1011", b: "110", op: "+", steps: S.stepsAdd("1011", "110", 2),
-      intro: "Endi ustunda qoʻshamiz: 1011₂ + 110₂. Oʻngdan boshlaymiz!",
+      intro: "Ustunda qoʻshamiz: 1011₂ + 110₂. Oʻngdan chapga, xonama-xona.",
     });
-    await ui.say("elder", "1011₂ + 110₂ = 10001₂. Tekshiramiz: 11 + 6 = 17 ✓");
-    await ui.say("elder", `Endi oʻzing qoʻsh. ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", "1011₂ + 110₂ = 10001₂. Tekshiruv oʻnlikda: 11 + 6 = 17 ✓");
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta misol — ikkilikda qoʻshish.`);
     await QK.practice.exercises({
       next: (prev, correct, tier) => amal2.makeAddTask(prev, undefined, tier),
       run: addTask,

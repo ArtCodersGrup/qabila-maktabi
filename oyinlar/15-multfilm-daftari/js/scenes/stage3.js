@@ -6,9 +6,9 @@
   const { video, ui, sound, art, videoUi, practice, common } = QK;
 
   const SCENES = [
-    { art: "film", lines: [`Siqilmagan film: 1 daqiqasi — ${video.REAL.minuteGb} Gbaytdan koʻp.`, "Siqilgan 2 soatlik kino — 2–4 Gbayt."] },
-    { art: "speaker", lines: ["Video — kadrlar va ovoz.", "Ovoz ham sonlarga aylantirib saqlanadi."] },
-    { art: "stream", lines: ["Internetda video koʻrganingda ham asosan oʻzgargan joylar keladi.", "Shuning uchun tinch video tezroq yuklanadi."] },
+    { art: "film", lines: [`Qayerda uchraydi: siqilmagan 1 daqiqa video — ${video.REAL.minuteGb} Gbaytdan koʻp.`, "MP4 (H.264) bilan siqilgan 2 soatlik kino — 2–4 Gbayt."] },
+    { art: "speaker", lines: ["Video fayl — kadrlar va ovoz. Ovoz ham sonlar ketma-ketligi qilib saqlanadi."] },
+    { art: "stream", lines: ["Onlayn video (YouTube) ham asosan oʻzgargan joylarni yuboradi.", "Shuning uchun tinch sahna kamroq trafik oladi."] },
   ];
 
   // 6.1: bola 2-kadrdagi o'zgargan kataklarni topadi
@@ -18,7 +18,7 @@
     const found = new Set();
     const count = common.line(`Topildi: 0 / ${changed.size}`);
     let frames = null;
-    ui.bubble("elder", "Quti biroz surildi. 2-kadrda oʻzgargan kataklarni bos!");
+    ui.bubble("elder", "Quti biroz surildi. 2-kadrda oʻzgargan kataklarni bos.");
     await ui.settle((done) => {
       frames = videoUi.pair(el, video.DEMO_A, video.DEMO_B, {
         size: "demo",
@@ -40,14 +40,14 @@
       el.append(count);
     });
     sound.play("correct");
-    await ui.say("elder", `Butun kadr — ${video.CELLS} piksel. Oʻzgargani — faqat ${changed.size} ta!`);
+    await ui.say("elder", `Kadr — ${video.CELLS} piksel, oʻzgargani — ${changed.size} ta. Qolganini qayta saqlash shart emas.`);
   }
 
   async function definition() {
     const el = common.box(false);
     common.formula(el, ["1-kadr — toʻliq", "keyingi kadrlar — faqat oʻzgargani"]);
     await ui.say("elder", "Video siqilganda 1-kadr toʻliq saqlanadi. Keyingilarida — faqat oʻzgargan piksellar.");
-    await ui.say("elder", "Siqilmasa 2 soatlik kino 1000 Gbaytga yaqin boʻlardi. Siqilgani — bir necha Gbayt.");
+    await ui.say("elder", "Siqilmagan 2 soatlik kino ~1000 Gbayt, siqilgani — bir necha Gbayt.");
   }
 
   // 6.3: mashq — nechta o'zgardi, nechta tejaldi, qaysi video ko'proq siqiladi
@@ -90,7 +90,7 @@
     }
     // To'rt videodan bittasi: eng ko'p yoki eng kam siqiladigani (4 variant)
     const most = task.ask === "most";
-    ui.bubble("elder", most ? "Toʻrtta video. Qaysi biri ENG KOʻP siqiladi?" : "Toʻrtta video. Qaysi biri ENG KAM siqiladi?");
+    ui.bubble("elder", most ? "Qaysi video ENG KOʻP siqiladi?" : "Qaysi video ENG KAM siqiladi?");
     return practice.tries({
       setup: (submit) => videoUi.choiceButtons(task.options.map((o) => o.label), submit, "wide"),
       check: (value) => value === task.answer,
@@ -121,7 +121,7 @@
   async function stage3() {
     await findChanges();
     await definition();
-    await ui.say("elder", `Endi oʻzing top: siqish qanday ishlaydi. ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta — oʻzgargan piksellar, tejash va siqiluvchanlik.`);
     await practice.exercises({
       next: (prev, correct, tier) => video.makeCompressTask(prev, undefined, tier),
       run: compressTask,

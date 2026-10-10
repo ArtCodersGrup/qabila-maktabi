@@ -6,9 +6,9 @@
   const { words, ui, art, wordsUi, practice, common } = QK;
 
   const SCENES = [
-    { art: "books", lines: ["Chatbotlar millionlab kitob va sahifani oʻqiydi.", "Ular ham soʻz juftliklarini sanaydi — faqat jadvali juda katta."] },
-    { art: "thinking", lines: ["Robot maʼnoni bilmaydi.", "Shuning uchun baʼzan ishonch bilan notoʻgʻri javob yozadi."] },
-    { art: "check", lines: ["Uning javobini doim tekshirish kerak.", "Kitobdan yoki bilgan odamdan soʻra."] },
+    { art: "books", lines: ["Qayerda uchraydi: chatbotlar milliardlab soʻzli korpusda oʻqitiladi.", "Ular ham keyingi soʻzni bashorat qiladi, lekin faqat oldingi soʻzga emas — butun matnga qaraydi."] },
+    { art: "thinking", lines: ["Model faktni tekshirmaydi — ehtimoli katta matnni yozadi.", "Shuning uchun baʼzan ishonch bilan notoʻgʻri javob beradi."] },
+    { art: "check", lines: ["Muhim javobni ishonchli manbadan tekshir: darslik, rasmiy sayt yoki mutaxassis."] },
   ];
 
   // 6.1: matn qo'shilsa jadval boyiydi
@@ -17,7 +17,7 @@
     const view = wordsUi.corpus(el, words.BASE);
     const ptable = wordsUi.pairTable(el);
     ptable.set(words.table(words.BASE), ["ovchi", "bola"]);
-    await ui.say("elder", "Robotga koʻproq gap beramiz. Jadval qanday oʻzgaradi?");
+    await ui.say("elder", "Korpusni kattalashtiramiz. Jadval qanday oʻzgaradi?");
     ui.bubble("elder", "«Matn qoʻsh»ni bos.");
     await ui.settle((done) => {
       ui.control().append(ui.button("Matn qoʻsh", () => { ui.clearControl(); done(); }, "big"));
@@ -30,7 +30,7 @@
     await ui.say("elder", "Jadval boyidi: yangi soʻzlar va yangi juftliklar paydo boʻldi.");
     const rline = wordsUi.robotLine(el);
     await common.animateWrite(words.table(words.ALL), "bola", { random: true }, rline, ptable);
-    await ui.say("elder", "Endi robot yangi gaplar ham yoza oladi. Koʻproq matn — koʻproq gap.");
+    await ui.say("elder", "Model endi yangi gaplar ham yoza oladi: korpus qancha katta boʻlsa, imkoniyat shuncha koʻp.");
   }
 
   // 6.2: robot ma'noni bilmaydi
@@ -39,7 +39,7 @@
     ui.clearWork();
     ui.clearControl();
     ui.work().append(ui.h("div", { class: "story-art", html: art.story("thinking") }));
-    await ui.say("elder", "Robot «olov» nimaligini bilmaydi. U olovni koʻrmagan, issiqligini sezmagan.");
+    await ui.say("elder", "Model «olov» nimaligini bilmaydi — u olovni koʻrmagan va issiqligini sezmagan.");
     await ui.say("elder", "U faqat shuni biladi: «olov» dan keyin koʻpincha «yoqdi» kelgan.");
   }
 
@@ -52,7 +52,7 @@
     task.options.forEach((s) => [s[0], s[1]].forEach((w) => { if (table[w] && !need.includes(w)) need.push(w); }));
     const ptable = wordsUi.pairTable(el);
     ptable.set(table, need);
-    ui.bubble("elder", "Jadvalga qara: robot qaysi gapni yoza oladi?");
+    ui.bubble("elder", "Jadvalga qara: model qaysi gapni yoza oladi?");
     return practice.tries({
       setup: (submit) => wordsUi.sentenceButtons(task.options, submit),
       check: (index) => index === task.answer,
@@ -96,7 +96,7 @@
   async function stage3() {
     await moreText();
     await meaning();
-    await ui.say("elder", `Endi oʻzing javob ber. ${QK.practice.need()} ta toʻgʻri javob kerak!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta savol — jadval boʻyicha model nimani yoza oladi.`);
     await practice.exercises({
       next: (prev, correct, tier) => words.makeStage3Task(null, correct, prev, null, tier),
       run: (task) => (task.type === "sentence" ? sentenceTask(task) : followTask(task)),

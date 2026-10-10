@@ -12,9 +12,9 @@
     host.append(BU.note("Python matni va unga mos bloklar."));
     const e = common.tarjimaEkran(host, k, true);
     e.qur.qoy(k.yechim);
-    await ui.say("elder", "Endi teskarisi: Python matni berilgan, bloklarni sen yigʻasan.");
-    await ui.say("elder", "Har qator — bitta blok. Ichkariga surilgan qatorlar — blok ichida turadi.");
-    await ui.say("elder", "Takror soni 3 dan boshlanadi: sonni bosib oʻzgartirasan.");
+    await ui.say("elder", "Teskari yoʻnalish: Python matnidan bloklarni yigʻasan.");
+    await ui.say("elder", "Har qator — bitta blok. Otstupli qatorlar oʻzidan yuqoridagi blok ichida turadi.");
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta dastur. Takror soni 3 dan boshlanadi — sonni bosib oʻzgartir.`);
   }
 
   async function stage3() {

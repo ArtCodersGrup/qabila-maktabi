@@ -10,7 +10,7 @@
     el.append(common.note("472 sonining raqamlarini birma-bir ajratamiz:"));
     el.append(common.digitTable(L.digitSteps(472)));
     await ui.say("elder", "n % 10 — oxirgi raqamni beradi. n // 10 — oxirgisini olib tashlaydi.");
-    await ui.say("elder", "Son nolga aylanguncha takrorlansa, hamma raqam qoʻlga tushadi.");
+    await ui.say("elder", "Buni n nolga aylanguncha takrorlasak, barcha raqamlar ajraladi.");
 
     const code = "n = 472\nwhile n > 0:\n    print(n % 10)\n    n = n // 10";
     const el2 = common.box();
@@ -23,11 +23,11 @@
 
   async function stage3() {
     await digits();
-    await ui.say("elder", "Endi navbat senga. Bu masalalar olimpiadalarda ham uchraydi.");
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta topshiriq — xatoni tuzatish yoki dastur yozish. Bunday masalalar olimpiadalarda uchraydi.`);
     await practice.exercises({
       next: (prev, correct, tier) => L.stage3Task(Math.random, prev, tier),
       run: (task) => common.stage3Exercise(task),
-      praise: (task) => (task.type === "kod-yoz" ? "Dastur hamma sinovdan oʻtdi." : "Xatoni topding."),
+      praise: (task) => (task.type === "kod-yoz" ? "Dastur hamma sinovdan oʻtdi." : "Xato tuzatildi."),
     });
   }
 

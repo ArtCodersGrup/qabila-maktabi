@@ -1,4 +1,5 @@
 // 3-bosqich: eng kamida nechta harf kerak (DIZAYN.md, 6-bo'lim).
+// 2026-10-10: 5–8 ohangi; shogird qog'ozi o'rniga ish zonasida shart kartasi (uzunlik, odamlar soni).
 (function (root) {
   "use strict";
 
@@ -49,15 +50,13 @@
     ui.setCompact(false);
     ui.clearWork();
     ui.clearControl();
-    ui.paper(common.paperText(type, i));
-    ui.raisePaper(true);
     const crowd = ui.h("div", { class: "people" });
     const info = ui.h("div", { class: "people-info" });
     const tools = ui.h("div");
-    ui.work().append(crowd, info, tools);
+    ui.work().append(common.condCard({ len: common.lenText(type, i), people }), crowd, info, tools);
     renderCrowd(crowd, null, people, i, type, 0);
-    await ui.say("elder", `Qabilada ${people} ta odam bor. Har biriga boshqa-boshqa ism kerak.`);
-    ui.bubble("elder", `Ism ${condText(type, i)}. «+» ni bosib, eng kamida nechta harf kerakligini top.`);
+    await ui.say("elder", `Teskari masala: ${people} ta odamning har biriga boshqa ism (kod) kerak. Alifboda kamida nechta harf boʻlishi shart?`);
+    ui.bubble("elder", `Ism ${condText(type, i)}. «+» bilan harflar sonini oshirib, yetadigan eng kichik sonni top.`);
     const answer = await ui.settle((done) => {
       let c = null;
       c = ui.counter(tools, {
@@ -75,7 +74,7 @@
     });
     sound.play("correct");
     ui.pose("apprentice", "happy", 900);
-    await ui.say("elder", `${answer - 1} ta harf yetmadi, ${answer} ta yetdi. Demak, eng kamida ${answer} ta.`);
+    await ui.say("elder", `${answer - 1} ta harf — kam, ${answer} ta — yetadi. Javob: a = ${answer}.`);
     return answer;
   }
 
@@ -83,10 +82,9 @@
   async function ruleStage3() {
     ui.setCompact(false);
     ui.clearWork();
-    ui.raisePaper(false);
     ui.work().append(stepsBox("5 ta odam, ism aynan 2 harfli:", 5, 2, "exact"));
-    await ui.say("elder", "Qoida: harflar sonini 1 dan boshlab bittadan oshiramiz.");
-    await ui.say("elder", "Soʻzlar soni odamlar sonidan kam boʻlmay qolgan birinchi son — javob.");
+    await ui.say("elder", "Usul: a = 1, 2, 3, … ni ketma-ket sinaymiz va har safar soʻzlar soni N ni hisoblaymiz.");
+    await ui.say("elder", "N ≥ odamlar soni boʻlgan birinchi a — javob.");
   }
 
   // 6.3: mashq
@@ -94,11 +92,9 @@
     show(ex) {
       ui.setCompact(false);
       ui.clearWork();
-      ui.paper(common.paperText(ex.type, ex.i));
-      ui.raisePaper(true);
-      ui.bubble("elder", `${ex.people} ta odam bor, ism ${condText(ex.type, ex.i)}. Eng kamida nechta harf kerak?`);
+      ui.bubble("elder", `${ex.people} ta odam, ism ${condText(ex.type, ex.i)}. Alifboda eng kamida nechta harf kerak?`);
       const crowd = ui.h("div", { class: "people" });
-      ui.work().append(crowd);
+      ui.work().append(common.condCard({ len: common.lenText(ex.type, ex.i), people: ex.people }), crowd);
       renderCrowd(crowd, null, ex.people, ex.i, ex.type, 0);
     },
     // Maslahat javobni yozib bermaydi (QOIDALAR 4.3): "Hammaga yetdi ✓" yozuvi yo'q — faqat asbob.
@@ -116,7 +112,7 @@
         onChange: (a) => renderCrowd(crowd, null, ex.people, ex.i, ex.type, a),
       });
     },
-    praise: (ex) => `${ex.answer - 1} ta harf yetmaydi, ${ex.answer} ta yetadi.`,
+    praise: (ex) => `${ex.answer - 1} ta harf — kam, ${ex.answer} ta — yetadi.`,
     solution(ex) {
       ui.clearWork();
       ui.work().append(stepsBox(`${ex.people} ta odam, ism ${condText(ex.type, ex.i)}:`, ex.people, ex.i, ex.type));
@@ -126,9 +122,9 @@
   async function stage3() {
     await peopleDemo(5, 2, "upto");
     await peopleDemo(5, 2, "exact");
-    await ui.say("elder", "Savol deyarli bir xil, lekin javoblar har xil: 2 va 3. «Aynan» va «gacha» soʻzlariga diqqat qil!");
+    await ui.say("elder", "Shart deyarli bir xil, javob har xil: 2 va 3. «Aynan» va «gacha» — boshqa-boshqa masala.");
     await ruleStage3();
-    await ui.say("elder", `Endi oʻzing top! ${QK.practice.need()} ta toʻgʻri javob — bosqich tugaydi.`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta misol. Shartdagi «aynan» yoki «gacha» ga qara.`);
     await common.exercises(3, stage3Spec);
   }
 

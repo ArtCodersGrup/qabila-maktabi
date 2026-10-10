@@ -23,7 +23,7 @@
       }, "big"));
       setTimeout(() => table.focus(), 50);
     });
-    await ui.say("elder", "Mana shu — kuzatuv jadvali. Dasturchi qogʻozda shunday tekshiradi.");
+    await ui.say("elder", "Bu — kuzatuv jadvali: har satrdan keyingi qiymatlar. Dasturchilar xatoni shunday qidiradi.");
   }
 
   // Almashtirish: uchinchi quti orqali va Pythonning qisqa yo'li
@@ -32,13 +32,13 @@
     const step = U.stepper({ code: L.SWAP_LONG });
     el.append(common.note("a va b qiymatlarini almashtiramiz. Uchinchi quti kerak boʻladi."));
     el.append(step.el);
-    ui.bubble("elder", "⏭ Qadam: c qutisi nega kerakligini koʻrasan.");
+    ui.bubble("elder", "«⏭ Qadam»ni bos va c nima uchun kerakligini kuzat.");
     await ui.settle((done) => {
       ui.control().append(ui.button("⏭ Qadam", () => {
         if (!step.step()) { ui.clearControl(); done(); }
       }, "big"));
     });
-    await ui.say("elder", "c boʻlmasa, a ning eski qiymati yoʻqolib ketardi.");
+    await ui.say("elder", "c boʻlmasa, a ning eski qiymati yoʻqolardi.");
 
     const el2 = common.box();
     el2.append(common.note("Pythonda buni bir satrda ham yozish mumkin:"));
@@ -46,7 +46,7 @@
     const out = U.output({ title: "Chiqish" });
     out.lines(K.run(L.SWAP_SHORT + "\nprint(a, b)").output);
     el2.append(out.el);
-    await ui.say("elder", "Natija bir xil. Avval oʻng tomondagi ikkala qiymat olinadi, keyin qoʻyiladi.");
+    await ui.say("elder", "Natija bir xil: avval oʻng tomondagi ikkala qiymat olinadi, keyin ikkalasi birga yoziladi.");
   }
 
   async function definition() {
@@ -55,14 +55,14 @@
       ui.h("div", { class: "formula-row", text: "Kuzatuv jadvali:" }),
       ui.h("div", { class: "formula-row", text: "har buyruqdan keyin qutilarga qarab chiqish" }),
       ui.h("div", { class: "formula-row kod", text: "a, b = b, a" })));
-    await ui.say("elder", "Dastur xato ishlasa, birinchi ish — jadval tuzish. Xato qaysi satrda ekani darrov koʻrinadi.");
+    await ui.say("elder", "Dastur xato ishlasa, kuzatuv jadvalini tuz: qiymat qaysi satrda buzilgani koʻrinadi.");
   }
 
   async function stage2() {
     await together();
     await swap();
     await definition();
-    await ui.say("elder", `Endi jadvalni oʻzing toʻldirasan. ${QK.practice.need()} ta toʻgʻri javob kerak.`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta jadval — har satrdan keyingi qiymatlarni yoz.`);
     await practice.exercises({
       next: (prev, correct, tier) => L.traceTask(Math.random, prev, tier),
       run: (task) => common.tableExercise(task),

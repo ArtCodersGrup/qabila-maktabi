@@ -15,7 +15,7 @@
     el.append(common.note("Har sxemadan kod chiqadi. Mana shunday:"));
     el.append(ui.h("div", { class: "sx-namuna" }, SU.chiz(sxema)));
     el.append(ui.h("div", { class: "sx-kod-bosh", text: "Sxemadan chiqqan kod:" }), U.codeBlock(S.kodYasa(sxema), { numbers: false }));
-    await ui.say("elder", "Har blok — bitta satr. Oval bloklar kodga tushmaydi, ular faqat boshi va oxiri.");
+    await ui.say("elder", "Har blok — kodning bitta satri. Ovallar kodga tushmaydi: ular faqat boshi va oxirini belgilaydi.");
   }
 
   async function korsatShart() {
@@ -30,8 +30,8 @@
     el.append(ui.h("div", { class: "sx-namuna" }, SU.chiz(sxema)));
     el.append(ui.h("div", { class: "sx-kod-bosh", text: "Sxemadan chiqqan kod:" }), U.codeBlock(S.kodYasa(sxema), { numbers: false }));
     await ui.say("elder", "“ha” tomoni — if ichiga, “yoʻq” tomoni — else ichiga tushadi.");
-    await ui.say("elder", "Endi oʻzing yigʻasan. Blokni bosib qoʻyasan, qoʻyilganini bosib olib tashlaysan.");
-    await ui.say("elder", "Shart ichiga qoʻyish uchun avval “ha” yoki “yoʻq” yozuvini bos.");
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta sxema yigʻish. Blokni bossang — qoʻyiladi, qoʻyilganini bossang — olib tashlanadi.`);
+    await ui.say("elder", "Shart tarmogʻiga blok qoʻyish uchun avval “ha” yoki “yoʻq” yozuvini bos.");
   }
 
   async function stage2() {

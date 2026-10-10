@@ -16,8 +16,8 @@
     await U.keyboardCheck();
     const el = common.box(false);
     el.append(ui.h("div", { class: "story-art wide", html: QK.gameArt.bench(true) }));
-    await ui.say("elder", "print — Python yasab bergan buyruq. Endi oʻzing buyruq yasaysan.");
-    await ui.say("elder", "Dastgoh kabi: chapdan qiymat kiradi, oʻngdan natija chiqadi.");
+    await ui.say("elder", "Maqsad: funksiya — def bilan oʻz buyrugʻingni eʼlon qilish va chaqirish.");
+    await ui.say("elder", "Kalit gʻoya: funksiya — dastgoh. Parametr orqali qiymat kiradi, return orqali natija chiqadi.");
   }
 
   async function firstDef() {
@@ -31,14 +31,14 @@
         if (!step.step()) { ui.clearControl(); done(); }
       }, "big"));
     });
-    await ui.say("elder", "Funksiya faqat chaqirilganda ishlaydi. Ikki marta chaqirdik — ikki marta ishladi.");
+    await ui.say("elder", "Funksiya tanasi faqat chaqirilganda bajariladi: ikkita chaqiruv — ikki marta.");
   }
 
   async function withParam() {
     const el = common.box();
     withOutput(el, 'def salom(ism):\n    print("Salom,", ism)\n\nsalom("Anvar")\nsalom("Malika")');
-    await ui.say("elder", "Qavs ichidagi nom — parametr. Chaqirganda unga qiymat beriladi.");
-    await ui.say("elder", "Bitta funksiya, har xil qiymat — har safar boshqa natija.");
+    await ui.say("elder", "Qavs ichidagi nom — parametr. Chaqiruvda unga beriladigan qiymat — argument.");
+    await ui.say("elder", "Bitta funksiya, har xil argument — har xil natija.");
   }
 
   async function definition() {
@@ -47,7 +47,7 @@
       ui.h("div", { class: "formula-row kod", text: "def nom(parametr):" }),
       ui.h("div", { class: "formula-row", text: "    surilgan satrlar — funksiya tanasi" }),
       ui.h("div", { class: "formula-row kod", text: "nom(qiymat)   ← chaqiruv" })));
-    await ui.say("elder", "Endi oʻzing ayt: kod nima chiqaradi?");
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta kod. Har biri nima chiqarishini aniqla.`);
   }
 
   async function stage1() {
@@ -57,7 +57,7 @@
     await practice.exercises({
       next: (prev, correct, tier) => L.callTask(Math.random, prev, tier),
       run: (task) => common.resultExercise(task),
-      praise: () => "Chaqiruvlarni toʻgʻri kuzatding.",
+      praise: () => "Chaqiruvlar toʻgʻri kuzatildi.",
     });
   }
 

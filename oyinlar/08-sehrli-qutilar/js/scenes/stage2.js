@@ -7,7 +7,7 @@
 
   // 6.1–6.2: ikkita o'yin, har biridan keyin mukofot
   async function gamesWithReward(state) {
-    await ui.say("elder", "Endi har oʻyindan keyin robotga mukofot beramiz.");
+    await ui.say("elder", "Endi har oʻyindan keyin xotira yangilanadi: yutsa — mukofot, yutqazsa — jazo.");
     for (let k = 0; k < 2; k++) {
       const game = await common.playRound(state);
       await common.rewardStep(state, game.history, game.won);
@@ -15,7 +15,7 @@
         ? "Yutgan yurishlarining munchogʻi koʻpaydi — endi ularni koʻproq tanlaydi."
         : "Yutqazgan yurishlarining munchogʻi kamaydi — endi ularni kamroq tanlaydi.");
     }
-    await ui.say("elder", "Mana shu — mukofot bilan oʻrganish. Robotga qoida aytmadik!");
+    await ui.say("elder", "Bu — mustahkamlab oʻrganish (reinforcement learning): qoida yoʻq, faqat mukofot va jazo.");
   }
 
   const USED_LABEL = { kok: "koʻk", sariq: "sariq", ikkalasi: "ikkalasi ham", hech: "hech qaysi" };
@@ -58,7 +58,7 @@
     const state = (QK.state && QK.state[7]) ? QK.state : boxes.newBoxes();
     QK.state = state;
     await gamesWithReward(state);
-    await ui.say("elder", `Endi savollar. ${QK.practice.need()} ta toʻgʻri javob kerak!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta savol — mukofot yoki jazodan keyin munchoqlar qanday oʻzgaradi.`);
     await practice.exercises({
       next: (prev, correct, tier) => boxes.makeStage2Task(correct, prev, null, tier),
       run: stageTask,

@@ -13,8 +13,8 @@
     ui.pose("elder", "happy", 1200);
     ui.pose("apprentice", "happy", 1200);
     await ui.say("elder", goingOn
-      ? `${s}-bosqich tugadi! Barakalla, keyingisiga oʻtamiz.`
-      : `${s}-bosqich tugadi! Barakalla!`);
+      ? `${s}-bosqich tugadi. Keyingisi — ${s === 1 ? "hajmlarni solishtirish" : "xotiraga nechta fayl sigʻadi"}.`
+      : `${s}-bosqich tugadi.`);
   }
 
   async function congrats() {
@@ -23,7 +23,7 @@
     sound.play("win");
     ui.pose("elder", "happy", 1500);
     ui.pose("apprentice", "happy", 1500);
-    ui.bubble("elder", "Tabriklayman! Endi sen axborot oʻlchovini bilasan!");
+    ui.bubble("elder", "Tayyor: hajmlarni birlikdan birlikka oʻtkaza, solishtira va xotiraga nechta fayl sigʻishini hisoblay olasan.");
     ui.work().append(ui.h("div", { class: "story" },
       ui.h("div", { class: "story-art small", html: art.storehouse() }),
       ui.h("div", { class: "summary" },

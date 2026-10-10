@@ -9,7 +9,7 @@
   async function korsat() {
     const host = common.box(true);
     const variantlar = ["http://kelajagim.uz/kirish", "https://kelajagim.uz.sovga-yutuq.com/kirish", "https://kelajagim.uz/kirish"];
-    ui.bubble("elder", "Uchta havola keldi. «kelajagim.uz» ga parolni qaysi biriga yozasan?");
+    ui.bubble("elder", "3 ta havola keldi. «kelajagim.uz» paroli qaysi biriga yoziladi?");
     const tanlov = await ui.settle((done) => {
       ui.clearControl();
       ui.control().append(h("div", { class: "qy-javoblar" }, ...variantlar.map((v) => {
@@ -22,16 +22,16 @@
     host.append(common.satr(tanlov));
     if (tanlov === variantlar[2]) {
       QK.sound.play("correct");
-      await ui.say("elder", "✓ Toʻgʻri! Qulf bor va manzil aynan kelajagim.uz.");
+      await ui.say("elder", "✓ Qulf bor va manzil aynan kelajagim.uz.");
     } else if (tanlov === variantlar[1]) {
       QK.sound.play("retry");
-      await ui.say("elder", "↻ Qulf bor — lekin bu kelajagim.uz emas! Egasi — sovga-yutuq.com. Firibgar ham qulfli sayt ochadi.");
+      await ui.say("elder", "↻ Qulf bor, lekin bu kelajagim.uz emas: egasi — sovga-yutuq.com. Firibgar ham qulfli sayt ochishi mumkin.");
     } else {
       QK.sound.play("retry");
       await ui.say("elder", "↻ Manzil toʻgʻri, lekin qulf yoʻq — parolingni yoʻlda oʻqishadi.");
     }
     await ui.say("elder", `Qoida ikki qadam: 1) boshida «https://» bormi; 2) birinchi «/» gacha boʻlgan qismni oxiridan oʻqi: ${L.egasi(variantlar[1])} — bu egasi.`);
-    await ui.say("apprentice", "Demak qulf — yoʻl xavfsiz degani, sayt halol degani emas!");
+    await ui.say("elder", `Xulosa: 🔒 — yoʻl himoyalangan degani, sayt halol degani emas. Mashq: ${QK.practice.need()} ta savol.`);
   }
 
   async function stage3() {

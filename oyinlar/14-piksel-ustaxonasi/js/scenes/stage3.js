@@ -10,18 +10,18 @@
   const fmt = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 
   const SCENES = [
-    { art: "phone", lines: [`Telefon surati siqilmasa ${pixels.PHOTO.mb} Mbayt, siqilsa — 3–4 Mbayt.`, "Telefon koʻz sezmaydigan mayda farqlarni ham tashlab yuboradi."] },
-    { art: "zoom", lines: ["Rasmni juda kattalashtirsang, kataklar — piksellar koʻrinadi."] },
-    { art: "film", lines: ["Rasmlar tez almashsa — video boʻladi.", "Bu keyingi oʻyinda!"] },
+    { art: "phone", lines: [`Qayerda uchraydi: telefon surati siqilmasa ${pixels.PHOTO.mb} Mbayt, JPEG bilan siqilsa — 3–4 Mbayt.`, "JPEG koʻz sezmaydigan mayda farqlarni tashlab yuboradi — bu yoʻqotishli siqish."] },
+    { art: "zoom", lines: ["Rasmni kattalashtirsang, piksellar koʻrinadi — rastr grafika shunday tuzilgan."] },
+    { art: "film", lines: ["Video — tez almashadigan kadrlar. Uning hajmi — «Multfilm daftari» oʻyinida."] },
   ];
 
   // 6.1–6.2: bola qizil, yashil, ko'k chiroqlardan rang yasaydi
   async function mix() {
-    const AFTER = ["Qizil va yashil — sariq boʻldi! Ekranda ranglar shunday aralashadi.", "Uchalasi yoniq — oq!"];
+    const AFTER = ["R + G = sariq. Ekranda rang shunday hosil boʻladi — bu RGB modeli.", "R + G + B = oq."];
     for (let t = 0; t < pixels.TARGETS.length; t++) {
       const target = pixels.TARGETS[t];
       const el = common.box(true);
-      ui.bubble("elder", `${cap(pixels.mixName(target))} rangni yasa! Chiroqlarni yoqib koʻr.`);
+      ui.bubble("elder", `${cap(pixels.mixName(target))} rangni yasa: qizil (R), yashil (G), koʻk (B) chiroqlarni yoq.`);
       await ui.settle((done) => {
         const m = pixelsUi.mixer(el, target, (rgb) => {
           if (rgb.join("") !== target.join("")) return;
@@ -33,9 +33,9 @@
       ui.pose("apprentice", "happy", 900);
       await ui.say("elder", AFTER[t]);
     }
-    await ui.say("elder", "3 ta chiroq, har biri yoniq yoki oʻchiq — 8 xil rang, yaʼni 3 bit.");
-    await ui.say("elder", "Haqiqiy ekranda har chiroq 256 xil yorugʻlikda yonadi — bu 1 bayt.");
-    await ui.say("elder", "Demak, rangli piksel — 3 bayt. Ranglar 16 milliondan ham koʻp!");
+    await ui.say("elder", "3 chiroq, har biri yoniq yoki oʻchiq: 2³ = 8 rang, yaʼni 3 bit.");
+    await ui.say("elder", "Haqiqiy ekranda har kanal 256 darajali: 2⁸ = 256, yaʼni 1 bayt.");
+    await ui.say("elder", "RGB piksel = 3 bayt = 24 bit: 2²⁴ ≈ 16,7 million rang.");
   }
 
   // 6.3: telefon surati va megabayt
@@ -46,14 +46,14 @@
     const rows = common.formula(el, [`${fmt(P.w)} × ${fmt(P.h)} = ${fmt(P.pixels)} piksel`]);
     await ui.say("elder", "Telefon surati: 4000 × 3000 — 12 million piksel.");
     rows.append(ui.h("div", { class: "formula-row", text: `${fmt(P.pixels)} × 3 = ${fmt(P.bytes)} bayt` }));
-    await ui.say("elder", "Har biri 3 bayt — 36 million bayt! Juda katta son.");
+    await ui.say("elder", "Har piksel 3 bayt: 36 million bayt.");
     el.append(ui.h("div", { class: "ladder" },
       ui.h("span", { class: "step", text: "bayt" }), ui.h("span", { class: "arrow", text: "× 1024 →" }),
       ui.h("span", { class: "step", text: "Kbayt" }), ui.h("span", { class: "arrow", text: "× 1024 →" }),
       ui.h("span", { class: "step new", text: "Mbayt" })));
-    await ui.say("elder", "Katta sonlar uchun katta birlik: 1024 Kbayt = 1 Mbayt (megabayt).");
+    await ui.say("elder", "Katta hajm uchun katta birlik: 1 Kbayt = 1024 bayt, 1 Mbayt = 1024 Kbayt.");
     el.append(common.answerLine(`${fmt(P.bytes)} bayt ≈ ${P.mb} Mbayt`));
-    await ui.say("elder", `Bu surat — ${P.mb} Mbaytga yaqin.`);
+    await ui.say("elder", `${fmt(P.bytes)} : 1024 : 1024 ≈ ${P.mb} Mbayt.`);
   }
 
   // 6.4: siqish — qatorni qisqa yozish
@@ -61,13 +61,13 @@
     const row = pixels.DEMO_ROW;
     const el = common.box(true);
     el.append(pixelsUi.rowView(row, false));
-    ui.bubble("elder", `Bu qatorda ${row.length} ta piksel. Uni qisqaroq yozsa boʻladimi?`);
+    ui.bubble("elder", `Qatorda ${row.length} ta piksel, ranglar takrorlanadi. Qisqaroq yozamiz.`);
     await common.waitButton("Qisqa yoz");
     el.append(pixelsUi.rleView(row));
     sound.play("correct");
     const parts = pixels.runs(row).length;
-    await ui.say("elder", `${row.length} ta piksel oʻrniga ${parts} ta yozuv: 6 koʻk, 2 oq, 2 koʻk!`);
-    await ui.say("elder", "Telefon takrorlanuvchi ranglarni shunday qisqa yozadi — bu siqish.");
+    await ui.say("elder", `${row.length} ta piksel oʻrniga ${parts} ta yozuv: 6 koʻk, 2 oq, 2 koʻk.`);
+    await ui.say("elder", "Bu — siqish: ketma-ket bir xil ranglar «son + rang» qilib yoziladi.");
   }
 
   // "Qaysi biri eng katta?" — uch karta va "Uchalasi teng" (4 variant)
@@ -89,7 +89,7 @@
     if (task.type === "rgb") {
       pixelsUi.taskPicture(el, task, pixels.PALETTE16, "rangli");
       const p = task.w * task.h;
-      ui.bubble("elder", "Bu rangli rasm. Necha bayt?");
+      ui.bubble("elder", "RGB rasm. Hajmi necha bayt?");
       return practice.numberTries({
         answer: task.answer,
         hint: () => {
@@ -102,7 +102,7 @@
     if (task.type === "runs") {
       const view = ui.h("div", { class: "task-view" }, pixelsUi.rowView(task.row, false));
       el.append(view);
-      ui.bubble("elder", "Bu qatorni qisqa yozsak, nechta yozuv chiqadi?");
+      ui.bubble("elder", "Siqilgan yozuvda nechta yozuv boʻladi?");
       return practice.numberTries({
         answer: task.answer,
         hint: () => {
@@ -118,12 +118,12 @@
     if (task.type === "cbytes") {
       pixelsUi.taskPicture(el, task, pixels.PALETTE16, `${task.colors} xil rang`);
       const p = task.w * task.h;
-      ui.bubble("elder", `Bu rasmda ${task.colors} xil rang. U necha BAYT?`);
+      ui.bubble("elder", `${task.colors} xil rang. Hajmi necha bayt?`);
       return practice.numberTries({
         answer: task.answer,
         hint: () => {
           common.add(el, common.line(`${task.colors} rang — har piksel ${task.bpp} bit. Avval bitlar, keyin : 8`));
-          ui.bubble("elder", "↻ Kenglik × balandlik × bit — bu bitlar. 8 bit — 1 bayt.");
+          ui.bubble("elder", "↻ Avval V = kenglik × balandlik × i bit, keyin : 8.");
         },
         solution: () => common.add(el, common.answerLine(`${task.w} × ${task.h} × ${task.bpp} = ${p * task.bpp} bit; ${p * task.bpp} : 8 = ${task.answer} bayt`)),
       });
@@ -168,7 +168,7 @@
     await mix();
     await megabyte();
     await squeeze();
-    await ui.say("elder", `Endi oʻzing hisobla: rangli rasm, siqish va megabayt. ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta — RGB rasm hajmi, siqish, Mbayt va Kbayt.`);
     await practice.exercises({
       next: (prev, correct, tier) => pixels.makePhotoTask(prev, undefined, tier),
       run: photoTask,

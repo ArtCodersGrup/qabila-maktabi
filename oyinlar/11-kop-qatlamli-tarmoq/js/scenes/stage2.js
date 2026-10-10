@@ -18,7 +18,7 @@
           if (goal === "tik" && h.tik) {
             goal = "krest";
             sound.play("correct");
-            ui.bubble("elder", "Tik chiziq neyroni yondi! Endi oʻrta qatorni ham boʻya.");
+            ui.bubble("elder", "Tik chiziq neyroni yondi. Endi oʻrta qatorni ham boʻya.");
           } else if (goal === "krest" && neural.output(cells) === "krest") {
             sound.play("win");
             done();
@@ -27,7 +27,7 @@
       });
       ui.bubble("elder", "Rasmning oʻrta ustunini boʻya — tik chiziq chiz.");
     });
-    await ui.say("elder", "Ikkala chiziq neyroni yondi — 2-qatlam «krest» dedi!");
+    await ui.say("elder", "Ikkala chiziq neyroni yondi — 2-qatlam «krest» dedi.");
     return view;
   }
 
@@ -35,8 +35,8 @@
     const el = common.box(false);
     const view = neuralUi.layerView(el, {});
     view.set([0, 1, 0, 1, 1, 1, 0, 1, 0]);
-    await ui.say("elder", "1-qatlam kichik belgilarni topadi: tik chiziq, yotiq chiziq.");
-    await ui.say("elder", "2-qatlam ulardan shakl yasaydi. Qatlam koʻp boʻlsa — tarmoq chuqur boʻladi.");
+    await ui.say("elder", "1-qatlam (yashirin qatlam) oddiy belgilarni topadi: tik va yotiq chiziq.");
+    await ui.say("elder", "2-qatlam 1-qatlam chiqishlaridan shaklni aniqlaydi. Qatlamlar koʻp boʻlsa, tarmoq chuqur deyiladi.");
   }
 
   const HIDDEN_HINT = "↻ Tik neyron oʻrta ustun toʻliq boʻlsa yonadi, yotiq — oʻrta qator toʻliq boʻlsa.";
@@ -74,7 +74,7 @@
       second: {
         setup: (submit) => {
           view.reveal("hidden");
-          ui.bubble("elder", "Toʻgʻri! Endi 2-qatlam: tarmoq bu rasmni nima deydi?");
+          ui.bubble("elder", "Toʻgʻri. Endi 2-qatlam: tarmoq bu rasmni nima deydi?");
           neuralUi.choiceButtons(task.options, submit);
         },
         check: (index) => task.options[index] === task.answer,
@@ -91,7 +91,7 @@
   async function stage2() {
     await layersDemo();
     await explain();
-    await ui.say("elder", `Endi oʻzing ayt! ${QK.practice.need()} ta toʻgʻri javob kerak.`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta rasm — qatlamlar chiqishini ayt.`);
     await practice.exercises({
       next: (prev, correct, tier) => neural.makeStage2Task(correct, prev, null, tier),
       run: (task) => (task.type === "hidden" ? hiddenTask(task) : bothTask(task)),

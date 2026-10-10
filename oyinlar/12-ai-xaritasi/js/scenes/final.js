@@ -13,8 +13,8 @@
     ui.pose("elder", "happy", 1200);
     ui.pose("apprentice", "happy", 1200);
     await ui.say("elder", goingOn
-      ? `${s}-bosqich tugadi! Barakalla, keyingisiga oʻtamiz.`
-      : `${s}-bosqich tugadi! Barakalla!`);
+      ? `${s}-bosqich tugadi. Keyingisi — ${s === 1 ? "usul va vazifa" : "real misollarni xaritaga joylash"}.`
+      : `${s}-bosqich tugadi.`);
   }
 
   async function congrats() {
@@ -23,7 +23,7 @@
     sound.play("win");
     ui.pose("elder", "happy", 1500);
     ui.pose("apprentice", "happy", 1500);
-    ui.bubble("elder", "Tabriklayman! Endi sen sunʼiy intellekt xaritasini bilasan!");
+    ui.bubble("elder", "Tayyor: istalgan dasturni AI / ML / DL doirasiga joylay olasan va usulni vazifadan ajrata olasan.");
     ui.work().append(ui.h("div", { class: "story" },
       ui.h("div", { class: "story-art small", html: art.robot() }),
       ui.h("div", { class: "summary" },

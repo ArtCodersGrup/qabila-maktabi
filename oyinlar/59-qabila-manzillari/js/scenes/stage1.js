@@ -9,16 +9,15 @@
   async function intro() {
     const el = common.box(false);
     el.append(h("div", { class: "story-art wide", html: QK.gameArt.xarita() }));
-    await ui.say("elder", "Paket yoʻlga chiqdi. Lekin internetda millionlab uy bor — u qaysi uyga borishini qayerdan biladi?");
-    await ui.say("apprentice", "Konvertga manzil yoziladi-ku!");
-    await ui.say("elder", "Toʻgʻri. Internetda manzil — sonlar. Keling, pochtachi boʻlib koʻramiz.");
+    await ui.say("elder", "Maqsad: paket kerakli qurilmani qanday topishini tushunish — IP manzil, DNS, kesh.");
+    await ui.say("elder", "Kalit gʻoya: internetda har qurilmaning sonli manzili bor — xuddi uy manzilidek. Paket shu manzil boʻyicha yetkaziladi.");
   }
 
   async function korsat() {
     const el = common.box(true);
     const uylar = ["10.0.3.7", "10.0.3.17", "10.0.7.3", "10.0.3.70"];
     el.append(common.konvert("10.0.3.7"));
-    ui.bubble("elder", "Konvertda 10.0.3.7 deb yozilgan. Qaysi uyga eltasan?");
+    ui.bubble("elder", "Paketda manzil: 10.0.3.7. Qaysi uyga yetkazasan?");
     const tanlov = await ui.settle((resolve) => {
       ui.clearControl();
       ui.control().append(h("div", { class: "qm-javoblar uylar" }, ...uylar.map((m, i) => {
@@ -29,11 +28,11 @@
     });
     ui.clearControl();
     QK.sound.play(tanlov === uylar[0] ? "correct" : "retry");
-    if (tanlov !== uylar[0]) await ui.say("elder", `↻ ${tanlov} — boshqa uy. Toʻrtala son bir xil boʻlishi kerak: 10.0.3.7.`);
-    else await ui.say("elder", "✓ Toʻppa-toʻgʻri! Toʻrtala son mos keldi.");
-    await ui.say("elder", "Internetdagi har qurilmaning shunday manzili bor: toʻrtta son, nuqta bilan. Bu — IP manzil.");
-    await ui.say("elder", "Har son — 1 bayt, shuning uchun 0 dan 255 gacha. «Bayt sandigʻi»ni esla: 8 bitda eng kattasi 255.");
-    await ui.say("apprentice", "Demak 300 degan son manzilda boʻlmaydi!");
+    if (tanlov !== uylar[0]) await ui.say("elder", `↻ ${tanlov} — boshqa manzil. Toʻrtala son ham mos kelishi kerak: 10.0.3.7.`);
+    else await ui.say("elder", "✓ Toʻrtala son mos keldi.");
+    await ui.say("elder", "Atama: IP manzil — nuqta bilan ajratilgan toʻrtta son, masalan 10.0.3.7.");
+    await ui.say("elder", "Har son — 1 bayt (8 bit), shuning uchun 0 dan 255 gacha: 2⁸ − 1 = 255.");
+    await ui.say("elder", `Demak, 300 yoki 256 IP manzilda boʻlmaydi. Mashq: ${QK.practice.need()} ta savol.`);
   }
 
   async function stage1() {

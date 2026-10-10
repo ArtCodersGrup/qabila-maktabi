@@ -8,17 +8,17 @@
   async function intro() {
     const el = common.box(false);
     el.append(ui.h("div", { class: "story-art wide", html: QK.gameArt.yolRasm() }));
-    await ui.say("elder", "Paket saytga yetguncha koʻp tugundan oʻtadi. Har tugunda kimdir paketni qoʻlga oladi.");
-    await ui.say("elder", "Bugun sen ham shunday tugunsan. Oldingdan kimningdir xabari oʻtadi…");
+    await ui.say("elder", "Maqsad: maʼlumot yoʻlda qanday himoyalanishini tushunish — HTTP, HTTPS, 🔒 va manzilni tekshirish.");
+    await ui.say("elder", "Kalit gʻoya: paket saytgacha koʻp tugundan oʻtadi va har tugun uni qoʻlga oladi. Hozir sen shu tugunlardan birisan.");
   }
 
   async function korsat() {
     const x = L.xabar(Math.random, 0);
     const host = common.box(true);
     host.append(common.yol(3), common.otkritka(x));
-    await ui.say("apprentice", `Voy, hammasi koʻrinib turibdi! Login — ${x.login}, parol — ${x.parol}.`);
-    await ui.say("elder", "Bu ochiq otkritka: qulfsiz yoʻlda yoʻldagi har tugun oʻqiydi. Sen ham, qolgan uchtasi ham.");
-    await ui.say("elder", "Endi oʻylab koʻr: shu tugunlardan biri firibgar boʻlsa-chi?");
+    await ui.say("elder", `Xabar ochiq koʻrinadi: login — ${x.login}, parol — ${x.parol}.`);
+    await ui.say("elder", "Qulfsiz yoʻlda xabar ochiq otkritkadek: uni yoʻldagi har tugun oʻqiydi — sen ham, qolgan uchtasi ham.");
+    await ui.say("elder", `Tugunlardan biri firibgar boʻlsa, parol unga ketadi. Mashq: ${QK.practice.need()} ta savol.`);
   }
 
   async function stage1() {

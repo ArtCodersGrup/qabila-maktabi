@@ -42,8 +42,8 @@
     await yigdir("ERTAGA MAKTABDA", 4);
     ui.clearControl();
     QK.sound.play("correct");
-    await ui.say("elder", "✓ Xat tiklandi! Konvertlar har xil yoʻldan kelgan, shuning uchun aralashgan.");
-    await ui.say("elder", "Raqami va manzili bor bunday konvert — paket deyiladi. Internetda hamma narsa paketlarda yuradi.");
+    await ui.say("elder", "✓ Xabar tiklandi. Konvertlar tarmoqda har xil yoʻldan kelgani uchun tartibi aralashgan.");
+    await ui.say("elder", "Atama: raqami va manzili bor boʻlak — paket. Internetda har qanday maʼlumot paketlarda uzatiladi.");
   }
 
   async function stage2() {

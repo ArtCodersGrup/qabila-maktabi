@@ -8,8 +8,8 @@
   async function example() {
     const el = common.box(false);
     el.append(ui.h("div", { class: "emoji-row", text: "🔑 YOKI 🛡️" }));
-    await ui.say("elder", "Darvoza ochiladi, agar kaliting bor YOKI qoʻriqchi seni taniydi.");
-    await ui.say("elder", "Ikkalasi ham boʻlsa — darvoza baribir ochiladi.");
+    await ui.say("elder", "Misol: «kaliting bor YOKI qoʻriqchi seni taniydi» — darvoza ochiladi.");
+    await ui.say("elder", "Ikkala shart rost boʻlsa ham natija 1.");
   }
 
   // 6.4: ta'rif — jadval va ikki sxema yonma-yon
@@ -24,18 +24,18 @@
       both.append(cell);
     });
     el.append(both);
-    await ui.say("elder", "YOKI — kamida bittasi rost boʻlsa, rost. Ikkalasi ham yolgʻon boʻlsa — yolgʻon.");
-    await ui.say("elder", "Ketma-ket ulangan kalitlar — VA, parallel ulangani — YOKI.");
+    await ui.say("elder", "YOKI: kamida bitta shart rost boʻlsa — rost; ikkalasi yolgʻon boʻlsa — yolgʻon.");
+    await ui.say("elder", "Ketma-ket ulangan kalitlar — VA, parallel ulangan — YOKI.");
   }
 
   async function stage2() {
-    await common.explore({ op: "or", intro: "Bu sxemada tok uchun ikki yoʻl bor. Kalitlarni bos — chiroq qachon yonadi?" });
-    await ui.say("elder", "Chiroq kamida bitta kalit ulanganda yondi. Ikkalasi ham ulansa — baribir yonadi.");
-    await ui.say("elder", "Bu — YOKI amali. A YOKI B — kamida bittasi 1 boʻlsa, 1.");
-    await ui.say("elder", "Diqqat: gapda «choy yoki kompot» — bittasi degani. Mantiqda YOKI — ikkalasi ham boʻlsa ham rost.");
+    await common.explore({ op: "or", intro: "Bu sxemada kalitlar parallel: tok uchun ikki yoʻl bor. Chiroq qachon yonadi?" });
+    await ui.say("elder", "Chiroq kamida bitta kalit ulanganda yondi, ikkalasi ulanganda ham.");
+    await ui.say("elder", "Bu — YOKI amali: A YOKI B = 1, agar kamida bittasi 1 boʻlsa.");
+    await ui.say("elder", "Diqqat: kundalik gapda «choy yoki kompot» — bittasi. Mantiqda YOKI ikkalasi rost boʻlganda ham rost.");
     await example();
     await definition();
-    await ui.say("elder", `Endi VA va YOKI aralash. ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta, VA va YOKI aralash.`);
     await common.exercises(2);
   }
 

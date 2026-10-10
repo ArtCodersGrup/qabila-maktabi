@@ -6,9 +6,9 @@
   const { units, ui, sound, art, unitsUi, practice, common } = QK;
 
   const SCENES = [
-    { art: "disk", lines: [`Doʻkonda «1 Tbayt» deb yozilgan disk kompyuterda ${units.DISK.gb} Gbayt koʻrinadi.`, "Doʻkon 1000 bilan sanaydi, kompyuter esa 1024 bilan. Disk kichraymagan!"] },
-    { art: "datacenter", lines: ["Katta maʼlumot markazlarida minglab Tbayt saqlanadi.", "1024 Tbayt — 1 Pbayt (petabayt)!"] },
-    { art: "ladder", lines: ["Hammasi bitta bitdan boshlanadi: yoniq yoki oʻchiq.", "Endi sen axborotni oʻlchay olasan!"] },
+    { art: "disk", lines: [`Qayerda uchraydi: doʻkonda «1 Tbayt» deb yozilgan disk kompyuterda ${units.DISK.gb} Gbayt koʻrinadi.`, "Ishlab chiqaruvchi 1000 bilan sanaydi, kompyuter esa 1024 bilan — disk kichraymagan."] },
+    { art: "datacenter", lines: ["Maʼlumot markazlarida minglab Tbayt saqlanadi: 1024 Tbayt = 1 Pbayt (petabayt)."] },
+    { art: "ladder", lines: ["Har qanday hajm oxir-oqibat bitlar soni: 1 Tbayt = 8 · 1024⁴ bit."] },
   ];
 
   // 6.1: fleshkani filmlar bilan to'ldirish
@@ -19,7 +19,7 @@
     const bar = unitsUi.storageBar(el, parts, `Fleshka: ${gb} Gbayt`);
     const count = common.line("Filmlar: 0");
     el.append(count);
-    ui.bubble("elder", `Fleshkaga ${film} Gbaytli filmlarni joyla. Nechta sigʻarkin?`);
+    ui.bubble("elder", `Fleshkaga ${film} Gbaytli filmlarni joyla. Nechtasi sigʻadi?`);
     await ui.settle((done) => {
       let n = 0;
       ui.control().append(ui.button(`Film qoʻsh (${film} Gbayt)`, () => {
@@ -34,7 +34,7 @@
       }, "big"));
     });
     sound.play("correct");
-    await ui.say("elder", `Toʻldi! ${gb} : ${film} = ${parts} ta film sigʻdi.`);
+    await ui.say("elder", `Toʻldi: ${gb} : ${film} = ${parts}, yaʼni ${parts} ta film.`);
   }
 
   // 6.2: turli birlik — avval aylantiramiz
@@ -45,17 +45,17 @@
     const bar = unitsUi.storageBar(el, parts, `Fleshka: ${gb} Gbayt`);
     await ui.say("elder", `${gb} Gbaytli fleshkaga ${mb} Mbaytli video nechta sigʻadi?`);
     const rows = common.formula(el, [`${gb} Gbayt = ${gb * 1024} Mbayt`]);
-    await ui.say("elder", "Birliklar har xil! Avval bir xil birlikka aylantiramiz.");
+    await ui.say("elder", "Birliklar har xil, shuning uchun avval bir xil birlikka oʻtkazamiz.");
     rows.append(ui.h("div", { class: "formula-row", text: `${gb * 1024} : ${mb} = ${parts}` }));
     bar.fill(parts);
     sound.play("correct");
-    await ui.say("elder", `${gb * 1024} : ${mb} = ${parts}. ${parts} ta video sigʻadi!`);
+    await ui.say("elder", `${gb * 1024} : ${mb} = ${parts}, yaʼni ${parts} ta video sigʻadi.`);
   }
 
   async function definition() {
     const el = common.box(false);
-    common.formula(el, ["nechta sigʻadi = xotira : fayl", "(bir xil birlikda!)"]);
-    await ui.say("elder", "Xotirani fayl hajmiga boʻlamiz. Birliklar bir xil boʻlsin!");
+    common.formula(el, ["nechta sigʻadi = xotira : fayl", "(ikkalasi bir xil birlikda)"]);
+    await ui.say("elder", "Xotira hajmi fayl hajmiga boʻlinadi. Ikkalasi bir xil birlikda boʻlishi shart.");
   }
 
   // 6.4: mashq — nechta sig'adi
@@ -97,7 +97,7 @@
     await fillFlash();
     await crossUnits();
     await definition();
-    await ui.say("elder", `Endi oʻzing hisobla: nechta sigʻadi? ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta masala — xotiraga nechta fayl sigʻadi.`);
     await practice.exercises({
       next: (prev, correct, tier) => units.makeFitTask(prev, undefined, tier),
       run: fitTask,

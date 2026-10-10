@@ -11,8 +11,8 @@
     const grid = ui.h("div", { class: "tasks" });
     for (const t of atlas.TASKS) grid.append(ui.h("div", { class: `task t-${t.id}`, text: t.name }));
     el.append(grid);
-    await ui.say("elder", "Doiralar — bu usullar: ish qanday qilinadi.");
-    await ui.say("elder", "Koʻrish, til, harakat, hisob esa — vazifalar: nima qilinadi.");
+    await ui.say("elder", "Doiralar — usullar: ish qanday bajariladi.");
+    await ui.say("elder", "Koʻrish, til, harakat, hisob — vazifalar: nima bajariladi.");
   }
 
   // 5.2: bitta vazifa — uch usul
@@ -33,8 +33,8 @@
       sound.play("tap");
       await ui.sleep(500);
     }
-    await ui.say("elder", "Vazifa bitta — koʻrish. Usul esa uch xil boʻlishi mumkin!");
-    await ui.say("elder", "Shuning uchun «kompyuter koʻrish» — bu doira emas, vazifa.");
+    await ui.say("elder", "Vazifa bitta — koʻrish, usul esa uch xil boʻlishi mumkin.");
+    await ui.say("elder", "Demak, «kompyuter koʻrishi» — doira (usul) emas, vazifa.");
   }
 
   // 5.3: mashq — bu ish qaysi vazifa?
@@ -58,7 +58,7 @@
   async function stage2() {
     await tasksIntro();
     await oneTaskThreeWays();
-    await ui.say("elder", `Endi oʻzing ayt: bu ish qaysi vazifa? ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta misol — qaysi vazifa.`);
     await practice.exercises({
       next: (prev, correct, tier) => atlas.makeJobTask(prev, null, tier),
       run: jobTask,

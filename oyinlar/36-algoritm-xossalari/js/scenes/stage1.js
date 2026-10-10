@@ -9,10 +9,8 @@
     await U.keyboardCheck();
     const el = common.box(false);
     el.append(ui.h("div", { class: "story-art", html: QK.gameArt.ikkiYol(null) }));
-    await ui.say("elder", "Ikki yoʻl ham bir joyga olib boradi. Lekin biri uzun, biri qisqa.");
-    await ui.say("elder", "Dasturda ham shunday: ikki kod bir xil javob beradi, lekin ishi har xil.");
-    await ui.say("apprentice", "Qaysi biri yaxshi ekanini qanday bilamiz?");
-    await ui.say("elder", "Sanab koʻramiz. Kompyuter nechta qadam bajarganini oʻlchab beradi.");
+    await ui.say("elder", "Maqsad: algoritmni baholash — toʻgʻrimi, xossalari joyidami, qanchalik samarali.");
+    await ui.say("elder", "Kalit gʻoya: ikki kod bir xil javob berishi mumkin, lekin biri kamroq qadam bajaradi — xuddi qisqa va uzun yoʻldek.");
   }
 
   async function ikkiYechim() {
@@ -28,23 +26,23 @@
         U.codeBlock(juft[kalit].kod, { numbers: false })));
     }
     el.append(yon);
-    await ui.say("elder", "Ikkalasini ham ishga tushiramiz. Javob bir xil chiqadimi?");
+    await ui.say("elder", "Ikkalasini ishga tushiramiz va bajarilgan qadamlarni sanaymiz.");
     el.append(U.qadamJadval([
       { nom: juft.a.nom, qadam: a.qadam, natija: a.chiqish[0], eng: a.qadam < b.qadam },
       { nom: juft.b.nom, qadam: b.qadam, natija: b.chiqish[0], eng: b.qadam < a.qadam },
     ]));
-    await ui.say("elder", "Javob bir xil: " + a.chiqish[0] + ". Lekin biri " + a.qadam + " qadam, ikkinchisi " + b.qadam + " qadam.");
-    await ui.say("elder", "Ikkalasi ham toʻgʻri. Faqat biri kamroq ish qiladi — bu samaradorlik deyiladi.");
+    await ui.say("elder", "Javob bir xil — " + a.chiqish[0] + ", lekin qadamlar soni: " + a.qadam + " va " + b.qadam + ".");
+    await ui.say("elder", "Ikkalasi ham toʻgʻri, lekin biri kamroq ish qiladi. Bu farq samaradorlik deyiladi.");
   }
 
   async function definition() {
     const el = common.box(false);
     el.append(ui.h("div", { class: "formula-box" },
-      ui.h("div", { class: "formula-row", text: "Ishlaydi ≠ yaxshi" }),
+      ui.h("div", { class: "formula-row", text: "Toʻgʻri ishlaydi ≠ samarali" }),
       ui.h("div", { class: "formula-row", text: "Bir masalaning koʻp yechimi boʻladi" }),
       ui.h("div", { class: "formula-row", text: "Qaysi biri kamroq qadam bajarsa — oʻshasi tejamli" })));
-    await ui.say("elder", "Endi oʻzing ayt: qaysi yechim tejamli? Baʼzan ikkalasi teng ham boʻladi.");
-    await ui.say("elder", "Va sanab ber: koʻproq aylanadigan sikl necha marta aylanadi?");
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta juft yechim. Qaysi biri kamroq qadam bajaradi — yoki ular teng?`);
+    await ui.say("elder", "Javobga qoʻshimcha: koʻproq aylanadigan sikl necha marta aylanishini yoz.");
   }
 
   async function stage1() {
@@ -53,7 +51,7 @@
     await practice.exercises({
       next: (prev, correct, tier) => L.juftTask(Math.random, prev, tier),
       run: (task) => common.juftExercise(task),
-      praise: () => "Tejamli yoʻlni topding.",
+      praise: () => "Toʻgʻri.",
     });
   }
 

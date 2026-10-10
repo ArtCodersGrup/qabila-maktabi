@@ -16,15 +16,15 @@
   async function lettersToo() {
     const el = common.box();
     withOutput(el, 's = "qabila"\nprint(s[0], s[-1], len(s))\nprint(s[1:4])');
-    await ui.say("elder", "Satr ham qator: har harfning oʻz indeksi bor.");
-    await ui.say("elder", "Kesish ham xuddi roʻyxatdagidek ishlaydi.");
+    await ui.say("elder", "Satr ham ketma-ketlik: har belgining oʻz indeksi bor.");
+    await ui.say("elder", "Indeks va kesish roʻyxatdagidek ishlaydi.");
   }
 
   async function splitting() {
     const el = common.box();
     withOutput(el, "a = input().split()\nprint(len(a))\nprint(a[0], a[1])\nprint(int(a[0]) + int(a[1]))", ["12 30"]);
-    await ui.say("elder", "split bir satrni boʻshliqlar boʻyicha boʻlaklarga ajratadi.");
-    await ui.say("elder", "Boʻlaklar — matn. Son kerak boʻlsa, int() bilan oʻgiriladi.");
+    await ui.say("elder", "split() satrni boʻshliqlar boʻyicha boʻlaklarga ajratib, roʻyxat qaytaradi.");
+    await ui.say("elder", "Boʻlaklar — satr (str). Son kerak boʻlsa, int() bilan oʻgiriladi.");
   }
 
   async function definition() {
@@ -33,7 +33,7 @@
       ui.h("div", { class: "formula-row kod", text: 'a = input().split()' }),
       ui.h("div", { class: "formula-row", text: "bir satrdan bir nechta qiymat" }),
       ui.h("div", { class: "formula-row kod", text: "int(a[0]) — boʻlakni songa oʻgirish" })));
-    await ui.say("elder", "Olimpiada masalalari koʻpincha aynan shu satr bilan boshlanadi.");
+    await ui.say("elder", `Olimpiada masalalari koʻpincha shu satr bilan boshlanadi. Mashq: ${QK.practice.need()} ta topshiriq.`);
   }
 
   async function stage3() {
@@ -43,7 +43,7 @@
     await practice.exercises({
       next: (prev, correct, tier) => L.stage3Task(Math.random, prev, tier),
       run: (task) => common.stage3Exercise(task),
-      praise: (task) => (task.type === "kod-yoz" ? "Dastur hamma sinovdan oʻtdi." : "Satrni toʻgʻri oʻqiding."),
+      praise: (task) => (task.type === "kod-yoz" ? "Dastur hamma sinovdan oʻtdi." : "Toʻgʻri."),
     });
   }
 

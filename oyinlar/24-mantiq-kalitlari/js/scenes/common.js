@@ -84,10 +84,10 @@
         }
         if (left === 0) {
           sw.lock();
-          ui.bubble("elder", "✓ Hamma holat jadvalda!");
+          ui.bubble("elder", "✓ Hamma holat jadvalda.");
           setTimeout(done, 900);
         } else if (firstLit) {
-          ui.bubble("elder", `✓ Yondi! Yana ${left} ta holat qoldi — sinab koʻr.`);
+          ui.bubble("elder", `✓ Chiroq yondi. Yana ${left} ta holat qoldi.`);
         } else if (fresh) {
           ui.bubble("elder", `Yangi holat jadvalga yozildi. Yana ${left} ta holat qoldi.`);
         } else {
@@ -158,7 +158,7 @@
       logicUi.lifeFacts(el, task.life, task.a, task.b);
       lifeHost = ui.h("div", { class: "step-tag" });
       el.append(lifeHost);
-      ui.bubble("elder", "Ikki savol: avval javob, keyin ifoda. Ikkalasi ham toʻgʻri boʻlsin!");
+      ui.bubble("elder", "Ikki savol: avval javob, keyin ifoda. Ikkalasi ham toʻgʻri boʻlishi kerak.");
     }
 
     // Hayotiy savol — ikki qadam: 1) holat uchun javob (Ha / Yo'q), 2) qoidaga mos ifoda (4 variant).

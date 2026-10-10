@@ -4,6 +4,7 @@
 
   const QK = root.QK;
   const { ui, sound } = QK;
+  const KEYINGI = { 1: "range(boshi, oxiri, qadam) va satr boʻylab yurish", 2: "ichma-ich sikl" };
 
   async function stageDone(s, goingOn) {
     ui.setCompact(false);
@@ -12,9 +13,7 @@
     sound.play("win");
     ui.pose("elder", "happy", 1200);
     ui.pose("apprentice", "happy", 1200);
-    await ui.say("elder", goingOn
-      ? `${s}-bosqich tugadi! Barakalla, keyingisiga oʻtamiz.`
-      : `${s}-bosqich tugadi! Barakalla!`);
+    await ui.say("elder", goingOn && KEYINGI[s] ? `${s}-bosqich tugadi. Keyingisi — ${KEYINGI[s]}.` : `${s}-bosqich tugadi.`);
   }
 
   async function congrats() {
@@ -23,7 +22,7 @@
     sound.play("win");
     ui.pose("elder", "happy", 1500);
     ui.pose("apprentice", "happy", 1500);
-    ui.bubble("elder", "Tabriklayman! Endi sanoqni Pythonga topshira olasan.");
+    ui.bubble("elder", "Tayyor: for va range bilan sanoqli sikl, ichma-ich sikl yoza olasan.");
     ui.work().append(ui.h("div", { class: "story" },
       ui.h("div", { class: "story-art small", html: QK.gameArt.steps(5, 5) }),
       ui.h("div", { class: "summary" },

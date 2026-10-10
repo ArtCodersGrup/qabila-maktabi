@@ -6,10 +6,8 @@
   const { ui, logic: L, common } = QK;
 
   async function kirish() {
-    await ui.say("elder", "Endi qurol. fire() — oʻq uzadi, lekin oʻqing uchta.");
-    await ui.say("elder", "scan() esa qarshingdagi nishongacha masofani aytadi. Koʻrinmasa −1 beradi.");
-    await ui.say("apprentice", "Demak avval scan(), keyin fire()?");
-    await ui.say("elder", "Toʻgʻri. Koʻrmay turib otish — oʻqni behuda sarflash.");
+    await ui.say("elder", "fire() — oʻq uzadi, oʻqing esa uchta. scan() — qarshingdagi nishongacha masofani qaytaradi, koʻrinmasa −1.");
+    await ui.say("elder", "Qoida: avval scan(), nishon koʻrinsa — fire(). Koʻrmay otish oʻqni behuda sarflaydi.");
   }
 
   async function stage2() {
@@ -17,8 +15,8 @@
     for (let k = 0; k < L.VAZIFALAR.nishon.length; k++) {
       ui.setProgress(L.VAZIFALAR.nishon.length, k);
       await common.vazifaEkrani("nishon", L.vazifa("nishon", k));
-      await ui.say("elder", k === 2 ? "Toʻsiq ortidagini ham urding — endi jangga tayyorsan."
-        : "Nishon yiqildi! Keyingisi qiyinroq.");
+      await ui.say("elder", k === 2 ? "Toʻsiq ortidagi nishon ham urildi."
+        : "Nishon urildi. Keyingisi qiyinroq.");
     }
     ui.setProgress(L.VAZIFALAR.nishon.length, L.VAZIFALAR.nishon.length);
   }

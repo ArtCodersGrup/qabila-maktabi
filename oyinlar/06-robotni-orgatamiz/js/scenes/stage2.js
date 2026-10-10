@@ -12,8 +12,8 @@
     const badge = learnUi.errorBadge(box);
     f.set({ points: task.points, line: task.start });
     badge.set(learn.errorsOf(task.points, task.start));
-    await ui.say("elder", "Har safar hamma misolni koʻrib chiqish — sekin. Yaxshisi, chegara chizamiz.");
-    ui.bubble("elder", "Chiziqni sur va bur: toʻlalar tepada, boʻshlar pastda qolsin!");
+    await ui.say("elder", "Har safar barcha misollar bilan solishtirish — sekin. Boshqa usul: misollarni ajratadigan chegara chizigʻi.");
+    ui.bubble("elder", "Chiziqni sur va bur: toʻlalar tepada, boʻshlar pastda qolsin. Xatolar soni hisoblab boriladi.");
     await ui.settle((done) => {
       common.lineEditor({
         f,
@@ -29,8 +29,8 @@
         },
       });
     });
-    await ui.say("elder", "Xato 0! Bu chiziq — robotning modeli.");
-    await ui.say("elder", "Endi robot har bir yongʻoqni chiziq bilan taqqoslaydi — tez va oson.");
+    await ui.say("elder", "Xato 0. Bu chiziq — model: maʼlumotdan olingan qoida.");
+    await ui.say("elder", "Endi bashorat — bitta tekshiruv: yongʻoq chiziqdan yuqoridami yoki pastda.");
   }
 
   // 5.3: robot o'zi o'rganadi
@@ -41,12 +41,12 @@
     f.set({ points: task.points, line: task.start });
     badge.set(learn.errorsOf(task.points, task.start));
     await ui.say("elder", "Yangi misollar. Endi chiziqni robot oʻzi topadi.");
-    ui.bubble("elder", "«Oʻrgat»ni bos va qara: u har xatodan keyin chiziqni biroz suradi.");
+    ui.bubble("elder", "«Oʻrgat»ni bos: robot har xatodan keyin chiziqni biroz suradi.");
     await ui.settle((done) => {
       ui.control().append(ui.button("Oʻrgat", () => { ui.clearControl(); done(); }, "big"));
     });
     await common.trainAnimation(f, task.points, task.start, badge);
-    await ui.say("elder", "Xato 0! Chiziqni qadamba-qadam tuzatish — bu oʻqitish.");
+    await ui.say("elder", "Xato 0. Oʻqitish — xatolar kamayadigan tomonga modelni qadamba-qadam tuzatish.");
   }
 
   // 5.4: mashq — chiziqni 0 xatoga keltirish
@@ -82,7 +82,7 @@
   async function stage2() {
     await drawLine();
     await robotTrains();
-    await ui.say("elder", `Endi oʻzing chiz! ${QK.practice.need()} ta toʻgʻri javob kerak.`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta maʼlumot toʻplami — har biriga xatosiz chegara.`);
     await practice.exercises({
       next: (prev, correct, tier) => learn.makeLineTask(prev, null, tier),
       run: lineTask,

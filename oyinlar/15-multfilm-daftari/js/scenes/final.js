@@ -12,9 +12,8 @@
     sound.play("win");
     ui.pose("elder", "happy", 1200);
     ui.pose("apprentice", "happy", 1200);
-    await ui.say("elder", goingOn
-      ? `${s}-bosqich tugadi! Barakalla, keyingisiga oʻtamiz.`
-      : `${s}-bosqich tugadi! Barakalla!`);
+    const NEXT = { 1: "video hajmi va gigabayt.", 2: "siqish: faqat oʻzgargan piksellar." };
+    await ui.say("elder", goingOn && NEXT[s] ? `${s}-bosqich tugadi. Keyingisi — ${NEXT[s]}` : `${s}-bosqich tugadi.`);
   }
 
   async function congrats() {
@@ -23,14 +22,14 @@
     sound.play("win");
     ui.pose("elder", "happy", 1500);
     ui.pose("apprentice", "happy", 1500);
-    ui.bubble("elder", "Tabriklayman! Endi sen video qanday saqlanishini bilasan!");
+    ui.bubble("elder", "Tayyor: video hajmini hisoblay olasan va siqish nimani tejashini bilasan.");
     ui.work().append(ui.h("div", { class: "story" },
       ui.h("div", { class: "story-art small", html: art.notebook() }),
       ui.h("div", { class: "summary" },
-        ui.h("div", { text: "Video — tez almashadigan kadrlar" }),
-        ui.h("div", { text: "Hajm = kadr × kadrlar soni" }),
+        ui.h("div", { text: "Kadrlar = kadr/soniya × soniya" }),
+        ui.h("div", { text: "V = 1 kadr hajmi × kadrlar soni" }),
         ui.h("div", { text: "1024 Mbayt = 1 Gbayt" }),
-        ui.h("div", { text: "Siqish: faqat oʻzgargani" }))));
+        ui.h("div", { text: "Siqish: 1-kadr toʻliq, keyin faqat oʻzgargani" }))));
     return ui.choice([
       { label: "Qayta oʻynash", value: "replay" },
       { label: "Bosh ekran", value: "home", secondary: true },

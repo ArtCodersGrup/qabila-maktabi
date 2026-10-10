@@ -11,10 +11,8 @@
     ui.clearControl();
     ui.paper("");
     ui.work().append(ui.h("div", { class: "story-art", html: art.robot() }));
-    await ui.say("elder", "Qabilaga robot keldi!");
-    await ui.say("apprentice", "U yongʻoqlarni saralay oladimi?");
-    await ui.say("elder", "Hozircha yoʻq — u hech narsa bilmaydi. Biz oʻrgatamiz.");
-    await ui.say("elder", "Morzeda jadvalni biz yozgandik. Robotga esa misollar koʻrsatamiz.");
+    await ui.say("elder", "Maqsad: mashina misollardan qanday oʻrganishini koʻrish — eng yaqin misol, chegara chizigʻi, sinov.");
+    await ui.say("elder", "Vazifa — klassifikatsiya: yongʻoqni chaqmasdan toʻla yoki boʻsh deb ajratish. Qoida yozilmaydi, robotga misollar beriladi.");
   }
 
   // 4.1: 6 ta yong'oqni chaqib, o'qitish ma'lumotini yig'ish
@@ -24,7 +22,7 @@
     box.append(counter);
     const holder = ui.h("div", { class: "nut-holder" });
     ui.control().append(holder);
-    ui.bubble("elder", "Yongʻoqni bos — chaqib koʻramiz. Ichida magʻiz bormi?");
+    ui.bubble("elder", "Yongʻoqni bosib chaq — ichida magʻiz bormi? Har chaqilgan yongʻoq — bitta misol.");
     const shown = [];
     for (const p of points) {
       holder.innerHTML = "";
@@ -41,7 +39,7 @@
       await ui.sleep(550);
     }
     holder.remove();
-    await ui.say("elder", "Bu — oʻqitish maʼlumoti. Toʻla yongʻoqlar tepada, boʻshlari pastda!");
+    await ui.say("elder", "Javobi maʼlum misollar — oʻqitish maʼlumoti. Toʻlalari tepada, boʻshlari pastda.");
   }
 
   // 4.2: eng yaqin misol bo'yicha qaror
@@ -51,8 +49,8 @@
     const holder = ui.h("div", { class: "nut-holder" });
     box.append(holder);
     const card = learnUi.nutCard(holder, task.query, null, true);
-    await ui.say("elder", "Yangi yongʻoq. Robot uni chaqmasdan aytishi kerak: toʻlami yoki boʻsh?");
-    ui.bubble("elder", "Robot eng oʻxshash misolni qidiradi. «Robot qaror qilsin»ni bos.");
+    await ui.say("elder", "Yangi yongʻoq. Robot uni chaqmasdan bashorat qilishi kerak: toʻla yoki boʻsh.");
+    ui.bubble("elder", "Usul: maydonda eng yaqin misol qidiriladi. «Robot qaror qilsin»ni bos.");
     await ui.settle((done) => {
       ui.control().append(ui.button("Robot qaror qilsin", () => { ui.clearControl(); done(); }, "big"));
     });
@@ -60,10 +58,10 @@
     sound.play("tap");
     await ui.sleep(700);
     f.set({ links: [task.near], glow: [task.near] });
-    await ui.say("elder", `Eng yaqin misol — ${common.nutName(task.near.full)}. Robot «${common.nutName(task.answer)}» deydi.`);
+    await ui.say("elder", `Eng yaqin misol — ${common.nutName(task.near.full)}, demak bashorat: «${common.nutName(task.answer)}».`);
     card.reveal(task.answer);
     sound.play("win");
-    await ui.say("elder", "Chaqib koʻrdik — toʻgʻri!");
+    await ui.say("elder", "Chaqib tekshirildi — bashorat toʻgʻri.");
   }
 
   async function explain() {
@@ -71,8 +69,8 @@
     ui.clearWork();
     ui.clearControl();
     ui.work().append(ui.h("div", { class: "story-art", html: art.robot() }));
-    await ui.say("elder", "Robot qoidani yozmaydi — u koʻrgan misollariga qaraydi.");
-    await ui.say("elder", "Eng yaqin misol qanday boʻlsa, javob ham shunday.");
+    await ui.say("elder", "Bu usul eng yaqin qoʻshni deyiladi: qoida yozilmaydi, yangi obyekt misollarga solishtiriladi.");
+    await ui.say("elder", "Oʻxshashlik — maydondagi masofa: masofa qancha kichik boʻlsa, misol shuncha oʻxshash.");
   }
 
   // 4.4: ikki qadam — avval eng yaqin misolni maydonda bosadi, keyin "robot nima deydi?" ga javob beradi.
@@ -92,7 +90,7 @@
       second: {
         setup: (submit) => {
           f.set({ onPick: null, links: [task.near], glow: [task.near] });
-          ui.bubble("elder", "Toʻgʻri, eng yaqini shu. Endi robot bu yongʻoqni nima deydi?");
+          ui.bubble("elder", "Eng yaqini shu. Robotning bashorati qanday?");
           learnUi.answerButtons(submit);
         },
         check: (value) => value === task.answer,
@@ -101,9 +99,9 @@
         if (step === 1) {
           // Asbob: uchta nomzodgacha chiziq — qaysi biri eng qisqa ekanini bola o'zi solishtiradi
           f.set({ links: learn.nearestList(task.points, task.query, 3) });
-          ui.bubble("elder", "↻ Uchta misolgacha chiziq tortdim. Eng qisqa chiziq qaysi misolga boradi?");
+          ui.bubble("elder", "↻ Uchta misolgacha masofa chizildi. Eng qisqasi qaysi misolga boradi?");
         } else {
-          ui.bubble("elder", "↻ Robot eng yaqin misolga qaraydi: u qanday boʻlsa, javob ham shunday.");
+          ui.bubble("elder", "↻ Bashorat = eng yaqin misolning javobi.");
         }
       },
       solution: () => {
@@ -119,7 +117,7 @@
     await collect(first.points);
     await nearestDemo(first);
     await explain();
-    await ui.say("elder", `Endi oʻzing top: eng yaqin misol qaysi va robot nima deydi? ${QK.practice.need()} ta toʻgʻri javob kerak!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta yongʻoq — avval eng yaqin misol, keyin bashorat.`);
     await practice.exercises({
       next: (prev, correct, tier) => learn.makeNearestTask(prev, null, tier),
       run: nearestTask,

@@ -11,9 +11,8 @@
     ui.clearControl();
     ui.paper("");
     ui.work().append(ui.h("div", { class: "story-art", html: art.robot() }));
-    await ui.say("elder", "«Robot nimani koʻradi?» oʻyinida belgini biz tanlagan edik: boʻyalgan kataklar soni.");
-    await ui.say("apprentice", "Robot belgini oʻzi topa oladimi?");
-    await ui.say("elder", "Ha — neyronlar yordamida. Neyron «Qabila chiroqlari» oʻyinidagi chiroqqa oʻxshaydi.");
+    await ui.say("elder", "Maqsad: sunʼiy neyron va neyron tarmoq qanday ishlashini tushunish.");
+    await ui.say("elder", "Kalit gʻoya: «Robot nimani koʻradi?» oʻyinida belgini biz tanlagan edik. Neyron tarmoq belgilarni misollardan oʻzi topadi.");
   }
 
   // 4.1: chiroqlarni yoqib, neyron qachon yonishini ko'rish
@@ -21,7 +20,7 @@
     const el = common.box(true);
     let sawOn = false;
     let sawOff = false;
-    ui.bubble("elder", "Chapdagi chiroqlarni bosib yoq. Katta doira — neyron. U qachon yonadi?");
+    ui.bubble("elder", "Chapdagi kirishlarni (chiroqlarni) bosib yoq. Katta doira — neyron: u qachon yonadi?");
     await ui.settle((done) => {
       neuralUi.neuronView(el, {
         weights: neural.DEMO.weights,
@@ -36,14 +35,14 @@
         },
       });
     });
-    await ui.say("elder", "Koʻrdingmi? Har chiroqning ogʻirligi bor: yashil +1 yonishga yordam beradi, sariq −1 xalaqit beradi.");
+    await ui.say("elder", "Har kirishning ogʻirligi bor: yashil +1 yonishga yordam beradi, sariq −1 xalaqit beradi.");
   }
 
   async function explain() {
     const el = common.box(false);
     neuralUi.neuronView(el, { inputs: [1, 1, 0], weights: neural.DEMO.weights, threshold: neural.DEMO.threshold });
-    await ui.say("elder", "Neyron yoniq kirishlarni ogʻirligi bilan qoʻshadi: +1 +1 = 2.");
-    await ui.say("elder", "Yigʻindi chegaraga yetsa — neyron yonadi. Yetmasa — yonmaydi.");
+    await ui.say("elder", "Neyron yoniq kirishlar ogʻirligini qoʻshadi: yigʻindi = w₁·x₁ + w₂·x₂ + … Bu yerda +1 +1 = 2.");
+    await ui.say("elder", "Qoida: yigʻindi ≥ chegara boʻlsa, neyron yonadi (1), aks holda — yonmaydi (0).");
   }
 
   // 4.3: mashq — ikki qadam: avval yig'indi (4 variant), keyin "yonadimi?".
@@ -81,7 +80,7 @@
   async function stage1() {
     await neuronDemo();
     await explain();
-    await ui.say("elder", `Endi oʻzing hisobla: yigʻindi nechchi va neyron yonadimi? ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta neyron — yigʻindini hisobla va yonish-yonmasligini ayt.`);
     await practice.exercises({
       next: (prev, correct, tier) => neural.makeFireTask(prev, null, tier),
       run: fireTask,

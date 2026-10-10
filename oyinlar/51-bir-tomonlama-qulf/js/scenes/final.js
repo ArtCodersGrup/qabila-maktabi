@@ -5,6 +5,8 @@
   const QK = root.QK;
   const { ui, sound } = QK;
 
+  const KEYINGI = { 1: "parol izi (xesh) va kirish tekshiruvi.", 2: "bir xil parol xavfi va tuz." };
+
   async function stageDone(s, goingOn) {
     ui.setCompact(false);
     ui.clearWork();
@@ -12,9 +14,7 @@
     sound.play("win");
     ui.pose("elder", "happy", 1200);
     ui.pose("apprentice", "happy", 1200);
-    await ui.say("elder", goingOn
-      ? `${s}-bosqich tugadi! Barakalla, keyingisiga oʻtamiz.`
-      : `${s}-bosqich tugadi! Barakalla!`);
+    await ui.say("elder", goingOn && KEYINGI[s] ? `${s}-bosqich tugadi. Keyingisi — ${KEYINGI[s]}` : `${s}-bosqich tugadi.`);
   }
 
   async function congrats() {
@@ -23,13 +23,13 @@
     sound.play("win");
     ui.pose("elder", "happy", 1500);
     ui.pose("apprentice", "happy", 1500);
-    ui.bubble("elder", "Tabriklayman! Endi bir tomonlama qulf qanday ishlashini bilasan.");
+    ui.bubble("elder", "Tayyor: parol izini qoʻlda hisoblay olasan va tuz nega kerakligini tushuntira olasan.");
     ui.work().append(ui.h("div", { class: "story" },
       ui.h("div", { class: "story-art small", html: QK.gameArt.barmoq() }),
       ui.h("div", { class: "summary" },
         ui.h("div", { text: "Bir tomonlama amal: oldinga oson, orqaga yoʻl yoʻq" }),
-        ui.h("div", { text: "Sayt parolni emas, uning izini saqlaydi" }),
-        ui.h("div", { text: "Har saytda boshqa parol — tuz izni ham boshqa qiladi" }))));
+        ui.h("div", { text: "Sayt parolni emas, izini (xeshini) saqlaydi: iz = (iz · 3 + son) mod 100" }),
+        ui.h("div", { text: "Tuz izni har saytda boshqa qiladi; parol ham har saytda boshqa boʻlsin" }))));
     return ui.choice([
       { label: "Qayta oʻynash", value: "replay" },
       { label: "Bosh ekran", value: "home", secondary: true },

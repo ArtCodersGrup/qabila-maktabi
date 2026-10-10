@@ -17,16 +17,16 @@
     el.append(common.note("Roʻyxat boʻylab ikki xil yurish mumkin:"));
     withOutput(el, "a = [5, 2, 9]\nfor x in a:\n    print(x)");
     withOutput(el, "a = [5, 2, 9]\nfor i in range(len(a)):\n    print(i, a[i])");
-    await ui.say("elder", "Birinchisi qiymatni beradi. Ikkinchisi indeksni ham beradi.");
-    await ui.say("elder", "Indeks kerak boʻlmasa, birinchisi qulayroq.");
+    await ui.say("elder", "Birinchisi faqat qiymatni beradi, ikkinchisi — indeksni ham.");
+    await ui.say("elder", "Indeks kerak boʻlmasa, birinchi usul qisqaroq.");
   }
 
   async function collect() {
     const el = common.box();
     el.append(common.note("Yigʻindi va eng kattasini oʻzimiz ham topa olamiz:"));
     withOutput(el, "a = [5, 2, 9, 4]\ns = 0\nfor x in a:\n    s += x\nprint(s, sum(a))");
-    await ui.say("elder", "Tayyor sum bor, lekin ichida aynan shu sikl ishlaydi.");
-    await ui.say("elder", "Olimpiada masalalarida koʻpincha oʻzing yozishing kerak boʻladi.");
+    await ui.say("elder", "Tayyor sum() funksiyasi ichida ham aynan shu sikl ishlaydi.");
+    await ui.say("elder", "Olimpiada masalalarida bu siklni koʻpincha oʻzing yozasan.");
   }
 
   async function slices() {
@@ -41,7 +41,7 @@
       ui.h("div", { class: "formula-row kod", text: "for x in a:        — qiymat" }),
       ui.h("div", { class: "formula-row kod", text: "for i in range(len(a)):  — indeks" }),
       ui.h("div", { class: "formula-row kod", text: "a[1:3] — 1 dan 3 gacha, 3 kirmaydi" })));
-    await ui.say("elder", "Endi oʻzing hisobla.");
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta kod. Har biri nima chiqarishini aniqla.`);
   }
 
   async function stage2() {
@@ -52,7 +52,7 @@
     await practice.exercises({
       next: (prev, correct, tier) => L.walkTask(Math.random, prev, tier),
       run: (task) => common.resultExercise(task),
-      praise: () => "Roʻyxatni toʻgʻri aylanib chiqding.",
+      praise: () => "Toʻgʻri.",
     });
   }
 

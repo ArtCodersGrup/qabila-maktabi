@@ -7,10 +7,10 @@
 
   // Hikoya: art — rasm (QK.art.story), caption — rasm ostidagi yozuv, lines — Oqsoqol gaplari
   const SCENES = [
-    { art: "abacus", lines: ["Rimliklar hisobni hisob taxtasida qilgan.", "Rim raqamlari esa asosan yozib qoʻyish uchun edi."] },
-    { art: "scroll", caption: "0 1 2 3 4 5 6 7 8 9", lines: ["Hindistonda 0 va oʻnlik pozitsion sonlar paydo boʻldi."] },
-    { art: "scholar", caption: "Muhammad al-Xorazmiy", lines: ["Xorazmlik buyuk olim Muhammad al-Xorazmiy bu sonlar haqida kitob yozdi.", "Kitob Yevropaga yetib bordi va dunyo shu sonlarni ishlata boshladi."] },
-    { art: "computer", caption: "algoritm", lines: ["«Algoritm» soʻzi al-Xorazmiy nomidan kelib chiqqan.", "Algoritm — ishni qadamma-qadam bajarish tartibi. Kompyuterlar ham shu bilan ishlaydi!"] },
+    { art: "abacus", lines: ["Tarix: rimliklar hisobni hisob taxtasida (abakda) qilgan.", "Rim raqamlari faqat natijani yozib qoʻyish uchun ishlatilgan."] },
+    { art: "scroll", caption: "0 1 2 3 4 5 6 7 8 9", lines: ["Hindistonda 0 va oʻnlik pozitsion tizim paydo boʻldi."] },
+    { art: "scholar", caption: "Muhammad al-Xorazmiy", lines: ["Muhammad al-Xorazmiy (IX asr) bu tizimda hisoblash haqida kitob yozdi.", "Kitob tarjimasi orqali Yevropa ham pozitsion tizimga oʻtdi."] },
+    { art: "computer", caption: "algoritm", lines: ["«Algoritm» soʻzi al-Xorazmiy nomidan kelib chiqqan.", "Algoritm — masalani yechadigan aniq qadamlar ketma-ketligi. Har bir dastur — algoritm."] },
   ];
 
   // 6.1: yoyilma — 352 va XXVII
@@ -24,10 +24,10 @@
     await ui.say("elder", "352 da 3 ta yuz, 5 ta oʻn va 2 ta bir bor.");
     view.showValues();
     box.append(ui.h("div", { class: "formula-row", text: "352 = 300 + 50 + 2" }));
-    await ui.say("elder", "Har bir raqam turgan xonasiga qarab qiymat oladi.");
+    await ui.say("elder", "Raqam qiymati = raqam × xona vazni: 5 × 10 = 50.");
     box.innerHTML = "";
     box.append(romanUi.breakdown("XXVII"), ui.h("div", { class: "formula-row", text: "XXVII = 10 + 10 + 5 + 1 + 1 = 27" }));
-    await ui.say("elder", "Rimda esa har bir belgining oʻz qiymati bor.");
+    await ui.say("elder", "Rimda esa belgining qiymati qatʼiy, qiymatlar shunchaki qoʻshiladi.");
   }
 
   // 6.2: tajriba — 5 va 2 joy almashadi
@@ -39,7 +39,7 @@
     ui.work().append(box);
     const view = romanUi.placeView(box, 352, { labels: true, values: true });
     view.highlight(1);
-    ui.bubble("elder", "«Almashtir»ni bos: 5 va 2 joy almashadi. 5 ga nima boʻladi?");
+    ui.bubble("elder", "«Almashtir»ni bos: 5 va 2 joy almashadi. 5 ning qiymati qanday oʻzgaradi?");
     await ui.settle((done) => {
       ui.control().append(ui.button("Almashtir", () => {
         ui.clearControl();
@@ -48,8 +48,8 @@
     });
     view.set(325);
     view.highlight(2);
-    await ui.say("elder", "5 raqami oʻnlar xonasida 50 edi, birlar xonasida esa 5!");
-    await ui.say("elder", "Raqam qiymati turgan xonasiga bogʻliq — bu pozitsion tizim.");
+    await ui.say("elder", "5 oʻnlar xonasida 50 edi, birlar xonasida — 5.");
+    await ui.say("elder", "Taʼrif: raqam qiymati turgan xonasiga bogʻliq boʻlsa — pozitsion tizim.");
     box.innerHTML = "";
     const row = ui.h("div", { class: "pairs" });
     for (const w of ["XV", "LX", "XXX"]) row.append(romanUi.breakdown(w, { mark: "X" }));
@@ -66,12 +66,12 @@
     ui.work().append(box);
     const view = romanUi.placeView(box, 105, { labels: true, values: true });
     view.highlight(1);
-    await ui.say("elder", "105 da 0 oʻnlar xonasini band qilib turadi.");
+    await ui.say("elder", "105 da 0 oʻnlar xonasini band qiladi: oʻnlik yoʻq, lekin xona bor.");
     romanUi.placeView(box, 15, { labels: true, values: true });
-    await ui.say("elder", "0 boʻlmasa, 1 va 5 yonma-yon turib, 15 boʻlib qolardi!");
+    await ui.say("elder", "0 boʻlmasa, 1 va 5 yonma-yon turib, 15 boʻlib qoladi.");
     box.innerHTML = "";
     box.append(romanUi.breakdown("CV"), ui.h("div", { class: "formula-row", text: "CV = 100 + 5 = 105" }));
-    await ui.say("elder", "Rimda nol yoʻq: 105 — CV.");
+    await ui.say("elder", "Rimda xona yoʻq, shuning uchun nol ham kerak emas: 105 = CV.");
   }
 
   // 6.4: "{352} sonidagi {5} raqami nechaga teng?"
@@ -202,15 +202,15 @@
     ui.work().append(ui.h("div", { class: "story" },
       common.stone(roman.toRoman(year)),
       ui.h("div", { class: "story-caption", text: String(year) })));
-    await ui.say("elder", "M — 1000. Bu yil Rim raqamida shunday yoziladi!");
+    await ui.say("elder", "M — 1000. Joriy yil Rim raqamida shunday yoziladi.");
   }
 
   async function stage3() {
     await expand();
     await swap();
     await zero();
-    await ui.say("elder", `Endi oʻzing: raqam qaysi xonada turibdi? ${QK.practice.need()} ta toʻgʻri javob!`);
-    await ui.say("elder", "Savollar qiyinlashib boradi: nol, joy almashish va Rim soni bilan hisob ham keladi.");
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta savol — raqamning xonadagi qiymati.`);
+    await ui.say("elder", "Keyin nol, joy almashish va Rim soni bilan hisob qoʻshiladi.");
     await practice.exercises({
       next: (prev, correct, tier) => roman.makeStage3Task(correct, prev, null, tier),
       run: (task) => TASKS[task.type](task),

@@ -7,9 +7,9 @@
   const S = sanoq;
 
   const BUILDS = [
-    { base: 2, count: 5, start: "2-likda xonalar: 1 dan boshlab, har gal 2 ga koʻpaytir!", end: "2-lik xonalar: 16, 8, 4, 2, 1 — «Qabila chiroqlari» oʻyinidagi chiroqlarni esla!" },
-    { base: 8, count: 3, start: "Endi 8-lik: har gal 8 ga koʻpaytir!", end: "8-lik xonalar: 64, 8, 1." },
-    { base: 16, count: 3, start: "16-lik: har gal 16 ga koʻpaytir!", end: "16-lik xonalar: 256, 16, 1." },
+    { base: 2, count: 5, start: "2-likda xona vaznlarini yasa: 1 dan boshlab har gal 2 ga koʻpaytir.", end: "2-likda vaznlar: 16, 8, 4, 2, 1 — 2⁴ … 2⁰ («Qabila chiroqlari» oʻyinidagi chiroqlar)." },
+    { base: 8, count: 3, start: "8-likda: har gal 8 ga koʻpaytir.", end: "8-likda vaznlar: 64, 8, 1 — 8², 8¹, 8⁰." },
+    { base: 16, count: 3, start: "16-likda: har gal 16 ga koʻpaytir.", end: "16-likda vaznlar: 256, 16, 1 — 16², 16¹, 16⁰." },
   ];
 
   // Xona qutilari: o'ngda 1, chapga qarab kattalashadi
@@ -46,9 +46,9 @@
 
   async function definition() {
     const el = common.box(false);
-    common.formula(el, ["xonalar: 1, n, n·n, n·n·n …", "10-lik: 1, 10, 100, 1000"]);
-    await ui.say("elder", "Har keyingi xona oldingisidan asos marta katta.");
-    await ui.say("elder", "10-likda ham shunday: 1, 10, 100, 1000 — tanish-ku!");
+    common.formula(el, ["xona vaznlari: 1, b, b², b³ … (bᵏ)", "10-lik: 1, 10, 100, 1000"]);
+    await ui.say("elder", "Har keyingi xonaning vazni oldingisidan b marta katta: oʻngdan 1-xona — 1, 2-xona — b, 3-xona — b².");
+    await ui.say("elder", "Oʻnlikdagi birlar, oʻnlar, yuzlar, minglar — aynan 10⁰, 10¹, 10², 10³.");
   }
 
   // Son ustida xona qiymatlari (maslahat uchun)
@@ -66,14 +66,14 @@
       el.append(ui.h("div", { class: "facts" },
         ui.h("div", { text: `Tizim: ${task.base}-lik` }),
         ui.h("div", { text: `Xona: oʻngdan ${task.k}-xona` })));
-      ui.bubble("elder", "Bu xonaning qiymati nechaga teng?");
+      ui.bubble("elder", "Bu xonaning vazni nechaga teng?");
       const list = S.places(task.base, task.k);
       return practice.numberTries({
         answer: task.answer,
         maxLen: 4,
         hint: () => {
           common.add(el, common.line(`1, ${task.base}, … — har gal ${task.base} ga koʻpaytir`));
-          ui.bubble("elder", "↻ Birlar xonasidan boshlab koʻpaytirib bor.");
+          ui.bubble("elder", "↻ 1-xona vazni 1. Har keyingisini asosga koʻpaytirib bor.");
         },
         solution: () => {
           el.append(placeRow(list));
@@ -85,12 +85,12 @@
       el.append(ui.h("div", { class: "facts" },
         ui.h("div", { text: `Son: ${S.fmt(task.number, task.base)}` }),
         ui.h("div", { text: `Raqam: ${task.digit}` })));
-      ui.bubble("elder", "Bu raqam turgan xonaning qiymati nechaga teng?");
+      ui.bubble("elder", "Bu raqam turgan xonaning vazni nechaga teng?");
       return practice.numberTries({
         answer: task.answer,
         hint: () => {
           common.add(el, numberWithPlaces(task.number, task.base));
-          ui.bubble("elder", "↻ Har raqam ustida uning xona qiymati.");
+          ui.bubble("elder", "↻ Har raqam ustida uning xona vazni yozilgan.");
         },
         solution: () => common.add(el, common.answerLine(`${task.digit} — ${task.answer} lar xonasida`)),
       });
@@ -98,8 +98,8 @@
     // Tizim turi: 4 yozuvdan bittasi boshqa turda — o'shani top (4 variant)
     el.append(ui.h("div", { class: "count-line", text: "Toʻrtta yozuv" }));
     ui.bubble("elder", task.ask === "nopoz"
-      ? "Bulardan qaysi biri NOPOZITSION tizimda yozilgan?"
-      : "Bulardan qaysi biri POZITSION tizimda yozilgan?");
+      ? "Qaysi biri NOPOZITSION tizimda yozilgan?"
+      : "Qaysi biri POZITSION tizimda yozilgan?");
     return practice.tries({
       setup: (submit) => {
         const row = ui.h("div", { class: "choice-row" });
@@ -123,8 +123,8 @@
   }
 
   const SCENES = [
-    { art: "chip", lines: ["Kompyuter 2-likda ishlaydi: har xona — bitta chiroq.", "Yoniq — 1, oʻchiq — 0."] },
-    { art: "coins", lines: ["Keyingi oʻyinda xona qiymatlari tangalarga aylanadi.", "Ular bilan istalgan sonni oʻnlikka oʻgiramiz!"] },
+    { art: "chip", lines: ["Qayerda uchraydi: protsessor va xotira 2-likda ishlaydi — har xona bitta tranzistor: oqim bor — 1, yoʻq — 0."] },
+    { art: "coins", lines: ["Xona vaznlari bilan istalgan sonni oʻnlikka oʻtkazish — «Tangalar bozori» oʻyinida."] },
   ];
 
   async function showScene(scene) {
@@ -138,7 +138,7 @@
   async function stage3() {
     for (const run of BUILDS) await build(run);
     await definition();
-    await ui.say("elder", `Endi oʻzing top: xonalar va tizim turlari. ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta — xona vazni va tizim turi.`);
     await practice.exercises({
       next: (prev, correct, tier) => tizim.makePlaceTask(prev, undefined, tier),
       run: placeTask,

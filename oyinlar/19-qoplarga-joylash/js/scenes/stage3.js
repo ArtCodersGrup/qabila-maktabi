@@ -7,8 +7,8 @@
   const S = sanoq;
 
   const SCENES = [
-    { art: "convert", lines: ["Kompyuter ham har kuni shunday aylantiradi.", "Sen yozgan 13 ni u ichida 1101 qilib saqlaydi."] },
-    { art: "plus", lines: ["Keyingi oʻyinda — ikkilikda qoʻshish, ayirish va koʻpaytirish!"] },
+    { art: "convert", lines: ["Qayerda uchraydi: klaviaturada 13 yozsang, dastur uni xotirada 1101₂ qilib saqlaydi.", "Ekranga chiqarishda esa teskari — oʻnlikka oʻtkazadi."] },
+    { art: "plus", lines: ["Ikkilikda qoʻshish, ayirish va koʻpaytirish — «Ikkilik hisobchi» oʻyinida."] },
   ];
 
   const expandText = (s, b) => S.expand(s, b).map((d) => `${d.value}·${d.place}`).join(" + ");
@@ -17,13 +17,13 @@
   async function hexDemo() {
     const el = common.box(true);
     el.append(ui.h("div", { class: "big-value", text: "200 → 16-lik" }));
-    ui.bubble("elder", "200 ni 16-likka oʻtkazamiz. «Boʻl»ni bos!");
+    ui.bubble("elder", "200 ni 16-likka oʻtkazamiz. «Boʻl» ni bos.");
     await qopScenes.divideAndRead(el, 200, 16, [
       "200 : 16 = 12, qoldiq 8.",
-      "12 : 16 = 0, qoldiq 12 — bu bitta raqam: C!",
+      "12 : 16 = 0, qoldiq 12 — 16-likda bu bitta raqam: C.",
     ]);
     common.add(el, common.answerLine(`Tekshiramiz: C8₁₆ = ${expandText("C8", 16)} = 200 ✓`));
-    await ui.say("elder", "Teskari yoʻl bilan tekshirish — eng ishonchli usul.");
+    await ui.say("elder", "Tekshiruv: natijani oʻnlikka qaytar (raqam × vazn) — boshlangʻich son chiqishi kerak.");
   }
 
   // 6.2: mashq — 16-lik, 8-lik, "to'g'ri yozuvni tanla" (4 variant)
@@ -31,21 +31,21 @@
     const el = common.box(true);
     if (task.type !== "choose") {
       el.append(ui.h("div", { class: "big-value", text: `${task.n} → ${task.base}-lik` }));
-      ui.bubble("elder", `Bu sonni ${task.base}-likda yoz.`);
+      ui.bubble("elder", `${task.base}-likda yoz.`);
       return sanoqUi.digitTries({
         answer: task.answer,
         base: task.base,
         maxLen: 4,
         hint: () => {
           common.add(el, qopScenes.firstStep(task));
-          ui.bubble("elder", "↻ Qoldiq 10 dan katta boʻlsa — harf bilan yoz.");
+          ui.bubble("elder", "↻ Qoldiq 10 yoki undan katta boʻlsa — harf bilan yoz: A = 10 … F = 15.");
         },
         solution: () => qopScenes.solutionTable(el, task),
       });
     }
     // 4 variantdan to'g'ri yozuvni tanlash: biri — qoldiqlar teskari o'qilgan, biri — bitta raqami xato
     el.append(ui.h("div", { class: "big-value", text: `${task.n} → ${task.base}-lik` }));
-    ui.bubble("elder", "Toʻrtta javobdan faqat bittasi toʻgʻri. Qaysi biri?");
+    ui.bubble("elder", "Toʻrtta javobdan faqat bittasi toʻgʻri. Qaysi?");
     return practice.tries({
       setup: (submit) => {
         const row = ui.h("div", { class: "choice-row" });
@@ -55,7 +55,7 @@
       },
       check: (value) => value === task.answer,
       hint: () => {
-        common.add(el, common.line(`Xonalar: ${S.places(task.base, task.answer.length).reverse().join(", ")} — raqam × xona qiymati`));
+        common.add(el, common.line(`Xonalar: ${S.places(task.base, task.answer.length).reverse().join(", ")} — raqam × xona vazni`));
         ui.bubble("elder", "↻ Har javobni oʻnlikka qaytarib tekshir.");
       },
       solution: (value) => {
@@ -81,7 +81,7 @@
 
   async function stage3() {
     await hexDemo();
-    await ui.say("elder", `Endi oʻzing: 16-lik, 8-lik va toʻgʻri javobni tanlash. ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta — 16-likka, 8-likka va toʻgʻri yozuvni tanlash.`);
     await practice.exercises({
       next: (prev, correct, tier) => qop.makeAnyTask(prev, undefined, tier),
       run: anyTask,

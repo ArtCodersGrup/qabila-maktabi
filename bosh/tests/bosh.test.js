@@ -188,7 +188,7 @@ test("o'yin sahifasi: data-toifa katalogga teng, data-maskot — faqat qog'oz/ba
     assert.match(html, new RegExp('name="theme-color" content="' + (kattami(g) ? "#FBFAF7" : "#FFF6E5") + '"'), g.dir);
   }
   const maskotli = GAMES.filter((g) => maskotKerak(g.dir)).map((g) => g.n).sort((a, b) => a - b);
-  assert.deepEqual(maskotli, [1, 2, 3], "qog'oz yoki baraban ishlatadigan o'yinlar");
+  assert.deepEqual(maskotli, [2], "qog'oz yoki baraban ishlatadigan o'yinlar");
 });
 
 // toifa.js har o'yinning <head> ida, uslublardan oldin (kelajakdagi ko'rinish sozlamalari uchun; hozir faqat

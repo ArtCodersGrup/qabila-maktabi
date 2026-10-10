@@ -29,11 +29,11 @@
 
   async function stage3() {
     await korsat();
-    await ui.say("elder", "Endi navbat senga: goh xossani topasan, goh kodni tuzatasan.");
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta topshiriq — buzilgan xossani topish yoki kodni tuzatish.`);
     await practice.exercises({
       next: (prev, correct, tier) => L.stage3Task(Math.random, prev, tier),
       run: (task) => common.stage3Exercise(task),
-      praise: (task) => (task.tur === "tuzat" ? "Kod endi toʻgʻri ishlaydi." : "Xossani topding."),
+      praise: (task) => (task.tur === "tuzat" ? "Kod endi toʻgʻri ishlaydi." : "Toʻgʻri."),
     });
   }
 

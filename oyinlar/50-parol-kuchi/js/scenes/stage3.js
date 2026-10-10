@@ -11,10 +11,9 @@
     el.append(ui.h("div", { class: "pk-ikki" },
       common.parolKarta("Anvar2010", { hisob: false, vaqt: true }),
       common.parolKarta("tulkiquyosh", { hisob: false, vaqt: true })));
-    await ui.say("elder", "Ikkalasi ham oʻn belgi atrofida. Lekin biri — ism va yil.");
-    await ui.say("elder", "Hujumchi avval ismlarni, mashhur soʻzlarni va yillarni sinaydi — bu soniyalar ishi.");
-    await ui.say("apprentice", "«P@ss1» kabi belgilar bilan yashirsam-chi?");
-    await ui.say("elder", "Bu hiylani hamma biladi: @ — a, 1 — i. Dastur ularni oʻzi almashtirib koʻradi.");
+    await ui.say("elder", "Ikkalasi ham 10 belgi atrofida, lekin biri — ism va yil.");
+    await ui.say("elder", "Lugʻat hujumi: avval ismlar, mashhur soʻzlar va yillar sinaladi — bu soniyalar ishi.");
+    await ui.say("elder", "«P@ss1» kabi almashtirish ham yordam bermaydi: @ → a, 1 → i ni dastur oʻzi sinab koʻradi.");
   }
 
   async function qoida() {
@@ -25,13 +24,13 @@
       ui.h("div", { text: "Ism, tugʻilgan yil, mashhur soʻz emas" }),
       ui.h("div", { text: "Har sayt uchun boshqacha" }),
       ui.h("div", { class: "pk-misol", text: "«sariq fil kitob oʻqiydi» — uzun, esda qoladi, lugʻatda yoʻq" })));
-    await ui.say("elder", "Eng qulayi — toʻrtta tasodifiy soʻzdan ibora. Uzun boʻladi, lekin esda qoladi.");
+    await ui.say("elder", "Amaliy usul: 4 ta tasodifiy soʻzdan ibora — uzun, lugʻatda yoʻq va esda qoladi.");
   }
 
   async function stage3() {
     await lugat();
     await qoida();
-    await ui.say("elder", "Endi oʻzing baho ber — va oʻzing kuchli parol yasa.");
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta savol — parolga baho berish va kuchli parol yasash navbatma-navbat.`);
     await practice.exercises({
       // Baho (5 variant: daraja + sababi) va "oʻzing yasa" navbatlashadi
       next: (prev, togri, tier) => (togri % 2 === 1 ? L.yasaTask(Math.random, prev, tier) : L.bahoTask(Math.random, prev, tier)),

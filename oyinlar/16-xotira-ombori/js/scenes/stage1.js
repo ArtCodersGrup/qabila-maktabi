@@ -12,26 +12,25 @@
     ui.clearControl();
     ui.paper("");
     ui.work().append(ui.h("div", { class: "story-art", html: art.storehouse() }));
-    await ui.say("elder", "Biz bit, bayt, kilobayt, megabayt va gigabaytni oʻrgandik.");
-    await ui.say("apprentice", "Ular qanday bogʻlangan?");
-    await ui.say("elder", "Kel, xotira omborini quramiz — qutilar ichida qutilar!");
+    await ui.say("elder", "Maqsad: axborot birliklarini (bit … Tbayt) bir-biriga oʻtkazish, solishtirish va xotiraga nechta fayl sigʻishini hisoblash.");
+    await ui.say("elder", "Kalit gʻoya: har katta birlik kichigini oʻz ichiga oladi — qutilar ichida qutilar. Koʻpaytuvchilar: 8 va 1024.");
   }
 
   // Har pog'ona qo'yilgandan keyingi izoh
   const AFTER = [
-    "Bit — eng kichigi: yoniq yoki oʻchiq.",
+    "Bit — eng kichik birlik: 0 yoki 1.",
     "8 bit = 1 bayt. Birinchi qadam — 8 marta.",
     "1024 bayt = 1 Kbayt. Endi har qadam — 1024 marta.",
     "1024 Kbayt = 1 Mbayt.",
     "1024 Mbayt = 1 Gbayt.",
-    "Gbaytdan keyin — Tbayt (terabayt): 1024 Gbayt. Kompyuter disklari shunday oʻlchanadi.",
+    "1024 Gbayt = 1 Tbayt (terabayt). Disklar hajmi shunday oʻlchanadi.",
   ];
 
   // 4.1–4.2: bola birliklarni eng kichigidan boshlab teradi
   async function build() {
     const el = common.box(true);
     const steps = unitsUi.ladder(el, 0);
-    ui.bubble("elder", "Eng kichik birlikdan boshla! Qaysi biri eng kichik?");
+    ui.bubble("elder", "Birliklarni eng kichigidan boshlab ter: qaysi biri eng kichik?");
     const mixed = ["Mbayt", "bit", "Tbayt", "Kbayt", "bayt", "Gbayt"];
     let next = 0;
     await ui.settle((done) => {
@@ -54,7 +53,7 @@
       });
     });
     await ui.say("elder", AFTER[U.length - 1]);
-    await ui.say("elder", "Zinapoya tayyor! Har pogʻona — oldingisini oʻz ichiga oladigan katta quti.");
+    await ui.say("elder", "Zinapoya tayyor: har pogʻona oldingisini oʻz ichiga oladi.");
   }
 
   async function definition() {
@@ -62,8 +61,8 @@
     const rows = [`1 bayt = 8 bit`];
     for (let i = 2; i < U.length; i++) rows.push(`1 ${U[i]} = 1024 ${U[i - 1]}`);
     common.formula(el, rows);
-    await ui.say("elder", "Har pogʻona 1024 marta katta. Faqat birinchisi — 8 marta.");
-    await ui.say("elder", "Ikkita sonni yodda tut: 8 va 1024.");
+    await ui.say("elder", "Har pogʻona 1024 = 2¹⁰ marta katta, faqat bit → bayt — 8 marta.");
+    await ui.say("elder", "Kattaroq birlikka oʻtishda boʻlamiz, kichigiga oʻtishda koʻpaytiramiz.");
   }
 
   // To'liq javob: "1 Mbayt = 1024 Kbayt" yoki "Kbayt → Mbayt"
@@ -107,7 +106,7 @@
   async function stage1() {
     await build();
     await definition();
-    await ui.say("elder", `Endi oʻzing top: zinapoyadagi boʻsh joylar. ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta savol — zinapoyadagi boʻsh joylar.`);
     await practice.exercises({
       next: (prev, correct, tier) => units.makeLadderTask(prev, undefined, tier),
       run: ladderTask,

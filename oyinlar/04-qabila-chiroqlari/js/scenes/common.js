@@ -33,7 +33,7 @@
         if (found.has(key)) {
           sound.play("retry");
           row.shake();
-          ui.toast("Bu naqsh bor edi! Boshqasini yasa.");
+          ui.toast("Bu naqsh allaqachon saqlangan. Boshqasini yasa.");
           return;
         }
         found.add(key);
@@ -50,7 +50,7 @@
         const missing = lamps.allPatterns(states, count).find((p) => !found.has(lamps.patternKey(p)));
         if (!missing) return;
         row.set(missing);
-        ui.toast("Mana bittasi — «Saqlash»ni bos!");
+        ui.toast("Topilmagan naqshlardan biri qoʻyildi — «Saqlash»ni bos.");
       };
       ui.control().append(ui.h("div", { class: "choice-row" },
         ui.button("Saqlash", save),

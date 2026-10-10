@@ -7,9 +7,9 @@
 
   // Qiymati to'g'ri, lekin yozuvi nostandart bo'lganda (roman.mistake)
   const MISTAKE = {
-    repeat: "Qiymati toʻgʻri! Lekin bir belgi 3 martadan koʻp yozilmaydi: IIII emas — IV.",
-    twice: "Qiymati toʻgʻri! Lekin V va L ikki marta yozilmaydi: VV emas — X.",
-    subtract: "Qiymati toʻgʻri! Lekin ayirishda faqat IV, IX, XL, XC ishlatiladi.",
+    repeat: "Qiymati toʻgʻri, lekin bir belgi 3 martadan koʻp yozilmaydi: IIII emas — IV.",
+    twice: "Qiymati toʻgʻri, lekin V va L takrorlanmaydi: VV emas — X.",
+    subtract: "Qiymati toʻgʻri, lekin ayirishda faqat IV, IX, XL, XC ishlatiladi.",
   };
 
   // Tosh lavha va ustidagi yozuv (rasm ichida matn yo'q — yozuv HTML'da)
@@ -56,7 +56,7 @@
           ui.pose("apprentice", "think", 1000);
           wrong++;
           if (roman.fromRoman(value) === target) ui.bubble("elder", "↻ " + MISTAKE[roman.mistake(value)]);
-          else if (wrong === 1) ui.bubble("elder", `↻ Hozir ${roman.fromRoman(value)}. ${target} kerak — kattasidan boshla.`);
+          else if (wrong === 1) ui.bubble("elder", `↻ Hozirgi qiymat ${roman.fromRoman(value)}, kerak ${target}. Eng katta belgidan boshla.`);
           else ui.bubble("elder", `↻ ${target} = ${answer}. Shuni yoz.`);
         },
       });

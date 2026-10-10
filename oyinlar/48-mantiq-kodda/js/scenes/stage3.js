@@ -7,10 +7,10 @@
 
   async function kirish() {
     const host = common.box(true);
-    host.append(common.note("Ikki shartni birlashtirish — eng koʻp ishlatiladigan narsa:"));
+    host.append(common.note("Murakkab shart — ikki solishtirish and bilan birlashtirilgan:"));
     host.append(common.kodBlok("yosh = 14\nbilet = True\nif yosh >= 12 and bilet:\n    print(\"kirishing mumkin\")"));
-    await ui.say("elder", "Shart ichida and, or, not boʻlishi mumkin — xuddi gapdagidek.");
-    await ui.say("elder", "Endi oʻzing yozasan. Chegaralarga eʼtibor ber: «12 dan kichik emas» — bu >= 12.");
+    await ui.say("elder", "if shartida and, or, not ishlatiladi — gapdagi «va», «yoki», «emas» kabi.");
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta shart. Chegaraga eʼtibor ber: «12 dan kichik emas» — bu >= 12.`);
   }
 
   const keyingi = (prev, togri, tier) => (togri % 2 === 0 ? L.kodTask(Math.random, prev, tier) : L.writeTask(Math.random, prev, tier));

@@ -11,17 +11,16 @@
     ui.clearControl();
     ui.paper("");
     ui.work().append(ui.h("div", { class: "story-art", html: art.robot() }));
-    await ui.say("elder", "Robot gapirishni oʻrganmoqchi!");
-    await ui.say("apprentice", "Unga soʻzlarning maʼnosini oʻrgatamizmi?");
-    await ui.say("elder", "Yoʻq — u maʼnoni bilmaydi. U faqat sanaydi: qaysi soʻzdan keyin qaysi soʻz kelgan.");
+    await ui.say("elder", "Maqsad: til modeli (chatbot) keyingi soʻzni qanday tanlashini koʻrish.");
+    await ui.say("elder", "Kalit gʻoya: model maʼnoni bilmaydi. U matnda qaysi soʻzdan keyin qaysi soʻz kelganini sanaydi.");
   }
 
   // 4.1: qabila gaplari
   async function showCorpus(sentences) {
     const el = common.box(true);
     wordsUi.corpus(el, sentences);
-    await ui.say("elder", "Bular — qabilaning gaplari. Robot ularni oʻqiydi.");
-    await ui.say("elder", "Endi birgalikda sanaymiz.");
+    await ui.say("elder", "Bu gaplar — korpus, yaʼni modelni oʻqitish uchun matn.");
+    await ui.say("elder", "Birinchi qadam — soʻz juftliklarini sanash.");
   }
 
   // 4.2: "olov" dan keyingi so'zlarni sanash
@@ -41,7 +40,7 @@
     });
     const render = () => table.set({ [word]: counts }, Object.keys(counts).length ? [word] : []);
     render();
-    ui.bubble("elder", "«olov» yonib turibdi. Har gapda undan keyingi soʻzni bos!");
+    ui.bubble("elder", "«olov» belgilangan. Har gapda undan keyingi soʻzni bos.");
     let left = targets.length;
     await ui.settle((done) => {
       handler = (si, wi, w) => {
@@ -60,8 +59,8 @@
         if (left === 0) done();
       };
     });
-    await ui.say("elder", "Mana — juftliklar jadvali: «olov» dan keyin «yoqdi» 3 marta, «koʻrdi» 1 marta kelgan.");
-    await ui.say("elder", "Robotning bor bilgani — shu jadval.");
+    await ui.say("elder", "Juftliklar jadvali: «olov» dan keyin «yoqdi» 3 marta, «koʻrdi» 1 marta.");
+    await ui.say("elder", "Bu sonlar — chastota. Modelning butun bilimi — shu jadval.");
   }
 
   // 4.4: "{so'z} dan keyin eng ko'p qaysi so'z kelgan?" — 4 variant; matn har misolda bankdan yangidan olinadi
@@ -77,7 +76,7 @@
       view = wordsUi.corpus(el, sentences);
     }
     ui.bubble("elder", mode === "table"
-      ? `Robot «${task.word}» dan keyin qaysi soʻzni yozishi eng ehtimoli katta?`
+      ? `«${task.word}» dan keyin qaysi soʻzning ehtimoli eng katta?`
       : `«${task.word}» dan keyin eng koʻp qaysi soʻz kelgan?`);
     return practice.tries({
       setup: (submit) => wordsUi.wordButtons(task.options, submit),
@@ -101,8 +100,8 @@
   async function stage1() {
     await showCorpus(words.BASE);
     await countDemo(words.BASE);
-    await ui.say("elder", `Endi oʻzing sana! ${QK.practice.need()} ta toʻgʻri javob kerak.`);
-    await ui.say("elder", "Diqqat: har safar gaplar boshqacha boʻladi — qaytadan sanash kerak.");
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta savol — eng koʻp kelgan keyingi soʻz.`);
+    await ui.say("elder", "Har savolda korpus yangi — qaytadan sana.");
     await practice.exercises({
       next: (prev, correct, tier) => words.makeBestTask(null, prev, null, tier),
       run: (task) => bestTask(task, task.sentences, "corpus"),

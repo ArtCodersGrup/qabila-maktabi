@@ -6,10 +6,10 @@
   const { boxes, ui, sound, art, boxesUi, practice, common } = QK;
 
   const SCENES = [
-    { art: "matchboxes", lines: ["1961-yilda bir olim 304 ta gugurt qutisi va munchoqlar bilan shunday mashina yasagan.", "U odam bilan oʻynab, yutishni oʻrgangan."] },
-    { art: "board", lines: ["Kompyuterlar shaxmat va Go oʻyinini ham shunday oʻrgangan: oʻynab, mukofot olib."] },
-    { art: "walker", lines: ["Robotlar yurishni ham shunday oʻrganadi.", "Har urinishdan keyin mukofot: yaqinroq yurdimi — plyus, yiqildimi — minus."] },
-    { art: "star", lines: ["Mukofot notoʻgʻri qoʻyilsa, robot notoʻgʻri narsani oʻrganadi.", "Shuning uchun mukofotni odam ehtiyotkorlik bilan tanlaydi."] },
+    { art: "matchboxes", lines: ["Tarix: 1961-yilda Donald Michie 304 ta gugurt qutisi va munchoqlardan MENACE mashinasini yasagan. U krestik-nolikni aynan shu usulda oʻrgangan."] },
+    { art: "board", lines: ["Qayerda uchraydi: AlphaGo va AlphaZero Go hamda shaxmatni mustahkamlab oʻrganish bilan oʻrgangan — oʻzi bilan millionlab oʻyin oʻynab."] },
+    { art: "walker", lines: ["Robotlar yurishni ham shunday oʻrganadi: oldinga siljisa — plyus, yiqilsa — minus."] },
+    { art: "star", lines: ["Xavf: mukofot notoʻgʻri qoʻyilsa, robot notoʻgʻri narsani oʻrganadi. Shuning uchun mukofot qoidasini odam ehtiyotkorlik bilan tanlaydi."] },
   ];
 
   // 7.1–7.2: 20 marta o'ynab o'rganish
@@ -18,9 +18,9 @@
     const boxView = boxesUi.boxRow(el, { compact: true });
     boxView.set(state, common.VISIBLE);
     const results = boxesUi.resultLine(el);
-    const note = common.line("Oʻyinlar: 0 / 20");
+    const note = common.line("Oʻyinlar: 0 / 40");
     el.append(note);
-    await ui.say("elder", "Robot mashq qilsin: 40 marta oʻynaydi. Raqibi — oʻyinni yaxshi biladigan murabbiy.");
+    await ui.say("elder", "Endi robot 40 marta oʻynaydi. Raqibi — xatosiz oʻynaydigan dastur.");
     await ui.say("elder", "Kuchli raqib bilan mashq qilsa, robot tezroq oʻrganadi: har xatosi darrov jazolanadi.");
     ui.bubble("elder", "«40 marta oʻyna»ni bos.");
     await ui.settle((done) => {
@@ -41,27 +41,27 @@
       await ui.sleep(150);
     }
     el.append(common.line(`Birinchi 10 ta oʻyin: ${first} ta yutuq · Oxirgi 10 ta: ${last} ta yutuq`));
-    await ui.say("elder", `Boshida ${first} ta yutgan edi, oxirida ${last} ta. Munchoqlar oʻzgardi!`);
-    await ui.say("elder", "Robot sirni topdi: raqibga 3 ga karrali tosh qoldiradi.");
+    await ui.say("elder", `Birinchi 10 oʻyinda ${first} ta yutuq, oxirgi 10 tasida — ${last} ta. Oʻzgargan narsa — faqat munchoqlar.`);
+    await ui.say("elder", "Robot topgan strategiya: raqibga 3 ga karrali tosh qoldirish.");
   }
 
   // 7.3: bola o'rgangan robot bilan o'ynaydi
   async function playTrained(state) {
-    await ui.say("elder", "Endi oʻrgangan robot bilan oʻynab koʻr!");
+    await ui.say("elder", "Endi oʻrgatilgan robot bilan oʻyna.");
     const game = await common.playRound(state);
     await ui.say("elder", game.won
-      ? "Robot yutdi. Endi uni yutish juda qiyin!"
-      : "Sen yutding! Demak robot hali toʻliq oʻrganmagan.");
+      ? "Robot yutdi: u endi kuchli yurishlarni koʻproq tanlaydi."
+      : "Sen yutding — demak robot hali toʻliq oʻrganmagan.");
   }
 
   // 7.4: endi bola birinchi yuradi — sirni bilsa, yutadi
   async function playFirst(state) {
-    await ui.say("elder", "Robot birinchi yursa, uni yutish deyarli imkonsiz. Lekin sir sende ham bor!");
+    await ui.say("elder", "Robot birinchi yursa, uni yutish deyarli imkonsiz. Lekin bu strategiya sen uchun ham ishlaydi.");
     await ui.say("elder", "Endi sen birinchi yur. Har safar robotga 6, 3 yoki 0 ta tosh qoldir.");
     const game = await common.playRound(state, { childFirst: true });
     await ui.say("elder", game.won
-      ? "Robot yutdi. Yana urinib koʻr: robotga 6, 3 yoki 0 qoldirsang — sen yutasan."
-      : "Sen yutding! Sirni ishlatding: har safar 3 ga karrali qoldirding.");
+      ? "Robot yutdi. Qoida: har yurishingdan keyin robotga 6, 3 yoki 0 ta tosh qolsin."
+      : "Sen yutding: har safar 3 ga karrali tosh qoldirding.");
   }
 
   const whyLabel = (task, key) => ({
@@ -105,13 +105,13 @@
       second: {
         setup: (submit) => {
           el.append(common.line(`${task.answer} ta oladi. Nega?`));
-          ui.bubble("elder", "Toʻgʻri! Endi sababini tanla: nega aynan shuncha?");
+          ui.bubble("elder", "Toʻgʻri. Endi sababini tanla.");
           boxesUi.optionButtons(task.whys, submit, (key) => whyLabel(task, key));
         },
         check: (index) => index === task.whyIndex,
       },
       hint: (step) => ui.bubble("elder", step === 1
-        ? "↻ Sirni esla: raqibga 3 ga karrali tosh qoldirish kerak — 9, 6, 3 yoki 0."
+        ? "↻ Strategiyani esla: raqibga 3 ga karrali tosh qolishi kerak — 9, 6, 3 yoki 0."
         : "↻ Hisoblab koʻr: robot olgandan keyin raqibga nechta tosh qoladi?"),
       solution: () => el.append(common.answerLine(`${task.answer} ta — raqibga ${task.left} ta qoladi (3 ga karrali)`)),
     });
@@ -128,7 +128,7 @@
       },
       check: (won) => won,
       hint: () => {
-        ui.bubble("elder", "↻ Robot yutdi. Sir: har yurishingdan keyin robotga 3 ga karrali tosh qolsin. Yana urinib koʻr!");
+        ui.bubble("elder", "↻ Robot yutdi. Har yurishingdan keyin robotga 3 ga karrali tosh qolsin.");
         ui.control().append(ui.button("Qayta oʻynash", () => { ui.clearControl(); play(); }, "big"));
       },
       solution: () => {
@@ -143,7 +143,7 @@
   const PRAISES = {
     ratio: () => "Son emas, ulush muhim: qaysi rang koʻproq ustun boʻlsa, oʻsha koʻproq tortiladi.",
     strategy: (task) => `${task.answer} ta olsa, raqibga ${task.left} ta qoladi.`,
-    beat: () => "Sen xatosiz oʻynaydigan robotni yutding: har safar unga 3 ga karrali tosh qoldirding!",
+    beat: () => "Xatosiz robot yutildi: har safar unga 3 ga karrali tosh qoldirding.",
   };
 
   async function showScene(scene) {
@@ -160,7 +160,7 @@
     await trainFast(state);
     await playTrained(state);
     await playFirst(state);
-    await ui.say("elder", `Endi savollar va oʻyinlar. ${QK.practice.need()} ta toʻgʻri javob kerak!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta topshiriq — ehtimol, strategiya va robotga qarshi oʻyin.`);
     await ui.say("elder", "Oʻyinda robot endi xato qilmaydi. Uni yutsang — javob toʻgʻri hisoblanadi.");
     await practice.exercises({
       next: (prev, correct, tier) => boxes.makeStage3Task(correct, prev, null, tier),

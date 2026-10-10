@@ -52,7 +52,7 @@
       check: (value) => value === task.xossa,
       hint() {
         host.querySelector(".alg-qadamlar").replaceWith(qadamlar(task.qadamlar, task.buzuq));
-        host.append(M.note("↻ Mana shu qator muammoli. Yana oʻylab koʻr."));
+        host.append(M.note("↻ Muammoli qator belgilandi. U qaysi xossaga zid?"));
       },
       solution() {
         javobni(tanlov, task.xossa);

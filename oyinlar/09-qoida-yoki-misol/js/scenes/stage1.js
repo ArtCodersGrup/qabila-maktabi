@@ -11,9 +11,8 @@
     ui.clearControl();
     ui.paper("");
     ui.work().append(ui.h("div", { class: "story-art", html: art.robot() }));
-    await ui.say("elder", "Robotga ish buyuramiz: mevalarni ajratsin.");
-    await ui.say("apprentice", "Unga qanday tushuntiramiz?");
-    await ui.say("elder", "Ikki yoʻl bor: qoida yozamiz yoki misol koʻrsatamiz. Avval qoidani sinaymiz.");
+    await ui.say("elder", "Maqsad: qachon dasturga qoida yoziladi va qachon mashina misollardan oʻrganishi kerakligini ajratish.");
+    await ui.say("elder", "Vazifa — mevalarni HA va YOʻQ ga ajratish. Avval qoida yozamiz: agar belgi > son boʻlsa — HA.");
   }
 
   // 4.1–4.2: qoidani qo'lda yasash (xato 0 boʻlguncha, xato hisoblanmaydi)
@@ -35,7 +34,7 @@
         sound.play("retry");
         tries++;
         ui.bubble("elder", tries === 1
-          ? `↻ ${errors} ta xato. Belgilangan narsalarga qara: qoida ularni notoʻgʻri ajratdi.`
+          ? `↻ ${errors} ta xato. Belgilangan narsalar notoʻgʻri ajratildi.`
           : `↻ Belgini yoki sonni oʻzgartirib koʻr. Kerakli belgi — ${rules.FEATURE_NAMES[task.answer.feature]}.`);
       }, "big"));
     });
@@ -47,14 +46,14 @@
     ui.clearWork();
     ui.clearControl();
     ui.work().append(ui.h("div", { class: "story-art", html: art.robot() }));
-    await ui.say("elder", "Biz robotga qoida yozdik. U qoidani soʻzsiz bajaradi — bu oddiy dastur.");
-    await ui.say("elder", "Qoida aniq boʻlsa, robot hech qachon adashmaydi.");
+    await ui.say("elder", "Bu — qoidaga asoslangan dastur: shart aniq yozilgan, kompyuter uni aynan bajaradi.");
+    await ui.say("elder", "Qoida maʼlumotga toʻgʻri kelsa, dastur adashmaydi.");
   }
 
   // 4.4: mashq — qoidani o'zi topadi
   function ruleTask(task) {
     const { view, badge, builder } = common.ruleScreen(task.items);
-    ui.bubble("elder", "Shu narsalarni ajratadigan qoidani top. Keyin «Ishga tushir»ni bos.");
+    ui.bubble("elder", "Narsalarni xatosiz ajratadigan qoidani yasa va «Ishga tushir»ni bos.");
     return practice.tries({
       setup: (submit) => {
         ui.control().append(ui.button("Ishga tushir", () => {
@@ -78,11 +77,11 @@
 
   async function stage1() {
     const first = rules.makeRuleTask(null);
-    await guidedRule(first, "Qoidani yasa: uchta tugmani bosib oʻzgartir, keyin «Ishga tushir».");
+    await guidedRule(first, "Qoida uch qismdan iborat: belgi, taqqoslash, son. Tugmalar bilan sozla va «Ishga tushir»ni bos.");
     const second = rules.makeRuleTask(first);
-    await guidedRule(second, "Yana bitta ish. Bu safar boshqa qoida kerak boʻlishi mumkin.");
+    await guidedRule(second, "Yangi toʻplam — boshqa belgi kerak boʻlishi mumkin.");
     await explain();
-    await ui.say("elder", `Endi oʻzing qoida yoz. ${QK.practice.need()} ta toʻgʻri javob kerak!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta toʻplam — har biriga xatosiz qoida.`);
     await practice.exercises({
       next: (prev, correct, tier) => rules.makeRuleTask(prev, null, tier),
       run: ruleTask,

@@ -14,8 +14,8 @@
     const el = common.box(false);
     gatesUi.gatesView(el, G.circuit("xorBuild")).set(1, 0);
     common.formula(el, ["Sxema — amallar zanjiri", "XOR = (A YOKI B) VA EMAS (A VA B)"]);
-    await ui.say("elder", "Sxema — amallar zanjiri. Chiqish — oxirgi amal natijasi.");
-    await ui.say("elder", "Kompyuter ichidagi hamma sxemalar shunday zanjirlardan yigʻilgan.");
+    await ui.say("elder", "Sxema — amallar zanjiri: chiqish — oxirgi amal natijasi.");
+    await ui.say("elder", "Protsessordagi barcha sxemalar shunday zanjirlardan yigʻilgan.");
   }
 
   async function stage2() {
@@ -24,22 +24,22 @@
       view: circuitView(first),
       out: (a, b) => G.output(first, a, b),
       heads: ["A", "B", "Chiroq"],
-      intro: "Bu — amallar zanjiri: VA ning chiqishi EMAS ga kiradi. Kalitlarni bos — simlar qanday yonadi?",
+      intro: "Amallar zanjiri: VA ning chiqishi EMAS ga kiradi. Kalitlarni bos va simlarni kuzat.",
     });
     await ui.say("elder", "Bitta amalning chiqishi — keyingisining kirishi.");
-    await ui.say("elder", `Bu sxemani shunday yozamiz: ${G.exprText(first)}.`);
+    await ui.say("elder", `Ifoda koʻrinishida: ${G.exprText(first)}.`);
 
     const xor = G.circuit("xorBuild");
     await common.explore({
       view: circuitView(xor),
       out: (a, b) => G.output(xor, a, b),
       heads: ["A", "B", "Chiroq"],
-      intro: "Endi YOKI, VA va EMAS dan kattaroq sxema. Jadval nima boʻladi?",
+      intro: "Endi YOKI, VA va EMAS dan yigʻilgan sxema. Jadvali qanday chiqadi?",
     });
-    await ui.say("elder", "Jadval XOR bilan bir xil! «Faqat bittasi»ni VA, YOKI, EMAS dan yigʻdik.");
-    await ui.say("elder", "«Koʻp qatlamli tarmoq» oʻyinini esla: bitta neyron XOR ni uddalay olmagan edi. Bu yerda ham bitta amal yetmaydi — ikki qavat kerak.");
+    await ui.say("elder", "Jadval XOR bilan bir xil: XOR ni VA, YOKI, EMAS dan yigʻish mumkin.");
+    await ui.say("elder", "«Koʻp qatlamli tarmoq» oʻyinida bitta neyron XOR ni uddalay olmagan edi. Bu yerda ham bitta amal yetmaydi — ikki qavat kerak.");
     await definition();
-    await ui.say("elder", `Endi sxemalarni oʻzing hisobla. ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta sxemani hisoblash.`);
     await common.exercises(2);
   }
 

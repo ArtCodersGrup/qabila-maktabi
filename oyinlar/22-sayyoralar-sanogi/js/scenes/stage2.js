@@ -20,7 +20,7 @@
     const el = common.box(true);
     el.append(ui.h("div", { class: "planet-tag", text: `${task.base}-lik sayyora` }));
     const board = sanoqUi.ustun(el, { a: task.a, b: task.b, op: "−", base: task.base });
-    ui.bubble("elder", "Ayir! Javobni shu sayyora tizimida yoz.");
+    ui.bubble("elder", "Ayir. Javobni shu asosda yoz.");
     const x = S.fromBase(task.a, task.base);
     const y = S.fromBase(task.b, task.base);
     return sanoqUi.digitTries({
@@ -29,20 +29,20 @@
       maxLen: 4,
       hint: () => {
         showBorrows(board, task);
-        ui.bubble("elder", `↻ Qarzlarni belgiladim: qarz — ${task.base} birlik.`);
+        ui.bubble("elder", `↻ Qarzlar belgilandi: bitta qarz = ${task.base} birlik, 10 emas.`);
       },
       solution: () => {
         showBorrows(board, task);
         board.setResultAll(task.answer);
-        common.add(el, common.answerLine(`Tekshiramiz: ${x} − ${y} = ${x - y} ✓`));
+        common.add(el, common.answerLine(`Tekshiruv (oʻnlikda): ${x} − ${y} = ${x - y} ✓`));
       },
     });
   }
 
   async function stage2() {
     await sayyoraScenes.guided("42", "14", "−", 5, S.stepsSub("42", "14", 5), "Ustunda ayiramiz: 42₅ − 14₅.");
-    await ui.say("elder", "42₅ − 14₅ = 23₅. Tekshiramiz: 22 − 9 = 13 = 2·5 + 3 ✓");
-    await ui.say("elder", `Qarz — asosga teng: bu sayyorada 5 ta. Endi oʻzing ayir. ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", "42₅ − 14₅ = 23₅. Tekshiruv: 22 − 9 = 13 = 2·5 + 3 ✓");
+    await ui.say("elder", `Qarz asosga teng: 5-likda 1 qarz = 5 birlik. Mashq: ${QK.practice.need()} ta ayirish.`);
     await practice.exercises({
       next: (prev, correct, tier) => sayyora.makeSubTask(prev, undefined, tier),
       run: subTask,

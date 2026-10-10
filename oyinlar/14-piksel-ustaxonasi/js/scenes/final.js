@@ -12,9 +12,8 @@
     sound.play("win");
     ui.pose("elder", "happy", 1200);
     ui.pose("apprentice", "happy", 1200);
-    await ui.say("elder", goingOn
-      ? `${s}-bosqich tugadi! Barakalla, keyingisiga oʻtamiz.`
-      : `${s}-bosqich tugadi! Barakalla!`);
+    const NEXT = { 1: "rangli piksellar: N = 2ⁱ.", 2: "RGB, megabayt va siqish." };
+    await ui.say("elder", goingOn && NEXT[s] ? `${s}-bosqich tugadi. Keyingisi — ${NEXT[s]}` : `${s}-bosqich tugadi.`);
   }
 
   async function congrats() {
@@ -23,14 +22,14 @@
     sound.play("win");
     ui.pose("elder", "happy", 1500);
     ui.pose("apprentice", "happy", 1500);
-    ui.bubble("elder", "Tabriklayman! Endi sen rasm hajmini hisoblay olasan!");
+    ui.bubble("elder", "Tayyor: rasm hajmini bit, bayt va Mbaytda hisoblay olasan.");
     ui.work().append(ui.h("div", { class: "story" },
       ui.h("div", { class: "story-art small", html: art.easel() }),
       ui.h("div", { class: "summary" },
         ui.h("div", { text: "Oq-qora: 1 piksel = 1 bit" }),
-        ui.h("div", { text: "Rang koʻp — bit koʻp" }),
-        ui.h("div", { text: "Rangli piksel = 3 bayt" }),
-        ui.h("div", { text: "1024 Kbayt = 1 Mbayt" }))));
+        ui.h("div", { text: "N = 2ⁱ: i bit — N xil rang" }),
+        ui.h("div", { text: "V = kenglik × balandlik × i (bit)" }),
+        ui.h("div", { text: "RGB piksel = 3 bayt; 1 Mbayt = 1024 Kbayt" }))));
     return ui.choice([
       { label: "Qayta oʻynash", value: "replay" },
       { label: "Bosh ekran", value: "home", secondary: true },

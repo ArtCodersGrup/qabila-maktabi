@@ -15,27 +15,27 @@
     const el = common.box(false);
     const t = gatesUi.addTable(el);
     t.mark("sum");
-    await ui.say("elder", "Yigʻindi ustuniga qara: 0, 1, 1, 0 — bu XOR!");
+    await ui.say("elder", "Yigʻindi ustuni: 0, 1, 1, 0 — bu XOR jadvali.");
     t.mark("carry");
-    await ui.say("elder", "Koʻchirish ustuni: 0, 0, 0, 1 — bu VA!");
+    await ui.say("elder", "Koʻchirish ustuni: 0, 0, 0, 1 — bu VA jadvali.");
   }
 
   async function definition() {
     const el = common.box(false);
     gatesUi.gatesView(el, G.circuit("halfAdder")).set(1, 1);
     common.formula(el, ["Yigʻindi = A XOR B", "Koʻchirish = A VA B", "1 + 1 = 10"]);
-    await ui.say("elder", "Bu — yarim qoʻshuvchi. Kompyuter 1 + 1 = 10 ni shunday topadi.");
+    await ui.say("elder", "Bu — yarim qoʻshuvchi: ikki bitni qoʻshib, yigʻindi va koʻchirishni beradi.");
   }
 
   async function story() {
     let el = common.box(false);
     el.append(ui.h("div", { class: "story-art", html: art.room() }));
-    await ui.say("elder", "80 yil oldin birinchi elektron kompyuter butun bir xonani egallagan.");
-    await ui.say("elder", "Unda kalitlar oʻrnida minglab chiroq-lampalar boʻlgan.");
+    await ui.say("elder", "Qayerda uchraydi: 80 yil oldingi ENIAC kompyuteri butun xonani egallagan.");
+    await ui.say("elder", "Unda kalit vazifasini 17 mingga yaqin elektron lampa bajargan.");
     el = common.box(false);
     el.append(ui.h("div", { class: "story-art", html: art.chip() }));
-    await ui.say("elder", "Bugun telefoningdagi protsessorda milliardlab shunday sxema bor.");
-    await ui.say("elder", "Har xona uchun bitta qoʻshuvchi, koʻchirish keyingi xonaga oʻtadi — xuddi ustunda qoʻshgandek.");
+    await ui.say("elder", "Bugun telefondagi protsessorda milliardlab tranzistor shunday sxemalarni tashkil qiladi.");
+    await ui.say("elder", "Koʻp xonali sonni qoʻshishda har xonaga bitta qoʻshuvchi; koʻchirish keyingi xonaga oʻtadi — xuddi ustunda qoʻshgandek.");
   }
 
   async function stage3() {
@@ -48,7 +48,7 @@
       heads: ["A", "B", "A + B"],
       intro: "Ikkilikda qoʻshamiz. A va B ni almashtirib, hamma holatni sinab koʻr.",
     });
-    await ui.say("elder", "«Ikkilik hisobchi» oʻyinini esla: ikkilikda 1 + 1 = 10. Oʻngdagi raqam — yigʻindi, chapdagisi — koʻchirish.");
+    await ui.say("elder", "Ikkilikda 1 + 1 = 10 («Ikkilik hisobchi» oʻyinidagidek). Oʻngdagi raqam — yigʻindi, chapdagisi — koʻchirish.");
     await discovery();
     const adder = G.circuit("halfAdder");
     await common.explore({
@@ -61,11 +61,11 @@
       },
       out: sumOut,
       heads: ["A", "B", "A + B"],
-      intro: "Mana sxema: XOR — yigʻindi, VA — koʻchirish. Kalitlarni bos!",
+      intro: "Sxema: XOR — yigʻindi, VA — koʻchirish. Kalitlarni bos.",
     });
-    await ui.say("elder", "Ikki chiroq ikkilik sonni koʻrsatadi: 1 + 1 = 10, yaʼni ikki.");
+    await ui.say("elder", "Ikki chiroq ikkilik sonni koʻrsatadi: 1 + 1 = 10₂, yaʼni 2₁₀.");
     await definition();
-    await ui.say("elder", `Endi oʻzing qoʻsh. ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta — ikkilikda qoʻshish va qoʻshuvchi sxemasi.`);
     await common.exercises(3);
     await story();
   }

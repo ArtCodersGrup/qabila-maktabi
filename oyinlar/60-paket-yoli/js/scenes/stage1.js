@@ -8,8 +8,8 @@
   async function intro() {
     const el = common.box(false);
     el.append(ui.h("div", { class: "story-art wide", html: QK.gameArt.pochta() }));
-    await ui.say("elder", "Paket manzilga bitta sim bilan toʻgʻri ketmaydi. Yoʻlda pochta boʻlimlari — tugunlar bor.");
-    await ui.say("elder", "Har tugun butun xaritani bilmaydi: faqat qoʻshnilarini. Hozir sen pochtachisan!");
+    await ui.say("elder", "Maqsad: paket tarmoqda qaysi yoʻldan yurishini va sayt qanday ochilishini tushunish — marshrut, mijoz, server.");
+    await ui.say("elder", "Kalit gʻoya: paket tugundan tugunga uzatiladi, har tugun esa faqat oʻz qoʻshnilarini biladi — xuddi pochta boʻlimlaridek.");
   }
 
   // Bola har qadamda qo'shni tugunni bosadi; yetib borganda qadamlari eng qisqa yo'l bilan solishtiriladi
@@ -44,15 +44,15 @@
     do { t = L.tor(Math.random); j = L.juft(t, Math.random, 3, 4); } while (!j);
     const [a, b] = j;
     const eng = L.bfs(t.simlar, a, b);
-    ui.bubble("elder", "Paketni manzilga yetkaz! Faqat sim bilan ulangan qoʻshniga oʻtish mumkin.");
+    ui.bubble("elder", "Paketni manzilga yetkaz. Faqat sim bilan ulangan qoʻshni tugunga oʻtish mumkin.");
     const qadam = await uzat(t, a, b);
     QK.sound.play("correct");
     const host = common.box(true);
     host.append(common.tor(t, { a, b, yol: eng.yol }));
     await ui.say("elder", qadam === eng.masofa
-      ? `✓ ${qadam} qadamda yetkazding — bu eng qisqa yoʻl!`
+      ? `✓ ${qadam} qadam — bu eng qisqa yoʻl.`
       : `✓ Yetib bordi: ${qadam} qadam. Eng qisqa yoʻl esa ${eng.masofa} qadam — yashil chiziq.`);
-    await ui.say("elder", "Paketning tugundan tugunga yurgan yoʻli — marshrut. Tugunlar uni qadam-baqadam tanlaydi.");
+    await ui.say("elder", `Atama: marshrut — paket tugundan tugunga oʻtgan yoʻl. Mashq: ${QK.practice.need()} ta savol.`);
   }
 
   async function stage1() {

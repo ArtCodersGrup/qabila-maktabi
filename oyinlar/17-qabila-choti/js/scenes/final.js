@@ -12,9 +12,8 @@
     sound.play("win");
     ui.pose("elder", "happy", 1200);
     ui.pose("apprentice", "happy", 1200);
-    await ui.say("elder", goingOn
-      ? `${s}-bosqich tugadi! Barakalla, keyingisiga oʻtamiz.`
-      : `${s}-bosqich tugadi! Barakalla!`);
+    const NEXT = { 1: "asos va raqamlar, tizim turlari.", 2: "xona vaznlari: 1, b, b², …" };
+    await ui.say("elder", goingOn && NEXT[s] ? `${s}-bosqich tugadi. Keyingisi — ${NEXT[s]}` : `${s}-bosqich tugadi.`);
   }
 
   async function congrats() {
@@ -23,13 +22,13 @@
     sound.play("win");
     ui.pose("elder", "happy", 1500);
     ui.pose("apprentice", "happy", 1500);
-    ui.bubble("elder", "Tabriklayman! Endi sen sanoq tizimlarini taniysan!");
+    ui.bubble("elder", "Tayyor: sonning asosini, raqamlarini va xona vaznlarini aniqlay olasan.");
     ui.work().append(ui.h("div", { class: "story" },
       ui.h("div", { class: "story-art small", html: art.abacus() }),
       ui.h("div", { class: "summary" },
-        ui.h("div", { text: "Asos — nechtada keyingi xonaga oʻtiladi" }),
-        ui.h("div", { text: "n-likda raqamlar: 0 … n−1" }),
-        ui.h("div", { text: "Xonalar: 1, n, n·n …" }))));
+        ui.h("div", { text: "Asos b — nechtada keyingi xonaga oʻtiladi" }),
+        ui.h("div", { text: "b-likda raqamlar: 0 … b−1" }),
+        ui.h("div", { text: "Xona vaznlari: 1, b, b², b³ …" }))));
     return ui.choice([
       { label: "Qayta oʻynash", value: "replay" },
       { label: "Bosh ekran", value: "home", secondary: true },

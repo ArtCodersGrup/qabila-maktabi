@@ -20,11 +20,11 @@
     const eski = L.bfs(t.simlar, a, b);
     const host = common.box(true);
     host.append(common.tor(t, { a, b, yol: eski.yol }), common.izoh());
-    await ui.say("elder", `Eng qisqa yoʻl — ${eski.masofa} qadam (yashil). Endi bir sim uzilib qoldi…`);
+    await ui.say("elder", `Eng qisqa yoʻl — ${eski.masofa} qadam (yashil). Endi bitta sim uziladi.`);
     host.innerHTML = "";
     host.append(common.tor(t, { a, b, uzilgan: [uzilgan], yol: yangi.yol }), common.izoh());
-    await ui.say("elder", `${L.simNomi(uzilgan)} simi uzildi, lekin paket toʻxtamadi — boshqa yoʻl topildi: ${yangi.masofa} qadam.`);
-    await ui.say("apprentice", "Internet bitta simga bogʻliq emas ekan! Yoʻl uzunroq boʻlsa ham, yetib boradi.");
+    await ui.say("elder", `${L.simNomi(uzilgan)} simi uzildi, lekin paket toʻxtamadi: yangi marshrut — ${yangi.masofa} qadam.`);
+    await ui.say("elder", `Tarmoqda yoʻllar zaxirasi bor, shuning uchun bitta uzilish aloqani toʻxtatmaydi. Mashq: ${QK.practice.need()} ta savol.`);
   }
 
   async function stage2() {

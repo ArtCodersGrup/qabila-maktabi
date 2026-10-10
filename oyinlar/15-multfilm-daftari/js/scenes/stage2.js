@@ -12,7 +12,7 @@
     const cards = ui.h("div", { class: "tcards" });
     const sum = common.line("Kadrlar: 0 · jami 0 bayt");
     el.append(common.line(`Kichik ekran: 4 × 4 = 16 piksel = 16 bit = ${video.TINY.bytes} bayt`, "muted"), cards, sum);
-    ui.bubble("elder", "Har kadr — 2 bayt. «+ kadr»ni 5 marta bos!");
+    ui.bubble("elder", "Har kadr — 2 bayt. «+ kadr» ni 5 marta bos.");
     await ui.settle((done) => {
       let n = 0;
       ui.control().append(ui.button("+ kadr", () => {
@@ -35,24 +35,24 @@
     const R = video.REAL;
     const el = common.box(false);
     const rows = common.formula(el, [`1 kadr: ${R.w} × ${R.h} × 3 bayt ≈ ${R.frameMb} Mbayt`]);
-    await ui.say("elder", `Haqiqiy video kadri: ${R.w} × ${R.h} piksel, har biri 3 bayt. Bu — ${R.frameMb} Mbaytga yaqin.`);
+    await ui.say("elder", `Haqiqiy kadr: ${R.w} × ${R.h} piksel, har biri 3 bayt (RGB) — taxminan ${R.frameMb} Mbayt.`);
     rows.append(ui.h("div", { class: "formula-row", text: `1 soniya: ${R.frameMb} × ${R.fps} = ${R.secondMb} Mbayt` }));
-    await ui.say("elder", `1 soniyada ${R.fps} kadr — ${R.secondMb} Mbayt!`);
+    await ui.say("elder", `${R.fps} kadr/soniya: ${R.frameMb} × ${R.fps} = ${R.secondMb} Mbayt.`);
     rows.append(ui.h("div", { class: "formula-row", text: `1 daqiqa: ${R.secondMb} × 60 = ${R.minuteMb} Mbayt` }));
-    await ui.say("elder", `1 daqiqada 60 soniya — ${R.minuteMb} Mbayt. Juda katta son!`);
+    await ui.say("elder", `1 daqiqa = 60 soniya: ${R.minuteMb} Mbayt.`);
     el.append(ui.h("div", { class: "ladder" },
       ui.h("span", { class: "step", text: "Kbayt" }), ui.h("span", { class: "arrow", text: "× 1024 →" }),
       ui.h("span", { class: "step", text: "Mbayt" }), ui.h("span", { class: "arrow", text: "× 1024 →" }),
       ui.h("span", { class: "step new", text: "Gbayt" })));
-    await ui.say("elder", "Yana katta birlik: 1024 Mbayt = 1 Gbayt (gigabayt).");
+    await ui.say("elder", "Keyingi birlik: 1 Gbayt (gigabayt) = 1024 Mbayt.");
     common.add(el, common.answerLine(`${R.minuteMb} Mbayt ≈ ${R.minuteGb} Gbaytdan koʻp`));
-    await ui.say("elder", `Demak, 1 daqiqa video — ${R.minuteGb} Gbaytdan koʻp!`);
+    await ui.say("elder", `Siqilmagan 1 daqiqa video — ${R.minuteGb} Gbaytdan koʻp.`);
   }
 
   async function definition() {
     const el = common.box(false);
     common.formula(el, ["video hajmi = 1 kadr hajmi × kadrlar soni", "1 Gbayt = 1024 Mbayt"]);
-    await ui.say("elder", "Video hajmini topish uchun 1 kadr hajmini kadrlar soniga koʻpaytiramiz.");
+    await ui.say("elder", "V = 1 kadr hajmi × kadrlar soni; kadrlar soni = kadr/soniya × soniya.");
   }
 
   // 5.4: mashq — kadrlar × bayt, soniyalar, Gbayt va Mbayt
@@ -66,7 +66,7 @@
         answer: task.answer,
         hint: () => {
           view.replaceChildren(videoUi.frameIcons(task.frames, `${task.frameBytes} bayt`));
-          ui.bubble("elder", "↻ Har kadr ostida uning hajmi. Hammasini qoʻsh.");
+          ui.bubble("elder", "↻ Har kadr ostida uning hajmi: bir xil sonlarni qoʻshish — koʻpaytirish.");
         },
         solution: () => common.add(el, common.answerLine(`${task.frameBytes} × ${task.frames} = ${task.answer} bayt`)),
       });
@@ -76,7 +76,7 @@
         ui.h("div", { text: `1 kadr — ${task.frameBytes} bayt` }),
         ui.h("div", { text: `1 soniyada — ${task.fps} kadr` }),
         ui.h("div", { text: `Video — ${task.seconds} soniya` })));
-      ui.bubble("elder", "Bu video necha bayt?");
+      ui.bubble("elder", "Video hajmi necha bayt?");
       return practice.numberTries({
         answer: task.answer,
         hint: () => {
@@ -118,7 +118,7 @@
     await addFrames();
     await realVideo();
     await definition();
-    await ui.say("elder", `Endi oʻzing hisobla: video hajmi. ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta — video hajmi va birliklarni solishtirish.`);
     await practice.exercises({
       next: (prev, correct, tier) => video.makeSizeTask(prev, undefined, tier),
       run: sizeTask,

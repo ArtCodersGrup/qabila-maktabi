@@ -12,8 +12,8 @@
     const out = U.output({ title: "Chiqish" });
     out.lines(K.run(code).output);
     el.append(out.el);
-    await ui.say("elder", "Hisob natijasini qutiga solib, matn bilan birga chiqardik.");
-    await ui.say("elder", "Vergul ikkalasini ajratadi va orasiga boʻshliq qoʻyadi.");
+    await ui.say("elder", "Hisob natijasi x oʻzgaruvchisiga yozildi va matn bilan birga chiqarildi.");
+    await ui.say("elder", "print ichida vergul qiymatlarni ajratadi va orasiga boʻshliq qoʻyadi.");
   }
 
   async function plusTrap() {
@@ -23,8 +23,8 @@
     const out = U.output({ title: "Chiqish" });
     out.show(K.run(bad), bad);
     el.append(out.el);
-    await ui.say("elder", "Vergul oʻrniga + qoʻysang — xato. Matn va son har xil tur.");
-    await ui.say("elder", "Ikki yechim bor: vergul qoʻyish yoki sonni str(x) bilan matnga oʻgirish.");
+    await ui.say("elder", "Vergul oʻrniga + qoʻysang — xato: matn (str) va son (int) har xil tur.");
+    await ui.say("elder", "Ikki yechim: vergul qoʻyish yoki sonni str(x) bilan matnga oʻgirish.");
   }
 
   async function definition() {
@@ -33,7 +33,7 @@
       ui.h("div", { class: "formula-row kod", text: 'print("javob:", x)' }),
       ui.h("div", { class: "formula-row kod", text: 'print("javob: " + str(x))' }),
       ui.h("div", { class: "formula-row", text: "ikkalasi ham toʻgʻri" })));
-    await ui.say("elder", "Endi hisoblaydigan dastur yozamiz: kiritilgan sondan javob chiqarasan.");
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta — kiritilgan sondan javob chiqaradigan dastur yoki xatoni tuzatish.`);
   }
 
   async function stage3() {

@@ -29,7 +29,7 @@
       strip.replaceChildren(digitStrip(base));
     };
     render();
-    ui.bubble("elder", "Asosni oshirib koʻr: raqamlar qanday oʻzgaradi? 16 gacha bor!");
+    ui.bubble("elder", "Asosni 16 gacha oshir va raqamlar toʻplamini kuzat.");
     let toldA = false;
     await ui.settle((done) => {
       const minus = ui.h("button", { class: "key", type: "button", text: "−", "aria-label": "Asosni kamaytirish" });
@@ -44,7 +44,7 @@
         sync();
         if (base === 11 && !toldA) {
           toldA = true;
-          ui.bubble("elder", "10 dan katta raqam uchun yangi belgi kerak: A — oʻn! Davom et.");
+          ui.bubble("elder", "10 ga teng raqam uchun yangi belgi kerak: A = 10. Davom et.");
         }
         if (base === 16) {
           ui.clearControl();
@@ -56,15 +56,15 @@
     });
     sound.play("correct");
     await ui.say("elder", "16-likda 16 ta raqam: 0–9 va A–F. A = 10, B = 11 … F = 15.");
-    await ui.say("elder", "n-lik tizimda raqamlar 0 dan n−1 gacha boʻladi.");
+    await ui.say("elder", "b-lik tizimda raqamlar 0 dan b−1 gacha — jami b ta.");
   }
 
   // 5.2–5.3: yozuv va turlari
   async function kinds() {
     const el = common.box(false);
     el.append(ui.h("div", { class: "big-value", text: "101₂" }));
-    await ui.say("elder", "Bu — «bir-nol-bir, ikkilik». Pastdagi kichik son — asos.");
-    await ui.say("elder", "Asosni yozish shart: 10 — oʻnlikda «oʻn», ikkilikda esa «bir-nol», yaʼni ikki!");
+    await ui.say("elder", "Oʻqilishi: «bir-nol-bir, ikkilik». Pastdagi kichik son — asos.");
+    await ui.say("elder", "Asos yozilmasa, yozuv ikki xil oʻqiladi: 10₁₀ = oʻn, 10₂ = ikki.");
     el.append(ui.h("div", { class: "kinds" },
       ui.h("div", { class: "kind-card" },
         ui.h("div", { class: "kind-title", text: "Pozitsion" }),
@@ -74,8 +74,8 @@
         ui.h("div", { class: "kind-title", text: "Nopozitsion" }),
         ui.h("div", { text: "Rim raqamlari" }),
         ui.h("div", { class: "kind-ex", text: "XX: X — har joyda 10" }))));
-    await ui.say("elder", "Pozitsion tizimda raqam qiymati turgan xonasiga bogʻliq.");
-    await ui.say("elder", "Nopozitsion tizimda belgi qiymati oʻzgarmaydi — Rim raqamlarini esla («Rim toshi» oʻyini).");
+    await ui.say("elder", "Pozitsion tizimda raqam qiymati turgan xonasiga bogʻliq: 352 dagi 5 — ellik.");
+    await ui.say("elder", "Nopozitsion tizimda belgi qiymati joyiga bogʻliq emas — masalan, Rim raqamlari («Rim toshi» oʻyini).");
   }
 
   // 5.4: mashq — noto'g'ri raqamni bos / eng kichik asos / harf qiymati
@@ -88,7 +88,7 @@
       const cells = [];
       let open = true;
       el.append(tiles);
-      ui.bubble("elder", "Bu yozuvda xato raqam bormi? Boʻlsa — uni bos.");
+      ui.bubble("elder", "Bu tizimda boʻlmaydigan raqam bormi? Boʻlsa — uni bos.");
       return practice.tries({
         setup: (submit) => {
           [...task.number].forEach((ch, i) => {
@@ -103,7 +103,7 @@
         },
         check: (value) => value === task.answer,
         hint: () => {
-          common.add(el, common.line(`n-lik tizimda raqamlar 0 dan n−1 gacha. Bu yerda n = ${task.base}`));
+          common.add(el, common.line(`b-lik tizimda raqamlar 0 dan b−1 gacha. Bu yerda b = ${task.base}`));
           ui.bubble("elder", "↻ Har bir raqamni asos bilan solishtir.");
         },
         solution: () => {
@@ -121,24 +121,24 @@
     }
     if (task.type === "minBase") {
       el.append(ui.h("div", { class: "big-value", text: task.number }));
-      ui.bubble("elder", "Bu son eng kamida qaysi tizimda boʻlishi mumkin?");
+      ui.bubble("elder", "Bu yozuv uchun eng kichik mumkin boʻlgan asos qaysi?");
       const max = Math.max(...[...task.number].map(S.digitValue));
       return practice.numberTries({
         answer: task.answer,
         hint: () => {
           common.add(el, common.line("Eng katta raqamni top: asos undan katta boʻladi"));
-          ui.bubble("elder", "↻ Qaysi raqam eng katta?");
+          ui.bubble("elder", "↻ Eng katta raqamga qara: asos undan kamida 1 ga katta.");
         },
         solution: () => common.add(el, common.answerLine(`Eng katta raqam ${S.digitChar(max)}${max >= 10 ? ` (= ${max})` : ""} → kamida ${task.answer}-lik`)),
       });
     }
     el.append(ui.h("div", { class: "big-value", text: S.fmt(task.digit, 16) }));
-    ui.bubble("elder", "16-likda bu raqam nechaga teng?");
+    ui.bubble("elder", "16-likdagi bu raqam oʻnlikda nechaga teng?");
     return practice.numberTries({
       answer: task.answer,
       hint: () => {
         common.add(el, common.line("A — 10 dan boshlanadi: A, B, C, D, E, F"));
-        ui.bubble("elder", "↻ A dan boshlab sana.");
+        ui.bubble("elder", "↻ A = 10 dan boshlab sana.");
       },
       solution: () => common.add(el, common.answerLine(`${task.digit} = ${task.answer}`)),
     });
@@ -153,7 +153,7 @@
   async function stage2() {
     await growBase();
     await kinds();
-    await ui.say("elder", `Endi oʻzing tekshir: raqamlar va asoslar. ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta — notoʻgʻri raqam, eng kichik asos, 16-lik harflar.`);
     await practice.exercises({
       next: (prev, correct, tier) => tizim.makeDigitTask(prev, undefined, tier),
       run: digitTask,

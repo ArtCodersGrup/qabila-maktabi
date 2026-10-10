@@ -13,7 +13,7 @@
       h("div", { class: "py-rol" }, h("span", { class: "py-rol-rasm", html: QK.gameArt.noutbuk() }), h("b", { text: "Sen" })),
       h("div", { class: "py-strelka", text: "⇄" }),
       h("div", { class: "py-rol" }, h("span", { class: "py-rol-rasm", html: QK.gameArt.server() }), h("b", { text: "Sayt egasining kompyuteri" }))));
-    await ui.say("elder", "«Sayt» — aslida kimningdir kompyuteridagi fayllar. Sen soʻraysan, u javob beradi.");
+    await ui.say("elder", "Sayt — boshqa kompyuterda saqlangan fayllar. Brauzer ularni soʻraydi, u kompyuter javob beradi.");
     ui.bubble("elder", "Manzilni bos va sahifa qanday yigʻilishini kuzat.");
     await ui.choice([{ label: "kelajagim.uz ni ochish", value: "ok" }]);
     const joy = h("div", {});
@@ -26,11 +26,11 @@
       QK.sound.play("tap");
       await kut(650);
     }
-    await ui.say("elder", "Toʻrtta soʻrov ketdi: sahifa, uslub, shrift, rasm. Har biri alohida keldi.");
-    await ui.say("elder", "Soʻraydigan tomon — mijoz, javob beradigan kompyuter — server.");
+    await ui.say("elder", "4 ta soʻrov ketdi: sahifa, uslub, shrift, rasm. Har fayl alohida javob boʻlib keldi.");
+    await ui.say("elder", "Atama: soʻrov yuboradigan tomon — mijoz, javob beradigan kompyuter — server.");
     joy.innerHTML = "";
     joy.append(common.sahifa(["sahifa", "uslub", "shrift"]));
-    await ui.say("apprentice", "Rasm yoʻlda yoʻqolsa — sahifa ochiladi, faqat rasm oʻrni boʻsh qoladi!");
+    await ui.say("elder", `Bitta fayl (rasm) kelmasa, sahifa baribir ochiladi — faqat oʻsha joy boʻsh qoladi. Mashq: ${QK.practice.need()} ta savol.`);
   }
 
   async function stage3() {

@@ -61,7 +61,22 @@
     return row;
   }
 
-  const paperText = (type, i) => (type === "exact" ? String(i) : `1–${i}`);
+  // Uzunlik sharti: "aynan 3" yoki "1–3"
+  const lenText = (type, i) => (type === "exact" ? `aynan ${i}` : `1–${i}`);
+
+  // Shart kartasi (ish zonasida): alifbo, so'z uzunligi, kerak bo'lsa odamlar soni.
+  // Avval shogird qog'ozida turgan uzunlik endi shu yerda — kattalar ko'rinishida ham ko'rinadi.
+  function condCard({ letters, len, people }) {
+    const card = ui.h("div", { class: "cond-card" });
+    if (letters) {
+      const row = ui.h("div", { class: "cond-row" }, ui.h("span", { text: `Alifbo (a = ${letters.length}):` }));
+      letters.forEach((l, k) => row.append(ui.tile(l, k, "xs")));
+      card.append(row);
+    }
+    if (len) card.append(ui.h("div", { class: "cond-row", text: `Uzunlik: ${len}` }));
+    if (people) card.append(ui.h("div", { class: "cond-row", text: `Odamlar: ${people}` }));
+    return card;
+  }
 
   // 1- va 2-bosqich mashqlari (DIZAYN 4.3, 5.3)
   function stage12Spec(type) {
@@ -69,12 +84,11 @@
       show(ex) {
         ui.setCompact(false);
         ui.clearWork();
-        ui.paper(paperText(type, ex.i));
-        ui.raisePaper(true);
+        ui.work().append(condCard({ letters: ex.letters, len: lenText(type, ex.i) }));
         const question = type === "exact"
-          ? `Aynan ${ex.i} harfli nechta soʻz bor?`
-          : `${ex.i} harfgacha (${logic.upToText(ex.i)} harfli) nechta soʻz bor?`;
-        ui.bubble("elder", ui.lettersLine("Harflar:", ex.letters, question));
+          ? `Aynan ${ex.i} harfli soʻzlar nechta?`
+          : `${ex.i} harfgacha (${logic.upToText(ex.i)} harfli) soʻzlar nechta?`;
+        ui.bubble("elder", ui.lettersLine("Alifbo:", ex.letters, question));
       },
       hint(ex) {
         ui.clearWork();
@@ -93,7 +107,7 @@
       },
       praise: (ex) => (type === "exact"
         ? `${logic.productText(ex.a, ex.i)} = ${ex.answer}.`
-        : `${ex.i} harfgacha — ${ex.answer} ta soʻz.`),
+        : `${logic.sumText(ex.a, ex.i)} = ${ex.answer}.`),
       solution(ex) {
         ui.clearWork();
         const box = ui.h("div", { class: "formula-box" });
@@ -114,6 +128,7 @@
   async function manualWall(letters, len, allowShort) {
     ui.setCompact(false);
     ui.clearWork();
+    ui.work().append(condCard({ letters, len: lenText(allowShort ? "upto" : "exact", len) }));
     const slots = ui.h("div", { class: "slots" });
     const wall = ui.h("div", { class: "wall" });
     const cols = {};
@@ -138,6 +153,7 @@
   async function manualTree(letters, depth) {
     ui.setCompact(true);
     ui.clearWork();
+    ui.work().append(condCard({ letters, len: lenText("exact", depth) }));
     const slots = ui.h("div", { class: "slots" });
     const box = ui.h("div", { class: "tree-box" });
     ui.work().append(slots, box);
@@ -158,6 +174,7 @@
   async function growTree(letters, depth) {
     ui.setCompact(true);
     ui.clearWork();
+    ui.work().append(condCard({ letters, len: lenText("exact", depth) }));
     const box = ui.h("div", { class: "tree-box" });
     ui.work().append(box);
     box.innerHTML = art.tree(letters, depth - 1, { lit: new Set(logic.listWords(letters, depth - 1, "exact")) });
@@ -171,9 +188,10 @@
 
   // Har bir tugun — so'z: qavatlar birin-ketin yonadi, tepasida "{n} ta" (DIZAYN 2.2).
   // Qavat sonlari HTML matn sifatida ham chiqadi — daraxt kichik bo'lsa ham o'qiladi (I1).
-  async function treeLevels(letters, depth) {
+  async function treeLevels(letters, depth, showCond = true) {
     ui.setCompact(true);
     ui.clearWork();
+    if (showCond) ui.work().append(condCard({ letters, len: lenText("upto", depth) }));
     const counts = ui.h("div", { class: "level-counts" });
     const box = ui.h("div", { class: "tree-box" });
     ui.work().append(counts, box);
@@ -193,7 +211,7 @@
   }
 
   QK.common = {
-    PRAISE, exercises, askUntilCorrect, hintTitle, variantSlots, paperText, stage12Spec,
+    PRAISE, exercises, askUntilCorrect, hintTitle, variantSlots, lenText, condCard, stage12Spec,
     manualWall, manualTree, growTree, treeLevels,
   };
 })(window);

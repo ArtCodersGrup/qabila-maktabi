@@ -20,14 +20,14 @@
           return;
         }
         ui.bubble("elder", birinchi
-          ? "↻ Yetmadi. Sariq ramkali qismni bossang, u almashadi — tuzat va yana ishga tushir."
+          ? "↻ Robot yetmadi. Sariq ramkali qismni bosib almashtir, keyin yana ishga tushir."
           : "↻ Hali yetmadi. Sonni yana bir bosib koʻr.");
         birinchi = false;
       });
       ui.bubble("elder", "Bu dasturda bitta xato bor. Avval ishga tushirib koʻr.");
     });
-    await ui.say("elder", "✓ Zoʻr! Xatoni topib tuzatishni dasturchilar «debug» deydi.");
-    await ui.say("elder", "Endi xato har safar boshqa joyda: son yoki yoʻnalish. Bloklar ham yonida yangilanib turadi.");
+    await ui.say("elder", "✓ Tuzatildi. Xatoni topib tuzatish jarayoni «debug» deyiladi.");
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta dastur, har birida bitta xato — son yoki yoʻnalish. Yonidagi bloklar ham yangilanadi.`);
   }
 
   async function stage2() {

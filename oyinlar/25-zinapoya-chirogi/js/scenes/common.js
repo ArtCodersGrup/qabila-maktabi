@@ -85,7 +85,7 @@
         prev = s;
         if (step >= steps.length && left === 0) {
           sw.lock();
-          ui.bubble("elder", msg && step === steps.length && steps.length ? `${msg} Hamma holat jadvalda!` : "✓ Hamma holat jadvalda!");
+          ui.bubble("elder", msg && step === steps.length && steps.length ? `${msg} Hamma holat jadvalda.` : "✓ Hamma holat jadvalda.");
           setTimeout(done, 1200);
         } else if (msg) {
           ui.bubble("elder", msg);
@@ -251,7 +251,7 @@
             break;
           default:
             add(el, note("1 + 1 = 10 — 0 yoz, 1 ni koʻchir; 1 + 1 + 1 = 11 — 1 yoz, 1 ni koʻchir"));
-            ui.bubble("elder", "↻ Oʻngdagi xonadan boshla. Koʻchirishni unutma!");
+            ui.bubble("elder", "↻ Oʻngdagi xonadan boshla va koʻchirishni hisobga ol.");
         }
       },
       solution: () => {

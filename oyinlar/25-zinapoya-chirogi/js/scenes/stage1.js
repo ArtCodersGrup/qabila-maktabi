@@ -8,9 +8,8 @@
   async function intro() {
     const el = common.box(false);
     el.append(ui.h("div", { class: "story-art", html: art.stairs() }));
-    await ui.say("apprentice", "Zinapoya chirogʻini pastda yoqdim, tepaga chiqib oʻchirdim!");
-    await ui.say("apprentice", "Qanday qilib? Ikkita kalit bor-ku.");
-    await ui.say("elder", "Bu — yangi mantiq amali. Sinab koʻramiz.");
+    await ui.say("elder", "Maqsad: XOR amali va kompyuter ikkilik sonlarni qanday qoʻshishi.");
+    await ui.say("elder", "Zinapoya chirogʻi pastdagi kalit bilan yonadi, tepadagisi bilan oʻchadi. Bu qaysi amal — sinab koʻramiz.");
   }
 
   // 5.4: ta'rif — YOKI va XOR yonma-yon, farqi 1 1 qatorida
@@ -21,8 +20,8 @@
     common.opTable(row, "xor").mark([3]);
     el.append(row);
     common.formula(el, ["XOR — faqat bittasi", "A va B har xil → 1, bir xil → 0"]);
-    await ui.say("elder", "Farqi — 1 1 qatorida: YOKI — 1, XOR — 0.");
-    await ui.say("elder", "Zinapoya chirogʻi — XOR: har bosish chiroqni almashtiradi.");
+    await ui.say("elder", "Farq faqat 1 1 qatorida: YOKI = 1, XOR = 0.");
+    await ui.say("elder", "Zinapoya chirogʻi — XOR: har bir bosish chiqishni teskarisiga almashtiradi.");
   }
 
   async function stage1() {
@@ -36,14 +35,14 @@
       subs: true, // zinapoya kaliti uzilmaydi — faqat bosiladi
       intro: "Sen pastdasan. Pastki kalit A bilan chiroqni yoq.",
       steps: [
-        { until: (s) => (s.a ^ s.b) === 1, say: "✓ Yondi! Endi tepaga chiqding. Boshqa kalit bilan chiroqni oʻchir.", retry: "Bitta kalitni bos — chiroq yonadi." },
-        { until: (s) => s.a === 1 && s.b === 1, say: "✓ Oʻchdi! Ikkala kalit ham bosilgan. Qolgan holatni ham sinab koʻr.", retry: "Birinchi kalitga tegmay, ikkinchisini bos." },
+        { until: (s) => (s.a ^ s.b) === 1, say: "✓ Chiroq yondi. Endi tepadasan: ikkinchi kalit bilan oʻchir.", retry: "Bitta kalitni bos — chiroq yonadi." },
+        { until: (s) => s.a === 1 && s.b === 1, say: "✓ Chiroq oʻchdi, ikkala kalit ham bosilgan. Qolgan holatni ham sinab koʻr.", retry: "Birinchi kalitga tegmay, ikkinchisini bos." },
       ],
     });
-    await ui.say("elder", "Chiroq faqat bitta kalit bosilganda yondi. Ikkalasi ham bosilsa — oʻchdi!");
-    await ui.say("elder", "Bu — XOR: «faqat bittasi». A va B har xil — 1, bir xil — 0.");
+    await ui.say("elder", "Chiroq faqat bitta kalit bosilganda yondi; ikkalasi bosilsa — oʻchdi.");
+    await ui.say("elder", "Bu — XOR («faqat bittasi»): A va B har xil → 1, bir xil → 0.");
     await definition();
-    await ui.say("elder", `Endi oʻzing oʻyla. ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta — XOR va boshqa amallar.`);
     await common.exercises(1);
   }
 

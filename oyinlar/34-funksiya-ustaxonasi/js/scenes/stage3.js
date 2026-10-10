@@ -12,15 +12,15 @@
     const out = U.output({ title: "Chiqish" });
     out.lines(K.run(code).output);
     el.append(out.el);
-    await ui.say("elder", "Katta masala ikkiga boʻlindi: juftmi va nechta_juft.");
-    await ui.say("elder", "Har bir funksiya bitta ishni qiladi. Shuning uchun tekshirish ham oson.");
+    await ui.say("elder", "Masala ikki funksiyaga boʻlindi: juftmi va nechta_juft.");
+    await ui.say("elder", "Har funksiya bitta ishni bajaradi, shuning uchun ularni alohida tekshirish oson.");
   }
 
   async function howItWorks() {
     const el = common.box(false);
     el.append(ui.h("div", { class: "story-art wide", html: QK.gameArt.bench(true) }));
-    await ui.say("elder", "Endi sen faqat funksiyani yozasan — chaqirishni sayt oʻzi bajaradi.");
-    await ui.say("elder", "Funksiya nomini aynan soʻralganidek yoz, aks holda sayt uni topolmaydi.");
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta funksiya. Faqat funksiyani yoz — sinov chaqiruvlarini sayt oʻzi bajaradi.`);
+    await ui.say("elder", "Funksiya nomi aynan soʻralganidek boʻlsin, aks holda sinov uni topolmaydi.");
   }
 
   async function stage3() {

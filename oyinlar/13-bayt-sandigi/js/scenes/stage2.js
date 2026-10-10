@@ -14,7 +14,7 @@
     const count = common.line("Baytlar: 0");
     el.append(ui.h("div", { class: "pack-head" }, bytesUi.messageView(message, false), count));
     const slots = bytesUi.packer(el, message);
-    ui.bubble("elder", "Har bir belgini bos — u oʻz sandigʻiga tushadi.");
+    ui.bubble("elder", "Har belgini bos — u oʻz baytiga joylanadi.");
 
     let packed = 0;
     let saidSpace = false;
@@ -26,10 +26,10 @@
         count.textContent = `Baytlar: ${packed}`;
         if (ch === " " && !saidSpace) {
           saidSpace = true;
-          ui.bubble("elder", "Boʻsh joy ham belgi! U ham 1 bayt oladi.");
+          ui.bubble("elder", "Boʻsh joy ham belgi — u ham 1 bayt oladi.");
         } else if (isMark(ch) && !saidMark) {
           saidMark = true;
-          ui.bubble("elder", "Vergul va undov ham belgi — har biri 1 bayt!");
+          ui.bubble("elder", "Tinish belgilari ham belgi — har biri 1 bayt.");
         }
         if (packed === message.length) {
           ui.clearControl();
@@ -49,7 +49,7 @@
     el.append(bytesUi.chest("A", { code: true }));
     common.formula(el, ["belgilar soni = baytlar soni", "bitlar = baytlar × 8"]);
     await ui.say("elder", "Har bir belgi — 1 bayt: harf, raqam, boʻsh joy, nuqta — hammasi.");
-    await ui.say("elder", "Har belgining oʻz naqshi bor: A — 01000001. Bu jadval ASCII deyiladi.");
+    await ui.say("elder", "Har belgining oʻz kodi bor: A = 65 = 01000001₂. Belgi va kodlar jadvali ASCII deyiladi.");
   }
 
   // 6.4: mashq — xabar necha bayt / necha bit
@@ -77,7 +77,7 @@
   async function stage2() {
     await pack();
     await definition();
-    await ui.say("elder", `Endi oʻzing oʻlcha: xabar necha bayt yoki necha bit? ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta xabar — hajmini bayt yoki bitda top.`);
     await practice.exercises({
       next: (prev, correct, tier) => bytes.makeTextTask(prev, undefined, tier),
       run: textTask,

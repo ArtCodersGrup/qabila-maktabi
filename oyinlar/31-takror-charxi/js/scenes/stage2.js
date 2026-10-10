@@ -10,14 +10,14 @@
     const el = common.box();
     const step = U.stepper({ code });
     el.append(step.el);
-    ui.bubble("elder", "⏭ Qadam: s qutisi qanday toʻlib borishini kuzat.");
+    ui.bubble("elder", "⏭ Qadam: s oʻzgaruvchisi har aylanishda qanday oʻsishini kuzat.");
     await ui.settle((done) => {
       ui.control().append(ui.button("⏭ Qadam", () => {
         if (!step.step()) { ui.clearControl(); done(); }
       }, "big"));
     });
-    await ui.say("elder", "Yigʻuvchi quti sikldan oldin yaratiladi: s = 0.");
-    await ui.say("elder", "Sikl ichida toʻladi, sikldan keyin chiqariladi.");
+    await ui.say("elder", "Yigʻuvchi oʻzgaruvchi sikldan oldin nolga tenglanadi: s = 0.");
+    await ui.say("elder", "Sikl ichida unga qoʻshiladi, natija sikldan keyin chiqariladi.");
   }
 
   async function breakDemo() {
@@ -37,18 +37,18 @@
       ui.h("div", { class: "formula-row kod", text: "s = 0        ← sikldan oldin" }),
       ui.h("div", { class: "formula-row kod", text: "s = s + i    ← sikl ichida" }),
       ui.h("div", { class: "formula-row kod", text: "print(s)     ← sikldan keyin" })));
-    await ui.say("elder", "Sanoq ham shunday: soni = 0, keyin soni += 1.");
+    await ui.say("elder", "Sanagich ham shu naqshda: soni = 0, sikl ichida soni += 1.");
   }
 
   async function stage2() {
     await collect();
     await breakDemo();
     await definition();
-    await ui.say("elder", "Endi oʻzing hisobla: dastur nima chiqaradi?");
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta dastur. Har biri nima chiqarishini aniqla.`);
     await practice.exercises({
       next: (prev, correct, tier) => L.sumTask(Math.random, prev, tier),
       run: (task) => common.resultExercise(task),
-      praise: () => "Yigʻindini toʻgʻri topding.",
+      praise: () => "Natija toʻgʻri.",
     });
   }
 

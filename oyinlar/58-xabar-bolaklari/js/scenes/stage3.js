@@ -13,13 +13,13 @@
       common.boshJoy(),
       common.konvert({ raqam: 4, jami }, { kichik: true }), common.konvert({ raqam: 5, jami }, { kichik: true }));
     el.append(qator);
-    ui.bubble("elder", "Beshta konvert yuborilgan edi, toʻrttasi keldi. Qaysi raqam yoʻq?");
+    ui.bubble("elder", "5 ta paket yuborildi, 4 tasi keldi. Qaysi raqam yoʻq?");
     const javob = await ui.choice([2, 3, 4].map((n) => ({ label: String(n), value: n })));
     QK.sound.play(javob === 3 ? "correct" : "retry");
-    if (javob !== 3) await ui.say("elder", "↻ 1, 2, keyin… 4. Oʻrtada 3 yoʻq.");
+    if (javob !== 3) await ui.say("elder", "↻ 1, 2, keyin 4 — oraliqda 3 yoʻq.");
     qator.replaceChild(common.konvert({ raqam: 3, jami }, { kichik: true, holat: "yangi" }), qator.children[2]);
-    await ui.say("elder", "✓ Qabul qiluvchi faqat 3-konvertni qayta soʻradi — hammasini emas. Mana u keldi.");
-    await ui.say("apprentice", "Raqamlar boʻlmaganda qaysi biri yoʻqolganini bilib boʻlmasdi!");
+    await ui.say("elder", "✓ Qabul qiluvchi faqat 3-paketni qayta soʻraydi, hammasini emas. U yetib keldi.");
+    await ui.say("elder", `Yoʻqolgan paket raqamlar ketma-ketligidagi boʻshliqdan topiladi. Mashq: ${QK.practice.need()} ta savol.`);
   }
 
   async function stage3() {

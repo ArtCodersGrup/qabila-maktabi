@@ -7,11 +7,11 @@
 
   // Ayirish namoyishi: har qadamda lagan holati va nima olish kerakligi
   const MINUS_STEPS = [
-    { tray: "XV", left: "VII", line: "Endi ayirish: XV − VII. Lagandan V, I, I ni olish kerak." },
-    { tray: "X", left: "II", line: "V ni olib tashladik. Endi I, I kerak — lekin laganda I yoʻq!" },
-    { tray: "VV", left: "II", line: "Rimliklar X ni ikkita V ga «sindirgan»." },
-    { tray: "VIIIII", left: "II", line: "Bitta V ni esa beshta I ga sindirgan." },
-    { tray: "VIII", left: "", line: "Mana, ikkita I ni ham olib tashladik. Laganda VIII qoldi." },
+    { tray: "XV", left: "VII", line: "Ayirish: XV − VII. Lagandan V, I, I ni olish kerak." },
+    { tray: "X", left: "II", line: "V olindi. Endi I, I kerak, lekin laganda I yoʻq." },
+    { tray: "VV", left: "II", line: "Shuning uchun X maydalanadi: X = VV." },
+    { tray: "VIIIII", left: "II", line: "Bitta V ham maydalanadi: V = IIIII." },
+    { tray: "VIII", left: "", line: "Ikkita I olindi. Laganda VIII qoldi." },
   ];
 
   // Qoida tugmasi: qo'llansa — lagan yangilanadi; qo'llanmasa — "yetarli emas"
@@ -35,16 +35,16 @@
     const box = ui.h("div", { class: "rbox" }, common.expr("XII", "+", "VIII"));
     ui.work().append(box);
     const tray = romanUi.tray(box);
-    await ui.say("elder", "Rimliklar qanday qoʻshgan? Ikki sonning belgilarini bitta laganga toʻplagan.");
+    await ui.say("elder", "Rimcha qoʻshish: ikki sonning barcha belgilari bitta laganga yigʻiladi.");
     tray.set(roman.merge("XII", "VIII"), "*");
-    await ui.say("elder", "Mana: X V I I I I I. Belgilar koʻp — ularni tartibga solish kerak.");
-    ui.bubble("elder", "Beshta I — bitta V ga teng. Yonib turgan qoidani bos!");
+    await ui.say("elder", "Natija: X V I I I I I. Endi uni standart yozuvga keltirish kerak.");
+    ui.bubble("elder", "IIIII = V. Yonib turgan qoidani bos.");
     await ui.settle((done) => {
       const rules = romanUi.ruleButtons((rule) => {
         if (!applyOn(tray, rule)) return;
         if (roman.canTidy(tray.get())) {
           rules.highlight(tray.get());
-          ui.bubble("elder", "Zoʻr! Yana tartibga solsa boʻladi.");
+          ui.bubble("elder", "Yana bitta qoida qoʻllanadi.");
           return;
         }
         ui.clearControl();
@@ -54,7 +54,7 @@
     });
     sound.play("correct");
     box.replaceChild(common.expr("XII", "+", "VIII", "XX"), box.firstChild);
-    await ui.say("elder", "Tayyor: XII + VIII = XX. Rimliklar shunday qoʻshgan.");
+    await ui.say("elder", "XII + VIII = XX. Rimcha qoʻshish: belgilarni yigʻib, qoidalar bilan ixchamlash.");
   }
 
   // 5.2: xuddi shu misol oddiy sonlarda
@@ -64,10 +64,10 @@
     ui.clearControl();
     const line = ui.h("div", { class: "formula-row big", text: "12 + 8 = ?" });
     ui.work().append(ui.h("div", { class: "rbox" }, line));
-    ui.bubble("elder", "Endi oʻzimizning sonlarda: 12 + 8 = ?");
+    ui.bubble("elder", "Xuddi shu misol oʻnlik tizimda: 12 + 8 = ?");
     await common.askUntil(20, "12 ga 8 ni qoʻsh.");
     line.textContent = "12 + 8 = 20";
-    await ui.say("elder", "Bir zumda! XII = 12, VIII = 8, XX = 20.");
+    await ui.say("elder", "Oʻnlikda bir qadam: XII = 12, VIII = 8, XX = 20.");
   }
 
   // 5.3: XV − VII — bola kuzatadi, keyin oddiy sonlarda hisoblaydi
@@ -86,14 +86,14 @@
       await ui.say("elder", step.line);
     }
     box.replaceChild(common.expr("XV", "−", "VII", "VIII"), box.firstChild);
-    await ui.say("elder", "XV − VII = VIII, yaʼni 8. Rimliklar buni hisob taxtasida qilgan.");
+    await ui.say("elder", "XV − VII = VIII. Amalda rimliklar buni hisob taxtasida (abakda) bajargan.");
     ui.clearWork();
     const line = ui.h("div", { class: "formula-row big", text: "15 − 7 = ?" });
     ui.work().append(ui.h("div", { class: "rbox" }, line));
-    ui.bubble("elder", "Endi oʻzimizning sonlarda: 15 − 7 = ?");
+    ui.bubble("elder", "Oʻnlik tizimda: 15 − 7 = ?");
     await common.askUntil(8, "15 dan 7 ni ayir.");
     line.textContent = "15 − 7 = 8";
-    await ui.say("elder", "Oʻzimizning sonlarda hisoblash ancha oson!");
+    await ui.say("elder", "Pozitsion tizimda hisob qisqa: ustun bilan, xonama-xona.");
   }
 
   // 5.4: Rimliklar usulida qo'shish (lagan va qoidalar)
@@ -108,7 +108,7 @@
     ui.work().append(box);
     const tray = romanUi.tray(box);
     tray.set(roman.merge(a, b), "*");
-    ui.bubble("elder", "Rimliklar usulida qoʻsh: laganni tartibga sol, keyin «Tayyor»ni bos.");
+    ui.bubble("elder", "Rimcha qoʻsh: belgilarni qoidalar bilan ixchamla, keyin «Tayyor»ni bos.");
     let rules = null;
     return practice.tries({
       setup: (submit) => {
@@ -118,7 +118,7 @@
       hint: () => {
         tray.shake();
         rules.highlight(tray.get());
-        ui.bubble("elder", "↻ Hali tartibga solsa boʻladi. Yonib turgan qoidani bos.");
+        ui.bubble("elder", "↻ Hali qoʻllanadigan qoida bor — u yonib turibdi.");
       },
       solution: () => {
         tray.set(roman.tidy(tray.get()), "*");
@@ -140,7 +140,7 @@
     ui.work().append(box);
     const note = ui.h("div", { class: "formula-row" });
     box.append(note);
-    ui.bubble("elder", "Oddiy songa aylantirib hisobla, javobni Rim raqamida yoz.");
+    ui.bubble("elder", "Oʻnlikka oʻtkazib hisobla, javobni Rim raqamida yoz.");
     return common.romanAnswer({
       target: task.answer,
       // Maslahat javobni aytmaydi (QOIDALAR 4.3): sonlar aylantirib beriladi, hisobni bola o'zi qiladi
@@ -161,7 +161,7 @@
     await tidyDemo();
     await ordinary();
     await minusDemo();
-    await ui.say("elder", `Endi oʻzing hisobla: goh lagan bilan, goh oddiy sonlarda. ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta misol — goh lagan bilan, goh oʻnlikka oʻtkazib.`);
     await practice.exercises({
       next: (prev, correct, tier) => roman.makeCalcTask(correct, prev, null, tier),
       run: (task) => (task.type === "tidy" ? tidyTask(task) : arithTask(task)),

@@ -22,7 +22,7 @@
       ui.h("span", { class: "legend-dot", style: `background:${c.color}` }),
       ui.h("span", { text: `${c.name} ${c.code}` }))));
     el.append(legend);
-    ui.bubble("elder", "Rang tanla va kataklarni boʻya. Har katakda uning kodi!");
+    ui.bubble("elder", "Rang tanlab kataklarni boʻya. Har katakda rangning 2 bitli kodi chiqadi.");
     await ui.settle((done) => {
       const row = ui.h("div", { class: "control-row" });
       ui.control().append(row);
@@ -39,7 +39,7 @@
     });
     board.lock();
     sound.play("correct");
-    await ui.say("elder", "4 xil rang — har piksel 2 bit: 2 × 2 = 4 xil kod.");
+    await ui.say("elder", "4 xil rang uchun 2 bit yetadi: 2² = 4 xil kod (00, 01, 10, 11).");
     await ui.say("elder", "16 piksel × 2 bit = 32 bit, yaʼni 4 bayt.");
   }
 
@@ -51,9 +51,9 @@
       table.append(ui.h("span", { text: `${colors} rang` }), ui.h("span", { text: `${bits} bit` }));
     }
     el.append(table);
-    common.formula(el, ["hajm = kenglik × balandlik × bit"]);
-    await ui.say("elder", "Rang qancha koʻp boʻlsa, har pikselga shuncha koʻp bit kerak.");
-    await ui.say("elder", "256 rang — 8 bit, yaʼni har piksel 1 bayt.");
+    common.formula(el, ["N = 2ⁱ (N — ranglar, i — bitlar)", "V = kenglik × balandlik × i (bit)"]);
+    await ui.say("elder", "i bit bilan 2ⁱ xil rang kodlanadi. N rang uchun 2ⁱ ≥ N boʻlgan eng kichik i olinadi.");
+    await ui.say("elder", "256 = 2⁸ rang — 8 bit, yaʼni har piksel 1 bayt.");
   }
 
   function bitsTable(mark, upTo) {
@@ -76,7 +76,7 @@
         hint: () => {
           table = bitsTable(null, task.answer);
           common.add(el, table);
-          ui.bubble("elder", "↻ Jadvalga qara: qaysi qatorda rang yetadi?");
+          ui.bubble("elder", "↻ Jadvalda 2ⁱ ranglar sonidan kichik boʻlmagan birinchi qatorni top.");
         },
         solution: () => {
           const marked = bitsTable(task.answer, task.answer);
@@ -89,12 +89,12 @@
     const colors = task.colors === 2 ? pixelsUi.BW : pixels.PALETTE16;
     pixelsUi.taskPicture(el, task, colors, `${task.colors} xil rang`);
     const p = task.w * task.h;
-    ui.bubble("elder", "Bu rasm necha bit?");
+    ui.bubble("elder", "Hajmi necha bit?");
     return practice.numberTries({
       answer: task.answer,
       hint: () => {
         common.add(el, common.line(`${task.w} × ${task.h} = ${p} piksel, har piksel ${task.bpp} bit`));
-        ui.bubble("elder", "↻ Piksellar sonini bitga koʻpaytir.");
+        ui.bubble("elder", "↻ Piksellar soni × bir piksel bitlari.");
       },
       solution: () => common.add(el, common.answerLine(`${task.w} × ${task.h} × ${task.bpp} = ${task.answer} bit`)),
     });
@@ -103,7 +103,7 @@
   async function stage2() {
     await paint();
     await definition();
-    await ui.say("elder", `Endi oʻzing hisobla: ranglar va bitlar. ${QK.practice.need()} ta toʻgʻri javob!`);
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta — i ni top yoki rasm hajmini hisobla.`);
     await practice.exercises({
       next: (prev, correct, tier) => pixels.makeColorTask(prev, undefined, tier),
       run: colorTask,

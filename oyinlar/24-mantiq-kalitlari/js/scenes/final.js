@@ -13,8 +13,8 @@
     ui.pose("elder", "happy", 1200);
     ui.pose("apprentice", "happy", 1200);
     await ui.say("elder", goingOn
-      ? `${s}-bosqich tugadi! Barakalla, keyingisiga oʻtamiz.`
-      : `${s}-bosqich tugadi! Barakalla!`);
+      ? `${s}-bosqich tugadi. Keyingisi — ${s === 1 ? "YOKI" : "EMAS va murakkab ifodalar"}.`
+      : `${s}-bosqich tugadi.`);
   }
 
   async function congrats() {
@@ -23,13 +23,13 @@
     sound.play("win");
     ui.pose("elder", "happy", 1500);
     ui.pose("apprentice", "happy", 1500);
-    ui.bubble("elder", "Tabriklayman! Endi sen mantiq kalitlarini bilasan!");
+    ui.bubble("elder", "Tayyor: VA, YOKI, EMAS ifodalari uchun rostlik jadvalini tuza olasan.");
     ui.work().append(ui.h("div", { class: "story" },
       ui.h("div", { class: "story-art small", html: art.circuit("series", { a: 1, b: 1, lamp: "on" }) }),
       ui.h("div", { class: "summary" },
-        ui.h("div", { text: "VA — ikkalasi ham" }),
-        ui.h("div", { text: "YOKI — kamida bittasi" }),
-        ui.h("div", { text: "EMAS — teskarisi" }))));
+        ui.h("div", { text: "A VA B = 1 — ikkalasi ham 1" }),
+        ui.h("div", { text: "A YOKI B = 1 — kamida bittasi 1" }),
+        ui.h("div", { text: "EMAS A: 1 → 0, 0 → 1" }))));
     return ui.choice([
       { label: "Qayta oʻynash", value: "replay" },
       { label: "Bosh ekran", value: "home", secondary: true },

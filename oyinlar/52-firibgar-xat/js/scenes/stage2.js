@@ -11,11 +11,11 @@
   async function korsat() {
     const el = common.box(true);
     el.append(common.xabarKarta(NAMUNA));
-    await ui.say("elder", "Xatni toʻrt joydan tekshiramiz: kimdan, manzil, matn va havola.");
-    await ui.say("elder", "Manzilga qara. Qabila bankning haqiqiy manzili — qabilabank.uz.");
+    await ui.say("elder", "Xat toʻrt joydan tekshiriladi: kimdan, manzil, matn va havola.");
+    await ui.say("elder", "Avval manzil. Bankning haqiqiy manzili — qabilabank.uz.");
     el.append(common.note(L.manzilBahosi(NAMUNA).izoh));
     el.append(common.belgiRoyxat(NAMUNA.belgilar.map(L.belgi)));
-    await ui.say("apprentice", "Nomga qoʻshimcha soʻz yopishtirilgan! Yana toʻrt belgi bor.");
+    await ui.say("elder", "Bu yerda nomga qoʻshimcha soʻz yopishtirilgan. Matnda yana 4 ta belgi bor.");
   }
 
   // Manzil qoidasi: faqat zonadan oldingi nom va zona solishtiriladi
@@ -34,9 +34,9 @@
       h("span", { class: "fx-belgi-ha", text: m.togri ? "✓" : "↻" }),
       common.manzilSatr(m.manzil),
       h("span", { class: "fx-izoh", text: m.izoh })))));
-    await ui.say("elder", "Nuqtalarni sanamaysan. Zonadan oldingi nomni harfma-harf solishtirasan.");
-    await ui.say("elder", "Nom toʻgʻri boʻlsa, oldidagi boʻlim — oʻsha tashkilotning oʻzi.");
-    await ui.say("elder", "Endi xatlarni oʻzing tekshir. Ikki savol: haqiqiymi yoki firibgarmi — va isboti qayerda?");
+    await ui.say("elder", "Qoida: nuqtalar soni muhim emas — zonadan (.uz, .com) oldingi nom harfma-harf solishtiriladi.");
+    await ui.say("elder", "Nom va zona toʻgʻri boʻlsa, oldidagi qism (kirish.) — oʻsha tashkilotning oʻz boʻlimi.");
+    await ui.say("elder", `Mashq: ${QK.practice.need()} ta xat. Har birida ikki savol: haqiqiymi yoki firibgarmi — va isboti qayerda.`);
   }
 
   async function stage2() {
@@ -47,7 +47,7 @@
       // tier 0 — qoʻlda yozilgan xatlar, tier 1 — ikki belgili, tier 2 — bitta belgili (eng nozik) xatlar
       next: (prev, togri, tier) => L.xabarTask(Math.random, prev, togri % 2 === 0, tier),
       run: (task) => common.xabarExercise(task),
-      praise: (task) => (task.xabar.soxta ? "Bu xat — qarmoq edi." : "Bu xat haqiqiy edi."),
+      praise: (task) => (task.xabar.soxta ? "Bu xat — fishing edi." : "Bu xat haqiqiy edi."),
     });
   }
 
