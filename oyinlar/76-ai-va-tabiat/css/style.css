@@ -1,0 +1,82 @@
+/* AI va tabiat — faqat shu o'yinga xos uslublar (prefiks .at-). */
+
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(250px, 70vw); align-self: center; }
+.story-art.wide { width: min(320px, 84vw); }
+.story-art.small { width: min(150px, 40vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 17px; font-weight: 800; text-align: center; }
+.at-haqiqat { font-size: 15px; font-weight: 700; color: var(--matn-2); max-width: 520px; }
+
+.at-savol { font-size: 18px; font-weight: 800; text-align: center; line-height: 1.4; max-width: 560px; margin: 0 auto; }
+.at-sarlavha { font-size: 14px; font-weight: 800; color: var(--matn-3); text-transform: uppercase; letter-spacing: 0.04em; text-align: center; }
+.at-joy { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+
+/* ---------- Yorliq (rang + matn) ---------- */
+.at-yorliq {
+  display: inline-block; padding: 1px 8px; border-radius: 999px; border: 1.5px solid; font-size: 13px; font-weight: 800; white-space: nowrap;
+}
+.at-yorliq.p { background: var(--asosiy-och); border-color: var(--asosiy); color: var(--asosiy-matn); }
+.at-yorliq.q { background: var(--sariq-och); border-color: var(--yana-qora); color: var(--yana-matn); }
+.at-yorliq.o { background: var(--togri-och); border-color: var(--togri); color: var(--togri-matn); }
+.at-yorliq.d { background: var(--yuza); border-style: dashed; border-color: var(--chiziq-kuchli); color: var(--matn-2); }
+.at-kut { color: var(--matn-3); }
+
+/* ---------- Jadval ---------- */
+.at-oram { max-width: 100%; overflow-x: auto; margin: 0 auto; }
+.at-jadval { border-collapse: collapse; margin: 0 auto; background: var(--yuza); font-size: 14px; font-weight: 700; }
+.at-jadval th, .at-jadval td { border: 1.5px solid var(--chiziq); padding: 4px 7px; text-align: left; vertical-align: middle; }
+.at-jadval th { font-size: 12px; font-weight: 800; color: var(--matn-3); background: var(--panel); white-space: nowrap; }
+.at-jadval td.nom { font-weight: 800; min-width: 72px; max-width: 132px; }
+.at-jadval td.raqam { text-align: center; font-variant-numeric: tabular-nums; font-weight: 900; }
+.at-jadval td.guruh { font-size: 13px; font-weight: 800; }
+.at-jadval tr.joriy td { background: var(--asosiy-och); }
+.at-jadval tr.test td { background: var(--sariq-och); }
+.at-jadval tr.test td.guruh { color: var(--yana-matn); }
+.at-jadval tr.oquv td.guruh { color: var(--asosiy-matn); }
+.at-jadval tr.yaqin td { background: var(--togri-och); }
+.at-jadval tr.xato td { background: var(--yana-och); }
+.at-mat th, .at-mat td { text-align: center; }
+.at-mat td { font-size: 18px; min-width: 40px; }
+.at-mat td.diag { background: var(--togri-och); }
+.at-mat td.nol { color: var(--matn-3); font-weight: 600; }
+.at-mat .burchak { font-size: 11px; font-weight: 700; white-space: normal; max-width: 60px; }
+
+/* ---------- Yangi buyum belgilari ---------- */
+.at-belgilar { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.at-belgi { padding: 4px 10px; background: var(--yuza); border: 2px solid var(--chiziq-kuchli); border-radius: 8px; font-size: 15px; font-weight: 800; }
+.at-belgi .kalit { color: var(--matn-3); font-weight: 700; }
+
+/* ---------- Bosiladigan qatorlar (xato yorliq, nomzodlar) ---------- */
+.at-qatorlar { display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 520px; margin: 0 auto; }
+.at-qator {
+  display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 2px 10px; min-height: 52px; padding: 6px 12px;
+  background: var(--yuza); border: 2px solid var(--chiziq-kuchli); border-radius: 10px; font: inherit; color: var(--matn); text-align: left; cursor: pointer;
+  box-shadow: 0 3px 0 var(--oq-qora); transition: transform 0.08s, box-shadow 0.08s;
+}
+.at-qator .nom { font-size: 16px; font-weight: 800; }
+.at-qator .tavsif { grid-column: 1 / 3; font-size: 13px; font-weight: 700; color: var(--matn-2); }
+.at-qator:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--oq-qora); }
+.at-qator:focus-visible { outline: 3px solid var(--asosiy); outline-offset: 3px; }
+.at-qator:disabled { cursor: default; box-shadow: none; border-style: dashed; }
+.at-qator.xato { border-style: solid; border-color: var(--yana); background: var(--yana-och); }
+.at-qator.tanlangan { border-color: var(--togri); background: var(--togri-och); box-shadow: 0 3px 0 var(--togri-qora); }
+
+/* ---------- Javob variantlari ---------- */
+.at-javoblar { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; width: 100%; max-width: 560px; margin: 0 auto; }
+.at-javoblar .btn { flex: 1 1 130px; min-height: 48px; }
+
+@media (max-width: 420px) {
+  .at-savol { font-size: 17px; }
+  .at-jadval { font-size: 13px; }
+  .at-jadval th, .at-jadval td { padding: 3px 5px; }
+  .at-jadval th { font-size: 11px; }
+  .at-yorliq { padding: 1px 6px; font-size: 12px; }
+  .at-jadval td.nom { max-width: 92px; }
+}
+
+/* Mashq qutisi */
+.pbox { display: flex; flex-direction: column; align-items: stretch; gap: 12px; width: 100%; max-width: 640px; margin: 0 auto; }
+.pbox .note { font-size: 18px; font-weight: 800; color: var(--asosiy-matn); text-align: center; }
+.pbox .answer { font-size: 19px; font-weight: 900; color: var(--togri-matn); text-align: center; }
+@media (max-width: 420px) { .pbox { gap: 8px; } .pbox .note { font-size: 17px; } }

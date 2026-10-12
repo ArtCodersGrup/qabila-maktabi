@@ -1,0 +1,131 @@
+/* Chizmani tanish — faqat shu o'yinga xos uslublar (prefiks .ct-). */
+
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(250px, 70vw); align-self: center; }
+.story-art.wide { width: min(320px, 84vw); }
+.story-art.small { width: min(150px, 40vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 17px; font-weight: 800; text-align: center; }
+.ct-haqiqat { font-size: 15px; font-weight: 700; color: var(--matn-2); max-width: 520px; }
+
+.ct-savol { font-size: 18px; font-weight: 800; text-align: center; line-height: 1.4; max-width: 560px; margin: 0 auto; }
+.ct-hisob { font-size: 17px; font-weight: 800; text-align: center; color: var(--matn-2); }
+
+/* ---------- Chizma (SVG) ---------- */
+.ct-rasm { flex: none; border: 2px solid var(--matn); border-radius: 6px; overflow: hidden; background: var(--yuza); line-height: 0; }
+.ct-rasm svg { display: block; width: 100%; height: auto; }
+.ct-rasm.katta { width: min(216px, 60vw); }
+.ct-rasm.orta { width: min(136px, 38vw); }
+.ct-rasm.kichik { width: min(72px, 19vw); }
+.ct-rasm.mitti { width: 36px; border-width: 1.5px; border-radius: 4px; }
+.ct-fon { fill: var(--yuza); }
+.ct-b { fill: var(--matn); }
+.ct-tor { fill: none; stroke: var(--chiziq); stroke-width: 0.5; }
+.ct-q { fill: var(--yana-och); }
+.ct-f { fill: none; stroke: var(--yana); stroke-width: 2; }
+
+.ct-juft { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 14px; }
+.ct-yozuvli { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.ct-yozuv { font-size: 15px; font-weight: 800; color: var(--matn-3); }
+
+/* ---------- Sonlar jadvali ---------- */
+.ct-sonlar {
+  display: grid; grid-template-columns: repeat(8, 1fr); width: min(208px, 58vw); margin: 0 auto;
+  border: 2px solid var(--matn); border-radius: 6px; overflow: hidden; background: var(--yuza);
+  font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 17px; font-weight: 700;
+}
+.ct-sonlar.kichik { width: min(136px, 38vw); font-size: 13px; }
+.ct-sonlar span { display: grid; place-items: center; aspect-ratio: 1; color: var(--matn-3); }
+.ct-sonlar .bir { color: var(--matn); background: var(--asosiy-och); font-weight: 900; }
+.ct-sonlar .q { box-shadow: inset 0 2px 0 var(--yana), inset 0 -2px 0 var(--yana); }
+.ct-sonlar .f { background: var(--yana); color: var(--matn); }
+
+/* ---------- Bosiladigan maydon ---------- */
+.ct-maydon {
+  display: grid; grid-template-columns: repeat(8, 1fr); gap: 2px; width: min(100%, 328px, 56vh); margin: 0 auto;
+  padding: 2px; background: var(--chiziq-kuchli); border-radius: 8px; touch-action: manipulation;
+}
+.ct-katak {
+  aspect-ratio: 1; min-width: 0; padding: 0; border: 0; border-radius: 3px; background: var(--yuza); cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.ct-katak.bor { background: var(--matn); }
+.ct-katak:active { transform: scale(0.92); }
+.ct-katak:focus-visible { outline: 3px solid var(--asosiy); outline-offset: -3px; }
+.ct-katak.farq { box-shadow: inset 0 0 0 4px var(--yana); }
+
+/* ---------- Namuna kartalari ---------- */
+.ct-kartalar { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.ct-karta {
+  display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 76px; padding: 6px 6px 4px;
+  background: var(--yuza); border: 2px solid var(--chiziq); border-radius: 10px; font: inherit; color: var(--matn);
+}
+.ct-sinf { font-size: 14px; font-weight: 800; }
+.ct-masofa { font-size: 14px; font-weight: 700; color: var(--matn-2); font-variant-numeric: tabular-nums; }
+.ct-karta.olchandi .ct-masofa { color: var(--asosiy-matn); font-weight: 900; }
+.ct-karta.yaqin { border-color: var(--togri); box-shadow: 0 0 0 3px var(--togri-och); }
+button.ct-karta { cursor: pointer; min-width: 92px; min-height: 96px; border-color: var(--chiziq-kuchli); box-shadow: 0 4px 0 var(--oq-qora); transition: transform 0.08s, box-shadow 0.08s; }
+button.ct-karta:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--oq-qora); }
+button.ct-karta:focus-visible, .ct-variant:focus-visible { outline: 3px solid var(--asosiy); outline-offset: 3px; }
+
+/* ---------- Javob variantlari ---------- */
+.ct-variantlar { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.ct-variant {
+  padding: 6px; background: var(--yuza); border: 2px solid var(--chiziq-kuchli); border-radius: 10px; cursor: pointer;
+  box-shadow: 0 4px 0 var(--oq-qora); transition: transform 0.08s, box-shadow 0.08s;
+}
+.ct-variant:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--oq-qora); }
+.ct-variant .ct-rasm.kichik { width: min(64px, 17vw); }
+.ct-javoblar { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; width: 100%; max-width: 560px; margin: 0 auto; }
+.ct-javoblar .btn { min-height: 48px; }
+.ct-javoblar.ustun .btn { flex: 1 1 200px; }
+
+/* ---------- Natijalar ro'yxati va chalkashlik jadvali ---------- */
+.ct-joy { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.ct-royxat { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 6px; width: 100%; max-width: 560px; }
+.ct-natija {
+  display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: 8px; align-items: center;
+  padding: 4px 8px; background: var(--yuza); border: 1.5px solid var(--chiziq); border-radius: 8px; font-size: 14px; font-weight: 700;
+}
+.ct-natija .ct-rasm { grid-row: 1 / 3; }
+.ct-natija .asl { color: var(--matn-2); }
+.ct-natija.ok { border-color: var(--togri); }
+.ct-natija.ok .model { color: var(--togri-matn); }
+.ct-natija.xato { border-color: var(--yana); }
+.ct-natija.xato .model { color: var(--yana-matn); }
+
+.ct-mat-oram { max-width: 100%; overflow-x: auto; }
+.ct-mat { border-collapse: collapse; margin: 0 auto; font-size: 15px; font-weight: 800; }
+.ct-mat th, .ct-mat td { border: 1.5px solid var(--chiziq); padding: 4px; text-align: center; }
+.ct-mat td { min-width: 34px; font-size: 18px; font-variant-numeric: tabular-nums; }
+.ct-mat .burchak { font-size: 12px; font-weight: 700; color: var(--matn-3); max-width: 64px; }
+.ct-mat .ct-rasm.mitti { width: 26px; margin: 0 auto; }
+.ct-mat-nom { display: flex; align-items: center; gap: 6px; font-size: 14px; text-align: left; }
+.ct-mat-nom .ct-rasm.mitti { margin: 0; }
+.ct-mat td.diag { background: var(--togri-och); }
+.ct-mat td.nol { color: var(--matn-3); font-weight: 600; }
+.ct-mat td.belgi { background: var(--yana-och); box-shadow: inset 0 0 0 2px var(--yana); }
+
+/* ---------- Model javobi paneli (masofa ustunchalari) ---------- */
+.ct-natija-panel, .ct-tajriba { display: flex; flex-direction: column; gap: 4px; width: 100%; max-width: 420px; margin: 0 auto; }
+.ct-natija-bosh { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 18px; font-weight: 900; }
+.ct-ustun { display: grid; grid-template-columns: 104px 1fr auto; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; color: var(--matn-2); }
+.ct-ustun .yol { height: 12px; background: var(--panel); border-radius: 999px; overflow: hidden; }
+.ct-ustun .tola { display: block; height: 100%; background: var(--chiziq-kuchli); border-radius: 999px; transition: width 0.4s; }
+.ct-ustun .son { min-width: 28px; text-align: right; font-variant-numeric: tabular-nums; }
+.ct-ustun.eng { color: var(--matn); font-weight: 900; }
+.ct-ustun.eng .tola { background: var(--asosiy); }
+
+@media (max-width: 420px) {
+  .ct-savol { font-size: 17px; }
+  .ct-karta { min-width: 68px; }
+  button.ct-karta { min-width: 84px; }
+  .ct-ustun { grid-template-columns: 92px 1fr auto; }
+}
+@media (prefers-reduced-motion: reduce) { .ct-ustun .tola { transition: none; } }
+
+/* Mashq qutisi */
+.pbox { display: flex; flex-direction: column; align-items: stretch; gap: 12px; width: 100%; max-width: 640px; margin: 0 auto; }
+.pbox .note { font-size: 18px; font-weight: 800; color: var(--asosiy-matn); text-align: center; }
+.pbox .answer { font-size: 20px; font-weight: 900; color: var(--togri-matn); text-align: center; }
+@media (max-width: 420px) { .pbox { gap: 8px; } .pbox .note { font-size: 17px; } }

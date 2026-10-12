@@ -1,0 +1,143 @@
+/* AI oilasi — faqat shu o'yinga xos uslublar (prefiks .ao-). */
+
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(250px, 70vw); align-self: center; }
+.story-art.wide { width: min(300px, 80vw); }
+.story-art.small { width: min(150px, 42vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 17px; font-weight: 800; text-align: center; max-width: 560px; }
+.ao-haqiqat { font-size: 15px; font-weight: 700; color: var(--matn-2); }
+
+.ao-savol { font-size: 18px; font-weight: 800; text-align: center; line-height: 1.4; max-width: 560px; margin: 0 auto; }
+.ao-karta {
+  padding: 12px 14px; border: 2px solid var(--chiziq); border-left: 5px solid var(--asosiy); border-radius: var(--r-s);
+  background: var(--yuza); font-size: 17px; font-weight: 700; line-height: 1.4;
+}
+.ao-formula {
+  display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; border-radius: var(--r-s);
+  background: var(--asosiy-och); font-size: 16px; font-weight: 800; line-height: 1.35;
+}
+.ao-chip {
+  display: inline-block; padding: 3px 10px; border-radius: 999px; background: var(--yuza); border: 1.5px solid var(--chiziq-kuchli);
+  font-size: 14px; font-weight: 800; color: var(--matn);
+}
+.ao-chip.eng { background: var(--togri-och); border-color: var(--togri); color: var(--togri-matn); }
+.ao-chip.yorliq { align-self: center; background: var(--asosiy); border-color: var(--asosiy-qora); color: #fff; }
+.ao-sinov { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+
+/* ---------- Holatlar jadvali ---------- */
+.ao-jadval { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+@media (min-width: 560px) { .ao-jadval { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.ao-qator {
+  position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 3px; padding: 6px 8px;
+  border: 2px solid var(--chiziq); border-radius: var(--r-s); background: var(--yuza);
+}
+.ao-qiymat { font-size: 15px; font-weight: 900; white-space: nowrap; }
+.ao-asl { padding: 1px 8px; border-radius: 999px; font-size: 13px; font-weight: 800; background: var(--togri-och); color: var(--togri-matn); }
+.ao-qator.ha .ao-asl { background: var(--yana-och); color: var(--yana-matn); }
+.ao-hukm {
+  position: absolute; top: -8px; right: -6px; width: 22px; height: 22px; display: grid; place-items: center;
+  border-radius: 50%; font-size: 13px; font-weight: 900; background: var(--togri); color: #fff;
+}
+.ao-qator.nomos { border-color: var(--yana); border-style: dashed; }
+.ao-qator.nomos .ao-hukm { background: var(--yana); color: var(--matn); }
+
+/* ---------- Ichma-ich halqalar ---------- */
+.ao-halqalar { width: 100%; max-width: 440px; margin: 0 auto; }
+.ao-halqa {
+  display: flex; flex-direction: column; gap: 4px; padding: 2px 8px 8px; border: 2.5px solid var(--chiziq-kuchli); border-radius: 16px;
+  background: var(--yuza-2); cursor: pointer;
+}
+.ao-halqa.z-oddiy { border-style: dashed; }
+.ao-halqa.z-ai { background: #E6EEFC; border-color: #2F6FDE; }
+.ao-halqa.z-ml { background: #DDF3EA; border-color: #1A9E77; }
+.ao-halqa.z-dl { background: #FFE9CF; border-color: #F08A24; min-height: 64px; }
+.ao-halqa-nom {
+  display: block; width: 100%; min-height: 48px; padding: 4px 6px; border: none; background: transparent;
+  font: inherit; font-size: 16px; font-weight: 800; text-align: left; color: var(--matn); cursor: pointer;
+}
+.ao-halqa-nom:focus-visible { outline: 3px solid var(--matn); outline-offset: -3px; border-radius: 10px; }
+.ao-halqa-nom:active { transform: translateY(2px); }
+.ao-halqa-nom:disabled { cursor: default; }
+.ao-ichida { display: flex; flex-wrap: wrap; gap: 4px; padding: 0 4px; }
+.ao-ichida:empty { display: none; }
+.ao-halqa.togri { box-shadow: 0 0 0 3px var(--togri); }
+
+/* ---------- Katakli rasm ---------- */
+.ao-rasm { width: min(288px, 100%); margin: 0 auto; padding-top: 10px; }
+.ao-rasm.kichik { width: min(108px, 27vw); padding-top: 6px; }
+.ao-tor { position: relative; display: grid; border: 2px solid var(--matn); background: #fff; }
+.ao-katak {
+  display: grid; place-items: center; aspect-ratio: 1; min-width: 0; padding: 0; margin: 0;
+  border: 1px solid var(--chiziq); border-radius: 0; background: transparent;
+  font: inherit; font-size: 20px; line-height: 1; color: var(--matn);
+}
+button.ao-katak { cursor: pointer; }
+button.ao-katak:focus-visible { outline: 3px solid var(--matn); outline-offset: -3px; }
+.ao-rasm.kichik .ao-katak { font-size: 10px; }
+.ao-katak.s-mashina { background: #D8E6FB; color: #1B4A94; }
+.ao-katak.s-odam { background: #FFE9C7; color: #8A5A10; }
+.ao-katak.s-daraxt { background: #D7F0E6; color: #116B50; }
+.ao-tor.maska .ao-katak { background: #E3DED2; border-color: #E3DED2; }
+.ao-tor.maska .ao-katak.s-mashina { background: #2F6FDE; border-color: #2F6FDE; }
+.ao-tor.maska .ao-katak.s-odam { background: #F08A24; border-color: #F08A24; }
+.ao-tor.maska .ao-katak.s-daraxt { background: #1A9E77; border-color: #1A9E77; }
+.ao-katak.tanlangan { box-shadow: inset 0 0 0 4px var(--yana); }
+.ao-katak.boyalgan { background: var(--c3); color: #fff; }
+
+.ao-ramka { position: absolute; box-sizing: border-box; border: 3px solid var(--matn); border-radius: 4px; pointer-events: none; }
+.ao-ramka.s-mashina { border-color: #1F55B5; }
+.ao-ramka.s-odam { border-color: #B4560C; }
+.ao-ramka.s-daraxt { border-color: #137A58; }
+.ao-ramka.sinov { border: 3px dashed var(--yana); }
+.ao-yorliq {
+  position: absolute; left: -3px; top: -11px; padding: 0 6px; border-radius: 6px; white-space: nowrap;
+  font-size: 12px; font-weight: 900; line-height: 16px; background: var(--matn); color: #fff;
+}
+.ao-ramka.s-mashina .ao-yorliq { background: #1F55B5; }
+.ao-ramka.s-odam .ao-yorliq { background: #B4560C; }
+.ao-ramka.s-daraxt .ao-yorliq { background: #137A58; }
+.ao-rasm.kichik .ao-ramka { border-width: 2px; }
+.ao-rasm.kichik .ao-yorliq { top: -8px; padding: 0 3px; font-size: 9px; line-height: 11px; }
+
+.ao-izoh { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 14px; font-size: 15px; font-weight: 700; }
+.ao-izoh-bir.s-mashina b { color: #1B4A94; }
+.ao-izoh-bir.s-odam b { color: #8A5A10; }
+.ao-izoh-bir.s-daraxt b { color: #116B50; }
+
+.ao-natija { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.ao-uchlik { display: flex; justify-content: center; gap: 8px; }
+.ao-uch { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 0; }
+.ao-uch-nom { font-size: 13px; font-weight: 800; text-align: center; }
+
+/* ---------- Neyron tarmoq ---------- */
+.ao-tarmoq { width: min(300px, 100%); margin: 0 auto; }
+.ao-tarmoq svg { display: block; width: 100%; height: auto; }
+.ao-hisob { font-size: 17px; font-weight: 900; text-align: center; font-family: ui-monospace, Menlo, Consolas, monospace; }
+
+/* ---------- Javob tugmalari ---------- */
+.ao-javoblar { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 560px; margin: 0 auto; }
+.ao-javoblar .btn.wide {
+  width: 100%; justify-content: flex-start; text-align: left; white-space: normal;
+  min-height: 52px; padding: 10px 14px; font-size: 16px; font-weight: 700; line-height: 1.3;
+}
+.ao-javoblar.tort { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; max-width: 360px; }
+@media (min-width: 560px) { .ao-javoblar.tort { grid-template-columns: repeat(4, minmax(0, 1fr)); max-width: 600px; } }
+.ao-variant {
+  display: flex; align-items: flex-start; justify-content: center; min-height: 72px; padding: 6px 6px 10px;
+  border: 2px solid var(--chiziq-kuchli); border-radius: var(--r-s); background: var(--yuza);
+  font: inherit; color: var(--matn); cursor: pointer; box-shadow: 0 4px 0 var(--oq-qora);
+  transition: transform 0.08s, box-shadow 0.08s;
+}
+.ao-variant:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--oq-qora); }
+.ao-variant:focus-visible { outline: 3px solid var(--matn); outline-offset: 3px; }
+
+/* Mashq qutisi (kod.css dagi bilan bir xil — bu o'yin kod yozmaydi, shuning uchun o'sha fayl ulanmaydi) */
+.pbox { display: flex; flex-direction: column; align-items: stretch; gap: 12px; width: 100%; max-width: 640px; margin: 0 auto; }
+.pbox .note { font-size: 17px; font-weight: 800; color: var(--asosiy-matn); text-align: center; }
+.pbox .answer { font-size: 18px; font-weight: 900; color: var(--togri-matn); text-align: center; }
+@media (max-width: 420px) {
+  .pbox { gap: 8px; }
+  .ao-savol { font-size: 17px; }
+  .ao-karta { font-size: 16px; }
+}

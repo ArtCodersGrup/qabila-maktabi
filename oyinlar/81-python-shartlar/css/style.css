@@ -1,0 +1,41 @@
+/* Faqat shu o'yinga xos uslublar.
+   Umumiylari: ../../umumiy/css/asos.css va ../../umumiy/css/kod.css */
+
+.formula-box { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+.formula-row { font-size: 20px; font-weight: 800; animation: pop 0.3s; }
+.formula-row.kod { font-family: var(--kod-shrift); font-size: 20px; color: var(--asosiy-matn); white-space: pre-wrap; }
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(300px, 80vw); align-self: center; }
+.story-art.small { width: min(220px, 60vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 19px; font-weight: 700; text-align: center; }
+
+/* Izoh: mashq ko'rsatmasi ostidagi ikkinchi darajali matn */
+.pbox .izoh { font-size: var(--t0); font-weight: 600; color: var(--matn-2); text-align: center; }
+
+/* Sinovlar jadvali: kirish → kutilgan chiqish */
+.sinov-jadval { align-self: center; border-collapse: collapse; font-family: var(--kod-shrift); font-size: 18px; background: var(--yuza); }
+.sinov-jadval th { font-family: inherit; font-size: var(--t-1); font-weight: 800; color: var(--matn-3); text-align: left; padding: 6px 14px; border-bottom: 2px solid var(--chiziq); }
+.sinov-jadval td { padding: 5px 14px; border-bottom: 1px solid var(--chiziq); }
+.sinov-jadval td + td { color: var(--togri-matn); font-weight: 700; }
+
+/* Bo'sh joyni to'ldirish maydonlari */
+.bosh-qator { display: flex; flex-direction: column; gap: 8px; }
+.bosh-yorliq { display: flex; align-items: center; gap: 8px; font-family: var(--kod-shrift); font-size: 18px; font-weight: 700; color: var(--matn-2); }
+.bosh-yorliq span { flex: none; min-width: 2ch; }
+.bosh-joy {
+  flex: 1; min-width: 0; min-height: 48px; padding: 8px 12px; box-sizing: border-box;
+  font-family: var(--kod-shrift); font-size: 18px; color: var(--matn);
+  background: var(--yuza); border: 2px solid var(--chiziq-kuchli); border-radius: var(--r-s);
+}
+.bosh-joy:focus { outline: none; border-color: var(--asosiy); box-shadow: 0 0 0 3px var(--asosiy-och); }
+
+@media (max-width: 480px) {
+  .formula-row, .formula-row.kod { font-size: 17px; }
+  .summary { font-size: 17px; gap: 8px; }
+  .sinov-jadval { font-size: 16px; }
+  .sinov-jadval th, .sinov-jadval td { padding: 4px 8px; }
+}
+@media (orientation: landscape) and (max-height: 520px) {
+  .story-art { width: min(220px, 44vh); }
+}

@@ -1,0 +1,78 @@
+/* Dipfeyk — faqat shu o'yinga xos uslublar (prefiks .df-). */
+
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 17px; font-weight: 800; text-align: center; max-width: 560px; }
+.df-haqiqat { font-size: 15px; font-weight: 700; color: var(--matn-2); }
+
+.df-art { width: min(300px, 82vw); margin: 0 auto; }
+.df-art.small { width: min(110px, 30vw); }
+.df-art svg { display: block; width: 100%; height: auto; }
+
+.df-savol { font-size: 19px; font-weight: 800; text-align: center; line-height: 1.4; max-width: 560px; margin: 0 auto; }
+.df-joy { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; }
+.df-holat { font-size: 16px; font-weight: 800; text-align: center; color: var(--asosiy-matn); min-height: 24px; line-height: 1.35; }
+
+/* ---------- Chizma yuz ---------- */
+.df-yuz { display: flex; flex-direction: column; align-items: center; gap: 4px; width: min(190px, 50vw); margin: 0 auto; flex: none; }
+.df-yuz.kichik { width: min(150px, 42vw); margin: 0; }
+.df-yuz-svg { width: 100%; }
+.df-yuz-svg svg { display: block; width: 100%; height: auto; }
+.df-yozuv { font-size: 16px; font-weight: 900; color: var(--matn-2); }
+.df-juft { display: flex; justify-content: center; gap: 12px; width: 100%; }
+
+/* ---------- Lab-ovoz sxemasi ---------- */
+.df-lab { display: flex; flex-direction: column; gap: 4px; width: 100%; max-width: 420px; margin: 0 auto; padding: 8px 10px; background: var(--yuza); border: 2px solid var(--chiziq); border-radius: var(--r-m); }
+.df-lab-qator { display: grid; gap: 3px; }
+.df-lab-qator span { display: grid; place-items: center; min-width: 0; border-radius: 6px; }
+.df-lab-qator.raqam span { font-size: 14px; font-weight: 900; color: var(--matn-3); }
+.df-lab-qator.ikon span { background: var(--panel); padding: 2px; aspect-ratio: 1; }
+.df-lab-qator.ikon svg { display: block; width: 100%; height: auto; max-width: 30px; }
+.df-lab-qator span.belgi { background: var(--yana-och); color: var(--yana-matn); box-shadow: inset 0 0 0 2px var(--yana); }
+.df-lab-nom { font-size: 13px; font-weight: 800; color: var(--matn-3); text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* ---------- Post va vaziyat kartasi ---------- */
+.df-karta {
+  display: flex; flex-direction: column; gap: 6px; width: 100%; max-width: 560px; margin: 0 auto; padding: 10px 14px;
+  background: var(--yuza); border: 2px solid var(--chiziq); border-radius: var(--r-m); text-align: left;
+}
+.df-davo { font-size: 17px; font-weight: 800; line-height: 1.35; }
+.df-satr { display: flex; flex-direction: column; gap: 1px; padding-top: 6px; border-top: 1px solid var(--chiziq); font-size: 16px; font-weight: 700; line-height: 1.35; }
+.df-satr.bog { display: block; overflow-wrap: anywhere; }
+.df-yorliq { font-size: 13px; font-weight: 800; color: var(--matn-3); text-transform: uppercase; letter-spacing: 0.5px; }
+.df-satr.yomon .df-matn { color: var(--yana-matn); font-weight: 800; }
+.df-son { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 18px; font-weight: 900; }
+
+.df-qoida {
+  display: flex; flex-direction: column; gap: 6px; width: 100%; max-width: 560px; margin: 0 auto; padding: 10px 14px;
+  background: var(--yuza); border: 2px solid var(--chiziq); border-radius: var(--r-m); font-size: 16px; font-weight: 800; line-height: 1.35; text-align: left;
+}
+.df-qoida-nom { font-size: 13px; color: var(--matn-3); text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* ---------- Tarqalish: har qadamda nuqtalar ko'payadi ---------- */
+.df-tarqalish { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; }
+.df-nuqtalar { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; max-width: 300px; animation: df-kel 0.35s ease-out; }
+.df-nuqta { width: 14px; height: 14px; border-radius: 50%; background: var(--yana); box-shadow: inset 0 0 0 2px var(--yana-qora); }
+.df-nuqta.men { width: 20px; height: 20px; background: var(--asosiy); box-shadow: inset 0 0 0 2px var(--asosiy-qora); }
+@keyframes df-kel { from { transform: translateY(-6px); opacity: 0; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .df-nuqtalar { animation: none; } }
+
+/* ---------- Javob tugmalari ---------- */
+.df-javoblar { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 560px; margin: 0 auto; }
+.df-javoblar .btn.wide { width: 100%; min-width: 0; min-height: 52px; font-size: 17px; padding: 10px 12px; line-height: 1.25; overflow-wrap: anywhere; }
+.df-javoblar:not(.ikki) .btn.wide { text-align: left; justify-content: flex-start; }
+.df-javoblar.ikki { display: grid; grid-template-columns: 1fr 1fr; }
+.df-javoblar.ikki > :last-child:nth-child(odd) { grid-column: 1 / -1; }
+.df-javoblar .btn.df-topildi { background: var(--togri-och); color: var(--togri-matn); box-shadow: inset 0 0 0 2px var(--togri); }
+
+/* Mashq qutisi */
+.pbox { display: flex; flex-direction: column; align-items: stretch; gap: 12px; width: 100%; max-width: 640px; margin: 0 auto; }
+.pbox .note { font-size: 17px; font-weight: 800; color: var(--asosiy-matn); text-align: center; line-height: 1.35; }
+.pbox .answer { font-size: 18px; font-weight: 900; color: var(--togri-matn); text-align: center; line-height: 1.35; }
+@media (max-width: 420px) {
+  .pbox { gap: 8px; }
+  .df-savol { font-size: 17px; }
+  .df-davo { font-size: 16px; }
+  .df-satr { font-size: 15px; }
+  .df-javoblar .btn.wide { font-size: 16px; padding: 8px 10px; }
+  .df-juft { gap: 8px; }
+}

@@ -32,6 +32,7 @@
     if (isRange(v)) return "range";
     if (isFunc(v)) return "function";
     if (isMap(v)) return "map";
+    if (v && v.t === "type") return "type";
     return "object";
   }
 
@@ -222,6 +223,11 @@
     if (isNone(a) || isNone(b)) return isNone(a) && isNone(b);
     if (isList(a) && isList(b)) return a.length === b.length && a.every((x, k) => eq(x, b[k]));
     if (isRange(a) && isRange(b)) return a.start === b.start && a.stop === b.stop && a.step === b.step;
+    // type() natijalari: bir xil tur — bitta obyekt
+    if (a && b && a.t === "type" && b.t === "type") return a.name === b.name;
+    // type(5) == int: tur obyekti va ichki tur nomi (int, float, str, bool, list)
+    const turNomi = (v) => (v && v.t === "type" ? v.name : v && v.t === "builtin" && ["int", "float", "str", "bool", "list"].includes(v.name) ? v.name : null);
+    if (turNomi(a) && turNomi(b)) return turNomi(a) === turNomi(b);
     return false;
   }
 

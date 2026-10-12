@@ -16,7 +16,9 @@
     // Berilmasa — SECTIONS tartibi. Ro'yxatda yo'q bo'lim (masalan "klaviatura") — SECTIONS dagi joyida, oxirida.
     { id: "orta", title: "5–8-sinf", qisqa: "5–8", sarlavha: "5–8-sinf informatikasi", note: "Kod, sonlar, internet, sunʼiy intellekt va Python",
       tartib: ["kod", "ikkilik", "olchov", "mantiq", "internet", "xavfsizlik", "ai", "ai2", "dastur", "python", "algoritm"] },
-    { id: "yuqori", title: "9–11-sinf", qisqa: "9–11", sarlavha: "Olimpiada dasturlash", note: "Algoritmlar, kombinatorika, C++ va masalalar" },
+    // IX sinf «Sunʼiy intellekt» fani (maktab taqvim-rejasi, 2026-10-12) — birinchi, keyin olimpiada yoʻnalishi
+    { id: "yuqori", title: "9–11-sinf", qisqa: "9–11", sarlavha: "9–11-sinf: sunʼiy intellekt va olimpiada", note: "Sunʼiy intellekt, Python, maʼlumot tahlili, algoritmlar va C++",
+      tartib: ["ai9", "ai9py", "ai9data", "algoritm", "kombinatorika", "cpp"] },
     { id: "hammasi", title: "Hammasi", qisqa: "hammasi", sarlavha: "Qabila maktabi", note: "Oʻqituvchi uchun — barcha oʻyinlar" },
   ];
 
@@ -38,6 +40,10 @@
     { id: "ai", title: "Sunʼiy intellekt: qanday oʻrganadi", note: "Misol, soʻz va mukofot bilan" },
     { id: "ai2", title: "Koʻrish, tarmoqlar va xarita", note: "Rasm, neyronlar va AI turlari" },
     { id: "mantiq", title: "Mantiq", note: "Rost va yolgʻon: VA, YOKI, EMAS" },
+    // IX sinf «Sunʼiy intellekt», I yarim yillik: 1–6, 7–11, 12–14-darslar
+    { id: "ai9", title: "Sunʼiy intellekt bilan tanishuv", note: "AI, ML, DL; loyiha sikli; chizma, tabiat, harakat va dipfeyk" },
+    { id: "ai9py", title: "Python: maʼlumot bilan ishlash", note: "Sintaksisdan funksiyagacha — misollar model va maʼlumot haqida" },
+    { id: "ai9data", title: "Data science", note: "Savoldan xulosagacha: tozalash, tahlil va mini loyiha" },
   ];
 
   const GAMES = [
@@ -112,6 +118,21 @@
     { n: 70, topic: "tanishuv", dir: "70-kichik-rassom", title: "Kichik rassom", desc: "Katakli Paint: asboblar, namunani qadam-qadam chizish, galereya", key: "kichik-rassom:v1", stages: 3, toifa: "boshlangich", icon: "rassom" },
     { n: 71, topic: "tanishuv", dir: "71-matn-yozamiz", title: "Matn yozamiz", desc: "Matn muharriri: kursor, xatoni tuzatish, qatorlar, belgilash va bezash", key: "matn-yozamiz:v1", stages: 3, toifa: "boshlangich", icon: "muharrir", pc: true },
     { n: 72, topic: "tanishuv", dir: "72-brauzer-va-sayt", title: "Brauzer va sayt", desc: "Oʻyinchoq internet: manzil, havola, orqaga, qidiruv va xavfsiz yurish", key: "brauzer-va-sayt:v1", stages: 3, toifa: "boshlangich", icon: "brauzer" },
+    // ---- IX sinf «Sunʼiy intellekt», I yarim yillik ----
+    { n: 73, topic: "ai9", dir: "73-ai-oilasi", title: "AI oilasi", desc: "AI, ML, DL va kompyuter koʻrishi: nima nimaning ichida", key: "ai-oilasi:v1", stages: 3, toifa: "yuqori", icon: "xarita" },
+    { n: 74, topic: "ai9", dir: "74-loyiha-sikli", title: "AI loyiha sikli", desc: "Besh bosqich: muammodan baholashgacha; xato qayerda", key: "loyiha-sikli:v1", stages: 3, toifa: "yuqori", icon: "charx" },
+    { n: 75, topic: "ai9", dir: "75-chizmani-tanish", title: "Chizmani tanish", desc: "8×8 chizma sonlarga aylanadi; model eng yaqin namunadan topadi", key: "chizmani-tanish:v1", stages: 3, toifa: "yuqori", icon: "piksel" },
+    { n: 76, topic: "ai9", dir: "76-ai-va-tabiat", title: "AI va tabiat", desc: "Chiqindi saralovchi model: yorliq, aniqlik va noxolis toʻplam", key: "ai-va-tabiat:v1", stages: 3, toifa: "yuqori", icon: "saralash" },
+    { n: 77, topic: "ai9", dir: "77-ai-va-harakat", title: "AI va harakat", desc: "Skelet nuqtalari koordinatasidan holatni aniqla, takrorni sana", key: "ai-va-harakat:v1", stages: 3, toifa: "yuqori", icon: "robot" },
+    { n: 78, topic: "ai9", dir: "78-dipfeyk", title: "Dipfeyk", desc: "Soxta videoni belgilari va manbasidan tekshir, tarqatma", key: "dipfeyk:v1", stages: 3, toifa: "yuqori", icon: "koz" },
+    { n: 79, topic: "ai9py", dir: "79-python-sintaksis", title: "Python: sintaksis", desc: "print, izoh, otstup: natijani ayt, xatoni tuzat, hisobot yoz", key: "python-sintaksis:v1", stages: 3, toifa: "yuqori", icon: "buyruq", pc: true },
+    { n: 80, topic: "ai9py", dir: "80-python-malumot-turlari", title: "Oʻzgaruvchi va maʼlumot turlari", desc: "int, float, str, bool, list: turni aniqla, oʻgir, roʻyxat bilan ishla", key: "python-malumot-turlari:v1", stages: 3, toifa: "yuqori", icon: "qutilar2", pc: true },
+    { n: 81, topic: "ai9py", dir: "81-python-shartlar", title: "Shartlar va tarmoqlanish", desc: "Chegara boʻyicha qaror: if, elif, else va qoidali tasniflagich", key: "python-shartlar:v1", stages: 3, toifa: "yuqori", icon: "ayri", pc: true },
+    { n: 82, topic: "ai9py", dir: "82-python-sikllar", title: "for va while", desc: "Sikllar: yorliqlarni sanash, oʻrtacha, xato kamayguncha oʻqitish", key: "python-sikllar:v1", stages: 3, toifa: "yuqori", icon: "zina", pc: true },
+    { n: 83, topic: "ai9py", dir: "83-python-funksiyalar", title: "Funksiyalar", desc: "def, parametr, return: natijani ayt, xatoni tuzat, funksiya yoz", key: "python-funksiyalar:v1", stages: 3, toifa: "yuqori", icon: "dastgoh", pc: true },
+    { n: 84, topic: "ai9data", dir: "84-data-science", title: "Data science", desc: "Savoldan xulosagacha: maʼlumot turlari va jadvalni tozalash", key: "data-science:v1", stages: 3, toifa: "yuqori", icon: "lupa" },
+    { n: 85, topic: "ai9data", dir: "85-data-analysis", title: "Maʼlumot tahlili", desc: "Oʻrtacha, mediana, diagramma oʻqish; bogʻliqlik — hali sabab emas", key: "data-analysis:v1", stages: 3, toifa: "yuqori", icon: "hisob2" },
+    { n: 86, topic: "ai9data", dir: "86-sorovnoma-tahlili", title: "Amaliy: soʻrovnoma tahlili", desc: "Sinf soʻrovnomasi: tozalash, funksiyalar va xulosa — mini loyiha", key: "sorovnoma-tahlili:v1", stages: 3, toifa: "yuqori", icon: "varaq", pc: true },
   ];
 
   // Mashqlar — o'yin emas: masalalar ro'yxati (qidiruv, filtr, sahifalash). Bosqichi yo'q,

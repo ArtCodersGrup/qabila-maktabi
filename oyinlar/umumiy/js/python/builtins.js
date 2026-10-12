@@ -79,6 +79,7 @@
     return best;
   }
 
+  const TURLAR = {}; // type() natijalari: tur nomi → yagona obyekt
   const BUILTINS = {
     // kw — nomli argumentlar: faqat print(…, end=…, sep=…) qo'llanadi (bir satrga chiqarish uchun)
     print(args, ctx, pos, kw) {
@@ -134,6 +135,26 @@
       }
       if (V.isIntLike(v)) { const n = V.toInt(v); return n < 0n ? -n : n; }
       return Math.abs(v);
+    },
+    // type(x) — qiymat turi: <class 'int'>. Har tur uchun bitta obyekt — type(a) == type(b) ishlaydi
+    type(args, ctx, pos) {
+      arity("type", args, 1, 1, pos);
+      const nom = V.typeName(args[0]);
+      if (!TURLAR[nom]) TURLAR[nom] = { t: "type", name: nom, toString() { return "<class '" + nom + "'>"; } };
+      return TURLAR[nom];
+    },
+    // round(x) — eng yaqin butun (yarim bo'lsa — juftiga, Pythondagidek); round(x, n) — n xonagacha
+    round(args, ctx, pos) {
+      arity("round", args, 1, 2, pos);
+      const v = args[0];
+      if (!V.isNum(v)) throw E.typeError("type " + V.typeName(v) + " doesn't define __round__ method", pos);
+      if (args.length === 2 && !V.isIntLike(args[1])) throw E.typeError("'" + V.typeName(args[1]) + "' object cannot be interpreted as an integer", pos);
+      if (V.isIntLike(v)) return V.toInt(v);
+      const juftga = (x) => { const q = Math.floor(x); const d = x - q; return d > 0.5 ? q + 1 : d < 0.5 ? q : (q % 2 === 0 ? q : q + 1); };
+      if (args.length === 1) return BigInt(juftga(v));
+      const n = Number(V.toInt(args[1]));
+      if (n > 15) return v;
+      return Number(v.toFixed(Math.max(0, n)));
     },
     min(args, ctx, pos) { return minMax("min", args, (c) => c < 0, ctx, pos); },
     max(args, ctx, pos) { return minMax("max", args, (c) => c > 0, ctx, pos); },

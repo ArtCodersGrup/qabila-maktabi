@@ -91,14 +91,14 @@ test("har bo'limda kamida bitta o'yin bor va bo'sh bo'lim ko'rsatilmaydi", () =>
 const UCH = ["boshlangich", "orta", "yuqori"];
 
 // Har o'yin AYNAN BITTA toifada (muallif qarori, 2026-10-06): kattaroq o'quvchi kichiklar o'yinini ko'rmaydi
-test("toifa: har o'yin aynan bitta toifada, taqsimot 16 / 43 / 12", () => {
+test("toifa: har o'yin aynan bitta toifada, taqsimot 16 / 43 / 26", () => {
   for (const g of GAMES) assert.ok(UCH.includes(g.toifa), g.dir + ": " + g.toifa);
   const soni = (id) => oyinlar(toifa(id)).length;
-  assert.deepEqual(UCH.map(soni), [16, 43, 12]);
+  assert.deepEqual(UCH.map(soni), [16, 43, 26]);
   assert.equal(soni("hammasi"), GAMES.length);
   const raqamlar = (id) => GAMES.filter((g) => g.toifa === id).map((g) => g.n).sort((a, b) => a - b);
   assert.deepEqual(raqamlar("boshlangich"), [2, 23, 26, 46, 47, 53, 62, 63, 64, 66, 67, 68, 69, 70, 71, 72]);
-  assert.deepEqual(raqamlar("yuqori"), [38, 39, 40, 41, 42, 43, 44, 45, 54, 55, 56, 57]);
+  assert.deepEqual(raqamlar("yuqori"), [38, 39, 40, 41, 42, 43, 44, 45, 54, 55, 56, 57, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86]);
   // Blok qoidalari: sun'iy intellekt va Python — 5–8; kombinatorika va C++ — 9–11
   for (const g of GAMES) {
     if (["ai", "ai2", "python"].includes(g.topic)) assert.equal(g.toifa, "orta", g.dir);
@@ -126,9 +126,9 @@ test("asbob va musobaqalar: toifalar ro'yxati bor va to'g'ri", () => {
 
 // 💻 — bolaga kompyuter kerak: kod yoki matn teriladigan o'yinlar va sichqoncha o'yini
 test("💻 belgisi: kod yoziladigan o'yinlarda bor, qolganlarida yo'q", () => {
-  const bloklar = ["klaviatura", "python", "algoritm", "kombinatorika", "cpp"];
+  const bloklar = ["klaviatura", "python", "algoritm", "kombinatorika", "cpp", "ai9py"];
   // Boshqa blokda turgan, lekin kod yoziladigan o'yinlar — ataylab sanab o'tiladi
-  const qoshimcha = ["48-mantiq-kodda", "67-chaqqon-sichqoncha", "71-matn-yozamiz"];
+  const qoshimcha = ["48-mantiq-kodda", "67-chaqqon-sichqoncha", "71-matn-yozamiz", "86-sorovnoma-tahlili"];
   for (const game of GAMES) {
     const kerak = bloklar.includes(game.topic) || qoshimcha.includes(game.dir);
     assert.equal(!!game.pc, kerak, game.dir);

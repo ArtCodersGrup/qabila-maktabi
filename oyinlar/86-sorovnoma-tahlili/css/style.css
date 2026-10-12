@@ -1,0 +1,24 @@
+/* «Amaliy: soʻrovnoma tahlili» — faqat shu o'yinga xos uslublar.
+   Umumiylari: ../../umumiy/css/asos.css va ../../umumiy/css/kod.css */
+
+.formula-box { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+.formula-row { font-size: 20px; font-weight: 900; animation: pop 0.3s; }
+.formula-row.kod { font-family: var(--kod-shrift); font-size: 20px; color: var(--asosiy-matn, var(--asosiy)); white-space: pre-wrap; }
+.story { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.story-art { width: min(240px, 66vw); align-self: center; }
+.story-art.wide { width: min(340px, 88vw); }
+.story-art svg { display: block; width: 100%; height: auto; }
+.summary { display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 19px; font-weight: 800; text-align: center; }
+.sinov-sarlavha { font-size: 15px; font-weight: 800; color: var(--matn-2, inherit); margin-top: 4px; }
+
+@media (max-width: 480px) {
+  .formula-row { font-size: 17px; }
+  .formula-row.kod { font-size: 16px; }
+  .summary { font-size: 17px; gap: 8px; }
+}
+@media (orientation: landscape) and (max-height: 520px) {
+  .story-art { width: min(180px, 34vh); }
+  .story-art.wide { width: min(300px, 60vh); }
+}
+.savol { font-size: 20px; font-weight: 900; text-align: center; color: var(--matn, inherit); }
+@media (max-width: 480px) { .savol { font-size: 18px; } }
