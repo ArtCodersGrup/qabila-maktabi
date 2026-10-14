@@ -357,8 +357,8 @@ test("har mavzu va qiyinlikda takrorsiz kamida 15 raund, 10 daqiqaga ham yetadi 
   for (const t of S.TOPICS) {
     for (const l of S.LEVELS) {
       const d = S.deck({ topics: [t.id], levels: [l.id], rng: rng(t.id.length + l.id) });
-      // Darslik mavzusi (word7) — 40 ta qoʻlda yozilgan savol, har darajada 13–14 ta; raundda 2 savol → 6 raund takrorsiz
-      const kerak = t.id === "word7" ? 6 : 15;
+      // Darslik mavzusi (word7) — 80 ta qoʻlda yozilgan savol, har darajada 26–27 ta; raundda 2 savol → 13 raund takrorsiz
+      const kerak = t.id === "word7" ? 13 : 15;
       const { rounds } = roundsUntilRepeat(d, kerak);
       assert.equal(rounds, kerak, `${t.id}/${l.id}: ${rounds}-raundda takror`);
       for (let k = 0; k < 135; k++) assert.ok(d.next(), `${t.id}/${l.id}`);

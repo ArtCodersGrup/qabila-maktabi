@@ -53,8 +53,9 @@
     { id: "algoritm", title: "Izlash va saralash" },
     { id: "kombinatorika", title: "Kombinatorika" },
     { id: "cpp", title: "C++" },
-    // Darslik mavzusi (oʻyini yoʻq): 7-sinf «Informatika va axborot texnologiyalari», 1-modul, 7-amaliy koʻnikma (23–24-betlar)
-    { id: "word7", title: "7-sinf: ustunlar va tekislash" },
+    // Darslik mavzusi (oʻyini yoʻq): 7-sinf «Informatika va axborot texnologiyalari», 1-modul (Word):
+    // 7-amaliy koʻnikma (23–24-betlar) va 9-amaliy koʻnikma (28–33-betlar). Muallif nomi: «7-sinf Word»
+    { id: "word7", title: "7-sinf Word" },
   ];
 
   // ======================================================================
@@ -1075,6 +1076,51 @@
     [3, "Qaysi holatda Landscape tanlash ortiqcha?", "Oddiy bir ustunli insho yozilganda", ["Enli jadval joylanganda", "Katta rasm yonida matn boʻlganda", "Keng diagramma qoʻyilganda"], "Oddiy matn uchun kitob holati qulay."],
     [3, "Page setup sozlamalari nima uchun muhim?", "Hujjat rasmiy koʻrinishi va axborot yaxshi taqdim etilishi uchun", ["Fayl tez saqlanishi uchun", "Imlo tekshirilishi uchun", "Kompyuter tez ishlashi uchun"], "Darslik: sahifani formatlash hujjatning rasmiy koʻrinishiga xizmat qiladi."],
   ];
+
+  // 9-amaliy koʻnikma (28–33-betlar): Print Preview, ssenariy-buklet (Wrap Text, jadval, belgili roʻyxat, albom va
+  // chegaralar, sahifa hoshiyasi), masalalar: Find and Replace, Link, Cover Page. 40 ta savol, 2026-10-14.
+  WORD7_BILIM.push(
+    [1, "Hujjat qanday koʻrinishda chop etilishini koʻrsatuvchi oyna?", "Print Preview", ["Page Setup", "Cover Page", "Find and Replace"], "Print Preview — chop etishdan oldingi koʻrinish."],
+    [1, "Print Preview oynasini ochish uchun File menyusidagi qaysi buyruq tanlanadi?", "Print", ["Save", "Open", "New"], "File → Print — oʻng tomonda sahifa koʻrinadi."],
+    [1, "Print Preview nima uchun kerak?", "Sahifaning toʻliq koʻrinishini chop etishdan oldin koʻrish uchun", ["Matnni tarjima qilish uchun", "Rasm chizish uchun", "Hujjatni oʻchirish uchun"], "Oddiy ish holati sahifaning hamma qismini koʻrsatmaydi."],
+    [1, "Matndagi soʻzni boshqasiga almashtiruvchi buyruq?", "Find and Replace", ["Print Preview", "Cover Page", "Wrap Text"], "Find and Replace — topish va almashtirish."],
+    [1, "Find and Replace oynasini ochish uchun Home menyusidagi qaysi tugma bosiladi?", "Replace", ["Paste", "Bold", "Bullets"], "Home → Replace."],
+    [1, "Hujjatga muqova sahifasini qoʻshuvchi buyruq?", "Cover Page", ["Page Borders", "Header", "Columns"], "Insert → Cover Page."],
+    [1, "Cover Page buyrugʻi qaysi menyuda?", "Insert", ["Home", "Layout", "View"], "Insert → Cover Page — dizayn namunalari oynasi ochiladi."],
+    [1, "Link (havola) yaratish buyrugʻi qaysi menyuda?", "Insert", ["Home", "Layout", "Review"], "Insert → Links → Link."],
+    [1, "Link nima?", "Boshqa hujjat yoki veb saytga yoʻnaltiruvchi havola", ["Sahifa hoshiyasi", "Muqova sahifasi", "Jadval katagi"], "Link auditoriyani boshqa joydagi maʼlumotga olib boradi."],
+    [1, "Sahifa hoshiyasini qoʻshuvchi buyruq?", "Page Borders", ["Cover Page", "Columns", "Margins"], "Design → Page Borders."],
+    [1, "Rasm atrofida matn qanday joylashishini belgilovchi sozlama?", "Wrap Text", ["Justify", "Orientation", "Replace"], "Wrap Text — matnni rasm atrofida oqizish."],
+    [1, "Hujjatga jadval qoʻshish uchun qaysi menyu ochiladi?", "Insert", ["Home", "View", "Review"], "Insert → Table."],
+    [1, "Belgili (nuqtali) roʻyxat yasovchi buyruq?", "Bullets", ["Numbering", "Columns", "Justify"], "Home → Paragraph → Bullets."],
+    [2, "Hujjat bir sahifadan koʻp boʻlsa, Print Preview da qolgan sahifalar qanday koʻriladi?", "Oynaning pastki qismidagi strelka bilan", ["Hujjatni qayta ochib", "Ctrl + J bosib", "Faqat chop etib koʻriladi"], "Darslik: oyna pastidagi strelkalar sahifalarni almashtiradi."],
+    [2, "Find and Replace oynasining yuqori maydoniga nima yoziladi?", "Topiladigan (xato yoki keraksiz) soʻz", ["Yangi soʻz", "Fayl nomi", "Sahifa raqami"], "Yuqorida — nimani topish, pastda — nimaga almashtirish."],
+    [2, "Find and Replace oynasining pastki maydoniga nima yoziladi?", "Yangi kiritiladigan soʻz", ["Topiladigan soʻz", "Muallif ismi", "Sana"], "Pastki maydon — «Replace with»."],
+    [2, "Replace tugmasi bilan Replace all ning farqi?", "Replace — bittalab, Replace all — hammasini birdan", ["Farqi yoʻq", "Replace all faqat birinchisini almashtiradi", "Replace hujjatni oʻchiradi"], "Replace — har birini koʻrib, Replace all — barcha joyda birdaniga."],
+    [2, "Matndagi «lotin» soʻzining hammasini «botanika» ga tez almashtirish uchun nima bosiladi?", "Replace all", ["Replace", "Find Next", "Cancel"], "Darslik mashgʻuloti: barcha «lotin» → «botanika»."],
+    [2, "Word da Find and Replace oynasining tezkor tugmalari?", "Ctrl + H", ["Ctrl + P", "Ctrl + K", "Ctrl + J"], "Ctrl + H — almashtirish, Ctrl + F — topish."],
+    [2, "Word da chop etish (Print) oynasining tezkor tugmalari?", "Ctrl + P", ["Ctrl + H", "Ctrl + S", "Ctrl + K"], "Ctrl + P — Print."],
+    [2, "Word da Link qoʻyishning tezkor tugmalari?", "Ctrl + K", ["Ctrl + L", "Ctrl + P", "Ctrl + H"], "Ctrl + K — havola qoʻyish."],
+    [2, "Link yaratishning birinchi qadami?", "Link boʻladigan soʻz(lar)ni belgilash", ["Insert → Cover Page", "Hujjatni chop etish", "Sahifani albomga oʻgirish"], "Avval soʻz belgilanadi, keyin Insert → Links → Link."],
+    [2, "Veb saytga link qoʻyishda sayt manzili qayerga yoziladi?", "Link oynasidagi Address maydoniga", ["Header maydoniga", "Find maydoniga", "Fayl nomiga"], "Address — sayt manzili."],
+    [2, "Sahifa hoshiyasi turlari qaysi?", "Box, Shadow, 3D", ["Portrait, Landscape", "Bold, Italic", "Left, Right"], "Page Borders oynasida Setting: Box, Shadow, 3-D."],
+    [2, "Hujjatning chegara (chet) maydonini kichraytiruvchi buyruq?", "Margins", ["Columns", "Borders", "Replace"], "Layout → Margins."],
+    [2, "Muqova sahifasi nima uchun kerak?", "Hujjat mavzusini koʻrsatib, eʼtiborni jalb qiladi", ["Sahifalarni raqamlaydi", "Imloni tekshiradi", "Faylni siqadi"], "Darslik: muqova auditoriyaga hujjat nima haqida ekanini koʻrsatadi."],
+    [2, "Bukletda maʼlumotlarni (sana, vaqt) tartibli koʻrsatish uchun nima qoʻshiladi?", "Jadval", ["Muqova sahifasi", "Sahifa hoshiyasi", "Link"], "Ssenariy: tadbir sanalari jadvalga kiritiladi."],
+    [3, "Replace all ishlatganda nimaga ehtiyot boʻlish kerak?", "Soʻzlarning qismlari ham almashib ketishi mumkin", ["Hujjat oʻchib ketadi", "Rasmlar yoʻqoladi", "Sahifa albomga aylanadi"], "Masalan, «tok» → «oqim»: «toksik» ham «oqimsik» boʻladi."],
+    [3, "«ota» soʻzini Replace all bilan «bobo» ga almashtirsak, «otabek» soʻzi nima boʻladi?", "«bobobek» boʻlib qoladi", ["Oʻzgarmaydi", "Oʻchib ketadi", "«ota» boʻlib qoladi"], "Soʻz qismi ham almashadi — shuning uchun ehtiyot kerak."],
+    [3, "Faqat butun soʻzlarni almashtirish uchun Find and Replace da qaysi belgi qoʻyiladi?", "Find whole words only", ["Match case", "Use wildcards", "Sounds like"], "More → Find whole words only — soʻz qismini almashtirmaydi."],
+    [3, "Katta-kichik harfni farqlab qidirish uchun qaysi belgi qoʻyiladi?", "Match case", ["Find whole words only", "Replace all", "Wrap Text"], "Match case — «Toshkent» va «toshkent» farqlanadi."],
+    [3, "Rasm atrofida matn uni toʻrtburchak shaklida aylanib oʻtishi uchun Wrap Text da nima tanlanadi?", "Square", ["In Line with Text", "Behind Text", "In Front of Text"], "Square — matn rasm atrofida toʻrtburchak boʻylab."],
+    [3, "Wrap Text da qaysi variant rasmni matn orqasiga qoʻyadi?", "Behind Text", ["In Front of Text", "Square", "Tight"], "Behind Text — rasm matn ostida, fon kabi."],
+    [3, "Rasm oʻlchamini oʻzgartirganda tomonlar nisbati nima uchun saqlanadi?", "Rasm choʻzilib yoki siqilib buzilmasligi uchun", ["Fayl kichrayishi uchun", "Rang oʻzgarmasligi uchun", "Rasm chop etilishi uchun"], "Burchakdagi tutqichdan tortish nisbatni saqlaydi."],
+    [3, "Sahifa hoshiyasini tanlashda darslik nimani maslahat beradi?", "Oddiy va hujjatga mos boʻlishi kerak", ["Iloji boricha rangli boʻlsin", "Har sahifada boshqacha boʻlsin", "Faqat 3D boʻlsin"], "Ortiqcha hoshiya hujjat maqsadidan chalgʻitadi."],
+    [3, "Ssenariy: buklet sahifasini albom qilib, chetlarini kichraytirish uchun qaysi ikki buyruq?", "Orientation va Margins", ["Columns va Justify", "Cover Page va Link", "Replace va Bullets"], "Layout → Orientation (Landscape) va Layout → Margins."],
+    [3, "Bukletni chop etishdan oldin dizayn muvaffaqiyatli chiqqanini qanday tekshiramiz?", "Print Preview orqali koʻrib", ["Replace all bosib", "Cover Page qoʻshib", "Faylni qayta nomlab"], "Ssenariy 6-mashgʻuloti: hoshiya qoʻshib, Print Preview bilan tekshirish."],
+    [3, "Hujjat ichidagi «bu yerni bosing» soʻzlariga sayt linki qoʻyildi. Ular odatda qanday koʻrinadi?", "Koʻk rangda, tagiga chizilgan", ["Qalin va qizil", "Koʻrinmaydi", "Rasmga aylanadi"], "Link odatda koʻk va tagi chizilgan boʻladi."],
+    [3, "Link boshqa hujjatga qoʻyilsa, Link oynasida nima qilinadi?", "Shu hujjat kompyuter xotirasidan topilib tanlanadi", ["Sayt manzili yoziladi", "Muqova tanlanadi", "Hujjat chop etiladi"], "Darslik: boshqa hujjat — xotiradan tanlanadi; sayt — Address maydoniga."],
+    [3, "Muqova sahifasi qoʻshilgach, undagi matn bilan nima qilinadi?", "Auditoriyaga moslab oʻzgartiriladi", ["Oʻzgarishsiz qoldiriladi", "Oʻchirib tashlanadi", "Inglizchaga tarjima qilinadi"], "Namuna matn oʻrniga sarlavha va ism yoziladi."],
+  );
 
   const word7Bilim = bilim("word7", WORD7_BILIM);
 
