@@ -29,11 +29,14 @@
   };
 
   const bolimlari = (mavzu) => BOLIMLAR[mavzu] || [];
+  // Darslik mavzulari: saytda oʻyini yoʻq, savollari darslikdan — Togʻda doim ochiq
+  const DARSLIK = ["word7"];
 
   // Mavzu ochiqmi. katalog: { GAMES, SECTIONS, mos(game, toifa) }, toifa — { id }, tugadimi(game) → bool.
   // Natija: { holat: "ochiq" | "yopiq" | "yoq", bolimlar: [{ id, title, tugagan, jami }] }.
   // "yoq" — bu toifada mavzuning bo'limida birorta o'yin yo'q (mashqda ko'rsatilmaydi).
   function holat(mavzu, katalog, toifa, tugadimi) {
+    if (DARSLIK.includes(mavzu)) return { holat: "ochiq", bolimlar: [] };
     const bolimlar = [];
     for (const id of bolimlari(mavzu)) {
       const sec = katalog.SECTIONS.find((s) => s.id === id);
@@ -100,7 +103,7 @@
     return out;
   }
 
-  const api = { STAT, ZAIF_MIN, ZAIF_ULUSH, BOLIMLAR, bolimlari, holat, sabab, tozala, qosh, zaifmi, jadval, yigindi };
+  const api = { STAT, ZAIF_MIN, ZAIF_ULUSH, BOLIMLAR, DARSLIK, bolimlari, holat, sabab, tozala, qosh, zaifmi, jadval, yigindi };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else {
     root.QK = root.QK || {};

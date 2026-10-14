@@ -184,7 +184,7 @@ const JAVOB = {
 
 test("har yangi tur uchun mustaqil tekshiruv yoki bilim ro'yxati bor", () => {
   const bilimlar = Object.keys(S2.KINDS).filter((k) => !JAVOB[k]);
-  assert.deepEqual(bilimlar.sort(), ["algoritmBilim", "cppBilim", "dasturBilim", "internetBilim", "kombBilim", "pythonBilim", "tanishuvBilim", "xavfBilim"]);
+  assert.deepEqual(bilimlar.sort(), ["algoritmBilim", "cppBilim", "dasturBilim", "internetBilim", "kombBilim", "pythonBilim", "tanishuvBilim", "word7Bilim", "xavfBilim"]);
 });
 
 test("generatorlar: javob mustaqil hisobga teng, savol hech qachon bo'sh emas", () => {
@@ -238,4 +238,18 @@ test("tanlovniTikla: eski ro'yxatga yangi mavzular qo'shiladi, o'chirilgani o'ch
   // Noma'lum id lar tashlanadi; bo'sh — null (chaqiruvchi hammasini oladi)
   assert.equal(S2.tanlovniTikla(["yoq"], bilgan, barcha), null);
   assert.equal(S2.tanlovniTikla(null, null, barcha), null);
+});
+
+// Darslik mavzusi (2026-10-14): 7-sinf, 1-modul, 7-amaliy koʻnikma — muallif 40 ta savol soʻradi
+test("word7: 40 ta savol, har darajada 13–14, variantlar toʻgʻri", () => {
+  const L = S2.WORD7_BILIM;
+  assert.equal(L.length, 40);
+  for (const d of [1, 2, 3]) assert.ok(L.filter((x) => x[0] === d).length >= 13, d + "-daraja");
+  assert.equal(new Set(L.map((x) => x[1])).size, 40, "savollar takrorlanmaydi");
+  for (const [, savol, javob, xato, izoh] of L) {
+    assert.equal(new Set(xato).size, 3, savol);
+    assert.ok(!xato.includes(javob), savol);
+    assert.ok(izoh && izoh.length > 5, savol);
+    assert.ok(!/'/.test(savol + javob + xato.join("") + izoh), "oddiy apostrof: " + savol);
+  }
 });

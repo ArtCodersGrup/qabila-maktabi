@@ -15,6 +15,11 @@ const toifa = (id) => K.toifaById(id);
 
 test("har savol mavzusi mavjud bo'limga bog'langan", () => {
   for (const t of S.TOPICS) {
+    if (M.DARSLIK.includes(t.id)) {
+      // Darslik mavzusi: bo'limi yo'q, Tog'da doim ochiq
+      assert.equal(M.holat(t.id, K, K.toifaById("orta"), () => false).holat, "ochiq", t.id);
+      continue;
+    }
     const b = M.bolimlari(t.id);
     assert.ok(b.length, "xaritada yo'q: " + t.id);
     for (const id of b) assert.ok(K.SECTIONS.some((s) => s.id === id), `${t.id} → ${id}`);

@@ -53,6 +53,8 @@
     { id: "algoritm", title: "Izlash va saralash" },
     { id: "kombinatorika", title: "Kombinatorika" },
     { id: "cpp", title: "C++" },
+    // Darslik mavzusi (oʻyini yoʻq): 7-sinf «Informatika va axborot texnologiyalari», 1-modul, 7-amaliy koʻnikma (23–24-betlar)
+    { id: "word7", title: "7-sinf: ustunlar va tekislash" },
   ];
 
   // ======================================================================
@@ -1026,6 +1028,56 @@
     [3, "cin >> n; — bu nima qiladi?", "Klaviaturadan n ni oʻqiydi", ["n ni chiqaradi", "n ni oʻchiradi", "n ni saralaydi"]],
   );
 
+  // ======================================================================
+  // 7-sinf darsligi, 1-modul «Matnli hujjatlardan maqsadli foydalanish», 7-amaliy koʻnikma:
+  // matnni ustunlarga boʻlish (Layout → Columns), Justify bilan tekislash (Home → Paragraph),
+  // sahifa holati (Layout → Orientation: Portrait / Landscape). 40 ta savol, muallif soʻrovi 2026-10-14.
+  // ======================================================================
+  const WORD7_BILIM = [
+    [1, "Matnni ustunlarga boʻlish buyrugʻi qaysi menyuda?", "Layout", ["Home", "Insert", "View"], "Layout menyusi → Columns boʻlimi."],
+    [1, "Matnni ustunlarga boʻluvchi buyruq nomi?", "Columns", ["Justify", "Orientation", "Header"], "Columns — ustunlar."],
+    [1, "Matnni ustunlarga boʻlishdan oldin birinchi qadam?", "Kerakli matnni belgilash", ["Hujjatni saqlash", "Sahifani oʻchirish", "Shriftni almashtirish"], "Avval matn belgilanadi, keyin Layout → Columns."],
+    [1, "Hujjat matni odatda nechta ustunda boʻladi?", "1 ta", ["2 ta", "3 ta", "4 ta"], "Oddiy hujjat — bitta ustun."],
+    [1, "Matn ustunlarga boʻlinsa, hujjat nimaga oʻxshaydi?", "Gazeta yoki jurnalga", ["Jadvalga", "Rasmga", "Taqdimotga"], "Ustunli matn — gazeta va jurnal koʻrinishi."],
+    [1, "Justify buyrugʻi qaysi menyuda?", "Home", ["Layout", "Insert", "Review"], "Home → Paragraph → Justify."],
+    [1, "Justify buyrugʻi Home menyusining qaysi boʻlimida?", "Paragraph", ["Font", "Styles", "Clipboard"], "Paragraph — xatboshi boʻlimi."],
+    [1, "Justify matnni qanday tekislaydi?", "Ikki chetidan: chap va oʻng", ["Faqat chapdan", "Faqat oʻngdan", "Markazdan"], "Justify — sahifaning ikki cheti boʻylab tekislash."],
+    [1, "Orientation buyrugʻi nimani oʻzgartiradi?", "Sahifa holatini", ["Shrift rangini", "Ustunlar sonini", "Sahifa raqamini"], "Orientation — sahifaning kitob yoki albom koʻrinishi."],
+    [1, "Sahifaning kitob holati inglizcha qanday ataladi?", "Portrait", ["Landscape", "Justify", "Columns"], "Portrait — kitob holati (tik)."],
+    [1, "Sahifaning albom holati inglizcha qanday ataladi?", "Landscape", ["Portrait", "Margins", "Columns"], "Landscape — albom holati (yotiq)."],
+    [1, "Orientation buyrugʻi qaysi menyuda?", "Layout", ["Home", "Insert", "View"], "Layout → Orientation."],
+    [1, "Matnni ustunlarga boʻlish nima uchun qulay?", "Qatorlar qisqa, oʻqish oson boʻladi", ["Hujjat hajmi kichrayadi", "Imlo xatolari tuzaladi", "Rasm oʻz-oʻzidan qoʻshiladi"], "Qisqa qatorni koʻz tez oʻqiydi."],
+    [2, "Matnni 3 ta ustunga ajratish ketma-ketligi qaysi?", "Matnni belgilash → Layout → Columns → Three", ["Layout → Columns → Three → matnni belgilash", "Home → Paragraph → Three", "Insert → Columns → Three"], "Avval belgilanadi, keyin Layout → Columns → Three."],
+    [2, "Ustunlarga boʻlingan matnning oʻng cheti notekis. Nima qilish kerak?", "Matnni belgilab Justify qoʻllash", ["Ustunlar sonini koʻpaytirish", "Landscape tanlash", "Shriftni kattalashtirish"], "Justify oʻng chetni ham tekislaydi."],
+    [2, "Justify oʻng chetni qanday tekislaydi?", "Soʻzlar orasiga boʻshliq qoʻshib", ["Soʻzlarni qisqartirib", "Harflarni kattalashtirib", "Satrlarni oʻchirib"], "Soʻzlar orasidagi boʻshliqlar choʻziladi."],
+    [2, "Tekislash usullaridan qaysi biri Justify EMAS?", "Chapdan tekislash", ["Ikki chetidan tekislash", "Satr boshidan oxirigacha choʻzish", "Chap va oʻng chetni bir chiziqqa keltirish"], "Justify — ikki chetidan; chapdan tekislash — Align Left."],
+    [2, "Word da Justify uchun tezkor tugmalar?", "Ctrl + J", ["Ctrl + L", "Ctrl + E", "Ctrl + R"], "Ctrl + J — Justify; L — chap, E — markaz, R — oʻng."],
+    [2, "Ctrl + E matnni qanday tekislaydi?", "Markazga", ["Chapga", "Oʻngga", "Ikki chetga"], "E — center (markaz)."],
+    [2, "Ctrl + L matnni qanday tekislaydi?", "Chapga", ["Oʻngga", "Markazga", "Ikki chetga"], "L — left (chap)."],
+    [2, "Ctrl + R matnni qanday tekislaydi?", "Oʻngga", ["Chapga", "Markazga", "Ikki chetga"], "R — right (oʻng)."],
+    [2, "Katta rasm va yonida matn joylash kerak. Qaysi sahifa holati qulay?", "Landscape (albom)", ["Portrait (kitob)", "Ikkalasi ham noqulay", "Faqat 3 ustunli"], "Albom sahifasi kengroq — rasm va matn yonma-yon sigʻadi."],
+    [2, "Koʻp ustunli maʼlumotlar jadvali uchun qaysi sahifa holati qulay?", "Landscape (albom)", ["Portrait (kitob)", "Sahifa holati ahamiyatsiz", "Justify"], "Albom sahifasida enli jadval sigʻadi."],
+    [2, "Kitob (Portrait) holatida sahifaning qaysi tomonlari uzun?", "Chap va oʻng tomonlari", ["Yuqori va pastki tomonlari", "Hamma tomoni teng", "Faqat pastki tomoni"], "Kitob holatida sahifa tik turadi."],
+    [2, "Albom (Landscape) holatida sahifaning qaysi tomonlari uzun?", "Yuqori va pastki tomonlari", ["Chap va oʻng tomonlari", "Hamma tomoni teng", "Faqat chap tomoni"], "Albom holatida sahifa yotiq turadi."],
+    [2, "Sahifa koʻrinishi bilan bogʻliq sozlamalar qanday ataladi?", "Page setup", ["Paragraph", "Font", "Styles"], "Page setup — sahifani formatlash sozlamalari."],
+    [2, "Columns roʻyxatida «Two» tanlansa nima boʻladi?", "Belgilangan matn 2 ta ustunga boʻlinadi", ["Hujjat 2 nusxada chop etiladi", "2 ta sahifa qoʻshiladi", "Matn 2 marta takrorlanadi"], "Two — ikki ustun."],
+    [3, "Justify qoʻllanganda xatboshining oxirgi satri odatda qanday boʻladi?", "Chapdan tekislangan holda qoladi", ["Butun satr boʻylab choʻziladi", "Markazga suriladi", "Oʻchib ketadi"], "Oxirgi qisqa satr choʻzilmaydi — aks holda soʻzlar orasi juda katta boʻlardi."],
+    [3, "Faqat bitta maqolani ustunlarga boʻlish, qolgan matnni oddiy qoldirish uchun nima qilinadi?", "Faqat shu maqola matni belgilanib Columns qoʻllanadi", ["Butun hujjatga Columns qoʻllanadi", "Landscape tanlanadi", "Justify bosiladi"], "Belgilangan qismgina ustunlarga boʻlinadi."],
+    [3, "Ustunlar orasiga ajratuvchi chiziq qoʻshish qayerda?", "Columns → More Columns → Line between", ["Home → Paragraph → Justify", "Insert → Header", "Layout → Orientation"], "More Columns oynasida «Line between» belgilanadi."],
+    [3, "Matnni keyingi ustunga majburan oʻtkazish uchun nima qoʻyiladi?", "Ustun uzilishi (Column break)", ["Sahifa raqami", "Header", "Boʻsh satrlar"], "Layout → Breaks → Column."],
+    [3, "Ustunlar oraligʻini (masofasini) qayerda oʻzgartirish mumkin?", "Columns → More Columns oynasida", ["Home → Font oynasida", "Insert → Picture oynasida", "View → Zoom oynasida"], "More Columns — kenglik va oraliq sozlamalari."],
+    [3, "Justify qoʻllangan juda tor ustunda qanday muammo chiqishi mumkin?", "Soʻzlar orasida katta boʻshliqlar paydo boʻladi", ["Matn oʻchib ketadi", "Ustunlar birlashadi", "Sahifa albomga aylanadi"], "Tor ustunda boʻshliq koʻp soʻzga taqsimlanmaydi."],
+    [3, "Hujjatning faqat bitta sahifasini albom holatiga oʻtkazish mumkinmi?", "Ha, mumkin", ["Yoʻq, faqat butun hujjatni", "Faqat jadval boʻlsa", "Faqat rasm boʻlsa"], "Darslik: toʻliq hujjat yoki biror sahifaning holati oʻzgartiriladi."],
+    [3, "Maktab gazetasi uchun eng mos sozlamalar qaysi?", "2–3 ta ustun va Justify", ["1 ta ustun va markazdan tekislash", "Landscape va 6 ta ustun", "Oʻngdan tekislash"], "Gazeta — bir necha ustun va tekis chetlar."],
+    [3, "7.1-mashgʻulot: maqola matnini nechta ustunga ajratish soʻralgan?", "3 ta", ["2 ta", "4 ta", "1 ta"], "«Maqoladagi matnni uchta ustunga ajrating va bir chiziqda tekislang»."],
+    [3, "Matn belgilanmay Columns → Two tanlansa nima boʻladi?", "Kursor turgan boʻlim (odatda butun hujjat) 2 ustunga boʻlinadi", ["Hech narsa oʻzgarmaydi", "Faqat birinchi soʻz koʻchadi", "Xato xabari chiqadi"], "Belgilangan matn boʻlmasa, sozlama butun boʻlimga qoʻllanadi."],
+    [3, "Ustunli matnda chap chet tekis, oʻng chet notekis. Hozir qaysi tekislash qoʻllangan?", "Chapdan tekislash (Align Left)", ["Justify", "Markazdan", "Oʻngdan"], "Oʻng chet notekis boʻlsa — matn chapdan tekislangan."],
+    [3, "Qaysi holatda Landscape tanlash ortiqcha?", "Oddiy bir ustunli insho yozilganda", ["Enli jadval joylanganda", "Katta rasm yonida matn boʻlganda", "Keng diagramma qoʻyilganda"], "Oddiy matn uchun kitob holati qulay."],
+    [3, "Page setup sozlamalari nima uchun muhim?", "Hujjat rasmiy koʻrinishi va axborot yaxshi taqdim etilishi uchun", ["Fayl tez saqlanishi uchun", "Imlo tekshirilishi uchun", "Kompyuter tez ishlashi uchun"], "Darslik: sahifani formatlash hujjatning rasmiy koʻrinishiga xizmat qiladi."],
+  ];
+
+  const word7Bilim = bilim("word7", WORD7_BILIM);
+
   // ---------- Saqlangan mavzu tanlovi ----------
   // Bola/o'qituvchi tanlagan mavzular qurilmada saqlanadi. Keyin bankka qo'shilgan mavzu o'sha ro'yxatda yo'q —
   // u o'chiq qolmasligi uchun saqlashda «o'shanda bor edi» ro'yxati ham yoziladi (bilgan). Eski yozuvda bilgan yo'q:
@@ -1040,11 +1092,11 @@
   }
 
   // ---------- Bankka qo'shish ----------
-  const KINDS = { faylTuri, yol, nusxa, tanishuvBilim, robotJoy, takror, dasturBilim, paket, ip, internetBilim, kuchli, variant, domen, xavfBilim, pyNatija, pythonBilim, pyRoyxat, izlash, saralash, algoritmBilim, sanash, kombBilim, cppNatija, cppBilim, pyMantiq, pyFunksiya, blokSxema };
+  const KINDS = { word7Bilim, faylTuri, yol, nusxa, tanishuvBilim, robotJoy, takror, dasturBilim, paket, ip, internetBilim, kuchli, variant, domen, xavfBilim, pyNatija, pythonBilim, pyRoyxat, izlash, saralash, algoritmBilim, sanash, kombBilim, cppNatija, cppBilim, pyMantiq, pyFunksiya, blokSxema };
   for (const t of TOPICS) if (!S.TOPICS.some((x) => x.id === t.id)) S.TOPICS.push(t);
   for (const [k, v] of Object.entries(KINDS)) if (!S.KINDS[k]) S.KINDS[k] = v;
 
-  const api = { TOPICS, KINDS, ASL_MAVZULAR, tanlovniTikla, TANISHUV_BILIM, DASTUR_BILIM, INTERNET_BILIM, XAVF_BILIM, PYTHON_BILIM, ALGORITM_BILIM, KOMB_BILIM, CPP_BILIM };
+  const api = { TOPICS, KINDS, ASL_MAVZULAR, tanlovniTikla, TANISHUV_BILIM, DASTUR_BILIM, INTERNET_BILIM, XAVF_BILIM, PYTHON_BILIM, ALGORITM_BILIM, KOMB_BILIM, CPP_BILIM, WORD7_BILIM };
   if (root.QK) root.QK.savollar2 = api;
   if (typeof module !== "undefined" && module.exports) module.exports = api;
 })(typeof window !== "undefined" ? window : globalThis);
