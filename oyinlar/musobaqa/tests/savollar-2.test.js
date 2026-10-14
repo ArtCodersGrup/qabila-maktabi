@@ -241,13 +241,13 @@ test("tanlovniTikla: eski ro'yxatga yangi mavzular qo'shiladi, o'chirilgani o'ch
 });
 
 // Darslik mavzusi (2026-10-14): 7-sinf, 1-modul, 7-amaliy koʻnikma — muallif 40 ta savol soʻradi
-// 2026-10-14 (2): 9-amaliy koʻnikma ham qoʻshildi — jami 80, mavzu nomi «7-sinf Word»
-test("word7: 80 ta savol (7- va 9-amaliy koʻnikma), har darajada 26+, variantlar toʻgʻri", () => {
+// 2026-10-14 (3): 1-modulning 1–9-amaliy koʻnikmalari — jami 120, mavzu nomi «7-sinf Word»
+test("word7: 120 ta savol (1–9-amaliy koʻnikma), har darajada 35+, variantlar toʻgʻri", () => {
   const L = S2.WORD7_BILIM;
-  assert.equal(L.length, 80);
+  assert.equal(L.length, 120);
   assert.equal(S2.TOPICS.find((t) => t.id === "word7").title, "7-sinf Word");
-  for (const d of [1, 2, 3]) assert.ok(L.filter((x) => x[0] === d).length >= 26, d + "-daraja");
-  assert.equal(new Set(L.map((x) => x[1])).size, 80, "savollar takrorlanmaydi");
+  for (const d of [1, 2, 3]) assert.ok(L.filter((x) => x[0] === d).length >= 35, d + "-daraja");
+  assert.equal(new Set(L.map((x) => x[1])).size, 120, "savollar takrorlanmaydi");
   for (const [, savol, javob, xato, izoh] of L) {
     assert.equal(new Set(xato).size, 3, savol);
     assert.ok(!xato.includes(javob), savol);
