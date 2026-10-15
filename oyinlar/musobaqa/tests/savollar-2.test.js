@@ -184,7 +184,7 @@ const JAVOB = {
 
 test("har yangi tur uchun mustaqil tekshiruv yoki bilim ro'yxati bor", () => {
   const bilimlar = Object.keys(S2.KINDS).filter((k) => !JAVOB[k]);
-  assert.deepEqual(bilimlar.sort(), ["algoritmBilim", "cppBilim", "dasturBilim", "internetBilim", "kombBilim", "pythonBilim", "tanishuvBilim", "word7Bilim", "xavfBilim"]);
+  assert.deepEqual(bilimlar.sort(), ["algoritmBilim", "cppBilim", "dasturBilim", "internetBilim", "kombBilim", "pythonBilim", "tanishuvBilim", "word6Bilim", "word7Bilim", "xavfBilim"]);
 });
 
 test("generatorlar: javob mustaqil hisobga teng, savol hech qachon bo'sh emas", () => {
@@ -248,6 +248,21 @@ test("word7: 120 ta savol (1–9-amaliy koʻnikma), har darajada 35+, variantlar
   assert.equal(S2.TOPICS.find((t) => t.id === "word7").title, "7-sinf Word");
   for (const d of [1, 2, 3]) assert.ok(L.filter((x) => x[0] === d).length >= 35, d + "-daraja");
   assert.equal(new Set(L.map((x) => x[1])).size, 120, "savollar takrorlanmaydi");
+  for (const [, savol, javob, xato, izoh] of L) {
+    assert.equal(new Set(xato).size, 3, savol);
+    assert.ok(!xato.includes(javob), savol);
+    assert.ok(izoh && izoh.length > 5, savol);
+    assert.ok(!/'/.test(savol + javob + xato.join("") + izoh), "oddiy apostrof: " + savol);
+  }
+});
+
+// 2026-10-15: 6-sinf darsligi, 1-modul (Word) — 72 ta savol, mavzu «6-sinf Word»
+test("word6: 72 ta savol, har darajada 24, variantlar toʻgʻri", () => {
+  const L = S2.WORD6_BILIM;
+  assert.equal(L.length, 72);
+  assert.equal(S2.TOPICS.find((t) => t.id === "word6").title, "6-sinf Word");
+  for (const d of [1, 2, 3]) assert.equal(L.filter((x) => x[0] === d).length, 24, d + "-daraja");
+  assert.equal(new Set(L.map((x) => x[1])).size, 72, "savollar takrorlanmaydi");
   for (const [, savol, javob, xato, izoh] of L) {
     assert.equal(new Set(xato).size, 3, savol);
     assert.ok(!xato.includes(javob), savol);

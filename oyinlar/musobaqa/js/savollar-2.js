@@ -55,6 +55,8 @@
     { id: "cpp", title: "C++" },
     // Darslik mavzusi (oʻyini yoʻq): 7-sinf «Informatika va axborot texnologiyalari», 1-modul (Word),
     // 1–9-amaliy koʻnikmalar, 120 ta savol. Muallif nomi: «7-sinf Word»
+    // 6-sinf darsligi, 1-modul «Matnli hujjatlar bilan ishlash», 1–5-amaliy koʻnikma va Masala — 72 ta savol
+    { id: "word6", title: "6-sinf Word" },
     { id: "word7", title: "7-sinf Word" },
   ];
 
@@ -1174,6 +1176,97 @@
   ];
   const word7Bilim = bilim("word7", WORD7_BILIM);
 
+  // ======================================================================
+  // 6-sinf darsligi «Informatika va axborot texnologiyalari», 1-modul «Matnli hujjatlar bilan ishlash» (Word),
+  // 1–5-amaliy koʻnikmalar va «Masala» (tasvir hoshiyasi, aylantirish, SmartArt). 72 ta savol, 2026-10-15.
+  // ======================================================================
+  const WORD6_BILIM = [
+    // --- 1-amaliy koʻnikma: matn qoʻshish, oʻzgartirish, oʻchirish, koʻchirish (8–10-betlar) ---
+    [1, "Matn sahifaning qayeriga yozilishini koʻrsatuvchi oʻchib-yonuvchi chiziqcha?", "Matn kursori", ["Sichqoncha", "Hoshiya", "Shrift"], "Kursor — matn yoziladigan joy."],
+    [1, "Kursordan oldingi harfni oʻchiruvchi tugma?", "Backspace", ["Enter", "Shift", "Caps Lock"], "Backspace — chapdagi harfni oʻchiradi."],
+    [1, "Hujjatni oʻqiydigan odamlar nima deb ataladi?", "Auditoriya", ["Muallif", "Muharrir", "Dastur"], "Auditoriya — hujjat kimlar uchun."],
+    [1, "Bitta soʻzni toʻliq belgilash uchun sichqoncha bilan nima qilinadi?", "Soʻz ustida chap tugma ikki marta bosiladi", ["Oʻng tugma bir marta bosiladi", "Soʻz ustiga kursor olib kelinadi xolos", "Ctrl + P bosiladi"], "Ikki marta bosish — bitta soʻz belgilanadi."],
+    [2, "Belgilangan jumlani oʻchirish uchun qaysi tugmalardan biri bosiladi?", "Backspace yoki Delete", ["Enter yoki Shift", "Tab yoki Caps Lock", "Ctrl yoki Alt"], "Belgilangan matn ikkalasi bilan ham oʻchadi."],
+    [2, "Matnni Cut va Paste bilan koʻchirishda Cut nima qiladi?", "Belgilangan matnni sahifadan olib, xotirada saqlaydi", ["Matnni nusxalaydi va joyida qoldiradi", "Matnni butunlay oʻchiradi", "Matnni chop etadi"], "Cut — kesib olish, Paste — yangi joyga qoʻyish."],
+    [2, "Cut va Paste buyruqlari qaysi tugma bosilganda chiqadigan roʻyxatda boʻladi?", "Sichqonchaning oʻng tugmasi", ["Sichqonchaning chap tugmasi", "Enter", "Backspace"], "Oʻng tugma — ochiluvchi roʻyxat (kontekst menyu)."],
+    [2, "Belgilangan matnni sichqoncha bilan sudrab boshqa joyga olib borish nima?", "Matnni koʻchirish", ["Matnni oʻchirish", "Matnni nusxalash", "Matnni saqlash"], "Ushlab sudralgan matn yangi joyga koʻchadi."],
+    [3, "Matnni Cut bilan kesdik, lekin Paste qilmadik. Matn qayerda?", "Xotirada (bufer), hali sahifada yoʻq", ["Butunlay yoʻqoldi", "Joyida qoldi", "Faylga saqlandi"], "Paste bosilmaguncha matn sahifaga qaytmaydi."],
+    [3, "Kesish (Cut) va nusxalash (Copy) ning farqi?", "Cut matnni olib qoʻyadi, Copy joyida qoldiradi", ["Ikkalasi bir xil", "Copy matnni oʻchiradi", "Cut matnni chop etadi"], "Copy — nusxa, Cut — koʻchirish uchun."],
+    [3, "Bolalar uchun yozilgan bayram xotiralari hujjatiga qaysi nom mosroq?", "Bayram_xotiralari.docx", ["Hujjat1.docx", "aaa.docx", "Yangi.docx"], "Nom hujjat mazmunini aytib tursin (1.4-mashgʻulot)."],
+    [3, "Klaviaturada soʻz yozganda katta harf uchun qaysi tugma ushlab turiladi?", "Shift", ["Enter", "Backspace", "Delete"], "Shift + harf — bitta katta harf; Caps Lock — doimiy."],
+
+    // --- 2-amaliy koʻnikma: shrift turi, oʻlchami, rangi; qalin, kursiv, tagiga chizilgan (10–14-betlar) ---
+    [1, "Harf va belgilarning muayyan stili nima deyiladi?", "Shrift", ["Hoshiya", "Kursor", "Jadval"], "Shrift — harflar koʻrinishi."],
+    [1, "Shrift oʻlchamining oʻlchov birligi?", "pt (punkt)", ["sm", "piksel", "kg"], "Masalan, 12 pt, 18 pt."],
+    [1, "Matnni qalin qiluvchi tugma?", "Bold", ["Italic", "Underline", "Paste"], "Bold — qalin (B)."],
+    [1, "Matnni kursiv (qiya) qiluvchi tugma?", "Italic", ["Bold", "Underline", "Align"], "Italic — kursiv (I)."],
+    [2, "Matnning tagiga chizuvchi tugma?", "Underline", ["Bold", "Italic", "Border"], "Underline — tagiga chizish (U)."],
+    [2, "Qalin matnni yana oddiy holiga qaytarish uchun nima qilinadi?", "Matn belgilanib, Bold yana bir marta bosiladi", ["Matn oʻchirib qayta yoziladi", "Italic bosiladi", "Hujjat yopiladi"], "Bold — yoqish/oʻchirish tugmasi."],
+    [2, "Mavjud matnning shriftini oʻzgartirishda birinchi qadam?", "Matnni belgilash", ["Hujjatni saqlash", "Tasvir qoʻshish", "Hoshiya qoʻyish"], "Avval belgilanadi, keyin roʻyxatdan shrift tanlanadi."],
+    [2, "Hujjatda nechtadan ortiq shrift ishlatmaslik maslahat beriladi?", "2 ta", ["5 ta", "10 ta", "Cheklov yoʻq"], "Koʻp shrift — hujjat tartibsiz va tushunarsiz."],
+    [3, "Sarlavha asosiy matndan ajralib turishi uchun nima qilinadi?", "Sarlavha shrifti turi, oʻlchami yoki rangi alohida sozlanadi", ["Sarlavha oʻchiriladi", "Butun matn sarlavha kabi qilinadi", "Sarlavha oxiriga koʻchiriladi"], "Kattaroq oʻlcham yoki boshqa rang — sarlavha koʻzga tashlanadi."],
+    [3, "8–13 yoshli bolalar uchun menyu hujjatiga qaysi ranglar mos?", "Yorqin ranglar", ["Faqat qora", "Xira ranglar", "Faqat kulrang"], "2.4-mashgʻulot: yosh auditoriya — yorqin ranglar."],
+    [3, "Rasmiy hujjat (masalan, ota-onalarga xat) uchun qanday shrift mos?", "Oddiy, oʻqishga oson shrift", ["Kulgili, bezakli shrift", "Har satrda boshqa shrift", "Juda mayda shrift"], "Rasmiy hujjat — oddiy va tushunarli shrift."],
+    [3, "Hujjatda juda koʻp shrift turi, oʻlchami va rangi ishlatilsa nima boʻladi?", "Hujjat zich va tartibsiz koʻrinadi", ["Hujjat rasmiyroq boʻladi", "Fayl tezroq ochiladi", "Imlo xatolari yoʻqoladi"], "Darslik maslahati: professional hujjatda formatlash cheklangan."],
+
+    // --- 3-amaliy koʻnikma: matnni tekislash (15–16-betlar) ---
+    [1, "Yozilayotgan matn avtomatik qanday tekislanadi?", "Chapdan", ["Oʻngdan", "Markazdan", "Ikki chetdan"], "Sukut boʻyicha — chapdan tekislash."],
+    [1, "Darslikdagi uchta asosiy tekislash turi?", "Chapdan, markazdan, oʻngdan", ["Yuqoridan, pastdan, chapdan", "Qalin, kursiv, tagiga chizilgan", "Kitob, albom, kvadrat"], "3 ta asosiy tekislash."],
+    [1, "Matnni sahifa oʻrtasiga joylash qaysi tekislash?", "Markazdan tekislash", ["Chapdan tekislash", "Oʻngdan tekislash", "Hoshiya"], "Markaz — chap va oʻngdan teng uzoqlikda."],
+    [1, "Tekislash tugmalari qaysi menyuda?", "Home", ["Insert", "Design", "View"], "Home → Paragraph."],
+    [2, "Tekislash tugmalari Home menyusining qaysi boʻlimida?", "Paragraph", ["Font", "Styles", "Clipboard"], "Paragraph — xatboshi boʻlimi."],
+    [2, "Tekislash tugmalari qanday koʻrinishda?", "Gorizontal chiziqlar", ["Harflar", "Strelkalar", "Ranglar"], "Chiziqlar joylashuvi tekislash turini koʻrsatadi."],
+    [2, "Tekislashni oʻzgartirishdan oldin nima qilinadi?", "Matn belgilanadi", ["Hujjat saqlanadi", "Tasvir qoʻshiladi", "Shrift oʻchiriladi"], "Belgilangan matn tekislanadi."],
+    [2, "Oʻngdan tekislashda matn qayerda tekis turadi?", "Sahifaning oʻng tomonida", ["Chap tomonida", "Oʻrtasida", "Yuqorisida"], "Oʻng chet bir chiziqda."],
+    [3, "3.1-mashgʻulot: hujjat oxiriga yozilgan ism qanday tekislanadi?", "Oʻngdan", ["Markazdan", "Chapdan", "Ikki chetdan"], "Ism yoziladi va oʻngdan tekislanadi."],
+    [3, "Hujjat sarlavhasi uchun qaysi tekislash koʻproq ishlatiladi?", "Markazdan", ["Oʻngdan", "Chapdan — doim", "Tekislanmaydi"], "Sarlavha odatda oʻrtada turadi."],
+    [3, "Tekislash tugmalari tartibi (chapdan oʻngga) qanday?", "Chapdan, markazdan, oʻngdan", ["Oʻngdan, markazdan, chapdan", "Markazdan, chapdan, oʻngdan", "Tartibi yoʻq"], "Birinchisi — chap, ikkinchisi — markaz, uchinchisi — oʻng."],
+    [3, "Xatda sana sahifaning oʻng tomonida turishi kerak. Nima qilinadi?", "Sana belgilanib, oʻngdan tekislanadi", ["Sana oldiga koʻp boʻsh joy qoʻyiladi", "Sana markazdan tekislanadi", "Sana qalin qilinadi"], "Boʻsh joy bilan surish notoʻgʻri — tekislash tugmasi bor."],
+
+    // --- 4-amaliy koʻnikma: tasvir va sahifa hoshiyasi (16–18-betlar) ---
+    [1, "Hujjatga tasvir qoʻshish qaysi menyuda?", "Insert", ["Home", "Design", "View"], "Insert → Pictures."],
+    [1, "Tasvir qoʻshish tugmasi?", "Pictures", ["Bold", "Page Borders", "Paste"], "Insert → Pictures → tasvir tanlanadi → Insert."],
+    [1, "Tasvir nima?", "Rasm, fotosurat yoki diagramma", ["Faqat matn", "Faqat jadval", "Shrift turi"], "Darslik taʼrifi."],
+    [1, "Sahifaga hoshiya qoʻshish tugmasi?", "Page Borders", ["Pictures", "Bold", "SmartArt"], "Design → Page Borders."],
+    [2, "Page Borders qaysi menyuda?", "Design", ["Insert", "Home", "View"], "Design menyusining oʻng burchagida."],
+    [2, "Tasvir qoʻshishdan oldin matn kursori qayerga qoʻyiladi?", "Tasvir boʻladigan qatorga", ["Hujjat boshiga — doim", "Sarlavhaga", "Kerak emas"], "Tasvir kursor turgan joyga qoʻshiladi."],
+    [2, "Tasvirni tanlab boʻlgach, oynada qaysi tugma bosiladi?", "Insert", ["Cancel", "Delete", "Print"], "Insert — tasvir sahifada paydo boʻladi."],
+    [2, "Page Borders oynasida nimalar sozlanadi?", "Hoshiya stili, rangi va qalinligi", ["Shrift va tekislash", "Faqat sahifa raqami", "Tasvir oʻlchami"], "Stil, rang, qalinlik."],
+    [3, "4.2-mashgʻulot: hoshiya qanday boʻlishi soʻralgan?", "Nuqtali, 1 pt, koʻk", ["Yulduzchali, 3 pt, qizil", "Toʻgʻri chiziq, 6 pt, qora", "Rangsiz"], "Koʻp nuqtali chiziq, 1 pt, koʻk rang."],
+    [3, "4.3-mashgʻulot: hoshiyani qanday hoshiyaga oʻzgartirish soʻralgan?", "Yulduzchali", ["Nuqtali", "Ikki chiziqli", "Koʻk toʻgʻri chiziq"], "Bezakli (yulduzchali) hoshiya tanlanadi."],
+    [3, "Hoshiya qalinligi qaysi birlikda?", "pt", ["sm", "kg", "%"], "Masalan, 1 pt — ingichka."],
+    [3, "Sahifa hoshiyasi bilan tasvir hoshiyasining farqi?", "Biri butun sahifa atrofida, ikkinchisi faqat tasvir atrofida", ["Farqi yoʻq", "Ikkalasi ham faqat matn atrofida", "Tasvir hoshiyasi butun hujjatga qoʻyiladi"], "Page Borders — sahifa, Picture Border — tasvir."],
+
+    // --- 5-amaliy koʻnikma: hujjatni auditoriyaga moslash (18–20-betlar) ---
+    [1, "Hujjat yaratishda avvalo nima haqida oʻylash kerak?", "Auditoriya haqida", ["Fayl hajmi haqida", "Kompyuter rangi haqida", "Klaviatura haqida"], "«Mening auditoriyamga nima kerak?»"],
+    [1, "Ota-onalarga yuboriladigan taklif xati qanday boʻlishi kerak?", "Rasmiy va tushunarli", ["Kulgili va rang-barang", "Juda koʻp shriftli", "Tasvirlar bilan toʻla"], "Kattalar rasmiy matnga eʼtiborli."],
+    [1, "Oʻquvchilar uchun qoʻllanma qanday boʻlishi kerak?", "Qiziqarli, lekin tartibli", ["Zerikarli va zich", "Tartibsiz va rang-barang", "Faqat matnli"], "Ssenariy: qiziqarli, ayni paytda rasmiy koʻrinish."],
+    [1, "Rasmiy hujjat zerikarli boʻlishi shartmi?", "Yoʻq, oddiy va tushunarli boʻladi", ["Ha, albatta", "Faqat qora rangda boʻladi", "Faqat bitta soʻzdan iborat"], "Darslik: rasmiy hujjat zerikarli koʻrinmaydi."],
+    [2, "Jiddiy mavzudagi matnga qanday tasvir mos?", "Mavzuga mos, ixcham tasvir", ["Kulgili multfilm tasviri", "Juda koʻp katta tasvirlar", "Mavzuga aloqasiz rasm"], "Tasvir mazmunga mos boʻlsin."],
+    [2, "Katta-katta, turlicha joylangan tasvirlar hujjatni qanday koʻrsatadi?", "Norasmiy", ["Rasmiy", "Qisqa", "Xavfsiz"], "Rasmiy hujjatga kamroq va ixchamroq tasvir."],
+    [2, "Moslash soʻzining maʼnosi?", "Takomillashtirish yoki oʻzgartirish", ["Oʻchirish", "Chop etish", "Saqlash"], "Darslik kalit soʻzi."],
+    [2, "Hujjat elementlari, dizayni va sozlamalari nimaga qarab tanlanadi?", "Auditoriyaga qarab", ["Tasodifiy", "Faqat muallif didiga qarab", "Kompyuter turiga qarab"], "Har element auditoriyaga moslanadi."],
+    [3, "Bir maqolani oʻquvchilar va ota-onalar uchun moslash kerak. Toʻgʻri yoʻl?", "Ikki variant: oʻquvchilarga qiziqarliroq, ota-onalarga rasmiyroq", ["Bitta variant ikkalasiga ham", "Faqat ota-onalar varianti", "Faqat rasmlar bilan"], "Yakuniy loyiha: har auditoriyaga alohida variant."],
+    [3, "Taklif xati chalkash: 6 xil shrift, 5 xil rang. Birinchi navbatda nima qilinadi?", "Shriftlarni 1–2 taga, ranglarni kamaytirish", ["Yana tasvir qoʻshish", "Hammasini qalin qilish", "Hoshiya qoʻshish"], "5.1-mashgʻulot: kontent va shrift tartibga keltiriladi."],
+    [3, "Professional boʻlmagan hujjatning belgisi?", "Juda koʻp shrift turi, oʻlchami va rangi", ["Bitta oddiy shrift", "Aniq sarlavha", "Toʻgʻri tekislash"], "Darslik maslahati."],
+    [3, "Rasmiy hujjat uchun qaysi tanlov eng mos?", "Oddiy shrift, aniq sarlavha, kam va mos tasvir", ["Yorqin bezakli shriftlar", "Har satr har xil rang", "Katta kulgili rasmlar"], "Oddiy, tushunarli, tartibli."],
+
+    // --- Masala: tasvirga hoshiya, aylantirish, SmartArt (21–25-betlar) ---
+    [1, "Hujjatda sxema yaratish uskunasi?", "SmartArt", ["Page Borders", "Pictures", "Bold"], "SmartArt — sxema va diagrammalar."],
+    [1, "SmartArt qaysi menyuda?", "Insert", ["Home", "Design", "View"], "Insert → SmartArt."],
+    [1, "Tasvir tanlanganda tasmada qaysi menyu paydo boʻladi?", "Format", ["Review", "Mailings", "File"], "Tasvir bilan ishlash — Format menyusi."],
+    [1, "Tasvirni aylantirish uchun nimadan foydalaniladi?", "Tasvir tepasidagi aylanasimon oʻqdan", ["Bold tugmasidan", "Backspace tugmasidan", "Page Borders dan"], "Oʻqni ushlab, sichqoncha bilan buriladi."],
+    [2, "Tasvirga hoshiya qoʻshuvchi tugma?", "Picture Border", ["Page Borders", "SmartArt", "Shape Fill"], "Format → Picture Border."],
+    [2, "Picture Border orqali nimalarni sozlash mumkin?", "Hoshiya rangi, qalinligi va tayyor namunalar", ["Shrift turi", "Sahifa holati", "Matn tekislanishi"], "Rang, qalinlik, namuna."],
+    [2, "SmartArt kataklariga yozilgan dastlabki yozuv?", "[Text]", ["[Rasm]", "[Sarlavha]", "Boʻsh — hech narsa"], "[Text] ni bosib yozuv kiritiladi."],
+    [2, "SmartArt shakli rangini oʻzgartiruvchi tugma?", "Shape Fill", ["Picture Border", "Font Color", "Page Color"], "Format → Shape Fill."],
+    [3, "SmartArt dagi ortiqcha katakni olib tashlash uchun nima qilinadi?", "Katak belgilanib, Backspace bosiladi", ["Hujjat qayta ochiladi", "Shape Fill bosiladi", "Katakka boʻsh joy yoziladi"], "Belgilangan katak Backspace bilan oʻchadi."],
+    [3, "2-mashgʻulot: sabzavotlar tasvirini necha darajaga aylantirish soʻralgan?", "45 daraja", ["90 daraja", "180 daraja", "360 daraja"], "Tasvir 45° ga buriladi."],
+    [3, "3-mashgʻulot: qaysi SmartArt joylashtirish soʻralgan?", "Basic Block List", ["Basic Cycle", "Organization Chart", "Picture Grid"], "Basic Block List — keyin 2 ta katak oʻchiriladi."],
+    [3, "Maʼlumotni (masalan, ota-onalar, oʻqituvchilar, oʻquvchilar) aniq koʻrsatish uchun eng mos?", "SmartArt sxemasi", ["Juda uzun bitta jumla", "Faqat sahifa hoshiyasi", "Har soʻzni boshqa shriftda yozish"], "Darslik maslahati: auditoriya uchun sxemada SmartArt."],
+  ];
+  const word6Bilim = bilim("word6", WORD6_BILIM);
+
   // ---------- Saqlangan mavzu tanlovi ----------
   // Bola/o'qituvchi tanlagan mavzular qurilmada saqlanadi. Keyin bankka qo'shilgan mavzu o'sha ro'yxatda yo'q —
   // u o'chiq qolmasligi uchun saqlashda «o'shanda bor edi» ro'yxati ham yoziladi (bilgan). Eski yozuvda bilgan yo'q:
@@ -1188,11 +1281,11 @@
   }
 
   // ---------- Bankka qo'shish ----------
-  const KINDS = { word7Bilim, faylTuri, yol, nusxa, tanishuvBilim, robotJoy, takror, dasturBilim, paket, ip, internetBilim, kuchli, variant, domen, xavfBilim, pyNatija, pythonBilim, pyRoyxat, izlash, saralash, algoritmBilim, sanash, kombBilim, cppNatija, cppBilim, pyMantiq, pyFunksiya, blokSxema };
+  const KINDS = { word6Bilim, word7Bilim, faylTuri, yol, nusxa, tanishuvBilim, robotJoy, takror, dasturBilim, paket, ip, internetBilim, kuchli, variant, domen, xavfBilim, pyNatija, pythonBilim, pyRoyxat, izlash, saralash, algoritmBilim, sanash, kombBilim, cppNatija, cppBilim, pyMantiq, pyFunksiya, blokSxema };
   for (const t of TOPICS) if (!S.TOPICS.some((x) => x.id === t.id)) S.TOPICS.push(t);
   for (const [k, v] of Object.entries(KINDS)) if (!S.KINDS[k]) S.KINDS[k] = v;
 
-  const api = { TOPICS, KINDS, ASL_MAVZULAR, tanlovniTikla, TANISHUV_BILIM, DASTUR_BILIM, INTERNET_BILIM, XAVF_BILIM, PYTHON_BILIM, ALGORITM_BILIM, KOMB_BILIM, CPP_BILIM, WORD7_BILIM };
+  const api = { TOPICS, KINDS, ASL_MAVZULAR, tanlovniTikla, TANISHUV_BILIM, DASTUR_BILIM, INTERNET_BILIM, XAVF_BILIM, PYTHON_BILIM, ALGORITM_BILIM, KOMB_BILIM, CPP_BILIM, WORD6_BILIM, WORD7_BILIM };
   if (root.QK) root.QK.savollar2 = api;
   if (typeof module !== "undefined" && module.exports) module.exports = api;
 })(typeof window !== "undefined" ? window : globalThis);

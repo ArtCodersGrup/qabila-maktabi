@@ -30,7 +30,7 @@
 
   const bolimlari = (mavzu) => BOLIMLAR[mavzu] || [];
   // Darslik mavzulari: saytda oʻyini yoʻq, savollari darslikdan — Togʻda doim ochiq
-  const DARSLIK = ["word7"];
+  const DARSLIK = ["word6", "word7"];
 
   // Mavzu ochiqmi. katalog: { GAMES, SECTIONS, mos(game, toifa) }, toifa — { id }, tugadimi(game) → bool.
   // Natija: { holat: "ochiq" | "yopiq" | "yoq", bolimlar: [{ id, title, tugagan, jami }] }.
